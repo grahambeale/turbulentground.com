@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Capital Diagnostic · Turbulent Ground</title>
+<meta name="description" content="25 questions, five dimensions, one score. Find out how much Care Capital your team has — and where to focus first.">
+<link rel="canonical" href="https://turbulentground.com/diagnostic">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://turbulentground.com/diagnostic">
+<meta property="og:title" content="Care Capital Diagnostic · Turbulent Ground">
+<meta property="og:description" content="25 questions, five dimensions, one score. Find out how much Care Capital your team has — and where to focus first.">
+<meta property="og:image" content="https://turbulentground.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Care Capital Diagnostic · Turbulent Ground">
+<meta name="twitter:description" content="25 questions, five dimensions, one score. Find out how much Care Capital your team has.">
+<meta name="twitter:image" content="https://turbulentground.com/og-image.png">
+<link rel="icon" type="image/png" href="../favicon.png">
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#131110;--surface:#1c1915;--surface2:#26211c;
+  --border:rgba(217,87,28,0.15);--border2:rgba(232,220,200,0.10);
+  --orange:#d9571c;--orange-dim:rgba(217,87,28,0.08);--orange-mid:rgba(217,87,28,0.25);
+  --text:#e8dcc8;--muted:#9e8e7c;--muted2:#9a8a78;
+  --c1:#d9571c;--c2:#c8b89a;--c3:#8ab4c8;--c4:#a8c89a;--c5:#d4a8c8;
+  --green:#7ec87e;--amber:#e8a840;--red:#e86060;
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;line-height:1.6}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(19,17,16,0.96);border-bottom:1px solid var(--border2);padding:0 48px;display:flex;align-items:center;height:72px;backdrop-filter:blur(20px);gap:0}
+
+
+.nav-step{font-family:'Outfit',sans-serif;font-size:12px;color:var(--muted);padding:0 20px;height:64px;display:flex;align-items:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.06em;white-space:nowrap}
+.nav-step.active{color:var(--orange);border-bottom-color:var(--orange)}
+.nav-step.done{color:var(--muted2)}
+.page{display:none}
+.page.active{display:block}
+
+/* INTRO */
+.intro-wrap{min-height:calc(100vh - 72px);display:flex;align-items:flex-start;justify-content:center;padding:108px 48px 60px}
+.intro-inner{max-width:640px;width:100%}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:16px}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-weight:300;line-height:1.0;margin-bottom:16px;letter-spacing:-0.025em}
+.strapline{font-size:16px;color:var(--muted);margin-bottom:24px;letter-spacing:.01em;font-weight:300}
+.lead{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:28px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.info-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px 18px}
+.info-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:6px}
+.info-card-value{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text)}
+.info-card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* FORM FIELDS */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+.field-hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.field input,.field select{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;appearance:none}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666460' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.field input:focus,.field select:focus{border-color:var(--orange)}
+.field input::placeholder{color:var(--muted)}
+.field select option{background:var(--surface);color:var(--text)}
+
+/* MODE TOGGLE */
+.mode-toggle{display:flex;gap:10px;margin-bottom:20px}
+.mode-btn{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;cursor:pointer;transition:all .2s;text-align:left}
+.mode-btn.active{border-color:var(--orange);background:var(--orange-dim)}
+.mode-btn-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.mode-btn-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.mode-btn.active .mode-btn-title{color:var(--orange)}
+
+/* TEAM CODE */
+.team-code-row{display:flex;gap:10px;align-items:flex-end}
+.team-code-row .field{flex:1;margin-bottom:0}
+.team-code-gen{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--muted2);cursor:pointer;white-space:nowrap;transition:all .2s;height:46px;display:flex;align-items:center}
+.team-code-gen:hover{color:var(--text);border-color:var(--muted)}
+
+/* BTN */
+.btn{background:#b84215;color:#fff;border:none;border-radius:40px;padding:14px 28px;font-size:14px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .22s;width:100%}
+.btn:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2);border-radius:40px;padding:12px 24px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+
+/* BETA */
+.beta-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,118,0,0.12);border:0.5px solid rgba(255,118,0,0.35);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:500;color:var(--orange);letter-spacing:.08em;text-transform:uppercase;margin-left:8px;flex-shrink:0}
+.beta-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.beta-notice{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start}
+.beta-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.beta-notice-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:5px}
+.beta-notice-text{font-size:14px;color:var(--muted2);line-height:1.65}
+
+/* SURVEY */
+.survey-wrap{max-width:680px;margin:0 auto;padding:104px 24px 100px}
+.factor-section{margin-bottom:56px}
+.factor-title{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.factor-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.factor-heading{font-family:'Outfit',sans-serif;font-size:clamp(17px,2vw,20px);font-weight:500;color:var(--text);letter-spacing:0;line-height:1.3}
+.factor-subheading{font-size:15px;color:var(--muted);margin-bottom:28px;padding-left:24px;line-height:1.6}
+.question-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:20px 22px;margin-bottom:10px;transition:border-color .2s}
+.q-text{font-size:16px;color:var(--text);line-height:1.6;margin-bottom:16px}
+.likert{display:flex;gap:6px}
+.likert-opt{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.likert-opt input[type=radio]{display:none}
+.likert-circle{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(232,220,200,0.30);background:transparent;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--text);transition:all .15s;font-family:'Cormorant Garamond',serif}
+.likert-opt input:checked + .likert-circle{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:500}
+.likert-opt:hover .likert-circle{border-color:rgba(232,220,200,0.6);color:#fff}
+.likert-label{font-size:12px;color:var(--muted);text-align:center;line-height:1.3;max-width:64px}
+.progress-bar-wrap{position:fixed;bottom:56px;left:0;right:0;height:2px;background:var(--border);z-index:100}
+.progress-bar{height:100%;background:var(--orange);transition:width .3s ease}
+.survey-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(19,17,16,0.96);border-top:1px solid var(--border2);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px)}
+.footer-count{font-size:12px;color:var(--muted)}
+.footer-count span{color:var(--text);font-weight:500}
+
+/* RESULTS */
+.results-wrap{max-width:800px;margin:0 auto;padding:48px 24px 80px}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-weight:300;line-height:1.1;margin-bottom:10px;letter-spacing:-0.015em}
+.overall-card{background:var(--orange-dim);border:1px solid var(--orange-mid);border-radius:16px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.overall-pct{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--orange);line-height:1;flex-shrink:0}
+.overall-zone{font-size:15px;font-weight:500;margin-bottom:6px}
+.overall-desc{font-size:15px;color:var(--muted2);line-height:1.65}
+.positive-card{background:rgba(126,200,126,0.07);border:0.5px solid rgba(126,200,126,0.25);border-radius:10px;padding:18px 20px;margin-bottom:28px}
+.positive-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--green);margin-bottom:8px}
+.positive-text{font-size:15px;color:var(--text);line-height:1.65}
+.scores-section{margin-bottom:40px}
+.scores-heading{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:20px}
+.score-row{margin-bottom:22px}
+.score-row-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.score-row-name{font-size:14px;font-weight:500}
+.score-row-vals{display:flex;align-items:baseline;gap:10px}
+.score-row-val{font-family:'Cormorant Garamond',serif;font-size:20px}
+.score-row-bench{font-size:11px;color:var(--muted)}
+.bar-wrap{position:relative;height:6px;background:var(--border);border-radius:3px;overflow:visible;margin-bottom:5px}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.bench-line{position:absolute;top:-3px;width:2px;height:12px;background:rgba(255,255,255,0.2);border-radius:1px}
+.bench-label-wrap{display:flex;align-items:center;gap:6px;margin-top:2px}
+.bench-dot{width:6px;height:6px;background:rgba(255,255,255,0.2);border-radius:50%;flex-shrink:0}
+.bench-text{font-size:10px;color:var(--muted)}
+.vs-badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.vs-above{background:rgba(126,200,126,0.15);color:var(--green)}
+.vs-below{background:rgba(232,96,96,0.15);color:var(--red)}
+.vs-same{background:rgba(255,118,0,0.12);color:var(--orange)}
+.radar-wrap-results{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;margin-bottom:32px;display:flex;justify-content:center}
+.factor-cards{}
+.factor-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.fc-top{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;user-select:none}
+.fc-name{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500}
+.fc-right{display:flex;align-items:center;gap:10px}
+.fc-pct{font-family:'Cormorant Garamond',serif;font-size:16px}
+.fc-chevron{font-size:11px;color:var(--muted);transition:transform .2s}
+.factor-card.open .fc-chevron{transform:rotate(180deg)}
+.fc-body{display:none;padding:0 20px 20px;border-top:0.5px solid var(--border)}
+.factor-card.open .fc-body{display:block}
+.fc-tabs{display:flex;gap:0;margin:16px 0 0;border-bottom:0.5px solid var(--border)}
+.fc-tab{font-size:11px;color:var(--muted);padding:8px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.fc-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.fc-panel{display:none;padding-top:16px}
+.fc-panel.active{display:block}
+.fc-positive{background:rgba(126,200,126,0.06);border:0.5px solid rgba(126,200,126,0.2);border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:15px;color:var(--text);line-height:1.65}
+.fc-positive-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:6px}
+.rec-item{display:flex;gap:10px;margin-bottom:12px;font-size:15px;line-height:1.6;color:var(--muted2)}
+.rec-num{color:var(--orange);font-family:'Cormorant Garamond',serif;font-size:14px;flex-shrink:0;line-height:1.4}
+.disc-prompt-item{padding:9px 0;border-bottom:0.5px solid var(--border);font-size:15px;color:var(--muted2);line-height:1.55}
+.disc-prompt-item:last-child{border-bottom:none}
+.q-score-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:11px;color:var(--muted);line-height:1.5}
+.q-score-row:last-child{border-bottom:none}
+.q-score-val{font-family:'Cormorant Garamond',serif;font-size:16px;flex-shrink:0}
+.low-score{color:var(--red)}
+.mid-score{color:var(--amber)}
+.high-score{color:var(--green)}
+.bench-note{font-size:11px;color:var(--muted);line-height:1.6;padding:14px 16px;background:var(--surface2);border-radius:8px;margin-top:24px;border:1px solid var(--border2)}
+.export-row{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+.footer-note{margin-top:32px;font-size:11px;color:var(--muted);border-top:0.5px solid var(--border);padding-top:20px;line-height:1.75}
+.feedback-card{margin-top:32px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:22px 24px}
+.feedback-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:8px}
+.feedback-text{font-size:15px;color:var(--muted2);line-height:1.65;margin-bottom:16px}
+.feedback-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;resize:vertical;min-height:80px;transition:border-color .2s;margin-top:12px}
+.feedback-input:focus{border-color:var(--orange)}
+.feedback-input::placeholder{color:var(--muted)}
+
+/* SHARE CARD */
+.share-card{background:var(--surface);border:0.5px solid var(--orange-mid);border-radius:12px;padding:22px 24px;margin-top:32px}
+.share-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:8px}
+.share-text{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
+.share-message{background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:14px;white-space:pre-wrap}
+.share-code{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 14px;font-size:12px;color:var(--text);margin-bottom:14px}
+.share-code strong{color:var(--orange);font-size:14px;font-family:'Cormorant Garamond',serif;letter-spacing:.05em}
+
+/* COHORT CARD */
+.cohort-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;margin-top:28px}
+.cohort-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--c3);margin-bottom:8px}
+.cohort-count{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--text);margin-bottom:4px}
+.cohort-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.variance-row{margin-bottom:14px}
+.variance-label{font-size:11px;color:var(--muted2);margin-bottom:6px;display:flex;justify-content:space-between}
+.variance-bar{height:4px;background:var(--border);border-radius:2px;position:relative}
+.variance-fill{height:100%;border-radius:2px;background:var(--c3)}
+.variance-spread{position:absolute;top:-2px;height:8px;background:rgba(138,180,200,0.3);border-radius:2px}
+
+/* EMAIL RESULTS */
+.email-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:20px 22px;margin-top:28px}
+.email-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:8px}
+.email-row{display:flex;gap:10px}
+.email-row input{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s}
+.email-row input:focus{border-color:var(--orange)}
+.email-row input::placeholder{color:var(--muted)}
+.email-row button{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.email-row button:hover{opacity:.85}
+.email-confirm{font-size:12px;color:var(--green);margin-top:8px;display:none}
+.capture-card{border-color:var(--orange-mid)}
+.capture-field{margin-bottom:10px}
+.capture-field input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:15px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s}
+.capture-field input:focus{border-color:var(--orange)}
+.capture-field input::placeholder{color:var(--muted)}
+.consent{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text);line-height:1.45;margin-top:14px;cursor:pointer}
+.consent input{margin-top:1px;width:15px;height:15px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
+.capture-note{font-size:11px;color:var(--muted);line-height:1.6;margin:14px 0}
+.capture-note a{color:var(--orange);text-decoration:none}
+.capture-card .btn{width:100%;margin-top:4px}
+.capture-error{font-size:12px;color:var(--red);margin-top:10px;display:none}
+
+@media(max-width:600px){
+  .info-grid{grid-template-columns:1fr}
+  .overall-card{flex-direction:column;gap:12px}
+  .mode-toggle{flex-direction:column}
+  .email-row{flex-direction:column}
+}
+
+/* Nav links */
+.nav-links-wrap{display:flex;flex-direction:row;align-items:center;gap:28px;width:420px;justify-content:flex-end;}
+.nav-link{font-family:'Outfit',sans-serif;font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;letter-spacing:0.06em;transition:color 0.2s;white-space:nowrap;}
+.nav-link:hover{color:#f5f0e8;}
+.nav-link.active{color:var(--orange);}
+.nav-btn-wrap{overflow:hidden;flex-shrink:0;max-width:200px;opacity:1;transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;}
+.nav.scrolled .nav-btn-wrap{max-width:0;opacity:0;pointer-events:none;}
+.nav-btn{display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:'Outfit';font-size:13px;font-weight:500;color:#fff;background:#b84215;text-decoration:none;padding:9px 20px;border-radius:40px;letter-spacing:0.04em;transition:all 0.22s;}
+.nav-btn:hover{background:var(--orange);transform:translateY(-1px);}
+.nav-logo-mark{flex-shrink:0;width:44px;overflow:hidden;transition:width 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;opacity:1;}
+.nav.scrolled .nav-logo-mark{width:0;opacity:0;}
+
+/* Step nav in body */
+.step-nav{display:flex;flex-direction:row;align-items:center;gap:0;margin-bottom:24px;border-bottom:1px solid var(--border2);}
+.step-item{display:inline-flex;align-items:center;font-family:'Outfit',sans-serif;font-size:12px;color:var(--muted);padding:10px 28px 10px 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;letter-spacing:.06em;white-space:nowrap;}
+.step-item.active{color:var(--orange);border-bottom-color:var(--orange);}
+.step-item.done{color:var(--muted2);}
+
+/* Nav fixed + scroll */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;height:72px;background:transparent;border-bottom:1px solid rgba(245,240,232,0.5);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+.nav.scrolled{height:52px;background:rgba(19,17,16,0.96);backdrop-filter:blur(20px);}
+.nav.scrolled{height:52px;background:rgba(19,17,16,0.96);backdrop-filter:blur(20px);}
+
+/* Hamburger + mobile menu */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:10px;margin-right:-10px;background:none;border:0;cursor:pointer;z-index:210;}
+.nav-toggle span{display:block;height:2px;width:24px;background:#f5f0e8;border-radius:2px;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),opacity 0.2s ease;}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-toggle.open span:nth-child(2){opacity:0;}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{position:fixed;inset:0;z-index:199;background:rgba(14,11,8,0.985);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;padding:100px 36px 40px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 0.35s ease,transform 0.35s ease,visibility 0.35s;}
+.mobile-menu.open{opacity:1;visibility:visible;transform:none;}
+.mobile-menu a{font-family:'Outfit',sans-serif;font-weight:400;font-size:20px;letter-spacing:0.05em;color:#e8dcc8;text-decoration:none;padding:12px 0;line-height:1.2;transition:color 0.2s ease;}
+.mobile-menu a.active{color:var(--orange);}
+.mobile-menu a:hover{color:var(--orange);}
+.mobile-menu .mobile-menu-btn{font-family:'Outfit',sans-serif;font-weight:500;font-size:16px;color:#fff;background:#b84215;padding:14px 30px;border-radius:40px;margin-top:26px;}
+@media(max-width:720px){
+  .nav-links-wrap{display:none;}
+  .nav-toggle{display:flex;}
+  #nav-logo-link{margin-right:0 !important;padding-right:0 !important;border-right:0 !important;}
+  .nav{padding:0 20px !important;}
+}
+
+
+/* WCAG 2.1 focus visibility */
+:focus-visible{outline:3px solid #ffb37a;outline-offset:2px;border-radius:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="main-nav">
+  <a href="../index.html" id="nav-logo-link" style="display:flex;align-items:center;gap:14px;text-decoration:none;margin-right:48px;padding-right:48px;border-right:1px solid rgba(232,220,200,0.1);flex-shrink:0;"
+    onmouseenter="this.querySelector('#nav-wm').style.color='var(--orange)'"
+    onmouseleave="this.querySelector('#nav-wm').style.color='#f5f0e8'">
+    <div class="nav-logo-mark">
+      <svg width="40" height="44" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="dc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#dc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 5.72 L0 5.72 L8 11.12 L16 6.84 L24 3.12 L32 0.27 L40 9.79 L48 8.84" stroke="#3d2010" stroke-width="1.2" fill="none"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 19.24 L0 29.87 L8 12.50 L16 14.61 L24 20.46 L32 29.37 L40 12.38 L48 13.95" stroke="#7a3a18" stroke-width="2" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 32.76 L0 26.41 L8 27.38 L16 42.05 L24 35.93 L32 17.66 L40 41.11 L48 42.21" stroke="#c25020" stroke-width="2.8" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div id="nav-wm" style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.18em;line-height:1;color:#f5f0e8;white-space:nowrap;transition:color 0.2s;">TURBULENT GROUND</div>
+  </a>
+  <div class="nav-links-wrap">
+    <a href="../writing.html" class="nav-link">Writing</a>
+    <div class="nav-btn-wrap" style="display:none;">
+      <a href="#" class="nav-btn" onclick="goPage(1);return false;">Begin assessment →</a>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../writing.html">Writing</a>
+  <a href="#" class="mobile-menu-btn" onclick="goPage(1);return false;">Begin assessment →</a>
+</div>
+
+<!-- ── INTRO ─────────────────────────────────────────────────────────── -->
+<div class="page active" id="page-0">
+  <div class="intro-wrap">
+    <div class="intro-inner">
+      <div class="step-nav" style="display:none;">
+        <div class="step-item active" id="step-0" onclick="goPage(0)">Introduction</div>
+        <div class="step-item" id="step-1" onclick="navigateToStep(1)">Assessment</div>
+        <div class="step-item" id="step-2" onclick="navigateToStep(2)">Results</div>
+      </div>
+      <span class="beta-badge" style="margin-bottom:20px;display:inline-flex;"><span class="beta-dot"></span>Beta model</span>
+      <h1>How strong is your team's care capital?</h1>
+      <p class="strapline">Investing in the conditions that make great work possible</p>
+      <p class="lead">This diagnostic measures the five conditions that determine whether a team can exercise genuine collective judgement, and whether AI will amplify your strengths or your blind spots.</p>
+
+      <div class="beta-notice">
+        <div class="beta-notice-icon">⬡</div>
+        <div>
+          <div class="beta-notice-label">Beta model</div>
+          <div class="beta-notice-text">The five-factor model, questions and benchmarks are being actively tested and refined. Your results and any feedback you share will directly inform how the model develops. Benchmark data strengthens as more teams complete it.</div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card"><div class="info-card-label">Questions</div><div class="info-card-value">25</div><div class="info-card-sub">5 per factor</div></div>
+        <div class="info-card"><div class="info-card-label">Time</div><div class="info-card-value">~8 min</div><div class="info-card-sub">Individual completion</div></div>
+        <div class="info-card"><div class="info-card-label">Output</div><div class="info-card-value">Radar</div><div class="info-card-sub">Score + recommendations</div></div>
+        <div class="info-card"><div class="info-card-label">Best used</div><div class="info-card-value">Team</div><div class="info-card-sub">Compare across colleagues</div></div>
+      </div>
+
+      <!-- Mode selection -->
+      <div class="field">
+        <label>How are you completing this?</label>
+        <div class="mode-toggle">
+          <div class="mode-btn active" id="mode-individual" onclick="setMode('individual')">
+            <div class="mode-btn-title">Just me</div>
+            <div class="mode-btn-desc">I'm completing this individually. I can share a link afterwards so colleagues can compare scores.</div>
+          </div>
+          <div class="mode-btn" id="mode-team" onclick="setMode('team')">
+            <div class="mode-btn-title">My team</div>
+            <div class="mode-btn-desc">We're completing this as a group. Use a shared team code to combine our scores.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team code (shown in team mode or if joining via link) -->
+      <div class="field" id="team-code-field" style="display:none">
+        <label>Team code <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, links your result to colleagues)</span></label>
+        <div class="team-code-row">
+          <div class="field"><input type="text" id="team-code-input" aria-label="Team code" placeholder="e.g. MIMECAST-2026" maxlength="30" style="text-transform:uppercase"></div>
+          <div class="team-code-gen" onclick="generateCode()">Generate code</div>
+        </div>
+        <div class="field-hint">Share this code with colleagues so their scores combine with yours.</div>
+      </div>
+
+      <!-- Country -->
+      <div class="field">
+        <label>Country <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by region)</span></label>
+        <select id="country-select" aria-label="Country">
+          <option value="">Select country…</option>
+          <option>United Kingdom</option><option>United States</option><option>Canada</option>
+          <option>Australia</option><option>New Zealand</option><option>Ireland</option>
+          <option>Germany</option><option>France</option><option>Netherlands</option>
+          <option>Sweden</option><option>Norway</option><option>Denmark</option>
+          <option>Finland</option><option>Switzerland</option><option>Belgium</option>
+          <option>Spain</option><option>Italy</option><option>Portugal</option>
+          <option>Poland</option><option>Czech Republic</option><option>Austria</option>
+          <option>Singapore</option><option>Japan</option><option>South Korea</option>
+          <option>India</option><option>China</option><option>Hong Kong</option>
+          <option>UAE</option><option>South Africa</option><option>Brazil</option>
+          <option>Mexico</option><option>Argentina</option><option>Chile</option>
+          <option>Israel</option><option>Turkey</option><option>Nigeria</option>
+          <option>Kenya</option><option>Pakistan</option><option>Bangladesh</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Sector -->
+      <div class="field">
+        <label>Sector <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by industry)</span></label>
+        <select id="sector-select" aria-label="Sector">
+          <option value="">Select sector…</option>
+          <option>Technology / SaaS</option>
+          <option>Financial Services</option>
+          <option>Healthcare / Health Tech</option>
+          <option>Media / Publishing</option>
+          <option>Education</option>
+          <option>Retail / E-commerce</option>
+          <option>Professional Services / Consulting</option>
+          <option>Government / Public Sector</option>
+          <option>Non-profit / Charity</option>
+          <option>Manufacturing / Engineering</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="startSurvey()">Begin assessment →</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;">Answer honestly. There are no right answers, only accurate ones. Divergence between teammates is often the most useful data. Results are anonymous, no personal information is stored.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── SURVEY ──────────────────────────────────────────────────────────── -->
+<div class="page" id="page-1">
+  <div class="survey-wrap" id="survey-content"></div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+  <div class="survey-footer">
+    <div class="footer-count"><span id="answered-count">0</span> of 25 answered</div>
+    <button class="btn" style="width:auto;padding:10px 28px;font-size:13px;" onclick="submitSurvey()">See my results →</button>
+  </div>
+</div>
+
+<!-- ── RESULTS ─────────────────────────────────────────────────────────── -->
+<div class="page" id="page-2">
+  <div class="results-wrap" id="results-content"></div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const SERIES_POSTS = {
+  safety:    { title:'How to Foster Psychological Safety When AI Erodes Trust', url:'https://hbr.org/2026/02/how-to-foster-psychological-safety-when-ai-erodes-trust-on-your-team' },
+  trust:     { title:'The Mercenary Trap', url:'https://www.linkedin.com/pulse/mercenary-trap-graham-beale-vqnre/' },
+  incentives:{ title:'AI Breaks Waterfall', url:'https://turbulentground.com' },
+  curiosity: { title:'The Shape of the Challenge', url:'https://www.linkedin.com/pulse/shape-challenge-graham-beale/' },
+  collective:{ title:'Five People on Your Team', url:'https://www.linkedin.com/pulse/five-people-your-team-graham-beale/' }
+};
+
+const BENCHMARKS = { safety:55, trust:62, incentives:48, curiosity:60, collective:54, overall:56 };
+const STORAGE_KEY = 'cc_submissions_v2';
+
+// ── SIMPLE HASH (for domain anonymisation) ──────────────────────────────
+function hashString(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
+  return (h >>> 0).toString(36);
+}
+
+function extractDomain(email) {
+  const parts = email.split('@');
+  return parts.length === 2 ? parts[1].toLowerCase().trim() : '';
+}
+
+function generateUID() {
+  return 'cc-' + Math.random().toString(36).substr(2,9) + Date.now().toString(36);
+}
+
+// ── STATE ───────────────────────────────────────────────────────────────
+let answers = {};
+let completionMode = 'individual';
+let respondentEmail = '';
+let lastResult = null;
+
+// ── FACTORS ─────────────────────────────────────────────────────────────
+const FACTORS = [
+  {
+    key:'safety', name:'Institutional safety', color:'#FF7600',
+    desc:'Whether people can speak truth without career cost',
+    questions:[
+      'I can raise a concern or disagree with a decision without worrying about the consequences',
+      'When people challenge ideas here, they are respected for it, not managed or sidelined',
+      'Mistakes in this team are treated as learning opportunities, not evidence of failure',
+      'Leadership behaviour is consistent with what they say, there are no visible double standards',
+      'I feel safe being honest about what I do not know'
+    ],
+    positive:{
+      high:'The foundations of psychological safety are present here. People are willing to participate openly, that is not a given, and it reflects something real about how this team is led.',
+      mid:'There is a meaningful level of safety present. People are engaging and contributing. The conditions exist, even if they are not yet fully consistent.',
+      low:'Completing this honestly at a low score takes its own form of courage. The fact that you can see the gap clearly is the first condition for closing it.'
+    },
+    recs:{
+      high:['Test whether safety holds under pressure, calm conditions rarely reveal the ceiling','Share what makes safety strong here with new joiners; it rarely transfers automatically','Watch for edge cases: does challenge still feel safe when stakes are high or leadership changes?'],
+      mid:['Ask leadership to publicly acknowledge a recent mistake and what changed as a result','Introduce a standing "what are we not saying?" question in retrospectives','Create a structured moment for challenge before key decisions, make it a norm, not a personality trait'],
+      low:['Start with one visible act: a senior person publicly acknowledging a mistake and its consequences','Audit the last three times someone challenged upward, what happened next? That pattern is the signal','Consider anonymous input channels temporarily to surface what people are not able to say directly']
+    },
+    prompts:['When did someone last visibly challenge a senior decision? What happened?','Is there anything this team cannot talk about openly?','What would need to change for people to feel safer raising concerns?'],
+    discussion:'Institutional safety is the most foundational condition. Without it, people perform rather than participate. Low scores here rarely reflect individual timidity, they reflect something structural in how the organisation responds to honesty.'
+  },
+  {
+    key:'trust', name:'Team trust & empathy', color:'#c8b89a',
+    desc:'Whether people understand and can navigate each other',
+    questions:[
+      'I understand what motivates the people I work with',
+      'I know where my colleagues find things difficult, and they know where I do',
+      'When I disagree with a teammate, I can do so without it becoming personal',
+      'I trust that my colleagues have good intent, even when we see things differently',
+      'I feel I know the people I work with as people, not just as roles'
+    ],
+    positive:{
+      high:'There is genuine relational depth here. People know each other well enough to navigate disagreement, extend good faith, and work with each other rather than around each other.',
+      mid:'Meaningful working relationships exist. People can collaborate and disagree without it consistently becoming problematic. The foundations are present, the depth is still developing.',
+      low:'Even at a low score, you have worked alongside these people. That proximity is the raw material. The relationships exist in some form, what is missing is the deliberate investment to develop them.'
+    },
+    recs:{
+      high:['Protect the informal time that built this, it is the first casualty under pressure or growth','Actively bring new team members into the relational fabric early; it does not happen by default','Watch for AI tool use that replaces peer interaction, relationships need exercise to stay strong'],
+      mid:['Run structured "working with me" sessions, each person shares how they work best and where they struggle','Create peer pairings across the team for informal 1:1s not focused on tasks','Introduce a retrospective question: "what do I wish I understood better about how a colleague works?"'],
+      low:['Start with structured self-disclosure: each person shares one strength and one genuine difficulty','Create conditions for informal interaction that do not depend on people having to organise it themselves','Reduce the volume of AI-mediated solo work and increase moments of collaborative thinking']
+    },
+    prompts:['Do people in this team know each other well enough to give honest feedback?','Where does misunderstanding most often occur, and why?','What would help people understand each other better?'],
+    discussion:'Team trust and empathy is what gets stripped out first by overwork, remote working, and increasingly by people working alone with AI tools rather than alongside each other. Low scores here mean the team is a group of capable individuals rather than a collective.'
+  },
+  {
+    key:'incentives', name:'Incentives & mission', color:'#8ab4c8',
+    desc:'Whether teams are aligned to outcomes they can actually influence',
+    questions:[
+      'The outcomes my team is measured on are things we can actually influence',
+      'I understand clearly what success looks like for our team',
+      'When the team does well, that is properly recognised, not just individual contributions',
+      'The metrics we are held to reflect what we are actually trying to achieve',
+      'My work connects to a purpose I find credible'
+    ],
+    positive:{
+      high:'The structural alignment here is real. People understand the mission, believe in the metrics, and feel recognised for collective outcomes. This is the condition most organisations have not figured out, and you have it.',
+      mid:'There is meaningful alignment between effort and outcome. People have a sense of what they are working toward, even if the connection between their work and success metrics is not yet fully clear.',
+      low:'Incentive misalignment is one of the most common and least-discussed problems in product organisations. Recognising it here is significant, most people attribute the resulting dysfunction to culture or personalities rather than structure.'
+    },
+    recs:{
+      high:['Test the mission with new joiners: can they articulate it clearly after 90 days?','As the team grows, actively maintain structural alignment, it degrades with scale','Check whether recognition practices still hold under cost pressure or organisational change'],
+      mid:['Run a session where each person states what they believe the team mission is, compare answers','Review whether OKRs are credible or aspirational theatre','Move from individual targets to team outcomes for at least one quarter as a test'],
+      low:['Audit current metrics: what are people actually being held to, and can they directly influence those outcomes?','Separate the metrics product teams should own (leading indicators) from those owned by go-to-market (lagging indicators)','Define one shared team outcome with a clear leading indicator and align recognition to that']
+    },
+    prompts:['Can everyone state clearly what the team is trying to achieve this quarter?','Are people being held accountable for things outside their control?','Does how people are recognised match what actually matters?'],
+    discussion:'Incentive misalignment is the structural problem that culture programmes cannot fix. If people are rewarded for individual performance on lagging indicators they cannot control, collaboration becomes irrational.'
+  },
+  {
+    key:'curiosity', name:'Curiosity & growth', color:'#a8c89a',
+    desc:'Whether people have freedom to challenge and develop',
+    questions:[
+      'I feel encouraged to ask questions, even when I do not know the answer',
+      'There is real investment in my development here, not just training budgets',
+      'I have space to experiment without every outcome being predetermined',
+      'I am encouraged to challenge assumptions, including the team\'s own assumptions',
+      'I feel I am growing in this role, not just performing it'
+    ],
+    positive:{
+      high:'Curiosity is alive in this team. People feel safe not knowing, safe challenging, and invested in. This is the layer AI can most powerfully amplify, and you have built it.',
+      mid:'There is real intellectual energy here. People are engaged and developing, even if structural support for that development is not yet consistent. The orientation is right.',
+      low:'The fact that this score is lower than you would like reflects something important: you recognise the gap between performing and growing. That distinction matters. Most teams do not make it.'
+    },
+    recs:{
+      high:['Ensure curiosity is applied to the team\'s own assumptions, not just external ones','Watch for the difference between people who are growing and people who are very busy','Protect experimentation time through periods of delivery pressure, that is when it disappears first'],
+      mid:['Create a regular "what did we learn this week?" moment, distinct from what was delivered','Give people a defined budget of time (not money) for exploration outside their current brief','Normalise saying "I don\'t know yet" in leadership communication'],
+      low:['Identify the one question the team is most afraid to ask itself, and ask it explicitly','Reduce pressure on predefined outcomes in at least one workstream','Connect learning directly to the work: what would change if we understood X better?']
+    },
+    prompts:['What is the team curious about right now?','When did someone last change their mind because of something they learned here?','What would more space to explore actually look like?'],
+    discussion:'Curiosity and growth is the condition AI most powerfully amplifies. A team that has stopped being curious will use AI to confirm what it already thinks. A team that is curious will use it to discover what it has not yet considered.'
+  },
+  {
+    key:'collective', name:'Collective intelligence', color:'#d4a8c8',
+    desc:'Whether the team produces thinking greater than the sum of its parts',
+    questions:[
+      'Decisions made in this team are better than what any individual would have decided alone',
+      'When we work together, something gets produced that none of us would have reached independently',
+      'I regularly have my mind changed by a colleague',
+      'The team\'s combined judgement is something I actively trust and rely on',
+      'Working with this team makes my own thinking sharper'
+    ],
+    positive:{
+      high:'This team produces something real through its collective work. The output is better than the sum of its parts, that is the condition that makes AI a multiplier rather than a substitute.',
+      mid:'There are genuine moments of collective intelligence here. The team produces real value through working together, even if it does not yet happen consistently across all decisions and contexts.',
+      low:'Collective intelligence is the output of the other four conditions working together. A low score here is rarely a diagnosis on its own, it is a signal to look at what is missing underneath it.'
+    },
+    recs:{
+      high:['Document how the team makes decisions, the process is an asset that should survive personnel changes','Create explicit moments for the team to reflect on how it thinks, not just what it produces','Protect the conditions that produced this, they are fragile under growth and pressure'],
+      mid:['Introduce structured pre-mortems: what might go wrong, and what are we not seeing?','Create explicit moments for challenge before key decisions are finalised','After significant decisions, run a brief debrief: how did we reach that conclusion, and was it sound?'],
+      low:['Start by asking: what would the team have to believe to make a different decision together?','Reduce the number of decisions made individually and increase the number made with at least one other person present','Introduce a standing question: what would change about this if someone with a completely different perspective were in the room?']
+    },
+    prompts:['When did this team last produce something that surprised even the people who made it?','Is the team\'s combined judgement something people actively trust?','What makes collaboration feel generative rather than administrative here?'],
+    discussion:'Collective intelligence is both the output of care capital and its most visible signal. When it is strong, the team produces decisions and outcomes that none of its members would have reached alone. When it is weak, the team is a coordination mechanism rather than a thinking system.'
+  }
+];
+
+// ── MODE ────────────────────────────────────────────────────────────────
+function setMode(mode) {
+  completionMode = mode;
+  document.getElementById('mode-individual').classList.toggle('active', mode === 'individual');
+  document.getElementById('mode-team').classList.toggle('active', mode === 'team');
+  document.getElementById('team-code-field').style.display = mode === 'team' ? 'block' : 'none';
+}
+
+function generateCode() {
+  const words = ['ALPHA','BETA','DELTA','ECHO','FOXTROT','GRANITE','HORIZON','INDIGO','JADE','KESTREL','LUNAR','NOVA','ORBIT','PRISM','QUARTZ','RIVER','SUMMIT','TITAN','ULTRA','VERTEX'];
+  const w = words[Math.floor(Math.random() * words.length)];
+  const n = Math.floor(Math.random() * 900) + 100;
+  const code = w + '-' + n;
+  document.getElementById('team-code-input').value = code;
+}
+
+// ── CHECK URL FOR PRE-FILLED TEAM CODE ──────────────────────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('code')) {
+    setMode('team');
+    document.getElementById('team-code-input').value = decodeURIComponent(params.get('code'));
+  }
+})();
+
+// ── STORAGE HELPERS ──────────────────────────────────────────────────────
+async function loadSubmissions() {
+  try {
+    const result = await window.storage.get(STORAGE_KEY, true);
+    return result ? JSON.parse(result.value) : [];
+  } catch(e) { return []; }
+}
+
+async function saveSubmission(sub) {
+  try {
+    const existing = await loadSubmissions();
+    existing.push(sub);
+    await window.storage.set(STORAGE_KEY, JSON.stringify(existing), true);
+  } catch(e) { console.warn('Storage unavailable:', e); }
+}
+
+async function getCohortData(domainHash, teamCode) {
+  try {
+    const all = await loadSubmissions();
+    return all.filter(s =>
+      (domainHash && s.domainHash === domainHash) ||
+      (teamCode && s.teamCode && s.teamCode === teamCode)
+    );
+  } catch(e) { return []; }
+}
+
+async function getGlobalBenchmarks() {
+  try {
+    const all = await loadSubmissions();
+    if (all.length < 5) return null;
+    const keys = ['safety','trust','incentives','curiosity','collective'];
+    const bench = {};
+    keys.forEach(k => {
+      const vals = all.map(s => s.scores[k]).filter(v => v != null);
+      bench[k] = Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
+    });
+    bench.overall = Math.round(keys.reduce((a,k) => a + bench[k], 0) / keys.length);
+    bench.count = all.length;
+    return bench;
+  } catch(e) { return null; }
+}
+
+// ── SURVEY ───────────────────────────────────────────────────────────────
+function startSurvey() {
+  const content = document.getElementById('survey-content');
+  content.innerHTML = FACTORS.map((f, fi) => `
+    <div class="factor-section">
+      <div class="factor-title">
+        <div class="factor-dot" style="background:${f.color}"></div>
+        <div class="factor-heading">${f.name}</div>
+      </div>
+      <div class="factor-subheading">${f.desc}</div>
+      ${f.questions.map((q, qi) => {
+        const name = `q_${fi}_${qi}`;
+        return `<div class="question-card" id="card_${fi}_${qi}">
+          <div class="q-text">${q}</div>
+          <div class="likert">
+            ${[1,2,3,4,5].map(v => `
+              <label class="likert-opt">
+                <input type="radio" name="${name}" value="${v}" onchange="recordAnswer('${name}',${v},${fi},${qi})">
+                <div class="likert-circle">${v}</div>
+                <div class="likert-label">${v===1?'Strongly disagree':v===5?'Strongly agree':''}</div>
+              </label>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+  goPage(1);
+}
+
+function recordAnswer(name, val, fi, qi) {
+  answers[name] = val;
+  const count = Object.keys(answers).length;
+  document.getElementById('answered-count').textContent = count;
+  document.getElementById('progress-bar').style.width = (count / 25 * 100) + '%';
+}
+
+function submitSurvey() {
+  if (Object.keys(answers).length < 25) {
+    alert('Please answer all 25 questions before continuing.');
+    return;
+  }
+  const fScores = FACTORS.map((f, fi) => {
+    const total = [0,1,2,3,4].reduce((s, qi) => s + (answers[`q_${fi}_${qi}`] || 0), 0);
+    const pct = Math.round((total / 25) * 100);
+    return { key: f.key, name: f.name, color: f.color, pct, total };
+  });
+  const overall = Math.round(fScores.reduce((s, f) => s + f.pct, 0) / 5);
+  renderResults(fScores, overall);
+}
+
+// ── RESULTS ──────────────────────────────────────────────────────────────
+async function renderResults(fScores, overall) {
+  goPage(2);
+
+  // Use live benchmark if enough data, else static
+  const liveBench = await getGlobalBenchmarks();
+  const bench = liveBench || BENCHMARKS;
+  const benchCount = liveBench ? liveBench.count : null;
+  const benchNote = liveBench
+    ? `Benchmarks based on ${liveBench.count} anonymous submissions.`
+    : 'Benchmarks are indicative and based on early beta data. They will update as more teams complete the diagnostic.';
+
+  const country  = document.getElementById('country-select').value || '';
+  const sector   = document.getElementById('sector-select').value || '';
+  const teamCode = (document.getElementById('team-code-input') || {}).value || '';
+  const mode     = completionMode;
+
+  const zone = overall >= 75 ? 'Strong' : overall >= 55 ? 'Developing' : overall >= 35 ? 'At risk' : 'Depleted';
+  const zoneDesc = {
+    Strong:     'Your team has strong foundational conditions. AI is most likely to amplify your collective strengths here. The work now is to maintain and extend what you have built.',
+    Developing: 'Real foundations exist, but they are not yet consistent. There are moments of genuine collective intelligence, the goal is to make them the norm rather than the exception.',
+    'At risk':  'The conditions for collective judgement are present in places but fragile. AI adoption without addressing these foundations is likely to compound existing tensions rather than resolve them.',
+    Depleted:   'The conditions that make collaborative work productive are significantly depleted. Completing this honestly at a low score is itself a significant act. The gap being named here is the starting point.'
+  }[zone];
+
+  const sorted = [...fScores].sort((a,b) => a.pct - b.pct);
+  const lowest = sorted.slice(0, 2);
+  const highest = sorted.slice(-1)[0];
+
+  // Save anonymous submission
+  const submission = {
+    id: generateUID(),
+    ts: new Date().toISOString(),
+    scores: Object.fromEntries(fScores.map(f => [f.key, f.pct])),
+    overall, zone, country, sector, mode,
+    domainHash: '', // filled after email
+    teamCode: teamCode.toUpperCase().trim()
+  };
+  lastResult = { scores: submission.scores, overall, zone, country, sector, teamCode: submission.teamCode, mode };
+
+  const wrap = document.getElementById('results-content');
+  wrap.innerHTML = `
+    <div class="eyebrow" style="margin-bottom:20px">Care Capital Diagnostic · ${mode === 'team' ? 'Team assessment' : 'Individual assessment'}${country ? ' · ' + country : ''}${sector ? ' · ' + sector : ''}</div>
+    <h2>Your care capital results</h2>
+    <p style="font-size:15px;color:var(--muted2);margin-bottom:28px;line-height:1.7">Investing in the conditions that make great work possible</p>
+
+    <div class="overall-card">
+      <div class="overall-pct">${overall}%</div>
+      <div>
+        <div class="overall-zone">${zone}</div>
+        <div class="overall-desc">${zoneDesc}</div>
+      </div>
+    </div>
+
+    <div class="positive-card">
+      <div class="positive-label">Strongest factor</div>
+      <div class="positive-text">${highest.name} (${highest.pct}%), ${FACTORS.find(f=>f.key===highest.key).positive[highest.pct>=70?'high':highest.pct>=50?'mid':'low']}</div>
+    </div>
+
+    <div class="radar-wrap-results">
+      <canvas id="results-radar" width="400" height="400"></canvas>
+    </div>
+
+    <div class="scores-section">
+      <div class="scores-heading">Factor breakdown ${benchCount ? `,  benchmarked against ${benchCount} submissions` : ',  indicative benchmarks'}</div>
+      ${fScores.map(f => {
+        const b = bench[f.key] || 55;
+        const diff = f.pct - b;
+        const badge = Math.abs(diff) < 5 ? '<span class="vs-badge vs-same">≈ Benchmark</span>' :
+          diff > 0 ? `<span class="vs-badge vs-above">+${diff}% above</span>` :
+          `<span class="vs-badge vs-below">${diff}% below</span>`;
+        const col = f.pct >= 70 ? 'var(--green)' : f.pct >= 50 ? 'var(--amber)' : 'var(--red)';
+        return `<div class="score-row">
+          <div class="score-row-header">
+            <div class="score-row-name" style="color:${f.color}">${f.name}</div>
+            <div class="score-row-vals">
+              <div class="score-row-val" style="color:${col}">${f.pct}%</div>
+              ${badge}
+            </div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-fill" style="width:${f.pct}%;background:${f.color}"></div>
+            <div class="bench-line" style="left:${b}%"></div>
+          </div>
+          <div class="bench-label-wrap"><div class="bench-dot"></div><div class="bench-text">Benchmark: ${b}%</div></div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <h2 style="margin-bottom:16px">Where to focus</h2>
+    <p style="font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:24px">Your two lowest-scoring factors are the highest-leverage starting points. Each links to a relevant post from the Care Capital series.</p>
+    ${lowest.map(f => {
+      const factor = FACTORS.find(ff => ff.key === f.key);
+      const level = f.pct >= 70 ? 'high' : f.pct >= 50 ? 'mid' : 'low';
+      const post = SERIES_POSTS[f.key];
+      return `<div class="factor-card" id="fc-${f.key}">
+        <div class="fc-top" onclick="toggleFC('${f.key}')">
+          <div class="fc-name"><div class="factor-dot" style="background:${f.color}"></div>${f.name} <span style="color:var(--muted);font-weight:300;font-size:12px;margin-left:4px">${f.pct}%</span></div>
+          <div class="fc-right"><span class="fc-chevron">▼</span></div>
+        </div>
+        <div class="fc-body">
+          <div class="fc-tabs">
+            <div class="fc-tab active" onclick="switchTab('${f.key}','positive',this)">What this means</div>
+            <div class="fc-tab" onclick="switchTab('${f.key}','recs',this)">Recommendations</div>
+            <div class="fc-tab" onclick="switchTab('${f.key}','prompts',this)">Discussion prompts</div>
+          </div>
+          <div class="fc-panel active" id="panel-${f.key}-positive">
+            <div class="fc-positive"><div class="fc-positive-label">Insight</div>${factor.positive[level]}</div>
+            <p style="font-size:15px;color:var(--muted2);line-height:1.7">${factor.discussion}</p>
+            ${post ? `<p style="margin-top:14px;font-size:13px;color:var(--muted)">Further reading: <a href="${post.url}" target="_blank" style="color:var(--orange);text-decoration:none">${post.title} →</a></p>` : ''}
+          </div>
+          <div class="fc-panel" id="panel-${f.key}-recs">
+            ${factor.recs[level].map((r,i) => `<div class="rec-item"><div class="rec-num">${i+1}</div><div>${r}</div></div>`).join('')}
+          </div>
+          <div class="fc-panel" id="panel-${f.key}-prompts">
+            ${factor.prompts.map(p => `<div class="disc-prompt-item">${p}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+
+    <!-- Capture: emailed summary + comparative findings -->
+    <div class="email-card capture-card" id="capture-card">
+      <div class="email-label" style="color:var(--orange)">Get your results by email</div>
+      <p style="font-size:14px;color:var(--muted2);line-height:1.65;margin-bottom:16px">Enter your work email and we'll send your scores and recommendations as a summary. You can also opt into the comparative findings as more teams take part.</p>
+      <div class="capture-field"><input type="email" id="cap-email" placeholder="you@company.com" autocomplete="email" aria-label="Work email"></div>
+      <div class="capture-field"><input type="text" id="cap-team" placeholder="Team name (optional, enables team comparison)" maxlength="40" aria-label="Team name"></div>
+      <label class="consent"><input type="checkbox" id="consent-results" checked><span>Email me a copy of my results.</span></label>
+      <label class="consent"><input type="checkbox" id="consent-findings"><span>Send me the comparative findings as the dataset grows.</span></label>
+      <label class="consent"><input type="checkbox" id="consent-contribute"><span>I'm open to being contacted for further insight.</span></label>
+      <p class="capture-note">Responses are grouped by work-email domain to build the organisation view; personal email addresses are kept as individual responses. See the <a href="../privacy.html">privacy note</a>.</p>
+      <button class="btn" id="capture-btn" onclick="submitCapture()">Send my results</button>
+      <div class="email-confirm" id="capture-confirm">✓ Sent. Check your inbox for your summary.</div>
+      <div class="capture-error" id="capture-error"></div>
+    </div>
+
+    <!-- Share card -->
+    <div class="share-card" id="share-section">
+      <div class="share-label">Invite colleagues</div>
+      <div class="share-text">When three or more people from the same organisation complete the diagnostic, you'll see a combined team view alongside your individual scores. Share this link or code with your team.</div>
+      <div class="share-message" id="share-message">Loading share message…</div>
+      ${teamCode ? `<div class="share-code">Team code: <strong>${teamCode.toUpperCase()}</strong></div>` : ''}
+      <button class="btn-ghost" style="font-size:12px;padding:9px 18px" onclick="copyShare()">Copy invite message</button>
+    </div>
+
+    <!-- Cohort view placeholder, populated async -->
+    <div id="cohort-section"></div>
+
+    <div class="bench-note">${benchNote}</div>
+
+    <div class="export-row">
+      <button class="btn-ghost" onclick="copyResults(${JSON.stringify(fScores).replace(/"/g,"'")}, ${overall})">Copy results to clipboard</button>
+      <button class="btn-ghost" onclick="resetAndRetake()">Retake diagnostic</button>
+    </div>
+
+    <div class="footer-note">
+      Care Capital is a framework developed by Graham Beale, part of the writing on TurbulentGround.<br>
+      <a href="https://turbulentground.com" target="_blank" style="color:var(--orange);text-decoration:none">turbulentground.com</a> · We only store a record if you submit your work email above, and you can request deletion at any time. See the <a href="../privacy.html" style="color:var(--orange);text-decoration:none">privacy note</a>.
+    </div>
+  `;
+
+  // Draw radar
+  setTimeout(() => drawRadar(fScores, bench), 100);
+
+  // Save submission and load cohort async
+  await saveSubmission(submission);
+  loadCohortView(submission);
+  buildShareMessage(teamCode);
+}
+
+// ── SHARE MESSAGE ─────────────────────────────────────────────────────────
+function buildShareMessage(teamCode) {
+  const code = teamCode ? teamCode.toUpperCase().trim() : '';
+  const baseUrl = window.location.href.split('?')[0];
+  const link = code ? `${baseUrl}?code=${encodeURIComponent(code)}` : baseUrl;
+  const msg = code
+    ? `I just took the Care Capital diagnostic on TurbulentGround, it maps the five conditions that determine whether a team can make the most of AI.\n\nIf you're at the same organisation, your results will combine with mine to build a shared team picture.\n\nTeam code: ${code}\nLink: ${link}\n\nTakes about 8 minutes.`
+    : `I just took the Care Capital diagnostic on TurbulentGround, it maps the five conditions that determine whether a team can make the most of AI.\n\nLink: ${link}\n\nTakes about 8 minutes.`;
+  const el = document.getElementById('share-message');
+  if (el) el.textContent = msg;
+}
+
+function copyShare() {
+  const msg = document.getElementById('share-message');
+  if (msg) navigator.clipboard.writeText(msg.textContent).then(() => {
+    alert('Invite message copied to clipboard.');
+  });
+}
+
+// ── COHORT VIEW ──────────────────────────────────────────────────────────
+async function loadCohortView(submission) {
+  const teamCode = submission.teamCode;
+  const cohort = await getCohortData(submission.domainHash, teamCode);
+  const section = document.getElementById('cohort-section');
+  if (!section) return;
+
+  if (cohort.length < 3) {
+    section.innerHTML = `<div class="cohort-card">
+      <div class="cohort-label">Team view</div>
+      <div class="cohort-count">${cohort.length} / 3</div>
+      <div class="cohort-sub">You need at least 3 responses to generate a combined team view. Share the invite message above with colleagues.</div>
+    </div>`;
+    return;
+  }
+
+  const keys = ['safety','trust','incentives','curiosity','collective'];
+  const names = { safety:'Institutional safety', trust:'Team trust & empathy', incentives:'Incentives & mission', curiosity:'Curiosity & growth', collective:'Collective intelligence' };
+  const colors = { safety:'#FF7600', trust:'#c8b89a', incentives:'#8ab4c8', curiosity:'#a8c89a', collective:'#d4a8c8' };
+
+  const teamAvg = {};
+  const teamMin = {};
+  const teamMax = {};
+  keys.forEach(k => {
+    const vals = cohort.map(s => s.scores[k]).filter(v => v != null);
+    teamAvg[k] = Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
+    teamMin[k] = Math.min(...vals);
+    teamMax[k] = Math.max(...vals);
+  });
+  const teamOverall = Math.round(keys.reduce((a,k) => a + teamAvg[k], 0) / keys.length);
+
+  section.innerHTML = `<div class="cohort-card">
+    <div class="cohort-label">Team view, ${cohort.length} responses</div>
+    <div class="cohort-count">${teamOverall}%</div>
+    <div class="cohort-sub">Combined care capital score across ${cohort.length} responses. Variance shows the spread between highest and lowest scores per factor, high variance indicates people experience conditions very differently.</div>
+    ${keys.map(k => {
+      const spread = teamMax[k] - teamMin[k];
+      return `<div class="variance-row">
+        <div class="variance-label">
+          <span style="color:${colors[k]}">${names[k]}</span>
+          <span>${teamAvg[k]}% avg · ${spread}% spread</span>
+        </div>
+        <div class="variance-bar">
+          <div class="variance-fill" style="width:${teamAvg[k]}%;background:${colors[k]}"></div>
+          <div class="variance-spread" style="left:${teamMin[k]}%;width:${spread}%"></div>
+        </div>
+      </div>`;
+    }).join('')}
+    <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6">High variance on any factor is often more diagnostically useful than a low average. It means people in the same team are having fundamentally different experiences, and that gap is worth discussing.</p>
+  </div>`;
+}
+
+// ── EMAIL RESULTS ────────────────────────────────────────────────────────
+async function submitCapture() {
+  const errEl = document.getElementById('capture-error');
+  const okEl  = document.getElementById('capture-confirm');
+  const btn   = document.getElementById('capture-btn');
+  errEl.style.display = 'none';
+
+  const email = (document.getElementById('cap-email').value || '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid work email address.';
+    errEl.style.display = 'block'; return;
+  }
+  const consentResults = document.getElementById('consent-results').checked;
+  if (!consentResults) {
+    errEl.textContent = 'Please tick the box to have your results emailed to you.';
+    errEl.style.display = 'block'; return;
+  }
+
+  respondentEmail = email;
+  const r = lastResult || {};
+  const scores = r.scores || {};
+  const payload = {
+    timestamp: new Date().toISOString(),
+    email,
+    team_name: (document.getElementById('cap-team').value || '').trim(),
+    respondent_name: (document.getElementById('respondent-name') || {}).value || '',
+    score_safety: scores.safety, score_trust: scores.trust,
+    score_incentives: scores.incentives, score_curiosity: scores.curiosity,
+    score_collective: scores.collective, score_overall: r.overall,
+    raw_answers: answers,
+    role: '', org_size_band: '',
+    sector: r.sector || '', country: r.country || '',
+    consent_results: consentResults,
+    consent_findings: document.getElementById('consent-findings').checked,
+    consent_contribute: document.getElementById('consent-contribute').checked,
+    source: 'diagnostic',
+    utm: getUtm()
+  };
+
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    btn.style.display = 'none';
+    okEl.style.display = 'block';
+  } catch(err) {
+    console.error('Submit error:', err);
+    errEl.textContent = 'We could not send your results just now. Please try again in a moment.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Send my results';
+  }
+}
+
+function getUtm() {
+  try {
+    const p = new URLSearchParams(window.location.search);
+    const utm = {};
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k => { if (p.get(k)) utm[k] = p.get(k); });
+    if (p.get('code')) utm.team_code = p.get('code');
+    return Object.keys(utm).length ? utm : null;
+  } catch(e) { return null; }
+}
+
+// ── RADAR ────────────────────────────────────────────────────────────────
+function drawRadar(fScores, bench) {
+  const canvas = document.getElementById('results-radar');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, maxR = Math.min(W,H)*0.34, labelR = maxR+44;
+  const n = 5, off = -Math.PI/2;
+
+  ctx.clearRect(0,0,W,H);
+
+  for (let ring=1; ring<=5; ring++) {
+    const r = (ring/5)*maxR;
+    ctx.beginPath();
+    for (let i=0; i<n; i++) {
+      const a = off+(i/n)*Math.PI*2;
+      i===0 ? ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)) : ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    }
+    ctx.closePath();
+    if (ring===4) { ctx.fillStyle='rgba(255,118,0,0.04)'; ctx.fill(); }
+    ctx.strokeStyle = ring===4 ? 'rgba(255,118,0,0.2)' : 'rgba(255,255,255,0.05)';
+    ctx.lineWidth=0.5; ctx.stroke();
+  }
+  for (let i=0; i<n; i++) {
+    const a = off+(i/n)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));
+    ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=0.5; ctx.stroke();
+  }
+
+  // Benchmark
+  const benchKeys = ['safety','trust','incentives','curiosity','collective'];
+  ctx.beginPath();
+  benchKeys.forEach((k,i) => {
+    const a = off+(i/n)*Math.PI*2, r=(bench[k]/100)*maxR;
+    i===0 ? ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)) : ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  });
+  ctx.closePath();
+  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.setLineDash([3,3]); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Data
+  ctx.beginPath();
+  fScores.forEach((f,i) => {
+    const a=off+(i/n)*Math.PI*2, r=(f.pct/100)*maxR;
+    i===0 ? ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)) : ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  });
+  ctx.closePath();
+  ctx.fillStyle='rgba(255,118,0,0.13)'; ctx.fill();
+  ctx.strokeStyle='#FF7600'; ctx.lineWidth=1.5; ctx.stroke();
+
+  fScores.forEach((f,i) => {
+    const a=off+(i/n)*Math.PI*2, r=(f.pct/100)*maxR;
+    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fillStyle=f.color; ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fillStyle='#141414'; ctx.fill();
+  });
+
+  const labels=['Institutional\nsafety','Team trust\n& empathy','Incentives\n& mission','Curiosity\n& growth','Collective\nintelligence'];
+  labels.forEach((label,i) => {
+    const a=off+(i/n)*Math.PI*2;
+    const x=cx+labelR*Math.cos(a), y=cy+labelR*Math.sin(a);
+    const lines=label.split('\n'), lineH=13;
+    const startY=y-(lines.length*lineH)/2+lineH/2;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    lines.forEach((line,li) => {
+      ctx.font = li===0 ? '500 10px "DM Sans",sans-serif' : '300 9px "DM Sans",sans-serif';
+      ctx.fillStyle = li===0 ? fScores[i].color : 'rgba(255,255,255,0.3)';
+      ctx.fillText(line,x,startY+li*lineH);
+    });
+  });
+
+  const overall=Math.round(fScores.reduce((a,b)=>a+b.pct,0)/5);
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font='300 9px "DM Sans",sans-serif'; ctx.fillStyle='rgba(255,255,255,0.2)';
+  ctx.fillText('care capital',cx,cy-10);
+  ctx.font='600 22px "Cormorant Garamond",serif';
+  ctx.fillStyle = overall>=70 ? '#FF7600' : overall>=50 ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.3)';
+  ctx.fillText(overall+'%',cx,cy+8);
+
+  ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(cx-40,H-12); ctx.lineTo(cx-26,H-12);
+  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=1; ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font='300 9px "DM Sans",sans-serif'; ctx.fillStyle='rgba(255,255,255,0.2)';
+  ctx.textAlign='left'; ctx.fillText('Benchmark',cx-22,H-12);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function toggleFC(key) {
+  const card = document.getElementById('fc-'+key);
+  card.classList.toggle('open');
+}
+
+function switchTab(key, panel, el) {
+  document.querySelectorAll(`#fc-${key} .fc-tab`).forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`#fc-${key} .fc-panel`).forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(`panel-${key}-${panel}`).classList.add('active');
+}
+
+function copyResults(fScores, overall) {
+  const lines = ['Care Capital Diagnostic', '', 'Overall: '+overall+'%', ''];
+  fScores.forEach(s => lines.push(s.name+': '+s.pct+'%'));
+  lines.push('','Graham Beale · Care Capital · turbulentground.com');
+  navigator.clipboard.writeText(lines.join('\n')).then(() => alert('Copied to clipboard'));
+}
+
+function resetAndRetake() {
+  answers = {};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('answered-count').textContent='0';
+  goPage(0);
+}
+
+function goPage(n) {
+  document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('active',i===n));
+  ['.nav-step','.step-item'].forEach(function(sel){
+    document.querySelectorAll(sel).forEach((s,i) => {
+      s.classList.remove('active','done');
+      if (i===n) s.classList.add('active');
+      else if (i<n) s.classList.add('done');
+    });
+  });
+  window.scrollTo(0,0);
+}
+
+// Nav scroll behaviour
+(function(){
+  var nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  if(toggle && menu){
+    var setMenu=function(open){
+      toggle.classList.toggle('open',open);
+      menu.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+      document.body.style.overflow=open?'hidden':'';
+    };
+    toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
+    menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+  }
+})();
+
+function navigateToStep(n) {
+  if (n === 1) {
+    // Only go to assessment if survey content exists, else start it
+    var content = document.getElementById('survey-content');
+    if (!content || content.innerHTML.trim() === '') {
+      startSurvey();
+    } else {
+      goPage(1);
+    }
+  } else if (n === 2) {
+    // Only navigate to results if they exist
+    var results = document.getElementById('results-content');
+    if (results && results.innerHTML.trim() !== '') {
+      goPage(2);
+    }
+  } else {
+    goPage(n);
+  }
+}
+</script>
+</body>
+</html>

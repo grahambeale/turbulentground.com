@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Graham Beale · Turbulent Ground</title>
+<meta name="description" content="Graham Beale is a product and design leader writing about organisational health, Care Capital, and the conditions that let teams do their best work.">
+<link rel="canonical" href="https://turbulentground.com/about">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://turbulentground.com/about">
+<meta property="og:title" content="About Graham Beale · Turbulent Ground">
+<meta property="og:description" content="Product and design leader writing about organisational health and Care Capital.">
+<meta property="og:image" content="https://turbulentground.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Graham Beale · Turbulent Ground">
+<meta name="twitter:description" content="Product and design leader writing about organisational health and Care Capital.">
+<meta name="twitter:image" content="https://turbulentground.com/og-image.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #131110;
+  --bg-warm:  #1c1915;
+  --surface:  #26211c;
+  --orange:   #d9571c;
+  --orange-lt:#e8763a;
+  --sand:     #e8dcc8;
+  --cream:    #f5f0e8;
+  --muted:    #9e8e7c;
+  --dim:      #9a8878;
+  --border:   rgba(232,220,200,0.08);
+  --border-o: rgba(217,87,28,0.18);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--sand);
+  font-family:'DM Sans', sans-serif;
+  font-weight:300;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection { background:var(--orange); color:#fff; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
+
+/* ── Nav ──────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange); }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:12px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle { display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:10px; margin-right:-10px; background:none; border:0; cursor:pointer; z-index:210; }
+.nav-toggle span { display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu { position:fixed; inset:0; z-index:199; background:rgba(14,11,8,0.985); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:2px; padding:100px 36px 40px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a { font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em; color:#e8dcc8; text-decoration:none; padding:12px 0; line-height:1.2; transition:color 0.2s ease; }
+.mobile-menu a.active { color:var(--orange); }
+.mobile-menu a:hover { color:var(--orange); }
+.mobile-menu .mobile-menu-btn { font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500; color:#fff; background:#b84215; padding:14px 30px; border-radius:40px; margin-top:28px; }
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+.container { max-width:720px; margin:0 auto; padding:0 48px; }
+.container--wide { max-width:900px; margin:0 auto; padding:0 48px; }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero {
+  padding:calc(64px + 96px) 0 96px;
+  border-bottom:1px solid var(--border);
+}
+.hero-name {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(52px,8vw,100px);
+  font-weight:300;
+  line-height:1.0;
+  letter-spacing:-0.025em;
+  color:var(--cream);
+  margin-bottom:28px;
+}
+.hero-sub {
+  font-size:clamp(17px,2.2vw,22px);
+  font-weight:300;
+  line-height:1.65;
+  color:var(--muted);
+  max-width:560px;
+  margin-bottom:32px;
+}
+.hero-links {
+  display:flex; gap:24px; align-items:center; flex-wrap:wrap;
+}
+.hero-link {
+  font-size:15px; font-weight:400;
+  color:var(--orange); text-decoration:none;
+  border-bottom:1px solid var(--orange);
+  padding-bottom:2px;
+  transition:opacity 0.2s;
+}
+.hero-link:hover { opacity:0.7; }
+
+/* ── Narrative ───────────────────────────────────────────────────── */
+.narrative {
+  padding:96px 0;
+  border-bottom:1px solid var(--border);
+}
+.narrative p {
+  font-size:clamp(17px,2vw,20px);
+  font-weight:300;
+  line-height:1.85;
+  color:var(--sand);
+  margin-bottom:32px;
+}
+.narrative p:last-child { margin-bottom:0; }
+
+/* ── What TG is ──────────────────────────────────────────────────── */
+.section {
+  padding:96px 0;
+  border-bottom:1px solid var(--border);
+}
+.section-eyebrow {
+  font-size:10px; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:16px;
+}
+.section-heading {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(28px,4vw,44px);
+  font-weight:400; line-height:1.15; letter-spacing:-0.02em;
+  color:var(--cream);
+  margin-bottom:20px;
+}
+.section-lead {
+  font-size:16px; font-weight:300;
+  color:var(--muted); line-height:1.75;
+  margin-bottom:48px;
+  max-width:560px;
+}
+
+.items-list {
+  display:flex; flex-direction:column; gap:0;
+}
+.item {
+  display:grid; grid-template-columns:1fr auto;
+  gap:20px 40px; align-items:start;
+  padding:32px 0;
+  border-top:1px solid var(--border);
+}
+.item:last-child { border-bottom:1px solid var(--border); }
+.item.muted { opacity:0.5; }
+.item-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(19px,2.2vw,25px);
+  font-weight:600; color:var(--cream);
+  margin-bottom:8px; line-height:1.25;
+}
+.item.muted .item-title { color:var(--muted); }
+.item-desc {
+  font-size:14px; font-weight:300;
+  color:var(--muted); line-height:1.7;
+}
+.item-cta {
+  font-size:13px; font-weight:500;
+  color:var(--orange); text-decoration:none;
+  white-space:nowrap; padding-top:4px;
+  transition:opacity 0.2s;
+}
+.item-cta:hover { opacity:0.7; }
+.item.muted .item-cta { color:var(--dim); pointer-events:none; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer {
+  padding:36px 48px;
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+}
+.footer-brand {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:15px; letter-spacing:0.16em; color:var(--cream);
+}
+.footer-link {
+  font-size:11px; color:var(--muted);
+  text-decoration:none; transition:color 0.2s;
+  letter-spacing:0.04em;
+}
+.footer-link:hover { color:var(--orange); }
+
+@media(max-width:640px) {
+  .nav { padding:0 20px; }
+  .container, .container--wide { padding:0 24px; }
+  .hero { padding:calc(64px + 56px) 0 56px; }
+  .narrative, .section { padding:64px 0; }
+  footer { padding:28px 24px; }
+  .item { grid-template-columns:1fr; }
+}
+
+/* WCAG 2.1 focus visibility */
+:focus-visible{outline:3px solid #ffb37a;outline-offset:2px;border-radius:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </a>
+  <div class="nav-links">
+    <a href="writing.html" class="nav-link">Writing</a>
+    <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="writing.html">Writing</a>
+  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <h1 class="hero-name">Graham Beale.</h1>
+    <p class="hero-sub">
+      Twenty-five years building product and design teams. Currently examining what AI is doing to that work, not what the consensus says it's doing.
+    </p>
+    <div class="hero-links">
+      <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="hero-link">LinkedIn &rarr;</a>
+      <a href="https://beale.co.uk/" target="_blank" class="hero-link">beale.co.uk &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Narrative -->
+<section class="narrative">
+  <div class="container">
+    <p>I've spent twenty-five years building product and design teams, at agencies, at scale-ups, at organisations going through significant change. The consistent thing I noticed is that the teams that handle change well are never the ones who figured it out alone. They are the ones who found others going through the same thing, compared notes, and stopped feeling like the uncertainty was a personal failing.</p>
+    <p>When AI started disrupting product work, not as a concept, but as something that changed how teams operated, I noticed the same pattern. People were privately confused, publicly confident, and largely isolated in both. Nobody was having the honest conversation.</p>
+    <p>Turbulent Ground is where that conversation happens. The Care Capital framework is the research backbone, a structured way to measure what makes teams ready to work with AI rather than just faster at the wrong things.</p>
+  </div>
+</section>
+
+<!-- What TG is -->
+<section class="section">
+  <div class="container--wide">
+    <p class="section-eyebrow">What Turbulent Ground is</p>
+    <h2 class="section-heading">Start where it's useful.</h2>
+    <p class="section-lead">Start with the diagnostic if you want a number. Start with the series if you want the argument.</p>
+
+    <div class="items-list">
+
+      <div class="item">
+        <div>
+          <div class="item-title">The Care Capital diagnostic</div>
+          <div class="item-desc">A free eight-minute assessment measuring five conditions that determine whether a product team is ready to work effectively with AI. Outputs a radar chart with benchmarks and recommendations.</div>
+        </div>
+        <a href="diagnostic/index.html" class="item-cta">Take the diagnostic &rarr;</a>
+      </div>
+
+      <div class="item">
+        <div>
+          <div class="item-title">The Care Capital framework</div>
+          <div class="item-desc">A detailed explanation of the five-factor model, what each condition means, what it looks like in a product team, and the risks when it is absent.</div>
+        </div>
+        <a href="care-capital.html" class="item-cta">Read the framework &rarr;</a>
+      </div>
+
+      <div class="item">
+        <div>
+          <div class="item-title">The LinkedIn series</div>
+          <div class="item-desc">Fifteen posts working through the argument from first principles, starting with the fear nobody was naming and ending at what care capital looks like in practice.</div>
+        </div>
+        <a href="writing.html" class="item-cta">Read the series &rarr;</a>
+      </div>
+
+      <div class="item muted">
+        <div>
+          <div class="item-title">Turbulent Ground on YouTube</div>
+          <div class="item-desc">Honest conversations with product leaders, designers and engineers about what AI is doing to their work. Not the polished version. The real one.</div>
+        </div>
+        <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="item-cta">Subscribe on YouTube &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-brand">TURBULENT GROUND</span>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <a href="diagnostic/index.html" class="footer-link">Diagnostic</a>
+    <a href="writing.html" class="footer-link">Writing</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+    <a href="privacy.html" class="footer-link">Privacy</a>
+  </div>
+  <span style="font-size:11px;color:var(--muted);">Vibe coded by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a></span>
+</footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  function setMenu(open){
+    toggle.classList.toggle('open',open);
+    menu.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+})();
+</script>
+
+</body>
+</html>

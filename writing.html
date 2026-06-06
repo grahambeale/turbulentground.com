@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing · Turbulent Ground</title>
+<meta name="description" content="Articles on product leadership, organisational health, and the conditions that let teams do their best work.">
+<link rel="canonical" href="https://turbulentground.com/writing">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://turbulentground.com/writing">
+<meta property="og:title" content="Writing · Turbulent Ground">
+<meta property="og:description" content="Articles on product leadership, organisational health, and the conditions that let teams do their best work.">
+<meta property="og:image" content="https://turbulentground.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Writing · Turbulent Ground">
+<meta name="twitter:description" content="Articles on product leadership, organisational health, and the conditions that let teams do their best work.">
+<meta name="twitter:image" content="https://turbulentground.com/og-image.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:        #131110;
+  --bg-warm:   #1c1915;
+  --surface:   #26211c;
+  --orange:    #d9571c;
+  --orange-lt: #e8763a;
+  --ink:       #e8dcc8;
+  --ink-mid:   #c8b89a;
+  --muted:     #9e8e7c;
+  --dim:       #9a8878;
+  --border:    rgba(232,220,200,0.08);
+  --border-strong: rgba(232,220,200,0.14);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  line-height:1.6;
+}
+::selection { background:var(--orange); color:#fff; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
+
+/* ── Nav ──────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange); }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:12px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle { display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:10px; margin-right:-10px; background:none; border:0; cursor:pointer; z-index:210; }
+.nav-toggle span { display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu { position:fixed; inset:0; z-index:199; background:rgba(14,11,8,0.985); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:2px; padding:100px 36px 40px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a { font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em; color:#e8dcc8; text-decoration:none; padding:12px 0; line-height:1.2; transition:color 0.2s ease; }
+.mobile-menu a.active { color:var(--orange); }
+.mobile-menu a:hover { color:var(--orange); }
+.mobile-menu .mobile-menu-btn { font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500; color:#fff; background:#b84215; padding:14px 30px; border-radius:40px; margin-top:28px; }
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+.container { max-width:900px; margin:0 auto; padding:0 48px; }
+section { padding:88px 0; }
+section+section { border-top:1px solid var(--border); }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero {
+  padding-top:calc(72px + 80px);
+  padding-bottom:80px;
+  background:linear-gradient(180deg,#1c1208 0%,var(--bg) 100%);
+}
+
+/* ── Phase nav ───────────────────────────────────────────────────── */
+.phase-nav {
+  display:flex; gap:0;
+  border:1px solid var(--border);
+  border-radius:12px; overflow:hidden;
+  background:var(--bg-warm);
+  margin-bottom:64px;
+}
+.phase-nav-item {
+  flex:1; padding:20px 24px;
+  border-right:1px solid var(--border);
+  text-decoration:none;
+}
+.phase-nav-item:last-child { border-right:none; }
+.phase-nav-label {
+  font-size:10px; font-weight:500; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--orange);
+  margin-bottom:6px;
+}
+.phase-nav-title {
+  font-family:'Cormorant Garamond',serif; font-weight:600;
+  font-size:17px; color:var(--ink); line-height:1.3;
+}
+.phase-nav-count {
+  font-size:11px; color:var(--muted); margin-top:4px;
+}
+
+/* ── Phase section ───────────────────────────────────────────────── */
+.phase-header {
+  display:grid; grid-template-columns:180px 1fr;
+  gap:40px; align-items:start;
+  padding-bottom:32px;
+  margin-bottom:0;
+}
+@media(max-width:600px) {
+  .phase-header { grid-template-columns:1fr; }
+}
+.phase-label {
+  font-size:10px; font-weight:500; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--orange);
+  padding-top:6px;
+}
+.phase-desc {
+  font-size:15px; font-weight:300; color:var(--muted); line-height:1.75;
+}
+
+/* ── Post list ───────────────────────────────────────────────────── */
+.post-list { border-top:1px solid var(--border); }
+
+.post-item {
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:0 20px;
+  align-items:center;
+  padding:22px 0;
+  border-bottom:1px solid var(--border);
+  text-decoration:none;
+  color:inherit;
+  transition:background 0.15s;
+}
+.post-item:not(.coming):hover {
+  background:rgba(217,87,28,0.04);
+  margin:0 -24px;
+  padding-left:24px;
+  padding-right:24px;
+}
+.post-item.coming { cursor:default; opacity:0.45; }
+
+.post-num {
+  font-family:'Cormorant Garamond',serif; font-weight:500;
+  font-size:15px; color:var(--dim);
+  line-height:1; padding-top:2px;
+}
+.post-body { display:flex; flex-direction:column; gap:4px; }
+.post-phase-tag {
+  font-size:10px; font-weight:500; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--orange);
+}
+.post-title {
+  font-family:'Cormorant Garamond',serif; font-weight:600;
+  font-size:clamp(18px,2.2vw,23px);
+  color:var(--ink); line-height:1.25;
+}
+.post-desc {
+  font-size:15px; font-weight:300; color:var(--muted);
+  line-height:1.55; margin-top:3px;
+}
+.post-arrow {
+  font-size:18px; color:var(--orange);
+  flex-shrink:0; opacity:0;
+  transition:opacity 0.15s, transform 0.15s;
+}
+.post-item:not(.coming):hover .post-arrow { opacity:1; transform:translateX(3px); }
+
+/* ── CTA ─────────────────────────────────────────────────────────── */
+.cta-row {
+  display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+}
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:15px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:14px 28px; border-radius:40px;
+  transition:all 0.22s;
+}
+.btn-primary:hover { background:var(--orange-lt); transform:translateY(-2px); }
+.btn-ghost {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:15px; font-weight:400; color:var(--muted);
+  text-decoration:none; transition:color 0.2s;
+}
+.btn-ghost:hover { color:var(--ink-mid); }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer {
+  padding:36px 48px;
+  border-top:1px solid var(--border);
+  background:var(--bg-warm);
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+}
+.footer-brand {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:15px; letter-spacing:0.16em; color:var(--ink);
+}
+.footer-link {
+  font-size:11px; color:var(--muted); text-decoration:none;
+  transition:color 0.2s; letter-spacing:0.04em;
+}
+.footer-link:hover { color:var(--orange); }
+
+@media(max-width:600px) {
+  .nav { padding:0 20px; }
+  .container { padding:0 20px; }
+  .phase-nav { flex-direction:column; }
+  .phase-nav-item { border-right:none; border-bottom:1px solid var(--border); }
+  .phase-nav-item:last-child { border-bottom:none; }
+  footer { padding:28px 20px; }
+  .post-item:not(.coming):hover { margin:0; padding-left:0; padding-right:0; }
+}
+
+/* WCAG 2.1 focus visibility */
+:focus-visible{outline:3px solid #ffb37a;outline-offset:2px;border-radius:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </a>
+  <div class="nav-links">
+    <a href="writing.html" class="nav-link active">Writing</a>
+    <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="writing.html" class="active">Writing</a>
+  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="container">
+    <p style="font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;">Writing</p>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(44px,6vw,80px);font-weight:300;line-height:1.0;letter-spacing:-0.025em;color:var(--ink);margin-bottom:24px;">
+      Fifteen posts.<br><em>One argument.</em>
+    </h1>
+    <p style="font-size:18px;font-weight:300;color:var(--muted);max-width:580px;line-height:1.75;margin-bottom:36px;">
+      The Care Capital series starts with the fear nobody was naming and works through the evidence before arriving at the framework and what it looks like in real product teams.
+    </p>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="btn-ghost" style="color:var(--orange);">Follow on LinkedIn &rarr;</a>
+  </div>
+</div>
+
+<!-- Phase nav strip -->
+<section style="padding:40px 0;background:var(--bg-warm);">
+  <div class="container">
+    <div class="phase-nav">
+      <a href="#diagnosis" class="phase-nav-item" style="text-decoration:none;">
+        <div class="phase-nav-label">Phase 1</div>
+        <div class="phase-nav-title">Diagnosis</div>
+        <div class="phase-nav-count">Posts 01&ndash;08</div>
+      </a>
+      <a href="#care-capital" class="phase-nav-item" style="text-decoration:none;">
+        <div class="phase-nav-label">Phase 2</div>
+        <div class="phase-nav-title">Care Capital</div>
+        <div class="phase-nav-count">Posts 09&ndash;14</div>
+      </a>
+      <a href="#practice" class="phase-nav-item" style="text-decoration:none;">
+        <div class="phase-nav-label">Phase 3</div>
+        <div class="phase-nav-title">Practice</div>
+        <div class="phase-nav-count">Post 15</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Phase 1: Diagnosis -->
+<section id="diagnosis">
+  <div class="container">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 1</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;color:var(--ink);margin-top:6px;line-height:1.2;">Diagnosis</div>
+      </div>
+      <p class="phase-desc">
+        The series opens by naming what most organisations are not naming: the human cost of AI adoption in product teams. Eight posts that build the case before a single solution is offered.
+      </p>
+    </div>
+    <div class="post-list">
+
+      <div class="post-item coming">
+        <span class="post-num">01</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The productivity paradox</span>
+          <span class="post-desc">Why AI is making product teams faster at going in circles.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <a href="https://www.linkedin.com/pulse/fear-were-naming-graham-beale-yg8le/" target="_blank" class="post-item">
+        <span class="post-num">02</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The fear we're not naming</span>
+          <span class="post-desc">The anxiety running through product organisations that nobody has named clearly enough to act on.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
+      <a href="https://www.linkedin.com/pulse/gap-nobody-designing-graham-beale-g2u3e/" target="_blank" class="post-item">
+        <span class="post-num">03</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The gap nobody is designing for</span>
+          <span class="post-desc">The space between AI capability and team readiness, and why most organisations are falling into it.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
+      <a href="https://www.linkedin.com/pulse/mercenary-trap-graham-beale-vqnre/" target="_blank" class="post-item">
+        <span class="post-num">04</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The mercenary trap</span>
+          <span class="post-desc">How AI adoption is driving incentive misalignment, and why the best people leave first.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
+      <div class="post-item coming">
+        <span class="post-num">05</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The shape of the challenge</span>
+          <span class="post-desc">A structural map of what is happening to product teams navigating AI, beyond the surface symptoms.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">06</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">The homogenisation problem</span>
+          <span class="post-desc">When everyone uses the same AI tools in the same way, product thinking converges. What this costs.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">07</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis</span>
+          <span class="post-title">What makes a team work</span>
+          <span class="post-desc">The research on high-performing product teams, and what it tells us about AI readiness.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">08</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Diagnosis, bridge</span>
+          <span class="post-title">Five people on your team</span>
+          <span class="post-desc">A taxonomy of how individuals in product teams are responding to AI adoption, and what each response reveals.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Phase 2: Care Capital -->
+<section id="care-capital" style="background:var(--bg-warm);">
+  <div class="container">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 2</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;color:var(--ink);margin-top:6px;line-height:1.2;">Care Capital</div>
+      </div>
+      <p class="phase-desc">
+        Having established what is wrong, the series introduces the framework: what care capital is, what it measures, and why it is a product quality issue rather than a culture programme.
+      </p>
+    </div>
+    <div class="post-list">
+
+      <div class="post-item coming">
+        <span class="post-num">09</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">What care capital is</span>
+          <span class="post-desc">The framework: five conditions that determine whether AI amplifies a team's strengths or its problems.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">10</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">Institutional safety</span>
+          <span class="post-desc">The first condition, and the one most undermined by AI adoption pressure.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">11</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">Team trust and empathy</span>
+          <span class="post-desc">Why cross-functional understanding is collapsing, and what it costs product quality.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">12</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">Incentives and mission</span>
+          <span class="post-desc">The structural problem that culture programmes cannot fix.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">13</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">Curiosity and growth</span>
+          <span class="post-desc">The condition AI most powerfully amplifies, for better or worse.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+      <div class="post-item coming">
+        <span class="post-num">14</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Care Capital</span>
+          <span class="post-title">Collective intelligence</span>
+          <span class="post-desc">The output condition: what care capital makes possible, and how AI can accelerate it or substitute for it.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Phase 3: Practice -->
+<section id="practice">
+  <div class="container">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 3</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;color:var(--ink);margin-top:6px;line-height:1.2;">Practice</div>
+      </div>
+      <p class="phase-desc">
+        The final post applies the framework to a real product team: what building care capital deliberately involves.
+      </p>
+    </div>
+    <div class="post-list">
+
+      <div class="post-item coming">
+        <span class="post-num">15</span>
+        <div class="post-body">
+          <span class="post-phase-tag">Practice</span>
+          <span class="post-title">What this looks like in practice</span>
+          <span class="post-desc">Care capital in a real product team: the sequence, the resistance, and what changes when it works.</span>
+        </div>
+        <span class="post-arrow">&rarr;</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Closing CTA -->
+<section style="background:var(--bg-warm);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div>
+        <p style="font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--orange);margin-bottom:14px;">Follow the argument</p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);color:var(--ink);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:16px;">
+          Each post builds on the last.
+        </h2>
+        <p style="font-size:16px;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:32px;">
+          Follow on LinkedIn to get each post as it publishes. The series is designed to be read in sequence: the framework only lands once the problem is understood.
+        </p>
+        <div class="cta-row">
+          <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="btn-primary">Follow on LinkedIn &rarr;</a>
+          <a href="diagnostic/index.html" class="btn-ghost">Take the diagnostic &rarr;</a>
+        </div>
+      </div>
+      <div style="background:var(--bg-warm);border:1px solid var(--border);border-radius:16px;padding:36px;">
+        <p style="font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:14px;">The diagnostic</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:23px;color:var(--ink);line-height:1.3;margin-bottom:14px;">
+          Don't just read about care capital. Measure it.
+        </p>
+        <p style="font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:24px;">
+          Eight minutes. Twenty-five questions. A radar chart across all five conditions, benchmarked against other product teams.
+        </p>
+        <a href="diagnostic/index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--orange);text-decoration:none;border-bottom:1px solid var(--orange);padding-bottom:2px;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">Measure your team &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-brand" style="color:#f5f0e8;">TURBULENT GROUND</span>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <a href="diagnostic/index.html" class="footer-link">Diagnostic</a>
+    <a href="writing.html" class="footer-link">Writing</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+    <a href="privacy.html" class="footer-link">Privacy</a>
+  </div>
+  <span style="font-size:11px;color:var(--muted);">Vibe coded by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a></span>
+</footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  function setMenu(open){
+    toggle.classList.toggle('open',open);
+    menu.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+})();
+</script>
+</body>
+</html>

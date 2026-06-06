@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turbulent Ground · Care Capital for Product Teams</title>
+<meta name="description" content="Care Capital is the organisational infrastructure that makes good product work possible. Take the free diagnostic and find out how your team scores.">
+<link rel="canonical" href="https://turbulentground.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://turbulentground.com/">
+<meta property="og:title" content="Turbulent Ground · Care Capital for Product Teams">
+<meta property="og:description" content="Care Capital is the organisational infrastructure that makes good product work possible. Take the free diagnostic and find out how your team scores.">
+<meta property="og:image" content="https://turbulentground.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Turbulent Ground · Care Capital for Product Teams">
+<meta name="twitter:description" content="Care Capital is the organisational infrastructure that makes good product work possible. Take the free diagnostic and find out how your team scores.">
+<meta name="twitter:image" content="https://turbulentground.com/og-image.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+/* ── Tokens ──────────────────────────────────────────────────────── */
+:root {
+  --bg:        #131110;
+  --bg-dark:   #0e0b08;
+  --bg-warm:   #1c1915;
+  --bg-invert: #26211c;
+  --surface:   #1c1915;
+  --orange:    #d9571c;
+  --orange-lt: #e8763a;
+  --ink:       #e8dcc8;
+  --ink-mid:   #c8b89a;
+  --muted:     #9e8e7c;
+  --dim:       #9a8878;
+  --border:    rgba(232,220,200,0.08);
+  --border-dk: rgba(232,220,200,0.14);
+
+  /* Dark section vars (same as base now) */
+  --dk-text:   #e8dcc8;
+  --dk-muted:  #9e8e7c;
+  --dk-border: rgba(232,220,200,0.09);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection { background:var(--orange); color:#fff; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
+
+/* ── Nav ──────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange); }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:12px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
+.mobile-menu a.active { color:var(--orange); }
+.mobile-menu a:hover { color:var(--orange); }
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+.container { max-width:1080px; margin:0 auto; padding:0 48px; }
+.container--narrow { max-width:720px; margin:0 auto; padding:0 48px; }
+
+section { padding:96px 0; }
+
+/* ── Type helpers ────────────────────────────────────────────────── */
+.eyebrow {
+  font-size:10px; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:16px; display:block;
+}
+.display {
+  font-family:var(--display-font,'DM Serif Display'),serif;
+  font-weight:var(--display-weight,400); line-height:1.05; letter-spacing:var(--display-tracking,-0.02em);
+}
+.display em { font-style:var(--display-accent,italic); }
+.display-xl { font-size:calc(clamp(52px,7vw,96px) * var(--display-scale,1)); }
+.display-lg { font-size:calc(clamp(36px,5vw,64px) * var(--display-scale,1)); }
+.display-md { font-size:calc(clamp(26px,3.5vw,42px) * var(--display-scale,1)); }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:15px; font-weight:500; text-decoration:none;
+  border-radius:40px; transition:all 0.22s;
+}
+.btn-primary { background:#b84215; color:#fff; padding:14px 28px; }
+.btn-primary:hover { background:var(--orange); transform:translateY(-2px); }
+.btn-ghost-dark { color:var(--muted); padding:14px 0; }
+.btn-ghost-dark:hover { color:var(--dk-text); }
+.btn-ghost-light { color:var(--dk-muted); padding:14px 0; }
+.btn-ghost-light:hover { color:var(--dk-text); }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero {
+  padding-top:calc(72px + 48px);
+  padding-bottom:72px;
+  background:linear-gradient(170deg,#1c1208 0%,var(--bg) 60%),radial-gradient(ellipse 70% 60% at 15% 10%,rgba(217,87,28,0.10) 0%,transparent 65%);
+  position:relative;
+}
+.hero::after {
+  content:'';
+  position:absolute;
+  right:-5%; top:0; bottom:0;
+  width:65%;
+  background:url('hero-terrain.png') center/contain no-repeat;
+  mix-blend-mode:screen;
+  opacity:0.75;
+  pointer-events:none;
+
+  border-bottom:1px solid var(--border);
+}
+.hero-inner {
+  display:grid;
+  grid-template-columns:1fr 400px;
+  gap:80px; align-items:center;
+}
+.hero-headline {
+  margin-bottom:24px;
+  color:var(--ink);
+}
+.hero-sub {
+  font-size:clamp(17px,2vw,21px);
+  font-weight:300; line-height:1.75;
+  color:var(--muted); max-width:520px;
+  margin-bottom:12px;
+}
+.hero-audience {
+  font-size:15px; font-weight:400;
+  color:var(--dim); margin-bottom:36px;
+  letter-spacing:0.03em;
+}
+.hero-ctas { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+
+/* Hero aside */
+.hero-aside {
+  background:var(--bg-warm);
+  border:1px solid var(--border-dk);
+  border-radius:20px; padding:36px;
+}
+.hero-aside-heading {
+  font-size:11px; font-weight:500;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:20px;
+}
+.aside-stat {
+  display:flex; align-items:baseline; gap:10px;
+  padding:14px 0; border-bottom:1px solid var(--border);
+}
+.aside-stat:last-child { border-bottom:none; }
+.aside-stat-num {
+  font-family:'DM Serif Display',serif;
+  font-size:36px; font-weight:400; color:var(--orange);
+  line-height:1; flex-shrink:0; min-width:60px;
+}
+.aside-stat-body { flex:1; }
+.aside-stat-label { font-size:13px; font-weight:500; color:var(--ink); margin-bottom:2px; }
+.aside-stat-src { font-size:10px; color:var(--dim); letter-spacing:0.06em; }
+
+/* ── Stats section ───────────────────────────────────────────────── */
+.stats-section {
+  background:var(--bg-dark);
+  background-image:radial-gradient(ellipse 55% 45% at 90% 10%,rgba(138,180,200,0.07) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 10% 90%,rgba(217,87,28,0.06) 0%,transparent 60%);
+  color:var(--dk-text);
+}
+.stats-framing {
+  font-size:16px; font-weight:300; color:var(--dk-muted);
+  line-height:1.75; max-width:560px; margin-bottom:56px;
+}
+.stats-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:var(--dk-border);
+  border:1px solid var(--dk-border);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:48px;
+}
+.stat-card {
+  background:var(--bg-invert); padding:36px 28px;
+}
+.stat-num {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(44px,5vw,72px);
+  font-weight:400; color:var(--orange);
+  line-height:1; margin-bottom:6px;
+}
+.stat-source { font-size:10px; color:var(--dk-muted); letter-spacing:0.1em; margin-bottom:14px; }
+.stat-label { font-size:14px; font-weight:500; color:var(--dk-text); margin-bottom:6px; }
+.stat-explain { font-size:13px; font-weight:300; color:var(--dk-muted); line-height:1.6; }
+
+/* ── Challenge section ───────────────────────────────────────────── */
+.challenge-section { background:var(--bg); background-image:radial-gradient(ellipse 50% 60% at 95% 80%,rgba(217,87,28,0.06) 0%,transparent 65%); }
+.challenge-heading { margin-bottom:48px; max-width:700px; }
+.problems-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:16px; margin-bottom:48px;
+}
+.problem-card {
+  background:var(--bg-warm);
+  border:1px solid var(--border);
+  border-radius:14px; padding:32px;
+  transition:border-color 0.2s, transform 0.2s;
+}
+.problem-card:hover {
+  border-color:var(--orange);
+  transform:translateY(-2px);
+}
+.problem-num {
+  font-size:11px; font-weight:400;
+  color:var(--dim); letter-spacing:0.12em;
+  margin-bottom:14px;
+}
+.problem-title {
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(16px,1.9vw,20px);
+  font-weight:500;
+  color:var(--ink); margin-bottom:12px; line-height:1.3;
+}
+.problem-desc {
+  font-size:16px; font-weight:300;
+  color:var(--muted); line-height:1.7;
+}
+
+/* ── Framework section ───────────────────────────────────────────── */
+.framework-section {
+  background:var(--bg-invert);
+  background-image:radial-gradient(ellipse 60% 70% at 5% 50%,rgba(217,87,28,0.08) 0%,transparent 65%);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.framework-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:start;
+}
+.framework-copy { font-size:16px; font-weight:300; color:var(--muted); line-height:1.8; margin-bottom:20px; }
+.framework-ctas { display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-top:32px; }
+
+.conditions-list { margin-top:8px; }
+.condition-row {
+  display:flex; gap:16px; align-items:flex-start;
+  padding:18px 0; border-bottom:1px solid var(--border);
+}
+.condition-row:first-child { border-top:1px solid var(--border); }
+.condition-dot {
+  width:8px; height:8px; border-radius:50%;
+  flex-shrink:0; margin-top:6px;
+}
+.condition-title {
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(16px,1.9vw,20px); font-weight:500;
+  color:var(--ink); margin-bottom:5px; line-height:1.3;
+}
+.condition-desc {
+  font-size:15px; font-weight:300; color:var(--muted); line-height:1.6;
+}
+
+/* ── Diagnostic section ──────────────────────────────────────────── */
+.diagnostic-section { background:var(--bg-warm); background-image:radial-gradient(ellipse 50% 50% at 50% 0%,rgba(217,87,28,0.07) 0%,transparent 65%); }
+.diag-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:center;
+}
+.diag-copy { font-size:16px; font-weight:300; color:var(--muted); line-height:1.8; margin-bottom:20px; }
+.diag-facts {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:var(--border);
+  border:1px solid var(--border); border-radius:12px;
+  overflow:hidden; margin-top:36px;
+}
+.diag-fact {
+  background:var(--bg-warm); padding:20px 18px;
+  text-align:center;
+}
+.diag-fact-num {
+  font-family:'DM Serif Display',serif;
+  font-size:26px; font-weight:400;
+  color:var(--orange); line-height:1; margin-bottom:4px;
+}
+.diag-fact-label { font-size:11px; color:var(--muted); letter-spacing:0.06em; }
+
+/* ── YouTube section ─────────────────────────────────────────────── */
+.yt-section {
+  background:var(--bg-dark);
+  background-image:radial-gradient(ellipse 50% 60% at 0% 100%,rgba(217,87,28,0.09) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 100% 0%,rgba(168,192,168,0.05) 0%,transparent 55%);
+  color:var(--dk-text);
+}
+.yt-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:center;
+}
+.yt-copy { font-size:16px; font-weight:300; color:var(--dk-muted); line-height:1.8; margin-bottom:24px; }
+.yt-secondary { margin-top:16px; font-size:14px; font-weight:400; color:var(--dk-muted); }
+.yt-secondary a { color:var(--orange); text-decoration:none; transition:opacity 0.2s; }
+.yt-secondary a:hover { opacity:0.7; }
+
+/* Email form */
+.email-form-label {
+  font-size:13px; font-weight:500; color:var(--dk-text);
+  margin-bottom:12px; display:block;
+}
+.email-form {
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.email-input {
+  flex:1 1 220px;
+  background:rgba(232,220,200,0.08);
+  border:1px solid rgba(232,220,200,0.14);
+  border-radius:40px; padding:13px 20px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px; color:var(--dk-text);
+  outline:none; transition:border-color 0.2s;
+}
+.email-input::placeholder { color:var(--dk-muted); }
+.email-input:focus { border-color:var(--orange); }
+.email-btn {
+  background:#b84215; color:#fff; border:none;
+  border-radius:40px; padding:13px 24px;
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
+  cursor:pointer; white-space:nowrap; transition:all 0.22s;
+}
+.email-btn:hover { background:var(--orange-lt); }
+.email-note { font-size:11px; color:var(--dk-muted); margin-top:10px; }
+.email-confirm {
+  display:none;
+  font-size:15px; color:var(--orange);
+  padding:14px 0;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer {
+  background:var(--bg-dark);
+  border-top:1px solid var(--border);
+  padding:36px 48px;
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+}
+.footer-brand {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:15px; letter-spacing:0.16em; color:#f5f0e8;
+}
+.footer-link {
+  font-size:11px; color:var(--muted); text-decoration:none;
+  transition:color 0.2s; letter-spacing:0.04em;
+}
+.footer-link:hover { color:var(--orange); }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media(max-width:900px) {
+  .nav { padding:0 24px; }
+  .container, .container--narrow { padding:0 24px; }
+  .hero-inner, .framework-inner, .diag-inner, .yt-inner { grid-template-columns:1fr; gap:40px; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .problems-grid { grid-template-columns:1fr; }
+  .diag-facts { grid-template-columns:repeat(2,1fr); }
+  footer { padding:28px 24px; }
+  section { padding:64px 0; }
+  .hero { padding-top:calc(72px + 32px); padding-bottom:56px; }
+}
+@media(max-width:720px) {
+  .nav-links { display:none; }
+  .nav-toggle { display:flex; }
+}
+@media(max-width:600px) {
+  .stats-grid { grid-template-columns:1fr; }
+  .diag-facts { grid-template-columns:1fr 1fr; }
+}
+
+/* ── Tweaks panel ─────────────────────────────────────────────────── */
+.tweaks-panel {
+  position:fixed; top:88px; right:24px; z-index:500; width:266px;
+  background:rgba(28,25,21,0.97); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+  border:1px solid var(--border-dk); border-radius:14px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  font-family:'DM Sans',sans-serif; color:var(--ink); overflow:hidden;
+}
+.tweaks-panel[hidden] { display:none; }
+.tw-head { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid var(--border); }
+.tw-title { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:0.14em; text-transform:uppercase; color:#f5f0e8; }
+.tw-close { background:none; border:0; color:var(--muted); font-size:22px; line-height:1; cursor:pointer; padding:0 2px; }
+.tw-close:hover { color:var(--orange); }
+.tw-body { padding:16px; display:flex; flex-direction:column; gap:18px; }
+.tw-group { display:flex; flex-direction:column; gap:9px; }
+.tw-label { font-size:10px; letter-spacing:0.1em; color:var(--ink-mid); text-transform:uppercase; }
+.tw-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.tw-val { font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tw-hint { font-size:11px; color:var(--dim); line-height:1.45; }
+.tw-seg { display:flex; gap:6px; }
+.tw-seg button { flex:1; padding:9px 6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--ink-mid); background:rgba(232,220,200,0.04); border:1px solid var(--border-dk); border-radius:8px; cursor:pointer; transition:background 0.18s, color 0.18s, border-color 0.18s; }
+.tw-seg button:hover { border-color:var(--muted); }
+.tw-seg button.active { background:var(--orange); color:#fff; border-color:var(--orange); }
+.tweaks-panel input[type=range] { -webkit-appearance:none; appearance:none; width:100%; height:3px; border-radius:2px; background:var(--border-dk); outline:none; margin:0; }
+.tweaks-panel input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:15px; height:15px; border-radius:50%; background:var(--orange); cursor:pointer; }
+.tweaks-panel input[type=range]::-moz-range-thumb { width:15px; height:15px; border:0; border-radius:50%; background:var(--orange); cursor:pointer; }
+.tw-switch { width:38px; height:22px; border-radius:11px; border:1px solid var(--border-dk); background:rgba(232,220,200,0.06); position:relative; cursor:pointer; transition:background 0.2s, border-color 0.2s; flex-shrink:0; padding:0; }
+.tw-switch::after { content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--muted); transition:transform 0.2s, background 0.2s; }
+.tw-switch.on { background:var(--orange); border-color:var(--orange); }
+.tw-switch.on::after { transform:translateX(16px); background:#fff; }
+@media(max-width:600px) { .tweaks-panel { top:auto; bottom:16px; right:16px; left:16px; width:auto; } }
+
+/* Why this exists prose */
+.why-prose{max-width:740px;margin-bottom:52px;display:flex;flex-direction:column;gap:18px}
+.why-prose p{font-size:18px;font-weight:300;color:var(--ink-mid);line-height:1.7}
+.why-answer{color:var(--ink)}
+.why-answer strong{color:var(--orange);font-weight:500}
+
+/* Latest articles */
+.writing-section{padding:96px 0;border-top:1px solid var(--border)}
+.writing-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:36px;flex-wrap:wrap}
+.latest-list{display:flex;flex-direction:column}
+.latest-row{display:grid;grid-template-columns:1fr auto;gap:16px 24px;align-items:center;padding:26px 0;border-top:1px solid var(--border);text-decoration:none;transition:padding-left .25s ease}
+.latest-row:last-child{border-bottom:1px solid var(--border)}
+.latest-row:hover{padding-left:10px}
+.latest-main{display:flex;flex-direction:column;gap:9px}
+.latest-tag{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange)}
+.latest-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(22px,2.6vw,30px);color:var(--ink);line-height:1.15;letter-spacing:-0.01em}
+.latest-desc{font-size:16px;color:var(--muted);line-height:1.65;max-width:620px}
+.latest-arrow{color:var(--orange);font-size:18px;flex-shrink:0}
+@media(max-width:600px){.writing-section{padding:64px 0}}
+
+/* WCAG 2.1 focus visibility */
+:focus-visible{outline:3px solid #ffb37a;outline-offset:2px;border-radius:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </a>
+  <div class="nav-links">
+    <a href="writing.html" class="nav-link">Writing</a>
+    <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="writing.html">Writing</a>
+  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+
+<!-- 2. Hero -->
+<section class="hero">
+  <div class="container">
+    <div style="max-width:680px;">
+        <h1 class="display display-xl hero-headline">AI amplifies<br><em>what it finds.</em></h1>
+        <p class="hero-sub">In a product team with strong foundations, it sharpens judgement and accelerates delivery. Without them, it accelerates the wrong things faster. The question is what your team is built on.</p>
+        <p class="hero-audience">For product leaders, designers and engineers in real organisations.</p>
+        <div class="hero-ctas">
+          <a href="diagnostic/index.html" class="btn btn-primary">Take the diagnostic &rarr;</a>
+          <a href="#why" class="btn btn-ghost-dark">Why this exists &rarr;</a>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- Why this exists -->
+<section class="challenge-section" id="why">
+  <div class="container">
+    <div class="challenge-heading">
+      <span class="eyebrow">Why this exists</span>
+      <h2 class="display display-lg">The conversation nobody<br><em>is having honestly.</em></h2>
+    </div>
+    <div class="why-prose">
+      <p>I have spent twenty-five years building product and design teams. The teams that handle change well are never the ones who figured it out alone. They are the ones who could be honest with each other about what was breaking, and act on it.</p>
+      <p>AI is the sharpest version of that test yet. With strong foundations it amplifies judgement and accelerates good decisions. Without them it accelerates the wrong things faster, with more confidence and less visibility. Most teams are privately unsure and publicly certain, and the honest conversation is not happening.</p>
+      <p class="why-answer">The answer is <strong>care capital</strong>: the conditions that decide whether a team can do its best work, and whether AI amplifies its strengths or its blind spots.</p>
+    </div>
+    <div class="problems-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <div class="problem-title">The productivity paradox</div>
+        <div class="problem-desc">Most teams using AI are moving faster without moving forward. Speed without direction is not progress, it is a more efficient way to be wrong.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <div class="problem-title">The collaboration collapse</div>
+        <div class="problem-desc">AI adoption tends to make individuals more capable and teams less coherent. People coordinate outputs rather than think together.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <div class="problem-title">The trust gap</div>
+        <div class="problem-desc">Product teams are shipping AI features into a world where trust in AI is already low. The product decisions being made now are either widening that gap or closing it.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">04</div>
+        <div class="problem-title">The human cost</div>
+        <div class="problem-desc">The productivity case for AI is being built on people who are already stretched. The bar quietly rises. The conditions for good work quietly deteriorate.</div>
+      </div>
+    </div>
+    <a href="writing.html" class="btn btn-ghost-dark" style="font-size:14px;">Read the full diagnosis &rarr;</a>
+  </div>
+</section>
+
+<!-- What's here -->
+<section class="framework-section" id="whats-here">
+  <div class="container">
+    <div class="framework-inner">
+      <div>
+        <span class="eyebrow">What's here</span>
+        <h2 class="display display-lg" style="margin-bottom:16px;color:var(--ink);">The diagnostic.</h2>
+        <p style="font-size:18px;font-weight:300;color:var(--muted);margin-bottom:24px;line-height:1.6;">Twenty-five questions across the five conditions. About eight minutes. You get a radar of your scores, benchmarked against other product teams, with specific recommendations for where to focus.</p>
+        <p class="framework-copy">Complete it individually, then share with your team. When three or more people from the same organisation respond, you get a combined view, including the variance between responses. That variance is usually where the real conversation starts.</p>
+        <div class="framework-ctas">
+          <a href="diagnostic/index.html" class="btn btn-primary">Take the diagnostic &rarr;</a>
+          <a href="care-capital.html" class="btn btn-ghost-dark">Read the framework &rarr;</a>
+        </div>
+        <div class="diag-facts" style="margin-top:36px;max-width:440px;">
+          <div class="diag-fact"><div class="diag-fact-num">25</div><div class="diag-fact-label">Questions</div></div>
+          <div class="diag-fact"><div class="diag-fact-num">8 min</div><div class="diag-fact-label">To complete</div></div>
+          <div class="diag-fact"><div class="diag-fact-num">5</div><div class="diag-fact-label">Conditions</div></div>
+          <div class="diag-fact"><div class="diag-fact-num">Free</div><div class="diag-fact-label">Always</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="conditions-list">
+          <div class="condition-row">
+            <div class="condition-dot" style="background:#d9571c;"></div>
+            <div>
+              <div class="condition-title">Institutional safety</div>
+              <div class="condition-desc">Whether people can raise real concerns without career cost.</div>
+            </div>
+          </div>
+          <div class="condition-row">
+            <div class="condition-dot" style="background:#c8b89a;"></div>
+            <div>
+              <div class="condition-title">Team trust and empathy</div>
+              <div class="condition-desc">Whether product, design and engineering understand each other's pressures and constraints.</div>
+            </div>
+          </div>
+          <div class="condition-row">
+            <div class="condition-dot" style="background:#8ab4c8;"></div>
+            <div>
+              <div class="condition-title">Incentives and mission</div>
+              <div class="condition-desc">Whether the team is pointed at outcomes it can influence, not just metrics it can hit.</div>
+            </div>
+          </div>
+          <div class="condition-row">
+            <div class="condition-dot" style="background:#a8c89a;"></div>
+            <div>
+              <div class="condition-title">Curiosity and growth</div>
+              <div class="condition-desc">Whether the team has space to challenge the brief and grow beyond current delivery.</div>
+            </div>
+          </div>
+          <div class="condition-row">
+            <div class="condition-dot" style="background:#d4a8c8;"></div>
+            <div>
+              <div class="condition-title">Collective intelligence</div>
+              <div class="condition-desc">Whether working together produces better decisions than working alone.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest articles -->
+<section class="writing-section" id="writing">
+  <div class="container">
+    <div class="writing-head">
+      <div>
+        <span class="eyebrow">Writing</span>
+        <h2 class="display display-lg" style="color:var(--ink);">Latest articles.</h2>
+      </div>
+      <a href="writing.html" class="btn btn-ghost-dark">All writing &rarr;</a>
+    </div>
+    <div class="latest-list">
+      <a href="https://www.linkedin.com/pulse/mercenary-trap-graham-beale-vqnre/" target="_blank" class="latest-row">
+        <div class="latest-main">
+          <span class="latest-tag">Diagnosis</span>
+          <span class="latest-title">The mercenary trap</span>
+          <span class="latest-desc">How AI adoption is driving incentive misalignment, and why the best people leave first.</span>
+        </div>
+        <span class="latest-arrow">&rarr;</span>
+      </a>
+      <a href="https://www.linkedin.com/pulse/gap-nobody-designing-graham-beale-g2u3e/" target="_blank" class="latest-row">
+        <div class="latest-main">
+          <span class="latest-tag">Diagnosis</span>
+          <span class="latest-title">The gap nobody is designing for</span>
+          <span class="latest-desc">The space between AI capability and team readiness, and why most organisations are falling into it.</span>
+        </div>
+        <span class="latest-arrow">&rarr;</span>
+      </a>
+      <a href="https://www.linkedin.com/pulse/fear-were-naming-graham-beale-yg8le/" target="_blank" class="latest-row">
+        <div class="latest-main">
+          <span class="latest-tag">Diagnosis</span>
+          <span class="latest-title">The fear we're not naming</span>
+          <span class="latest-desc">The anxiety running through product organisations that nobody has named clearly enough to act on.</span>
+        </div>
+        <span class="latest-arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-brand">TURBULENT GROUND</span>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <a href="diagnostic/index.html" class="footer-link">Diagnostic</a>
+    <a href="writing.html" class="footer-link">Writing</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+    <a href="privacy.html" class="footer-link">Privacy</a>
+  </div>
+  <span style="font-size:11px;color:var(--muted);">Vibe coded by <a href="https://beale.co.uk" target="_blank" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Graham Beale</a></span>
+</footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  function setMenu(open){
+    toggle.classList.toggle('open',open);
+    menu.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){
+    setMenu(!menu.classList.contains('open'));
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ setMenu(false); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') setMenu(false);
+  });
+})();
+</script>
+
+<!-- Tweaks panel -->
+<div id="tweaks-panel" class="tweaks-panel" hidden>
+  <div class="tw-head">
+    <span class="tw-title">Tweaks</span>
+    <button class="tw-close" id="tw-close" aria-label="Close tweaks">&times;</button>
+  </div>
+  <div class="tw-body">
+    <div class="tw-group">
+      <div class="tw-label">Headline typeface</div>
+      <div class="tw-seg" id="tw-font">
+        <button type="button" data-val="DM Serif Display">DM Serif</button>
+        <button type="button" data-val="Cormorant Garamond">Cormorant</button>
+      </div>
+      <div class="tw-hint">Cormorant matches the Care Capital page; DM Serif matches About &amp; Series.</div>
+    </div>
+    <div class="tw-group">
+      <div class="tw-row"><span class="tw-label">Weight</span><span class="tw-val" id="tw-weight-val">400</span></div>
+      <input type="range" id="tw-weight" min="300" max="600" step="100">
+    </div>
+    <div class="tw-group">
+      <div class="tw-row"><span class="tw-label">Size</span><span class="tw-val" id="tw-scale-val">1.00&times;</span></div>
+      <input type="range" id="tw-scale" min="0.8" max="1.2" step="0.01">
+    </div>
+    <div class="tw-group">
+      <div class="tw-row"><span class="tw-label">Letter spacing</span><span class="tw-val" id="tw-track-val">-0.02em</span></div>
+      <input type="range" id="tw-track" min="-0.05" max="0.01" step="0.005">
+    </div>
+    <div class="tw-group">
+      <div class="tw-row"><span class="tw-label">Italic accent line</span><button type="button" class="tw-switch" id="tw-italic" role="switch" aria-label="Toggle italic accent"></button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var TW = /*EDITMODE-BEGIN*/{
+    "headlineFont": "Cormorant Garamond",
+    "headlineWeight": 300,
+    "headlineScale": 0.9,
+    "headlineTracking": -0.025,
+    "headlineItalicAccent": true
+  }/*EDITMODE-END*/;
+
+  var root = document.documentElement;
+  function apply(){
+    root.style.setProperty('--display-font', "'" + TW.headlineFont + "'");
+    root.style.setProperty('--display-weight', TW.headlineWeight);
+    root.style.setProperty('--display-scale', TW.headlineScale);
+    root.style.setProperty('--display-tracking', TW.headlineTracking + 'em');
+    root.style.setProperty('--display-accent', TW.headlineItalicAccent ? 'italic' : 'normal');
+  }
+  apply();
+
+  function persist(edits){
+    try { window.parent.postMessage({type:'__edit_mode_set_keys', edits:edits}, '*'); } catch(e){}
+  }
+  function fmtTrack(v){ return (Math.round(v*1000)/1000) + 'em'; }
+
+  var panel = document.getElementById('tweaks-panel');
+  var fontSeg = document.getElementById('tw-font');
+  function syncFontSeg(){
+    fontSeg.querySelectorAll('button').forEach(function(b){ b.classList.toggle('active', b.dataset.val === TW.headlineFont); });
+  }
+  fontSeg.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){
+      TW.headlineFont = b.dataset.val; apply(); syncFontSeg(); persist({headlineFont: TW.headlineFont});
+    });
+  });
+
+  var weight = document.getElementById('tw-weight'), weightVal = document.getElementById('tw-weight-val');
+  weight.value = TW.headlineWeight; weightVal.textContent = TW.headlineWeight;
+  weight.addEventListener('input', function(){
+    TW.headlineWeight = +weight.value; weightVal.textContent = weight.value; apply(); persist({headlineWeight: TW.headlineWeight});
+  });
+
+  var scale = document.getElementById('tw-scale'), scaleVal = document.getElementById('tw-scale-val');
+  scale.value = TW.headlineScale; scaleVal.textContent = (+TW.headlineScale).toFixed(2) + '\u00d7';
+  scale.addEventListener('input', function(){
+    TW.headlineScale = +scale.value; scaleVal.textContent = (+scale.value).toFixed(2) + '\u00d7'; apply(); persist({headlineScale: TW.headlineScale});
+  });
+
+  var track = document.getElementById('tw-track'), trackVal = document.getElementById('tw-track-val');
+  track.value = TW.headlineTracking; trackVal.textContent = fmtTrack(TW.headlineTracking);
+  track.addEventListener('input', function(){
+    TW.headlineTracking = +track.value; trackVal.textContent = fmtTrack(+track.value); apply(); persist({headlineTracking: TW.headlineTracking});
+  });
+
+  var ital = document.getElementById('tw-italic');
+  function syncItal(){ ital.classList.toggle('on', !!TW.headlineItalicAccent); }
+  ital.addEventListener('click', function(){
+    TW.headlineItalicAccent = !TW.headlineItalicAccent; apply(); syncItal(); persist({headlineItalicAccent: TW.headlineItalicAccent});
+  });
+
+  syncFontSeg(); syncItal();
+
+  document.getElementById('tw-close').addEventListener('click', function(){
+    panel.hidden = true;
+    try { window.parent.postMessage({type:'__edit_mode_dismissed'}, '*'); } catch(e){}
+  });
+
+  window.addEventListener('message', function(e){
+    var d = e.data || {};
+    if(d.type === '__activate_edit_mode'){ panel.hidden = false; }
+    else if(d.type === '__deactivate_edit_mode'){ panel.hidden = true; }
+  });
+  try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e){}
+})();
+</script>
+</body>
+</html>

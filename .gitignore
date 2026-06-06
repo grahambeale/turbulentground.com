@@ -1,0 +1,7 @@
+.env
+.env.local
+node_modules/
+.vercel/
+package.json
+package-lock.json
+generate-og.mjs

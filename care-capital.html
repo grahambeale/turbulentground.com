@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Capital · Turbulent Ground</title>
+<meta name="description" content="Care Capital: the five conditions that determine whether product teams can do their best work — psychological safety, trust, aligned incentives, curiosity, and collective orientation.">
+<link rel="canonical" href="https://turbulentground.com/care-capital">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://turbulentground.com/care-capital">
+<meta property="og:title" content="Care Capital · Turbulent Ground">
+<meta property="og:description" content="The five conditions that determine whether product teams can do their best work.">
+<meta property="og:image" content="https://turbulentground.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Care Capital · Turbulent Ground">
+<meta name="twitter:description" content="The five conditions that determine whether product teams can do their best work.">
+<meta name="twitter:image" content="https://turbulentground.com/og-image.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+/* ── Tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --bg:       #131110;
+  --bg-mid:   #1c1915;
+  --bg-light: #26211c;
+  --orange:   #d9571c;
+  --orange-lt:#e8763a;
+  --sand:     #e8dcc8;
+  --cream:    #f5f0e8;
+  --muted:    #9e8e7c;
+  --dim:      #9a8878;
+  --border-n: rgba(232,220,200,0.08);
+  --border-o: rgba(217,87,28,0.18);
+  --c1:#d9571c; --c2:#c8b89a; --c3:#8ab4c8; --c4:#a8c89a; --c5:#d4a8c8;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--sand);
+  font-family:'Outfit',sans-serif;
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  line-height:1.6;
+}
+::selection { background:var(--orange); color:#fff; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
+
+/* ── Typography ──────────────────────────────────────────────────────── */
+.display {
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;
+  line-height:1.0;
+  letter-spacing:-0.025em;
+}
+.display-lg { font-size:clamp(52px,7vw,96px); }
+.display-md { font-size:clamp(36px,5vw,64px); }
+.display-sm { font-size:clamp(24px,3vw,38px); }
+
+.eyebrow {
+  font-size:10px;
+  font-family:'Outfit',sans-serif;
+  font-weight:500;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--orange);
+  margin-bottom:16px;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.container { max-width:1100px; margin:0 auto; padding:0 48px; }
+.container--narrow { max-width:760px; margin:0 auto; padding:0 48px; }
+
+section { padding:96px 0; }
+section + section { border-top:1px solid var(--border-n); }
+
+/* ── Nav ──────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange); }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:12px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle { display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:10px; margin-right:-10px; background:none; border:0; cursor:pointer; z-index:210; }
+.nav-toggle span { display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu { position:fixed; inset:0; z-index:199; background:rgba(14,11,8,0.985); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:2px; padding:100px 36px 40px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a { font-family:'Outfit',sans-serif; font-weight:400; font-size:20px; letter-spacing:0.05em; color:#e8dcc8; text-decoration:none; padding:12px 0; line-height:1.2; transition:color 0.2s ease; }
+.mobile-menu a.active { color:var(--orange); }
+.mobile-menu a:hover { color:var(--orange); }
+.mobile-menu .mobile-menu-btn { font-family:'Outfit',sans-serif; font-weight:500; font-size:16px; color:#fff; background:#b84215; padding:14px 30px; border-radius:40px; margin-top:26px; }
+@media(max-width:720px) { .nav-links { display:none !important; } .nav-toggle { display:flex !important; } }
+
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.container { max-width:1100px; margin:0 auto; padding:0 48px; }
+.container--narrow { max-width:760px; margin:0 auto; padding:0 48px; }
+
+section { padding:96px 0; }
+section + section { border-top:1px solid var(--border-n); }
+
+/* ── Nav ─────────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; cursor:pointer; flex-shrink:0;
+}
+.nav-logo-mark {
+  width:40px; overflow:hidden; flex-shrink:0;
+  transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+}
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:var(--cream); text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange); }
+.nav-links {
+  display:flex; align-items:center; gap:24px;
+  justify-content:flex-end;
+}
+.nav-link {
+  font-family:'Outfit'; font-size:12px; font-weight:400;
+  color:var(--muted); text-decoration:none;
+  letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:var(--cream); }
+.nav-link.active { color:var(--orange); font-weight:500; }
+.nav-btn-wrap {
+  overflow:hidden; flex-shrink:0;
+  max-width:200px; opacity:1;
+  transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+}
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  white-space:nowrap; font-family:'Outfit'; font-size:13px; font-weight:500;
+  color:#fff; background:var(--orange); text-decoration:none;
+  padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange-lt); transform:translateY(-1px); }
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Outfit'; font-weight:500; font-size:15px;
+  text-decoration:none; border-radius:40px;
+  transition:all 0.22s;
+}
+.btn-primary {
+  background:#b84215; color:#fff;
+  padding:15px 32px;
+}
+.btn-primary:hover { background:var(--orange-lt); transform:translateY(-2px); }
+.btn-ghost {
+  color:var(--muted); padding:15px 0;
+}
+.btn-ghost:hover { color:var(--sand); }
+
+/* ── Growth symbol ───────────────────────────────────────────────────── */
+.growth-symbol svg { display:block; }
+
+/* ── Conditions ──────────────────────────────────────────────────────── */
+.conditions-list { display:flex; flex-direction:column; gap:0; }
+
+details.condition {
+  border-bottom:1px solid var(--border-n);
+}
+details.condition:first-child { border-top:1px solid var(--border-n); }
+
+details.condition summary {
+  display:flex; align-items:center; gap:20px;
+  padding:28px 0; cursor:pointer;
+  list-style:none;
+  transition:opacity 0.2s;
+}
+details.condition summary::-webkit-details-marker { display:none; }
+details.condition summary:hover { opacity:0.9; }
+
+.condition-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px; font-weight:400;
+  flex-shrink:0; width:24px;
+  color:var(--dim);
+}
+.condition-dot {
+  width:10px; height:10px; border-radius:50%;
+  flex-shrink:0;
+  transition:transform 0.2s;
+}
+details[open] .condition-dot { transform:scale(1.3); }
+.condition-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,2.5vw,26px); font-weight:600;
+  color:var(--cream); flex:1; line-height:1.2;
+}
+.condition-premise {
+  font-family:'Outfit'; font-size:15px; font-weight:300;
+  color:var(--muted); flex:1; max-width:380px;
+  display:none;
+}
+@media(min-width:768px) { .condition-premise { display:block; } }
+.condition-chevron {
+  font-size:11px; color:var(--muted); flex-shrink:0;
+  transition:transform 0.3s ease;
+}
+details[open] .condition-chevron { transform:rotate(180deg); }
+
+.condition-body {
+  padding:0 0 36px 54px;
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:24px;
+}
+@media(max-width:768px) {
+  .condition-body { grid-template-columns:1fr; padding-left:0; }
+}
+
+.condition-detail { font-family:'Outfit'; font-size:16px; font-weight:300; color:var(--muted); line-height:1.75; }
+.condition-detail p { color:var(--muted); }
+
+.signal-list, .risk-list { list-style:none; }
+.signal-list li, .risk-list li {
+  font-family:'Outfit'; font-size:15px; font-weight:300;
+  color:var(--muted); line-height:1.6;
+  padding:6px 0;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.signal-list li::before {
+  content:'';
+  display:block; width:5px; height:5px; border-radius:50%;
+  flex-shrink:0; margin-top:7px;
+}
+.risk-list li::before {
+  content:'';
+  display:block; width:5px; height:1px;
+  flex-shrink:0; margin-top:10px; background:var(--dim);
+}
+
+.col-label {
+  font-size:10px; font-family:'Outfit'; font-weight:500;
+  letter-spacing:0.18em; text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+/* ── Stat band ───────────────────────────────────────────────────────── */
+.stat-band {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--border-n); border:1px solid var(--border-n);
+  border-radius:16px; overflow:hidden;
+}
+.stat-item {
+  background:var(--bg-mid); padding:32px 28px;
+}
+@media(max-width:768px) { .stat-band { grid-template-columns:1fr 1fr; } }
+
+/* ── CTA card ────────────────────────────────────────────────────────── */
+.cta-card {
+  background:var(--bg-mid);
+  border:1px solid var(--border-o);
+  border-radius:20px; padding:48px;
+  display:grid; grid-template-columns:1fr auto;
+  gap:40px; align-items:center;
+}
+@media(max-width:768px) { .cta-card { grid-template-columns:1fr; } }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+footer {
+  padding:40px 48px;
+  border-top:1px solid var(--border-n);
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+}
+
+/* ── Topo bg ─────────────────────────────────────────────────────────── */
+.topo-bg {
+  position:absolute; inset:0; pointer-events:none; overflow:hidden;
+}
+
+/* ── Animation ───────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation:fadeUp 0.7s ease both; }
+.fade-up-1 { animation-delay:0.1s; }
+.fade-up-2 { animation-delay:0.25s; }
+.fade-up-3 { animation-delay:0.4s; }
+.fade-up-4 { animation-delay:0.55s; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media(max-width:768px) {
+  .container, .container--narrow { padding:0 24px; }
+  section { padding:64px 0; }
+  .nav { padding:0 24px; }
+  footer { padding:32px 24px; }
+  .nav-links { gap:16px; }
+  .cta-card { padding:32px 24px; }
+}
+
+/* WCAG 2.1 focus visibility */
+:focus-visible{outline:3px solid #ffb37a;outline-offset:2px;border-radius:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo" id="nav-logo">
+    <div class="nav-logo-mark" id="nav-logo-mark">
+      <svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 5.72 L0 5.72 L8 11.12 L16 6.84 L24 3.12 L32 0.27 L40 9.79 L48 8.84" stroke="#3d2010" stroke-width="1.2" fill="none"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 19.24 L0 29.87 L8 12.50 L16 14.61 L24 20.46 L32 29.37 L40 12.38 L48 13.95" stroke="#7a3a18" stroke-width="2" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 32.76 L0 26.41 L8 27.38 L16 42.05 L24 35.93 L32 17.66 L40 41.11 L48 42.21" stroke="#c25020" stroke-width="2.8" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </a>
+  <div class="nav-links">
+    <a href="writing.html" class="nav-link">Writing</a>
+    <div class="nav-btn-wrap">
+      <a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="writing.html">Writing</a>
+  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+
+<!-- ── Hero ────────────────────────────────────────────────────────── -->
+<section style="min-height:100vh;position:relative;display:flex;align-items:center;padding-top:72px;">
+
+  <!-- Topo bg -->
+  <div class="topo-bg">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1c1208 0%,var(--bg) 70%)"></div>
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.35" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
+      <path d="M0 160 Q180 120 360 155 Q540 190 720 140 Q900 90 1080 150 Q1260 210 1440 130" stroke="#d9571c" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <path d="M0 220 Q180 175 360 215 Q540 255 720 195 Q900 135 1080 210 Q1260 285 1440 190" stroke="#d9571c" stroke-width="0.9" fill="none" opacity="0.5"/>
+      <path d="M0 290 Q180 240 360 285 Q540 330 720 260 Q900 190 1080 275 Q1260 360 1440 255" stroke="#d9571c" stroke-width="1.1" fill="none" opacity="0.45"/>
+      <path d="M0 370 Q180 310 360 365 Q540 420 720 335 Q900 250 1080 350 Q1260 450 1440 330" stroke="#d9571c" stroke-width="1.3" fill="none" opacity="0.4"/>
+      <path d="M0 460 Q180 390 360 455 Q540 520 720 420 Q900 320 1080 435 Q1260 550 1440 415" stroke="#d9571c" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <path d="M0 560 Q180 480 360 555 Q540 630 720 515 Q900 400 1080 530 Q1260 660 1440 510" stroke="#d9571c" stroke-width="1.8" fill="none" opacity="0.3"/>
+      <path d="M0 560 Q180 480 360 555 Q540 630 720 515 Q900 400 1080 530 Q1260 660 1440 510 L1440 800 L0 800 Z" fill="#d9571c" opacity="0.05"/>
+    </svg>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg))"></div>
+  </div>
+
+  <div class="container" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;width:100%;">
+
+    <!-- Left: argument -->
+    <div>
+      <p class="eyebrow fade-up fade-up-1">The framework</p>
+      <h1 class="display display-lg fade-up fade-up-2" style="margin-bottom:28px;">
+        AI is not a<br>
+        productivity tool.<br>
+        <em style="color:var(--orange);">It is a multiplier.</em>
+      </h1>
+      <p class="fade-up fade-up-3" style="font-size:18px;font-weight:300;line-height:1.8;color:var(--muted);max-width:480px;margin-bottom:16px;">
+        Multipliers amplify what they find. In a product team with strong foundations, AI sharpens judgement, surfaces what people were afraid to say, and accelerates decisions worth making.
+      </p>
+      <p class="fade-up fade-up-3" style="font-size:18px;font-weight:300;line-height:1.8;color:var(--muted);max-width:480px;margin-bottom:40px;">
+        Without those foundations, it accelerates the wrong things faster. With higher confidence. And less visibility of the problem.
+      </p>
+      <div class="fade-up fade-up-4" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <a href="diagnostic/index.html" class="btn btn-primary">Measure your team &rarr;</a>
+        <a href="#conditions" class="btn btn-ghost">See the five conditions &darr;</a>
+      </div>
+    </div>
+
+    <!-- Right: growth symbol + definition -->
+    <div class="fade-up fade-up-3" style="display:flex;flex-direction:column;gap:32px;">
+
+      <!-- Care Capital definition card -->
+      <div style="background:var(--bg-mid);border:1px solid var(--border-o);border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:24px;">
+
+        <!-- Growth symbol -->
+        <div style="display:flex;align-items:center;gap:16px;">
+          <svg width="52" height="64" viewBox="0 0 52 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Organic upward form: reads as person + leaf -->
+            <path d="M26 60 C26 60 8 46 8 30 C8 18 16 10 26 10 C36 10 44 18 44 30 C44 46 26 60 26 60 Z" stroke="#d9571c" stroke-width="1.5" fill="none"/>
+            <path d="M26 60 C26 60 8 46 8 30 C8 18 16 10 26 10" stroke="#c25020" stroke-width="2" fill="rgba(217,87,28,0.06)"/>
+            <!-- Head/top -->
+            <circle cx="26" cy="7" r="5" stroke="#d9571c" stroke-width="1.5" fill="none"/>
+            <!-- Inner vein: upward growth line -->
+            <path d="M26 58 L26 18" stroke="#d9571c" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.5"/>
+            <!-- Branching marks suggesting growth -->
+            <path d="M26 42 C20 38 16 32 18 26" stroke="#d9571c" stroke-width="1" fill="none" opacity="0.6"/>
+            <path d="M26 34 C32 30 36 24 34 18" stroke="#d9571c" stroke-width="1" fill="none" opacity="0.6"/>
+          </svg>
+          <div>
+            <div class="eyebrow" style="margin-bottom:6px;">Care Capital</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:var(--muted);line-height:1.5;font-style:italic;">"The conditions that determine whether a team can do its best work"</div>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border-n);padding-top:24px;">
+          <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:16px;">
+            Care capital is not a culture initiative. It is a product quality issue. Five measurable conditions determine whether a team can exercise genuine collective judgement, use AI tools well, and ship work that matters.
+          </p>
+          <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.75;">
+            Teams that build it ship better work. Teams that don't will be faster at producing the wrong thing.
+          </p>
+        </div>
+
+        <!-- Mini stat row -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--border-n);padding-top:24px;">
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--orange);line-height:1;">5</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;">Conditions</div>
+          </div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--orange);line-height:1;">8 min</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;">To measure</div>
+          </div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--orange);line-height:1;">Free</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;">Always</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Why it matters ───────────────────────────────────────────────── -->
+<section>
+  <div class="container--narrow">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
+      <div>
+        <p class="eyebrow">The argument</p>
+        <h2 class="display display-md" style="margin-bottom:0;">
+          The teams that handle AI well are not the ones who figured it out alone.
+        </h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding-top:8px;">
+        <p style="font-size:16px;font-weight:300;color:var(--muted);line-height:1.8;">
+          They are the ones who already had the conditions in place: people who could challenge each other honestly, shared a mission they believed in, and built on each other's thinking rather than just coordinating outputs.
+        </p>
+        <p style="font-size:16px;font-weight:300;color:var(--muted);line-height:1.8;">
+          Care capital is the name for those conditions. It exists in every team. The question is whether you have enough of it to do what you are being asked to do.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Five conditions ──────────────────────────────────────────────── -->
+<section id="conditions">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px;">
+      <div>
+        <p class="eyebrow">The five conditions</p>
+        <h2 class="display display-md">What Care Capital measures.</h2>
+      </div>
+      <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;">
+        Five interdependent conditions. Each affects the others. The order matters: safety enables trust, trust enables aligned incentives, and so on until you reach the only output that counts.
+      </p>
+    </div>
+
+    <!-- Conditions accordion (CSS-only) -->
+    <div class="conditions-list">
+
+      <!-- 1. Safety -->
+      <details class="condition">
+        <summary>
+          <span class="condition-num">01</span>
+          <span class="condition-dot" style="background:var(--c1);"></span>
+          <span class="condition-title">Institutional Safety</span>
+          <span class="condition-premise">Whether people can raise real concerns without career cost</span>
+          <span class="condition-chevron">&#9660;</span>
+        </summary>
+        <div class="condition-body">
+          <div class="condition-detail">
+            <p style="color:var(--sand);margin-bottom:12px;">In most product organisations, the stated culture and the lived experience are not the same thing. People learn quickly what can be said and what must be managed.</p>
+            <p>In AI-assisted work this matters more than ever: AI surfaces what people have been too careful to say out loud, and it takes genuine safety to act on it rather than dismiss it.</p>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--c1);">Signs it is present</div>
+            <ul class="signal-list">
+              <li style="--dot-color:var(--c1)"><span class="condition-dot" style="background:var(--c1);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>People challenge product decisions without it becoming political</li>
+              <li><span class="condition-dot" style="background:var(--c1);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Mistakes are examined rather than managed away</li>
+              <li><span class="condition-dot" style="background:var(--c1);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Leadership behaviour matches what leadership says</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--muted);">Risks when absent</div>
+            <ul class="risk-list">
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Teams ship what is safe rather than what is right</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>AI outputs get rubber-stamped because no one wants to question the model</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Critical feedback loops break down quietly</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- 2. Trust -->
+      <details class="condition">
+        <summary>
+          <span class="condition-num">02</span>
+          <span class="condition-dot" style="background:var(--c2);"></span>
+          <span class="condition-title">Team Trust &amp; Empathy</span>
+          <span class="condition-premise">Whether product, design and engineering understand each other</span>
+          <span class="condition-chevron">&#9660;</span>
+        </summary>
+        <div class="condition-body">
+          <div class="condition-detail">
+            <p style="color:var(--sand);margin-bottom:12px;">Cross-functional product teams are asked to collaborate under pressure, across different professional languages, with different definitions of done.</p>
+            <p>Without trust and empathy, AI tools become individualised. Decisions get made without the full picture. The team fragments into capable people working in parallel rather than together.</p>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--c2);">Signs it is present</div>
+            <ul class="signal-list">
+              <li><span class="condition-dot" style="background:var(--c2);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Designers and engineers understand what motivates each other</li>
+              <li><span class="condition-dot" style="background:var(--c2);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Disagreement is navigated rather than avoided or escalated</li>
+              <li><span class="condition-dot" style="background:var(--c2);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>People know where their teammates find things difficult</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--muted);">Risks when absent</div>
+            <ul class="risk-list">
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>AI adoption happens individually, creating invisible capability gaps</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Collaboration becomes coordination: lots of communication, little shared thinking</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>The team's combined judgement drifts toward the lowest common denominator</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- 3. Incentives -->
+      <details class="condition">
+        <summary>
+          <span class="condition-num">03</span>
+          <span class="condition-dot" style="background:var(--c3);"></span>
+          <span class="condition-title">Incentives &amp; Mission</span>
+          <span class="condition-premise">Whether the team is pointed at outcomes it can actually influence</span>
+          <span class="condition-chevron">&#9660;</span>
+        </summary>
+        <div class="condition-body">
+          <div class="condition-detail">
+            <p style="color:var(--sand);margin-bottom:12px;">Product teams are frequently held accountable for lagging indicators they cannot directly control. When AI is introduced, this compounds: the team can move faster, but faster in the wrong direction is worse.</p>
+            <p>A team with well-structured incentives uses AI to go further toward outcomes that matter. A team with misaligned incentives uses AI to hit numbers that do not.</p>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--c3);">Signs it is present</div>
+            <ul class="signal-list">
+              <li><span class="condition-dot" style="background:var(--c3);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>The team's success metrics are things it can actually move</li>
+              <li><span class="condition-dot" style="background:var(--c3);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>There is a shared definition of what a good outcome looks like</li>
+              <li><span class="condition-dot" style="background:var(--c3);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Collective achievement is recognised, not just individual performance</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--muted);">Risks when absent</div>
+            <ul class="risk-list">
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>AI gets used to optimise metrics rather than to improve outcomes</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Short-term velocity crowds out long-term quality</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>People build what they are measured on rather than what users need</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- 4. Curiosity -->
+      <details class="condition">
+        <summary>
+          <span class="condition-num">04</span>
+          <span class="condition-dot" style="background:var(--c4);"></span>
+          <span class="condition-title">Curiosity &amp; Growth</span>
+          <span class="condition-premise">Whether the team has space to challenge the brief and develop</span>
+          <span class="condition-chevron">&#9660;</span>
+        </summary>
+        <div class="condition-body">
+          <div class="condition-detail">
+            <p style="color:var(--sand);margin-bottom:12px;">Teams under delivery pressure lose curiosity first. By the time they notice, the habit is gone. In an AI-augmented workflow, the teams that thrive are the ones that stay curious about the problem, the tools, and whether the assumptions are right.</p>
+            <p>Curiosity is what turns AI from an automation layer into an amplifier of insight.</p>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--c4);">Signs it is present</div>
+            <ul class="signal-list">
+              <li><span class="condition-dot" style="background:var(--c4);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>People are encouraged to ask questions, even when they slow things down</li>
+              <li><span class="condition-dot" style="background:var(--c4);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>The team challenges its own assumptions, not just the brief</li>
+              <li><span class="condition-dot" style="background:var(--c4);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>There is real investment in developing people, not just upskilling them for current tasks</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--muted);">Risks when absent</div>
+            <ul class="risk-list">
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>AI becomes a shortcut to the obvious answer rather than a tool for better questions</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Everyone's output starts converging toward the AI's average</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>The team stops learning because it is too busy delivering</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- 5. Collective intelligence -->
+      <details class="condition">
+        <summary>
+          <span class="condition-num">05</span>
+          <span class="condition-dot" style="background:var(--c5);"></span>
+          <span class="condition-title">Collective Intelligence</span>
+          <span class="condition-premise">Whether collaboration produces better decisions than any individual alone</span>
+          <span class="condition-chevron">&#9660;</span>
+        </summary>
+        <div class="condition-body">
+          <div class="condition-detail">
+            <p style="color:var(--sand);margin-bottom:12px;">Collective intelligence is the output condition: the thing all four previous conditions make possible. When they are healthy, the team produces decisions and work that none of its members could have reached alone.</p>
+            <p>AI can either accelerate collective intelligence or substitute for it. The difference depends entirely on what the team brings to the collaboration.</p>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--c5);">Signs it is present</div>
+            <ul class="signal-list">
+              <li><span class="condition-dot" style="background:var(--c5);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Decisions made together are better than decisions made individually</li>
+              <li><span class="condition-dot" style="background:var(--c5);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>People regularly change their minds because of something a colleague said</li>
+              <li><span class="condition-dot" style="background:var(--c5);width:5px;height:5px;flex-shrink:0;margin-top:7px;border-radius:50%;"></span>Working with this team makes each person's own thinking sharper</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-label" style="color:var(--muted);">Risks when absent</div>
+            <ul class="risk-list">
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>AI produces confident, coherent outputs that feel like collective thinking but are not</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>The team loses the ability to disagree productively</li>
+              <li><span style="display:block;width:12px;height:1px;background:var(--dim);flex-shrink:0;margin-top:10px;"></span>Group judgement degrades below that of its strongest individual members</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA (second) ─────────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="cta-card">
+      <div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          <svg width="44" height="54" viewBox="0 0 52 64" fill="none">
+            <path d="M26 60 C26 60 8 46 8 30 C8 18 16 10 26 10 C36 10 44 18 44 30 C44 46 26 60 26 60 Z" stroke="#d9571c" stroke-width="1.5" fill="rgba(217,87,28,0.06)"/>
+            <circle cx="26" cy="7" r="5" stroke="#d9571c" stroke-width="1.5" fill="none"/>
+            <path d="M26 58 L26 18" stroke="#d9571c" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.5"/>
+            <path d="M26 42 C20 38 16 32 18 26" stroke="#d9571c" stroke-width="1" fill="none" opacity="0.6"/>
+            <path d="M26 34 C32 30 36 24 34 18" stroke="#d9571c" stroke-width="1" fill="none" opacity="0.6"/>
+          </svg>
+          <div>
+            <p class="eyebrow" style="margin-bottom:4px;">Free diagnostic</p>
+            <h2 class="display display-sm">Where does your team sit?</h2>
+          </div>
+        </div>
+        <p style="font-size:16px;font-weight:300;color:var(--muted);line-height:1.8;max-width:520px;">
+          Twenty-five questions across the five conditions. Eight minutes. You get a radar chart of your scores, benchmarked against other product teams, with specific recommendations for where to focus.
+        </p>
+        <p style="font-size:15px;font-weight:300;color:var(--dim);margin-top:12px;">
+          Complete it individually, then share with your team. The variance between responses is often the most useful data of all.
+        </p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;">
+        <a href="diagnostic/index.html" class="btn btn-primary" style="white-space:nowrap;">Measure your team &rarr;</a>
+        <span style="font-size:12px;color:var(--dim);">Free &middot; No account required</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────── -->
+<footer>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <svg width="32" height="32" viewBox="0 0 52 52">
+      <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+      <clipPath id="fc"><circle cx="26" cy="26" r="26"/></clipPath>
+      <g clip-path="url(#fc)">
+        <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+        <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#d9571c" stroke-width="2.4" fill="none"/>
+        <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+      </g>
+      <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+    </svg>
+    <span style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.16em;color:var(--cream);">TURBULENT GROUND</span>
+  </div>
+  <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+    <a href="diagnostic/index.html" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">Diagnostic</a>
+    <a href="writing.html" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">Writing</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">YouTube</a>
+    <a href="privacy.html" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">Privacy</a>
+  </div>
+  <span style="font-size:11px;color:var(--muted);">Vibe coded by <a href="https://beale.co.uk" target="_blank" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Graham Beale</a></span>
+</footer>
+
+<!-- ── Nav scroll JS ─────────────────────────────────────────────────── -->
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  function setMenu(open){
+    toggle.classList.toggle('open',open);
+    menu.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+})();
+</script>
+
+</body>
+</html>
