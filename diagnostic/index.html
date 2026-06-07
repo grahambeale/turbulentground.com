@@ -347,31 +347,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="info-card"><div class="info-card-label">Best used</div><div class="info-card-value">Team</div><div class="info-card-sub">Compare across colleagues</div></div>
       </div>
 
-      <!-- Mode selection -->
-      <div class="field">
-        <label>How are you completing this?</label>
-        <div class="mode-toggle">
-          <div class="mode-btn active" id="mode-individual" onclick="setMode('individual')">
-            <div class="mode-btn-title">Just me</div>
-            <div class="mode-btn-desc">I'm completing this individually. I can share a link afterwards so colleagues can compare scores.</div>
-          </div>
-          <div class="mode-btn" id="mode-team" onclick="setMode('team')">
-            <div class="mode-btn-title">My team</div>
-            <div class="mode-btn-desc">We're completing this as a group. Use a shared team code to combine our scores.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Team code (shown in team mode or if joining via link) -->
-      <div class="field" id="team-code-field" style="display:none">
-        <label>Team code <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, links your result to colleagues)</span></label>
-        <div class="team-code-row">
-          <div class="field"><input type="text" id="team-code-input" aria-label="Team code" placeholder="e.g. MIMECAST-2026" maxlength="30" style="text-transform:uppercase"></div>
-          <div class="team-code-gen" onclick="generateCode()">Generate code</div>
-        </div>
-        <div class="field-hint">Share this code with colleagues so their scores combine with yours.</div>
-      </div>
-
       <!-- Country -->
       <div class="field">
         <label>Country <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by region)</span></label>
@@ -830,7 +805,6 @@ async function renderResults(fScores, overall) {
       <div class="email-label" style="color:var(--orange)">Get your results by email</div>
       <p style="font-size:14px;color:var(--muted2);line-height:1.65;margin-bottom:16px">Enter your work email and we'll send your scores and recommendations as a summary. You can also opt into the comparative findings as more teams take part.</p>
       <div class="capture-field"><input type="email" id="cap-email" placeholder="you@company.com" autocomplete="email" aria-label="Work email"></div>
-      <div class="capture-field"><input type="text" id="cap-team" placeholder="Team name (optional, enables team comparison)" maxlength="40" aria-label="Team name"></div>
       <label class="consent"><input type="checkbox" id="consent-results" checked><span>Email me a copy of my results.</span></label>
       <label class="consent"><input type="checkbox" id="consent-findings"><span>Send me the comparative findings as the dataset grows.</span></label>
       <label class="consent"><input type="checkbox" id="consent-contribute"><span>I'm open to being contacted for further insight.</span></label>
@@ -838,15 +812,6 @@ async function renderResults(fScores, overall) {
       <button class="btn" id="capture-btn" onclick="submitCapture()">Send my results</button>
       <div class="email-confirm" id="capture-confirm">✓ Sent. Check your inbox for your summary.</div>
       <div class="capture-error" id="capture-error"></div>
-    </div>
-
-    <!-- Share card -->
-    <div class="share-card" id="share-section">
-      <div class="share-label">Invite colleagues</div>
-      <div class="share-text">When three or more people from the same organisation complete the diagnostic, you'll see a combined team view alongside your individual scores. Share this link or code with your team.</div>
-      <div class="share-message" id="share-message">Loading share message…</div>
-      ${teamCode ? `<div class="share-code">Team code: <strong>${teamCode.toUpperCase()}</strong></div>` : ''}
-      <button class="btn-ghost" style="font-size:12px;padding:9px 18px" onclick="copyShare()">Copy invite message</button>
     </div>
 
     <!-- Cohort view placeholder, populated async -->
