@@ -991,9 +991,23 @@ async function submitCapture() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    btn.style.display = 'none';
-    okEl.style.display = 'block';
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      errEl.textContent = json.error || 'We could not send your results just now. Please try again in a moment.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Send my results';
+      return;
+    }
+    if (json.status === 'verification_sent') {
+      // Show "check your email" state
+      btn.style.display = 'none';
+      okEl.innerHTML = '✉️ Check your inbox — we\'ve sent a verification link to <strong>' + email + '</strong>. Click it to confirm your email and see your results.';
+      okEl.style.display = 'block';
+    } else {
+      btn.style.display = 'none';
+      okEl.textContent = '✓ Sent. Check your inbox for your summary.';
+      okEl.style.display = 'block';
+    }
   } catch(err) {
     console.error('Submit error:', err);
     errEl.textContent = 'We could not send your results just now. Please try again in a moment.';
@@ -1158,6 +1172,131 @@ function goPage(n) {
     toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
     menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+  }
+})();
+
+// ── EMAIL VERIFICATION TOKEN HANDLER ────────────────────────────────────
+(async function checkVerificationToken() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+  if (!token) return;
+
+  // Show a loading state on page 0 (intro screen)
+  const intro = document.getElementById('page-0');
+  if (intro) {
+    intro.innerHTML = `<div style="max-width:560px;margin:120px auto 0;padding:0 24px;text-align:center;">
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase;margin-bottom:24px;">Turbulent Ground</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);margin-bottom:16px;">Verifying your email…</h2>
+      <p style="font-size:15px;color:var(--muted2);">Just a moment.</p>
+    </div>`;
+  }
+
+  try {
+    const res = await fetch('/api/verify?token=' + encodeURIComponent(token));
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok || !json.ok) {
+      if (intro) {
+        intro.innerHTML = `<div style="max-width:560px;margin:120px auto 0;padding:0 24px;text-align:center;">
+          <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase;margin-bottom:24px;">Turbulent Ground</p>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);margin-bottom:16px;">Verification failed</h2>
+          <p style="font-size:15px;color:var(--muted2);line-height:1.6;">${json.error || 'This link is invalid or has expired.'}<br><br>
+          <a href="/diagnostic" style="color:var(--orange);text-decoration:none;">Retake the diagnostic</a> to get a fresh link.</p>
+        </div>`;
+      }
+      return;
+    }
+
+    const sub = json.submission || {};
+    const company = json.company;
+    const dims = [
+      { key: 'score_safety',     label: 'Psychological Safety',  color: '#FF7600' },
+      { key: 'score_trust',      label: 'Trust & Transparency',  color: '#c8b89a' },
+      { key: 'score_incentives', label: 'Aligned Incentives',    color: '#8ab4c8' },
+      { key: 'score_curiosity',  label: 'Curiosity & Learning',  color: '#a8c89a' },
+      { key: 'score_collective', label: 'Collective Orientation', color: '#d4a8c8' },
+    ];
+
+    function scoreLabel(s) {
+      return s >= 75 ? 'Strong' : s >= 50 ? 'Developing' : s >= 25 ? 'At risk' : 'Critical';
+    }
+
+    function renderScale(min, max, mean, userVal) {
+      const pMin  = Math.round(min);
+      const pMax  = Math.round(max);
+      const pMean = Math.round(mean);
+      const pUser = Math.round(userVal);
+      return `<div style="position:relative;height:28px;margin:8px 0 16px;">
+        <div style="position:absolute;top:11px;left:0;right:0;height:6px;background:#26211c;border-radius:4px;"></div>
+        <div style="position:absolute;top:11px;left:${pMin}%;width:${pMax-pMin}%;height:6px;background:#3a3028;border-radius:4px;"></div>
+        <div style="position:absolute;top:5px;left:calc(${pMean}% - 5px);width:10px;height:18px;background:#9e8e7c;border-radius:3px;" title="Mean: ${pMean}"></div>
+        <div style="position:absolute;top:4px;left:calc(${pUser}% - 6px);width:12px;height:20px;background:var(--orange);border-radius:3px;" title="Your score: ${pUser}"></div>
+        <div style="position:absolute;top:32px;left:${pMin}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">${pMin}</div>
+        <div style="position:absolute;top:32px;left:${pMax}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">${pMax}</div>
+        <div style="position:absolute;top:32px;left:${pMean}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">avg</div>
+        <div style="position:absolute;top:32px;left:${pUser}%;font-size:10px;color:var(--orange);transform:translateX(-50%);">you</div>
+      </div>`;
+    }
+
+    let companyHtml = '';
+    if (company) {
+      const staleNote = company.isStale
+        ? `<p style="font-size:12px;color:var(--muted);margin-bottom:12px;padding:10px 14px;background:#1c1915;border-radius:8px;line-height:1.5;">
+            Advisory: fewer than 3 responses from your organisation in the last 12 months. Showing all ${company.count} historical responses. Oldest: ${new Date(company.oldestDate).toLocaleDateString('en-GB', {month:'short',year:'numeric'})}.
+           </p>` : '';
+
+      const dimRows = dims.map(d => {
+        const s = company.stats[d.key];
+        const userScore = sub[d.key] ?? 0;
+        return `<div style="margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+            <span style="font-size:13px;color:${d.color};">${d.label}</span>
+            <span style="font-size:12px;color:var(--muted);">you: ${userScore} · avg: ${s.mean}</span>
+          </div>
+          ${renderScale(s.min, s.max, s.mean, userScore)}
+        </div>`;
+      }).join('');
+
+      companyHtml = `<div style="margin-top:32px;padding:24px;background:#1c1915;border-radius:12px;border:1px solid #26211c;">
+        <p style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Organisation view · ${company.count} verified responses</p>
+        <p style="font-size:13px;color:var(--muted2);margin-bottom:24px;line-height:1.5;">Orange bar = your score · grey bar = range · tick = average.</p>
+        ${staleNote}
+        ${dimRows}
+      </div>`;
+    } else {
+      companyHtml = `<div style="margin-top:24px;padding:20px 24px;background:#1c1915;border-radius:12px;border:1px solid #26211c;">
+        <p style="font-size:13px;color:var(--muted2);line-height:1.6;">Once 3 or more verified responses from your organisation are in, you'll see a combined view here.</p>
+      </div>`;
+    }
+
+    const scoreRows = dims.map(d => {
+      const s = sub[d.key] ?? 0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #26211c;">
+        <span style="font-size:14px;color:${d.color};">${d.label}</span>
+        <span style="font-size:14px;font-weight:600;color:var(--ink);">${s} <span style="font-size:12px;font-weight:400;color:var(--muted);">${scoreLabel(s)}</span></span>
+      </div>`;
+    }).join('');
+
+    if (intro) {
+      intro.innerHTML = `<div style="max-width:640px;margin:100px auto 80px;padding:0 24px;">
+        <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--orange);text-transform:uppercase;margin-bottom:16px;">Email verified</p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;color:var(--ink);line-height:1.15;margin-bottom:8px;">Your Care Capital results</h2>
+        <p style="font-size:15px;color:var(--muted2);margin-bottom:32px;">Overall score: <strong style="color:var(--ink);font-size:20px;">${sub.score_overall ?? 0}</strong> / 100</p>
+        <div style="margin-bottom:8px;">${scoreRows}</div>
+        ${companyHtml}
+        <p style="font-size:13px;color:var(--muted);margin-top:32px;line-height:1.6;">Your results have also been emailed to <strong style="color:var(--ink-mid);">${sub.email}</strong>. Read the full framework at <a href="/care-capital" style="color:var(--orange);text-decoration:none;">turbulentground.com/care-capital</a>.</p>
+        <div style="margin-top:24px;">
+          <a href="/diagnostic" style="display:inline-block;font-size:13px;color:var(--muted);border:1px solid #26211c;padding:9px 20px;border-radius:40px;text-decoration:none;">Retake the diagnostic</a>
+        </div>
+      </div>`;
+    }
+
+    // Clean token from URL without reload
+    const clean = window.location.pathname;
+    window.history.replaceState({}, '', clean);
+
+  } catch(err) {
+    console.error('Verification error:', err);
   }
 })();
 

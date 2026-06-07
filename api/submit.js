@@ -1,10 +1,15 @@
-// Vercel serverless function — POST /api/submit
+// POST /api/submit
+// Validates email, checks MX record, generates signed verification token,
+// sends verification email. Does NOT write to Airtable yet — that happens
+// in /api/verify once the user clicks the link.
+//
 // Env vars required:
-//   AIRTABLE_TOKEN   — Airtable personal access token (data.records:write)
-//   AIRTABLE_BASE_ID — e.g. appXXXXXXXXXXXXXX
-//   AIRTABLE_TABLE   — table name, e.g. "Diagnostic Submissions"
-//   RESEND_API_KEY   — Resend API key
-//   RESEND_FROM      — verified sender, e.g. "results@turbulentground.com"
+//   RESEND_API_KEY        — Resend API key
+//   RESEND_FROM           — verified sender e.g. results@turbulentground.com
+//   VERIFICATION_SECRET   — random hex string used to sign tokens
+
+import { createHmac } from "crypto";
+import { promises as dns } from "dns";
 
 const CONSUMER_DOMAINS = new Set([
   "gmail.com","googlemail.com","outlook.com","hotmail.com","hotmail.co.uk",
@@ -15,88 +20,54 @@ const CONSUMER_DOMAINS = new Set([
   "mail.com","inbox.com","fastmail.com","fastmail.fm","hey.com",
 ]);
 
-function deriveEmailMeta(email) {
-  const domain = email.split("@")[1]?.toLowerCase() ?? "";
-  return {
-    email_domain: domain,
-    is_consumer_domain: CONSUMER_DOMAINS.has(domain),
-  };
+function signToken(payload, secret) {
+  const b64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const sig  = createHmac("sha256", secret).update(b64).digest("hex");
+  return `${b64}.${sig}`;
 }
 
-function scoreLabel(score) {
-  if (score >= 75) return "Strong";
-  if (score >= 50) return "Developing";
-  if (score >= 25) return "At risk";
-  return "Critical";
+async function checkMx(domain) {
+  try {
+    const records = await dns.resolveMx(domain);
+    return records && records.length > 0;
+  } catch {
+    return false;
+  }
 }
 
-function buildEmailHtml(data) {
-  const dims = [
-    { key: "score_safety",     label: "Psychological Safety" },
-    { key: "score_trust",      label: "Trust & Transparency" },
-    { key: "score_incentives", label: "Aligned Incentives" },
-    { key: "score_curiosity",  label: "Curiosity & Learning" },
-    { key: "score_collective", label: "Collective Orientation" },
-  ];
-
-  const rows = dims.map(({ key, label }) => {
-    const score = data[key] ?? 0;
-    return `
-      <tr>
-        <td style="padding:8px 12px;color:#c8b89a;font-family:sans-serif;font-size:14px;">${label}</td>
-        <td style="padding:8px 12px;font-family:sans-serif;font-size:14px;font-weight:600;color:#e8dcc8;">${score}</td>
-        <td style="padding:8px 12px;font-family:sans-serif;font-size:13px;color:#9e8e7c;">${scoreLabel(score)}</td>
-      </tr>`;
-  }).join("");
-
-  const overall = data.score_overall ?? 0;
-  const lowestDim = dims.reduce((a, b) => (data[a.key] ?? 0) < (data[b.key] ?? 0) ? a : b);
-
+function buildVerifyEmailHtml(verifyUrl) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#131110;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#131110;">
   <tr><td align="center" style="padding:40px 16px;">
-    <table width="560" cellpadding="0" cellspacing="0" style="background:#1c1915;border-radius:12px;overflow:hidden;">
+    <table width="520" cellpadding="0" cellspacing="0" style="background:#1c1915;border-radius:12px;overflow:hidden;">
       <tr>
         <td style="padding:32px 40px 24px;background:#0e0b08;">
           <p style="margin:0 0 8px;font-family:sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#9e8e7c;">Turbulent Ground</p>
-          <h1 style="margin:0;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;line-height:1.25;">Your Care Capital results</h1>
+          <h1 style="margin:0;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;line-height:1.25;">Confirm your email to see your results</h1>
         </td>
       </tr>
       <tr>
-        <td style="padding:32px 40px 8px;">
-          <p style="margin:0 0 24px;font-family:sans-serif;font-size:15px;color:#c8b89a;line-height:1.6;">
-            Here are your five dimension scores${data.respondent_name ? `, ${data.respondent_name}` : ""}. Overall score: <strong style="color:#e8dcc8;">${overall}/100</strong>.
+        <td style="padding:32px 40px;">
+          <p style="margin:0 0 28px;font-family:sans-serif;font-size:15px;color:#c8b89a;line-height:1.6;">
+            Click the button below to verify your work email and unlock your Care Capital scores. This link expires in 24 hours.
           </p>
-          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <thead>
-              <tr style="border-bottom:1px solid #26211c;">
-                <th style="padding:8px 12px;text-align:left;font-family:sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9e8e7c;font-weight:500;">Dimension</th>
-                <th style="padding:8px 12px;text-align:left;font-family:sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9e8e7c;font-weight:500;">Score</th>
-                <th style="padding:8px 12px;text-align:left;font-family:sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9e8e7c;font-weight:500;">Signal</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:24px 40px 32px;">
-          <p style="margin:0 0 12px;font-family:sans-serif;font-size:14px;color:#9e8e7c;line-height:1.6;">
-            Your lowest dimension is <strong style="color:#e8dcc8;">${lowestDim.label}</strong> (${data[lowestDim.key] ?? 0}). That is often the first place to focus.
-          </p>
-          <p style="margin:0;font-family:sans-serif;font-size:14px;color:#9e8e7c;line-height:1.6;">
-            Read the full framework at <a href="https://turbulentground.com/care-capital" style="color:#d9571c;text-decoration:none;">turbulentground.com/care-capital</a>.
+          <a href="${verifyUrl}" style="display:inline-block;background:#b84215;color:#fff;font-family:sans-serif;font-size:14px;font-weight:500;text-decoration:none;padding:14px 28px;border-radius:40px;">
+            View my results
+          </a>
+          <p style="margin:24px 0 0;font-family:sans-serif;font-size:12px;color:#9e8e7c;line-height:1.6;">
+            Or copy this link into your browser:<br>
+            <span style="color:#c8b89a;word-break:break-all;">${verifyUrl}</span>
           </p>
         </td>
       </tr>
       <tr>
         <td style="padding:20px 40px;background:#0e0b08;border-top:1px solid #26211c;">
           <p style="margin:0;font-family:sans-serif;font-size:12px;color:#9e8e7c;">
-            You received this because you completed the Care Capital diagnostic and opted in to receive your results.
-            To unsubscribe or request data deletion, email <a href="mailto:privacy@turbulentground.com" style="color:#9e8e7c;">privacy@turbulentground.com</a>.
+            If you didn't take the Care Capital diagnostic, ignore this email — nothing has been saved.
+            Questions? <a href="mailto:privacy@turbulentground.com" style="color:#9e8e7c;">privacy@turbulentground.com</a>
           </p>
         </td>
       </tr>
@@ -119,103 +90,79 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid JSON" });
   }
 
-  if (!data.email) {
-    return res.status(400).json({ error: "email is required" });
+  const email = (data.email || "").trim().toLowerCase();
+
+  // Basic format check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: "Please enter a valid email address." });
   }
 
-  const { email_domain, is_consumer_domain } = deriveEmailMeta(data.email);
+  const domain = email.split("@")[1];
 
-  // --- Airtable write ---
-  const airtableToken = process.env.AIRTABLE_TOKEN;
-  const airtableBase  = process.env.AIRTABLE_BASE_ID;
-  const airtableTable = process.env.AIRTABLE_TABLE;
+  // Consumer domain check
+  if (CONSUMER_DOMAINS.has(domain)) {
+    return res.status(400).json({
+      error: "Please use a work email address. Personal email addresses (Gmail, Outlook, etc.) are not accepted."
+    });
+  }
 
-  if (!airtableToken || !airtableBase || !airtableTable) {
-    console.error("Missing Airtable env vars");
+  // MX record check — domain must have mail configured
+  const hasMx = await checkMx(domain);
+  if (!hasMx) {
+    return res.status(400).json({
+      error: "We couldn't verify that email domain. Please check your address and try again."
+    });
+  }
+
+  // Build token payload — includes all submission data so /api/verify
+  // can write to Airtable without a separate store
+  const secret = process.env.VERIFICATION_SECRET;
+  if (!secret) {
+    console.error("Missing VERIFICATION_SECRET");
     return res.status(500).json({ error: "Server configuration error" });
   }
 
-  const record = {
-    fields: {
-      timestamp:           data.timestamp ?? new Date().toISOString(),
-      email:               data.email,
-      email_domain,
-      is_consumer_domain,
-      team_name:           data.team_name        ?? "",
-      respondent_name:     data.respondent_name  ?? "",
-      score_safety:        data.score_safety      ?? 0,
-      score_trust:         data.score_trust       ?? 0,
-      score_incentives:    data.score_incentives  ?? 0,
-      score_curiosity:     data.score_curiosity   ?? 0,
-      score_collective:    data.score_collective  ?? 0,
-      score_overall:       data.score_overall     ?? 0,
-      raw_answers:         JSON.stringify(data.raw_answers ?? {}),
-      role:                data.role              ?? "",
-      org_size_band:       data.org_size_band     ?? "",
-      sector:              data.sector            ?? "",
-      country:             data.country           ?? "",
-      consent_results:     data.consent_results   ?? false,
-      consent_findings:    data.consent_findings  ?? false,
-      consent_contribute:  data.consent_contribute ?? false,
-      source:              data.source            ?? "",
-      utm:                 JSON.stringify(data.utm ?? {}),
-    },
+  const payload = {
+    exp: Date.now() + 24 * 60 * 60 * 1000, // 24h expiry
+    data: { ...data, email }, // normalised email
   };
 
+  const token = signToken(payload, secret);
+  const verifyUrl = `https://turbulentground.com/diagnostic?token=${token}`;
+
+  // Send verification email
+  const resendKey  = process.env.RESEND_API_KEY;
+  const resendFrom = process.env.RESEND_FROM;
+
+  if (!resendKey || !resendFrom || resendKey === "placeholder") {
+    console.error("Missing Resend env vars");
+    return res.status(500).json({ error: "Server configuration error" });
+  }
+
   try {
-    const atRes = await fetch(
-      `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${airtableToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ records: [record] }),
-      }
-    );
-    if (!atRes.ok) {
-      const err = await atRes.text();
-      console.error("Airtable error:", err);
-      return res.status(502).json({ error: "Failed to save submission" });
+    const emailRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: resendFrom,
+        to: [email],
+        subject: "Confirm your email to see your Care Capital results",
+        html: buildVerifyEmailHtml(verifyUrl),
+      }),
+    });
+
+    if (!emailRes.ok) {
+      const err = await emailRes.text();
+      console.error("Resend error:", err);
+      return res.status(502).json({ error: "Could not send verification email. Please try again." });
     }
   } catch (err) {
-    console.error("Airtable fetch error:", err);
-    return res.status(502).json({ error: "Failed to save submission" });
+    console.error("Resend fetch error:", err);
+    return res.status(502).json({ error: "Could not send verification email. Please try again." });
   }
 
-  // --- Resend email (only when consent_results) ---
-  if (data.consent_results) {
-    const resendKey  = process.env.RESEND_API_KEY;
-    const resendFrom = process.env.RESEND_FROM;
-
-    if (!resendKey || !resendFrom) {
-      console.error("Missing Resend env vars — skipping email");
-    } else {
-      try {
-        const emailRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: resendFrom,
-            to:   [data.email],
-            subject: "Your Care Capital results",
-            html: buildEmailHtml(data),
-          }),
-        });
-        if (!emailRes.ok) {
-          const err = await emailRes.text();
-          console.error("Resend error:", err);
-          // Non-fatal: record is already saved; log and continue
-        }
-      } catch (err) {
-        console.error("Resend fetch error:", err);
-      }
-    }
-  }
-
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ status: "verification_sent" });
 }
