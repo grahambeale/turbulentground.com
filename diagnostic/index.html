@@ -352,8 +352,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
       <!-- Country -->
       <div class="field">
-        <label>Country <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by region)</span></label>
-        <select id="country-select" aria-label="Country">
+        <label for="country-select">Country <span id="country-hint" style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by region)</span></label>
+        <select id="country-select" aria-describedby="country-hint">
           <option value="">Select country…</option>
           <option>United Kingdom</option><option>United States</option><option>Canada</option>
           <option>Australia</option><option>New Zealand</option><option>Ireland</option>
@@ -374,8 +374,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
       <!-- Sector -->
       <div class="field">
-        <label>Sector <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by industry)</span></label>
-        <select id="sector-select" aria-label="Sector">
+        <label for="sector-select">Sector <span id="sector-hint" style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(optional, helps benchmark by industry)</span></label>
+        <select id="sector-select" aria-describedby="sector-hint">
           <option value="">Select sector…</option>
           <option>Technology / SaaS</option>
           <option>Financial Services</option>
