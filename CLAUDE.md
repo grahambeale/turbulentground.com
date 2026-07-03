@@ -1,0 +1,1 @@
+Before doing anything, always read orchestration-prompt.md, okr.md, and content-requests.md in full. Follow them exactly.
