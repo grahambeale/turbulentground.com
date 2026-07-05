@@ -7,3 +7,5 @@ package-lock.json
 generate-og.mjs
 lighthouse-report.html
 .cowork-credential-test
+.DS_Store
+*.bak

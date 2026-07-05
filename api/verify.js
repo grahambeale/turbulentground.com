@@ -223,50 +223,93 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
-  const record = {
-    fields: {
-      timestamp:           data.timestamp ?? new Date().toISOString(),
-      email,
-      email_domain:        domain,
-      is_consumer_domain,
-      verified:            true,
-      team_name:           data.team_name        ?? "",
-      respondent_name:     data.respondent_name  ?? "",
-      score_safety:        data.score_safety      ?? 0,
-      score_trust:         data.score_trust       ?? 0,
-      score_incentives:    data.score_incentives  ?? 0,
-      score_curiosity:     data.score_curiosity   ?? 0,
-      score_collective:    data.score_collective  ?? 0,
-      score_overall:       data.score_overall     ?? 0,
-      raw_answers:         JSON.stringify(data.raw_answers ?? {}),
-      role:                data.role              ?? "",
-      org_size_band:       data.org_size_band     ?? "",
-      sector:              data.sector            ?? "",
-      country:             data.country           ?? "",
-      consent_results:     data.consent_results   ?? false,
-      consent_findings:    data.consent_findings  ?? false,
-      consent_contribute:  data.consent_contribute ?? false,
-      source:              data.source            ?? "",
-      utm:                 JSON.stringify(data.utm ?? {}),
-    },
+  const fields = {
+    timestamp:           data.timestamp ?? new Date().toISOString(),
+    email,
+    email_domain:        domain,
+    is_consumer_domain,
+    verified:            true,
+    attempt_id:          data.attempt_id ?? "",
+    team_name:           data.team_name        ?? "",
+    respondent_name:     data.respondent_name  ?? "",
+    score_safety:        data.score_safety      ?? 0,
+    score_trust:         data.score_trust       ?? 0,
+    score_incentives:    data.score_incentives  ?? 0,
+    score_curiosity:     data.score_curiosity   ?? 0,
+    score_collective:    data.score_collective  ?? 0,
+    score_overall:       data.score_overall     ?? 0,
+    raw_answers:         JSON.stringify(data.raw_answers ?? {}),
+    role:                data.role              ?? "",
+    org_size_band:       data.org_size_band     ?? "",
+    sector:              data.sector            ?? "",
+    country:             data.country           ?? "",
+    consent_results:     data.consent_results   ?? false,
+    consent_findings:    data.consent_findings  ?? false,
+    consent_contribute:  data.consent_contribute ?? false,
+    source:              data.source            ?? "",
+    utm:                 JSON.stringify(data.utm ?? {}),
   };
 
   try {
-    const atRes = await fetch(
-      `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${airtableToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ records: [record] }),
+    // Sprint 4: /api/submit now writes a pending (verified=false) record
+    // tagged with attempt_id. Look for it and update it in place, so a
+    // single diagnostic attempt produces one row, not two. If no pending
+    // record is found (pending write failed, or an older token issued
+    // before this change), fall back to the original create-on-verify
+    // behaviour so verification never fails because of this.
+    let updated = false;
+
+    if (data.attempt_id) {
+      const findFormula = encodeURIComponent(`{attempt_id}="${data.attempt_id}"`);
+      const findRes = await fetch(
+        `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}?filterByFormula=${findFormula}&maxRecords=1`,
+        { headers: { Authorization: `Bearer ${airtableToken}` } }
+      );
+      if (findRes.ok) {
+        const findJson = await findRes.json();
+        const existing = (findJson.records || [])[0];
+        if (existing) {
+          const patchRes = await fetch(
+            `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
+            {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${airtableToken}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ records: [{ id: existing.id, fields }] }),
+            }
+          );
+          if (patchRes.ok) {
+            updated = true;
+          } else {
+            const err = await patchRes.text();
+            console.error("Airtable patch failed, will fall back to create:", err);
+          }
+        }
+      } else {
+        const err = await findRes.text();
+        console.error("Airtable lookup by attempt_id failed, will fall back to create:", err);
       }
-    );
-    if (!atRes.ok) {
-      const err = await atRes.text();
-      console.error("Airtable error:", err);
-      return res.status(502).json({ error: "Failed to save submission" });
+    }
+
+    if (!updated) {
+      const atRes = await fetch(
+        `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${airtableToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ records: [{ fields }] }),
+        }
+      );
+      if (!atRes.ok) {
+        const err = await atRes.text();
+        console.error("Airtable error:", err);
+        return res.status(502).json({ error: "Failed to save submission" });
+      }
     }
   } catch (err) {
     console.error("Airtable fetch error:", err);

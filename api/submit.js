@@ -1,14 +1,19 @@
 // POST /api/submit
 // Validates email, checks MX record, generates signed verification token,
-// sends verification email. Does NOT write to Airtable yet — that happens
-// in /api/verify once the user clicks the link.
+// sends verification email. Also writes a *pending* (verified=false) record
+// to Airtable immediately, tagged with a unique attempt_id, so the team can
+// see diagnostic attempts that never get verified — not just completions.
+// This pending write is best-effort: if it fails, the core submit/verify
+// flow still works exactly as before (see Sprint 4 decision log).
 //
 // Env vars required:
 //   RESEND_API_KEY        — Resend API key
 //   RESEND_FROM           — verified sender e.g. results@turbulentground.com
 //   VERIFICATION_SECRET   — random hex string used to sign tokens
+//   AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE — same as /api/verify,
+//     used here only for the best-effort pending-record write (Sprint 4)
 
-import { createHmac } from "crypto";
+import { createHmac, randomUUID } from "crypto";
 import { promises as dns } from "dns";
 
 const CONSUMER_DOMAINS = new Set([
@@ -32,6 +37,69 @@ async function checkMx(domain) {
     return records && records.length > 0;
   } catch {
     return false;
+  }
+}
+
+async function writePendingRecord(data) {
+  const airtableToken = process.env.AIRTABLE_TOKEN;
+  const airtableBase  = process.env.AIRTABLE_BASE_ID;
+  const airtableTable = process.env.AIRTABLE_TABLE;
+
+  if (!airtableToken || !airtableBase || !airtableTable) {
+    console.error("Pending record skipped: Airtable env vars not configured");
+    return;
+  }
+
+  const domain = (data.email.split("@")[1] || "").toLowerCase();
+  const is_consumer_domain = CONSUMER_DOMAINS.has(domain);
+
+  const record = {
+    fields: {
+      attempt_id:          data.attempt_id,
+      timestamp:           data.timestamp ?? new Date().toISOString(),
+      email:               data.email,
+      email_domain:        domain,
+      is_consumer_domain,
+      verified:            false,
+      team_name:           data.team_name        ?? "",
+      respondent_name:     data.respondent_name  ?? "",
+      score_safety:        data.score_safety      ?? 0,
+      score_trust:         data.score_trust       ?? 0,
+      score_incentives:    data.score_incentives  ?? 0,
+      score_curiosity:     data.score_curiosity   ?? 0,
+      score_collective:    data.score_collective  ?? 0,
+      score_overall:       data.score_overall     ?? 0,
+      raw_answers:         JSON.stringify(data.raw_answers ?? {}),
+      role:                data.role              ?? "",
+      org_size_band:       data.org_size_band     ?? "",
+      sector:              data.sector            ?? "",
+      country:             data.country           ?? "",
+      consent_results:     data.consent_results   ?? false,
+      consent_findings:    data.consent_findings  ?? false,
+      consent_contribute:  data.consent_contribute ?? false,
+      source:              data.source            ?? "",
+      utm:                 JSON.stringify(data.utm ?? {}),
+    },
+  };
+
+  try {
+    const res = await fetch(
+      `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${airtableToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ records: [record] }),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Pending record write failed (non-fatal):", err);
+    }
+  } catch (err) {
+    console.error("Pending record fetch error (non-fatal):", err);
   }
 }
 
@@ -122,13 +190,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  const attemptId = randomUUID();
+
   const payload = {
     exp: Date.now() + 24 * 60 * 60 * 1000, // 24h expiry
-    data: { ...data, email }, // normalised email
+    data: { ...data, email, attempt_id: attemptId },
   };
 
   const token = signToken(payload, secret);
   const verifyUrl = `https://turbulentground.com/diagnostic?token=${token}`;
+
+  // Best-effort pending record — funnel visibility (Sprint 4). Never blocks
+  // or fails the submission if Airtable is unreachable or misconfigured.
+  await writePendingRecord({ ...data, email, attempt_id: attemptId });
 
   // Send verification email
   const resendKey  = process.env.RESEND_API_KEY;
