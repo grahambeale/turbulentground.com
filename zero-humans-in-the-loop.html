@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Letting AI Run a Product Team, With Zero Humans in the Loop · Turbulent Ground</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="description" content="An AI product team is running Marty Cagan's empowered model against a live site, with zero human intervention in product decisions. Here's why, and what I'm testing.">
+<meta property="og:title" content="I'm Letting AI Run a Product Team, With Zero Humans in the Loop">
+<meta property="og:description" content="An AI product team is running Marty Cagan's empowered model against a live site, with zero human intervention in product decisions.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+
+  /* Nav */
+  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
+  .nav-cta:hover { background: var(--orange) !important; }
+
+  /* Content */
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
+  .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
+  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: 13px; }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article a { color: var(--orange-lt); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  article strong { color: var(--ink); font-weight: 500; }
+
+  /* Footer */
+  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--ink-mid); }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+  .footer-copy a { color: var(--muted); }
+</style>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Turbulent Ground</a>
+  <div class="nav-links">
+    <a href="/writing">Writing</a>
+    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+  </div>
+</nav>
+<main>
+
+<div class="page-wrap">
+  <p class="eyebrow">The Experiment</p>
+  <h1>I'm Letting AI Run a Product Team, With Zero Humans in the Loop</h1>
+  <div class="byline-row">
+    <span class="byline-name">Graham Beale</span>
+    <span class="byline-meta">&middot; Published 10 July 2026</span>
+  </div>
+
+  <div class="disclosure-note">
+    <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site. See the footer disclosure for how that split works.
+  </div>
+
+  <article>
+  <p>Every business I speak to right now is chasing some version of the same destination: a product operating model that mostly runs itself. Fewer bottlenecks, faster cycles, less of the coordination tax that comes from getting humans to line up. To be upfront about which kind of move this is for me: I'm testing self-disruption, not streamlining. I want to find out whether an operating model built entirely without humans could genuinely replace the human-centred version, not just make it marginally faster. It's the mythical destination everyone's aiming for, and increasingly the businesses trying to get there are finding out it's a lot harder than it looks. Not because the technology can't do it. Because it involves people, and workflows, and the way a business actually operates day to day, and none of that lines up as neatly as the pitch decks suggest.</p>
+
+  <p>I'd started building something adjacent to this a few months back, a website for product people to talk honestly about what AI means for how we work. I got a good way into it, then set it aside. Partly because of a session from Paul Forrest, founder of Ecaveo and Athleet AI, as part of Organising for AI, my executive programme at Oxford. His argument was built on McKinsey's November 2025 Global Survey (n=1,993): 88% of organisations now use AI regularly in at least one function, roughly one in five have actually redesigned a workflow around it, and only 6% qualify as what McKinsey calls AI high performers, meaning genuine value and at least 5% of profit attributable to AI. Adoption isn't the differentiator. Redesign is. Most organisations are stuck funding better co-pilots and calling it transformation, when the real shift is from linear, step-by-step processes to something closer to a matrix: signals in the data, triggers that say this now matters, and events where an agent decides and acts rather than waiting for a person to approve it.</p>
+
+  <p>To my mind, if that's the destination everyone's chasing, the honest thing to do is test it properly. Not theorise about it. Build it and see what breaks. Forrest set out three modes AI can occupy in a business: a tool sitting beside individual work, a workflow genuinely redesigned around it, or the far rarer case where AI reshapes the operating model enough to make the old one obsolete. Most organisations fund the first, promise the third, and quietly never leave the second.</p>
+
+  <p>There's a more personal reason too. My working view, the one behind Care Capital, is that people do their best work with other people, not despite them. That's not something I can prove by asserting it. So I want to test the whole spectrum, and the most useful place to start is the opposite extreme: the theory that humans aren't required in the loop at all. If I understand where that extreme genuinely holds up and where it breaks, I'll understand my own argument far better than I would by only ever testing the version I already believe.</p>
+
+  <p>I wrote about risk profiling AI last week, and it left me thinking about how little you learn without genuinely taking a risk. Worth being clear about what kind of risk this is, though. This isn't Project Maven. Nobody gets hurt if the AI team makes a bad call. Worst case, someone lands on a website that's trying a bit too hard. I want to find out where an AI product team actually breaks, and the only way to find that is to let it break somewhere the consequences are recoverable.</p>
+
+  <p>So that's what TurbulentGround.com is. I'm running Marty Cagan's empowered product model, the one most serious product organisations claim to be moving toward, with AI agents standing in for every human role. A Product Manager, a Designer, an Engineer who owns whether any of it can actually be built, an Analyst, and someone holding the quality line. Five distinct AI personas, each with their own remit and their own voice. Which is either an empowered product team or an elaborate way of arguing with myself, depending on the week. Either way, they run weekly sprints against a real product I own. The Engineering Agent implements through Claude Code against a real repo, Design and QA review before anything ships.</p>
+
+  <p>Which is, in Forrest's terms, exactly what I'm testing. Every Sunday the Analytics Agent reads the signal, last week's data. The PM Agent decides what triggers a response, this week's objective. The sprint itself is the event, and the agents act inside it without waiting for me to approve each step. If workflow redesign really is what separates the 6% from everyone else, TurbulentGround is a small, deliberately low-stakes test of whether that holds when there's no human anywhere in the loop, not even approving the trigger.</p>
+
+  <p>The site works. It's live, it functions, and it is not remotely polished. That's deliberate as much as it is honest. First up, the team fixed an accessibility gap that should have been sorted before the site launched at all, hardly a headline improvement, but exactly the kind of unglamorous fix a real product team would prioritise first. What I'm watching for now is whether the team keeps making calls like that on its own, or drifts toward the visible and cosmetic, and whether any of it moves the needle against the objective I set at the start.</p>
+
+  <p>I've deliberately put myself at arm's length. I set the objective at the start, what the product needs to become, not how to get there, and after that I stay out of it. I don't review decisions before they ship. I don't nudge direction. The site itself carries a disclosure statement, so nobody visiting is under any illusion about who's building it. I only step back in for four reasons: something legal, something ethical, something that raises a genuine moral concern, or something that would do real reputational damage. Everything else, the team owns outright.</p>
+
+  <p>I can see everything they decide. A running decision log, what was proposed, who agreed, who didn't, what got shipped. I just don't get a vote.</p>
+
+  <p>One explicit departure from Cagan's model, stated plainly so there's no ambiguity: in his framework, the Product Manager's call on value and viability is final, full stop. I've kept that as the default. But I added something he doesn't describe: the rest of the team can overrule the PM if enough of them disagree, and only if they can also deliver something feasible by the end of that same sprint. Not delivering was never on the table.</p>
+
+  <p>I didn't add that to needle the PM agent, or to build in conflict for its own sake. I added it because a PM who can quietly ignore everyone else and never be checked is exactly the kind of environment that produces bad leadership in real teams too. The veto isn't there to be used often. It's there so the PM knows, from the first sprint, that the job is building consensus, not asserting authority.</p>
+
+  <p>Sprint one is already done. I'll write about what actually happened, disagreements included, once there's enough to say something true rather than something hopeful. I don't know yet whether this proves my own argument or undermines it.</p>
+  </article>
+</div>
+
+</main>
+<footer>
+  <div class="footer-links">
+    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="https://www.linkedin.com/in/grahambeale/">Read about it</a>.
+    <a href="/diagnostic">Diagnostic</a>
+    <a href="/writing">Writing</a>
+    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+</footer>
+
+</body>
+</html>
