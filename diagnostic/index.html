@@ -23,7 +23,7 @@
 :root{
   --bg:#131110;--surface:#1c1915;--surface2:#26211c;
   --border:rgba(217,87,28,0.15);--border2:rgba(232,220,200,0.10);
-  --orange:#d9571c;--orange-dim:rgba(217,87,28,0.08);--orange-mid:rgba(217,87,28,0.25);
+  --orange:#d9571c;--orange-lt:#e8763a;--orange-dim:rgba(217,87,28,0.08);--orange-mid:rgba(217,87,28,0.25);
   --text:#e8dcc8;--muted:#9e8e7c;--muted2:#9a8a78;
   --c1:#d9571c;--c2:#c8b89a;--c3:#8ab4c8;--c4:#a8c89a;--c5:#d4a8c8;
   --green:#7ec87e;--amber:#e8a840;--red:#e86060;
@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 
 
 .nav-step{font-family:'Outfit',sans-serif;font-size:12px;color:var(--muted);padding:0 20px;height:64px;display:flex;align-items:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.06em;white-space:nowrap}
-.nav-step.active{color:var(--orange);border-bottom-color:var(--orange)}
+.nav-step.active{color:var(--orange-lt);border-bottom-color:var(--orange-lt)}
 .nav-step.done{color:var(--muted2)}
 .page{display:none}
 .page.active{display:block}
@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 /* INTRO */
 .intro-wrap{min-height:calc(100vh - 72px);display:flex;align-items:flex-start;justify-content:center;padding:108px 48px 60px}
 .intro-inner{max-width:640px;width:100%}
-.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange-lt);margin-bottom:16px}
 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-weight:300;line-height:1.0;margin-bottom:16px;letter-spacing:-0.025em}
 .strapline{font-size:16px;color:var(--muted);margin-bottom:24px;letter-spacing:.01em;font-weight:300}
 .lead{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:28px}
@@ -81,15 +81,15 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-we
 .btn{background:#b84215;color:#fff;border:none;border-radius:40px;padding:14px 28px;font-size:14px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .22s;width:100%}
 .btn:hover{opacity:.9;transform:translateY(-1px)}
 .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2);border-radius:40px;padding:12px 24px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange-lt)}
 
 /* BETA */
-.beta-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,118,0,0.12);border:0.5px solid rgba(255,118,0,0.35);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:500;color:var(--orange);letter-spacing:.08em;text-transform:uppercase;margin-left:8px;flex-shrink:0}
+.beta-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,118,0,0.12);border:0.5px solid rgba(255,118,0,0.35);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:500;color:var(--orange-lt);letter-spacing:.08em;text-transform:uppercase;margin-left:8px;flex-shrink:0}
 .beta-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .beta-notice{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start}
 .beta-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.beta-notice-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:5px}
+.beta-notice-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange-lt);margin-bottom:5px}
 .beta-notice-text{font-size:14px;color:var(--muted2);line-height:1.65}
 
 /* SURVEY */
@@ -119,7 +119,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-we
 .results-wrap{max-width:800px;margin:0 auto;padding:48px 24px 80px}
 h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-weight:300;line-height:1.1;margin-bottom:10px;letter-spacing:-0.015em}
 .overall-card{background:var(--orange-dim);border:1px solid var(--orange-mid);border-radius:16px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
-.overall-pct{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--orange);line-height:1;flex-shrink:0}
+.overall-pct{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--orange-lt);line-height:1;flex-shrink:0}
 .overall-zone{font-size:15px;font-weight:500;margin-bottom:6px}
 .overall-desc{font-size:15px;color:var(--muted2);line-height:1.65}
 .positive-card{background:rgba(126,200,126,0.07);border:0.5px solid rgba(126,200,126,0.25);border-radius:10px;padding:18px 20px;margin-bottom:28px}
@@ -142,7 +142,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .vs-badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
 .vs-above{background:rgba(126,200,126,0.15);color:var(--green)}
 .vs-below{background:rgba(232,96,96,0.15);color:var(--red)}
-.vs-same{background:rgba(255,118,0,0.12);color:var(--orange)}
+.vs-same{background:rgba(255,118,0,0.12);color:var(--orange-lt)}
 .radar-wrap-results{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;margin-bottom:32px;display:flex;justify-content:center}
 .factor-cards{}
 .factor-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;margin-bottom:12px;overflow:hidden}
@@ -156,13 +156,13 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .factor-card.open .fc-body{display:block}
 .fc-tabs{display:flex;gap:0;margin:16px 0 0;border-bottom:0.5px solid var(--border)}
 .fc-tab{font-size:11px;color:var(--muted);padding:8px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.fc-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.fc-tab.active{color:var(--orange-lt);border-bottom-color:var(--orange-lt)}
 .fc-panel{display:none;padding-top:16px}
 .fc-panel.active{display:block}
 .fc-positive{background:rgba(126,200,126,0.06);border:0.5px solid rgba(126,200,126,0.2);border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:15px;color:var(--text);line-height:1.65}
 .fc-positive-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:6px}
 .rec-item{display:flex;gap:10px;margin-bottom:12px;font-size:15px;line-height:1.6;color:var(--muted2)}
-.rec-num{color:var(--orange);font-family:'Cormorant Garamond',serif;font-size:14px;flex-shrink:0;line-height:1.4}
+.rec-num{color:var(--orange-lt);font-family:'Cormorant Garamond',serif;font-size:14px;flex-shrink:0;line-height:1.4}
 .disc-prompt-item{padding:9px 0;border-bottom:0.5px solid var(--border);font-size:15px;color:var(--muted2);line-height:1.55}
 .disc-prompt-item:last-child{border-bottom:none}
 .q-score-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:11px;color:var(--muted);line-height:1.5}
@@ -175,7 +175,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .export-row{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
 .footer-note{margin-top:32px;font-size:11px;color:var(--muted);border-top:0.5px solid var(--border);padding-top:20px;line-height:1.75}
 .feedback-card{margin-top:32px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:22px 24px}
-.feedback-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:8px}
+.feedback-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange-lt);margin-bottom:8px}
 .feedback-text{font-size:15px;color:var(--muted2);line-height:1.65;margin-bottom:16px}
 .feedback-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;resize:vertical;min-height:80px;transition:border-color .2s;margin-top:12px}
 .feedback-input:focus{border-color:var(--orange)}
@@ -183,11 +183,11 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 
 /* SHARE CARD */
 .share-card{background:var(--surface);border:0.5px solid var(--orange-mid);border-radius:12px;padding:22px 24px;margin-top:32px}
-.share-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);margin-bottom:8px}
+.share-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange-lt);margin-bottom:8px}
 .share-text{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
 .share-message{background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:14px;white-space:pre-wrap}
 .share-code{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 14px;font-size:12px;color:var(--text);margin-bottom:14px}
-.share-code strong{color:var(--orange);font-size:14px;font-family:'Cormorant Garamond',serif;letter-spacing:.05em}
+.share-code strong{color:var(--orange-lt);font-size:14px;font-family:'Cormorant Garamond',serif;letter-spacing:.05em}
 
 /* COHORT CARD */
 .cohort-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;margin-top:28px}
@@ -216,9 +216,9 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .capture-field input:focus{border-color:var(--orange)}
 .capture-field input::placeholder{color:var(--muted)}
 .consent{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text);line-height:1.45;margin-top:14px;cursor:pointer}
-.consent input{margin-top:1px;width:15px;height:15px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
+.consent input{margin-top:1px;width:15px;height:15px;accent-color:var(--orange-lt);flex-shrink:0;cursor:pointer}
 .capture-note{font-size:11px;color:var(--muted);line-height:1.6;margin:14px 0}
-.capture-note a{color:var(--orange);text-decoration:none}
+.capture-note a{color:var(--orange-lt);text-decoration:none}
 .capture-card .btn{width:100%;margin-top:4px}
 .capture-error{font-size:12px;color:var(--red);margin-top:10px;display:none}
 
@@ -233,7 +233,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .nav-links-wrap{display:flex;flex-direction:row;align-items:center;gap:28px;width:420px;justify-content:flex-end;}
 .nav-link{font-family:'Outfit',sans-serif;font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;letter-spacing:0.06em;transition:color 0.2s;white-space:nowrap;}
 .nav-link:hover{color:#f5f0e8;}
-.nav-link.active{color:var(--orange);}
+.nav-link.active{color:var(--orange-lt);}
 .nav-btn-wrap{overflow:hidden;flex-shrink:0;max-width:200px;opacity:1;transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;}
 .nav.scrolled .nav-btn-wrap{max-width:0;opacity:0;pointer-events:none;}
 .nav-btn{display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:'Outfit';font-size:13px;font-weight:500;color:#fff;background:#b84215;text-decoration:none;padding:9px 20px;border-radius:40px;letter-spacing:0.04em;transition:all 0.22s;}
@@ -244,7 +244,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 /* Step nav in body */
 .step-nav{display:flex;flex-direction:row;align-items:center;gap:0;margin-bottom:24px;border-bottom:1px solid var(--border2);}
 .step-item{display:inline-flex;align-items:center;font-family:'Outfit',sans-serif;font-size:12px;color:var(--muted);padding:10px 28px 10px 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;letter-spacing:.06em;white-space:nowrap;}
-.step-item.active{color:var(--orange);border-bottom-color:var(--orange);}
+.step-item.active{color:var(--orange-lt);border-bottom-color:var(--orange-lt);}
 .step-item.done{color:var(--muted2);}
 
 /* Nav fixed + scroll */
@@ -261,8 +261,8 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .mobile-menu{position:fixed;inset:0;z-index:199;background:rgba(14,11,8,0.985);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;padding:100px 36px 40px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 0.35s ease,transform 0.35s ease,visibility 0.35s;}
 .mobile-menu.open{opacity:1;visibility:visible;transform:none;}
 .mobile-menu a{font-family:'Outfit',sans-serif;font-weight:400;font-size:20px;letter-spacing:0.05em;color:#e8dcc8;text-decoration:none;padding:12px 0;line-height:1.2;transition:color 0.2s ease;}
-.mobile-menu a.active{color:var(--orange);}
-.mobile-menu a:hover{color:var(--orange);}
+.mobile-menu a.active{color:var(--orange-lt);}
+.mobile-menu a:hover{color:var(--orange-lt);}
 .mobile-menu .mobile-menu-btn{font-family:'Outfit',sans-serif;font-weight:500;font-size:16px;color:#fff;background:#b84215;padding:14px 30px;border-radius:40px;margin-top:26px;}
 @media(max-width:720px){
   .nav-links-wrap{display:none;}
@@ -282,7 +282,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 <nav class="nav" id="main-nav">
   <a href="../index.html" id="nav-logo-link" style="display:flex;align-items:center;gap:14px;text-decoration:none;margin-right:48px;padding-right:48px;border-right:1px solid rgba(232,220,200,0.1);flex-shrink:0;"
-    onmouseenter="this.querySelector('#nav-wm').style.color='var(--orange)'"
+    onmouseenter="this.querySelector('#nav-wm').style.color='var(--orange-lt)'"
     onmouseleave="this.querySelector('#nav-wm').style.color='#f5f0e8'">
     <div class="nav-logo-mark">
       <svg width="40" height="44" viewBox="0 0 52 52">
@@ -794,7 +794,7 @@ async function renderResults(fScores, overall) {
           <div class="fc-panel active" id="panel-${f.key}-positive">
             <div class="fc-positive"><div class="fc-positive-label">Insight</div>${factor.positive[level]}</div>
             <p style="font-size:15px;color:var(--muted2);line-height:1.7">${factor.discussion}</p>
-            ${post ? `<p style="margin-top:14px;font-size:13px;color:var(--muted)">Further reading: <a href="${post.url}" target="_blank" style="color:var(--orange);text-decoration:none">${post.title} →</a></p>` : ''}
+            ${post ? `<p style="margin-top:14px;font-size:13px;color:var(--muted)">Further reading: <a href="${post.url}" target="_blank" style="color:var(--orange-lt);text-decoration:none">${post.title} →</a></p>` : ''}
           </div>
           <div class="fc-panel" id="panel-${f.key}-recs">
             ${factor.recs[level].map((r,i) => `<div class="rec-item"><div class="rec-num">${i+1}</div><div>${r}</div></div>`).join('')}
@@ -808,7 +808,7 @@ async function renderResults(fScores, overall) {
 
     <!-- Capture: emailed summary + comparative findings -->
     <div class="email-card capture-card" id="capture-card">
-      <div class="email-label" style="color:var(--orange)">Get your results by email</div>
+      <div class="email-label" style="color:var(--orange-lt)">Get your results by email</div>
       <p style="font-size:14px;color:var(--muted2);line-height:1.65;margin-bottom:16px">Enter your work email and we'll send your scores and recommendations as a summary. You can also opt into the comparative findings as more teams take part.</p>
       <div class="capture-field"><input type="email" id="cap-email" placeholder="you@company.com" autocomplete="email" aria-label="Work email"></div>
       <label class="consent"><input type="checkbox" id="consent-results" checked><span>Email me a copy of my results.</span></label>
@@ -832,7 +832,7 @@ async function renderResults(fScores, overall) {
 
     <div class="footer-note">
       Care Capital is a framework developed by Graham Beale, part of the writing on TurbulentGround.<br>
-      <a href="https://turbulentground.com" target="_blank" style="color:var(--orange);text-decoration:none">turbulentground.com</a> · We only store a record if you submit your work email above, and you can request deletion at any time. See the <a href="../privacy.html" style="color:var(--orange);text-decoration:none">privacy note</a>.
+      <a href="https://turbulentground.com" target="_blank" style="color:var(--orange-lt);text-decoration:none">turbulentground.com</a> · We only store a record if you submit your work email above, and you can request deletion at any time. See the <a href="../privacy.html" style="color:var(--orange-lt);text-decoration:none">privacy note</a>.
     </div>
   `;
 
@@ -1173,7 +1173,7 @@ function goPage(n) {
           <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase;margin-bottom:24px;">Turbulent Ground</p>
           <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);margin-bottom:16px;">Verification failed</h2>
           <p style="font-size:15px;color:var(--muted2);line-height:1.6;">${json.error || 'This link is invalid or has expired.'}<br><br>
-          <a href="/diagnostic" style="color:var(--orange);text-decoration:none;">Retake the diagnostic</a> to get a fresh link.</p>
+          <a href="/diagnostic" style="color:var(--orange-lt);text-decoration:none;">Retake the diagnostic</a> to get a fresh link.</p>
         </div>`;
       }
       return;
@@ -1206,7 +1206,7 @@ function goPage(n) {
         <div style="position:absolute;top:32px;left:${pMin}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">${pMin}</div>
         <div style="position:absolute;top:32px;left:${pMax}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">${pMax}</div>
         <div style="position:absolute;top:32px;left:${pMean}%;font-size:10px;color:var(--muted);transform:translateX(-50%);">avg</div>
-        <div style="position:absolute;top:32px;left:${pUser}%;font-size:10px;color:var(--orange);transform:translateX(-50%);">you</div>
+        <div style="position:absolute;top:32px;left:${pUser}%;font-size:10px;color:var(--orange-lt);transform:translateX(-50%);">you</div>
       </div>`;
     }
 
@@ -1251,12 +1251,12 @@ function goPage(n) {
 
     if (intro) {
       intro.innerHTML = `<div style="max-width:640px;margin:100px auto 80px;padding:0 24px;">
-        <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--orange);text-transform:uppercase;margin-bottom:16px;">Email verified</p>
+        <p style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.16em;color:var(--orange-lt);text-transform:uppercase;margin-bottom:16px;">Email verified</p>
         <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;color:var(--ink);line-height:1.15;margin-bottom:8px;">Your Care Capital results</h2>
         <p style="font-size:15px;color:var(--muted2);margin-bottom:32px;">Overall score: <strong style="color:var(--ink);font-size:20px;">${sub.score_overall ?? 0}</strong> / 100</p>
         <div style="margin-bottom:8px;">${scoreRows}</div>
         ${companyHtml}
-        <p style="font-size:13px;color:var(--muted);margin-top:32px;line-height:1.6;">Your results have also been emailed to <strong style="color:var(--ink-mid);">${sub.email}</strong>. Read the full framework at <a href="/care-capital" style="color:var(--orange);text-decoration:none;">turbulentground.com/care-capital</a>.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:32px;line-height:1.6;">Your results have also been emailed to <strong style="color:var(--ink-mid);">${sub.email}</strong>. Read the full framework at <a href="/care-capital" style="color:var(--orange-lt);text-decoration:none;">turbulentground.com/care-capital</a>.</p>
         <div style="margin-top:24px;">
           <a href="/diagnostic" style="display:inline-block;font-size:13px;color:var(--muted);border:1px solid #26211c;padding:9px 20px;border-radius:40px;text-decoration:none;">Retake the diagnostic</a>
         </div>
