@@ -16,9 +16,11 @@
 <meta name="twitter:description" content="25 questions, five dimensions, one score. Find out how much Care Capital your team has.">
 <meta name="twitter:image" content="https://turbulentground.com/og-image.png">
 <link rel="icon" type="image/png" href="../favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#131110;--surface:#1c1915;--surface2:#26211c;
@@ -568,19 +570,29 @@ const FACTORS = [
 ];
 
 // ── MODE ────────────────────────────────────────────────────────────────
+// Note: team mode's UI (mode toggle, team-code field) was removed from this
+// page (commit ec8418a, "Remove team mode — individual submissions only").
+// These functions are kept only so old ?code= links and the team_name
+// payload field degrade safely instead of throwing; every element lookup
+// below is guarded rather than assumed to exist.
 function setMode(mode) {
   completionMode = mode;
-  document.getElementById('mode-individual').classList.toggle('active', mode === 'individual');
-  document.getElementById('mode-team').classList.toggle('active', mode === 'team');
-  document.getElementById('team-code-field').style.display = mode === 'team' ? 'block' : 'none';
+  const modeIndividual = document.getElementById('mode-individual');
+  const modeTeam = document.getElementById('mode-team');
+  const teamCodeField = document.getElementById('team-code-field');
+  if (modeIndividual) modeIndividual.classList.toggle('active', mode === 'individual');
+  if (modeTeam) modeTeam.classList.toggle('active', mode === 'team');
+  if (teamCodeField) teamCodeField.style.display = mode === 'team' ? 'block' : 'none';
 }
 
 function generateCode() {
+  const teamCodeInput = document.getElementById('team-code-input');
+  if (!teamCodeInput) return;
   const words = ['ALPHA','BETA','DELTA','ECHO','FOXTROT','GRANITE','HORIZON','INDIGO','JADE','KESTREL','LUNAR','NOVA','ORBIT','PRISM','QUARTZ','RIVER','SUMMIT','TITAN','ULTRA','VERTEX'];
   const w = words[Math.floor(Math.random() * words.length)];
   const n = Math.floor(Math.random() * 900) + 100;
   const code = w + '-' + n;
-  document.getElementById('team-code-input').value = code;
+  teamCodeInput.value = code;
 }
 
 // ── CHECK URL FOR PRE-FILLED TEAM CODE ──────────────────────────────────
@@ -588,7 +600,8 @@ function generateCode() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('code')) {
     setMode('team');
-    document.getElementById('team-code-input').value = decodeURIComponent(params.get('code'));
+    const teamCodeInput = document.getElementById('team-code-input');
+    if (teamCodeInput) teamCodeInput.value = decodeURIComponent(params.get('code'));
   }
 })();
 
@@ -940,7 +953,7 @@ async function submitCapture() {
   const payload = {
     timestamp: new Date().toISOString(),
     email,
-    team_name: (document.getElementById('cap-team').value || '').trim(),
+    team_name: (document.getElementById('cap-team') || {}).value || '',
     respondent_name: (document.getElementById('respondent-name') || {}).value || '',
     score_safety: scores.safety, score_trust: scores.trust,
     score_incentives: scores.incentives, score_curiosity: scores.curiosity,
