@@ -32,11 +32,25 @@ test('diagnostic: begin, answer all 25 questions, submit, capture email', async 
 
   // Answer all 25 questions. Each question is a row of five radio inputs
   // named q_<factorIndex>_<questionIndex>; select the middle option (3) for
-  // each, matching real user interaction (a real click on the radio),
-  // not a scripted shortcut into internal JS state.
+  // each, matching real user interaction.
+  //
+  // Each input is deliberately visually-hidden (clip-rect pattern, 1x1px)
+  // with a sibling .likert-circle providing the visible clickable surface —
+  // a real visitor clicks the circle (or anywhere in the wrapping <label>),
+  // which natively toggles the associated hidden input via standard
+  // label-for-input semantics. A real mouse click never lands on the 1x1px
+  // input itself. This test's first run (2026-07-22, GitHub Actions) tried
+  // clicking the raw <input>, which Playwright resolves to a real, if
+  // tiny, hit-test point — and that point was found by the browser's
+  // elementFromPoint check to sometimes belong to a neighbouring
+  // .likert-circle and sometimes to the fixed nav, depending on scroll
+  // timing. That's Playwright's actionability check being (correctly)
+  // stricter than the site needs to be for a real user, not necessarily a
+  // real usability defect — clicking the label, as below, both matches
+  // real interaction and avoids the near-zero-size target entirely.
   for (let fi = 0; fi < 5; fi++) {
     for (let qi = 0; qi < 5; qi++) {
-      await page.locator(`input[name="q_${fi}_${qi}"][value="3"]`).click();
+      await page.locator(`label.likert-opt:has(input[name="q_${fi}_${qi}"][value="3"])`).click();
     }
   }
 
