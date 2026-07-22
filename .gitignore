@@ -9,3 +9,5 @@ lighthouse-report.html
 .cowork-credential-test
 .DS_Store
 *.bak
+playwright-report/
+test-results/

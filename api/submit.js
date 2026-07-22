@@ -16,6 +16,17 @@
 import { createHmac, randomUUID } from "crypto";
 import { promises as dns } from "dns";
 
+// Reserved address for the automated Playwright smoke test (Sprint 7, see
+// .github/workflows/diagnostic-smoke-test.yml and decision-log.md row 15).
+// Exercises the full client -> server round trip on the LIVE site without
+// sending a real verification email or writing a real Airtable row each
+// time the schedule fires — both of which would otherwise pollute exactly
+// the "real submissions" data the team has struggled to interpret since
+// Sprint 4. Everything else (format check, consumer-domain check, token
+// signing, response shape) still runs for real, so a break in any of that
+// still fails the smoke test.
+const SMOKE_TEST_EMAIL = "playwright-smoke-test@turbulentground.com";
+
 const CONSUMER_DOMAINS = new Set([
   "gmail.com","googlemail.com","outlook.com","hotmail.com","hotmail.co.uk",
   "hotmail.fr","live.com","live.co.uk","msn.com","yahoo.com","yahoo.co.uk",
@@ -166,6 +177,7 @@ export default async function handler(req, res) {
   }
 
   const domain = email.split("@")[1];
+  const isSmokeTest = email === SMOKE_TEST_EMAIL;
 
   // Consumer domain check
   if (CONSUMER_DOMAINS.has(domain)) {
@@ -174,8 +186,11 @@ export default async function handler(req, res) {
     });
   }
 
-  // MX record check — domain must have mail configured
-  const hasMx = await checkMx(domain);
+  // MX record check — domain must have mail configured. Bypassed only for
+  // the reserved smoke-test address, so the automated check doesn't depend
+  // on turbulentground.com's own DNS/MX setup (unrelated to what it's
+  // actually testing) and can't be flaky because of it.
+  const hasMx = isSmokeTest ? true : await checkMx(domain);
   if (!hasMx) {
     return res.status(400).json({
       error: "We couldn't verify that email domain. Please check your address and try again."
@@ -202,7 +217,11 @@ export default async function handler(req, res) {
 
   // Best-effort pending record — funnel visibility (Sprint 4). Never blocks
   // or fails the submission if Airtable is unreachable or misconfigured.
-  await writePendingRecord({ ...data, email, attempt_id: attemptId });
+  // Skipped for the smoke test specifically so scheduled runs don't create
+  // real Airtable rows (see SMOKE_TEST_EMAIL comment above).
+  if (!isSmokeTest) {
+    await writePendingRecord({ ...data, email, attempt_id: attemptId });
+  }
 
   // Send verification email
   const resendKey  = process.env.RESEND_API_KEY;
@@ -211,6 +230,18 @@ export default async function handler(req, res) {
   if (!resendKey || !resendFrom || resendKey === "placeholder") {
     console.error("Missing Resend env vars");
     return res.status(500).json({ error: "Server configuration error" });
+  }
+
+  // The smoke test stops here, deliberately: everything above it (JSON
+  // parsing, email/domain validation, VERIFICATION_SECRET presence, token
+  // signing) has now run for real using the actual deployed code and env
+  // config, which is exactly what a smoke test should prove works. Sending
+  // a real email through Resend on every scheduled run is the one part
+  // worth skipping — it has no bearing on whether the *submission* flow
+  // works, and would otherwise deliver a real inbox message a few times a
+  // day to an address nobody reads.
+  if (isSmokeTest) {
+    return res.status(200).json({ status: "verification_sent", smoke_test: true });
   }
 
   try {

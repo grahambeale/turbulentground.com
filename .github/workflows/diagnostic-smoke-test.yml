@@ -1,0 +1,74 @@
+name: Diagnostic smoke test
+
+# Real-browser test of the diagnostic's full submission flow, run against
+# the LIVE site (turbulentground.com) — not a preview, not a mock. This
+# exists because a client-side bug silently broke every real diagnostic
+# submission from Sprint 5 onward, undetected for four sprints, because
+# nothing in the review process actually ran the page in a browser. See
+# decision-log.md row 15 (2026-07-19) and tests/smoke/diagnostic.spec.js.
+#
+# Runs on a schedule (independent of deploys, so it also catches something
+# breaking for reasons unrelated to a push — e.g. an expired API key, a
+# third-party outage), after every push to main (with a short wait for
+# Vercel's deploy to land), and on demand.
+#
+# On failure: GitHub emails failure notifications for scheduled workflow
+# runs to the repository owner by default (Settings > Notifications).
+# No additional alerting is configured — if that's not enough, this is the
+# place to add a Slack/email/etc. step to the "notify" job below.
+
+on:
+  schedule:
+    - cron: '0 6,18 * * *' # 06:00 and 18:00 UTC daily
+  push:
+    branches: [main]
+    paths:
+      - 'diagnostic/**'
+      - 'api/submit.js'
+      - 'api/verify.js'
+      - 'tests/smoke/**'
+      - '.github/workflows/diagnostic-smoke-test.yml'
+  workflow_dispatch: {} # manual "Run workflow" button in the Actions tab
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Fast, no-browser regression tests first — if these fail, the
+      # browser-based smoke test below would fail for the same underlying
+      # reason anyway, so fail fast and skip the slower step.
+      - name: Run script-level regression tests (no browser required)
+        run: node tests/diagnostic-flow.test.js && node tests/submit-api.test.mjs && node tests/verify-dedup.test.mjs
+
+      - name: Install Playwright + Chromium
+        run: |
+          npm install --no-save @playwright/test
+          npx playwright install --with-deps chromium
+
+      # Only on a push-triggered run: give Vercel a little time to finish
+      # deploying before hitting the live site. Scheduled/manual runs skip
+      # this — they're testing "is it working right now", not "did this
+      # specific push deploy successfully".
+      - name: Wait for deploy to land (push-triggered runs only)
+        if: github.event_name == 'push'
+        run: sleep 90
+
+      - name: Run smoke test against the live site
+        run: npx playwright test
+        env:
+          SMOKE_TEST_BASE_URL: https://turbulentground.com
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

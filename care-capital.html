@@ -373,6 +373,31 @@ footer {
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:3px solid #ffb37a !important;outline-offset:2px}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<script>
+// Client-side error telemetry, added Sprint 7 (2026-07-19). Without this,
+// a JS crash (e.g. a form handler throwing before its request is sent) is
+// invisible to analytics and looks identical to "nobody tried" — which is
+// exactly what let the diagnostic submission bug go undetected for four
+// sprints. This reports uncaught errors as a Plausible event so they show
+// up as real data in the weekly sprint review. See decision-log.md row 15.
+(function(){
+  function reportJsError(message, source){
+    try{
+      if (typeof plausible !== 'function') return;
+      // Skip the generic cross-origin "Script error." placeholder browsers
+      // emit for errors thrown by third-party scripts (extensions, ad
+      // blockers, etc.) — no useful information, just noise.
+      if (!message || message === 'Script error.') return;
+      plausible('JS Error', { props: { message: String(message).slice(0,120), page: location.pathname, source: source || '' } });
+    } catch(err) { /* error reporting must never itself throw */ }
+  }
+  window.addEventListener('error', function(e){ reportJsError(e.message, 'onerror'); });
+  window.addEventListener('unhandledrejection', function(e){
+    var msg = (e.reason && e.reason.message) ? e.reason.message : String(e.reason);
+    reportJsError(msg, 'unhandledrejection');
+  });
+})();
+</script>
 </head>
 <body>
 

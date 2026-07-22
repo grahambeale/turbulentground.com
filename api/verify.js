@@ -257,39 +257,73 @@ export default async function handler(req, res) {
     // record is found (pending write failed, or an older token issued
     // before this change), fall back to the original create-on-verify
     // behaviour so verification never fails because of this.
+    //
+    // Sprint 8: this lookup was found, via real Airtable data, to
+    // sometimes miss a pending record that had in fact already been
+    // written moments earlier — producing exactly the duplicate row this
+    // mechanism exists to prevent (two records sharing one attempt_id, one
+    // verified:false, one verified:true). Root cause not confirmed from
+    // inside this sandbox (no access to Airtable's or Vercel's internal
+    // timing/logs) — the two leading candidates are Airtable's REST API
+    // not being strictly read-after-write consistent for a filterByFormula
+    // query issued a few seconds after the write, or Vercel routing the
+    // submit and verify requests to different regions during a deploy
+    // rollout. Rather than guess which, this adds one short retry before
+    // falling back to create — cheap, and mitigates both candidate causes
+    // the same way, since either resolves given a brief delay.
     let updated = false;
 
     if (data.attempt_id) {
       const findFormula = encodeURIComponent(`{attempt_id}="${data.attempt_id}"`);
-      const findRes = await fetch(
-        `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}?filterByFormula=${findFormula}&maxRecords=1`,
-        { headers: { Authorization: `Bearer ${airtableToken}` } }
-      );
-      if (findRes.ok) {
-        const findJson = await findRes.json();
-        const existing = (findJson.records || [])[0];
-        if (existing) {
-          const patchRes = await fetch(
-            `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
-            {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${airtableToken}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ records: [{ id: existing.id, fields }] }),
-            }
-          );
-          if (patchRes.ok) {
-            updated = true;
-          } else {
-            const err = await patchRes.text();
-            console.error("Airtable patch failed, will fall back to create:", err);
+      const findUrl = `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}?filterByFormula=${findFormula}&maxRecords=1`;
+
+      let existing = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        if (attempt > 0) {
+          // Short backoff before the one retry — long enough to clear a
+          // brief consistency/propagation lag, short enough not to hold up
+          // the visitor waiting on their results.
+          await new Promise(r => setTimeout(r, 700));
+        }
+        const findRes = await fetch(findUrl, {
+          headers: { Authorization: `Bearer ${airtableToken}` },
+        });
+        if (findRes.ok) {
+          const findJson = await findRes.json();
+          existing = (findJson.records || [])[0] || null;
+          if (existing) break;
+        } else {
+          const err = await findRes.text();
+          console.error(`Airtable lookup by attempt_id failed (attempt ${attempt + 1}):`, err);
+        }
+      }
+
+      if (existing) {
+        const patchRes = await fetch(
+          `https://api.airtable.com/v0/${airtableBase}/${encodeURIComponent(airtableTable)}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${airtableToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ records: [{ id: existing.id, fields }] }),
           }
+        );
+        if (patchRes.ok) {
+          updated = true;
+        } else {
+          const err = await patchRes.text();
+          console.error("Airtable patch failed, will fall back to create:", err);
         }
       } else {
-        const err = await findRes.text();
-        console.error("Airtable lookup by attempt_id failed, will fall back to create:", err);
+        // Logged distinctly from a lookup failure above: this means both
+        // attempts completed successfully but found nothing, which is the
+        // specific case that produced Sprint 8's duplicate row. Kept as a
+        // plain log line (not a metric) since this sandbox has no way to
+        // wire it to Plausible from a server-side function the way the
+        // client-side JS-error telemetry (also this sprint) does.
+        console.error("No pending record found for attempt_id after retry — falling back to create:", data.attempt_id);
       }
     }
 
