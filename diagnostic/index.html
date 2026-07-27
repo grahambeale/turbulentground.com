@@ -142,8 +142,17 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .bench-dot{width:6px;height:6px;background:rgba(255,255,255,0.2);border-radius:50%;flex-shrink:0}
 .bench-text{font-size:10px;color:var(--muted)}
 .vs-badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+/* Sprint 9: contrast on these translucent badges verified by alpha-compositing each rgba() background
+   against its real parent (--surface #1c1915 for .vs-* badges, --bg #131110 for .beta-badge above) and
+   computing WCAG relative luminance on the composited result, rather than treating this as unverifiable
+   without a browser. Results: .vs-above 6.5:1 (pass), .vs-same 5.0:1 (pass), .beta-badge 5.1:1 (pass) —
+   all unchanged. .vs-below measured 4.3:1 against its composited background, below the 4.5:1 AA
+   threshold for normal-size text — color changed below from var(--red) (#e86060) to a lighter red
+   (#f08080), which composites to 5.6:1. var(--red) itself is untouched (it already passes 4.5:1+ on
+   every other place it's used, which sit on solid, non-translucent backgrounds) — this fix is scoped
+   to .vs-below only. See decision-log.md, Sprint 9, for the full worked calculation. */
 .vs-above{background:rgba(126,200,126,0.15);color:var(--green)}
-.vs-below{background:rgba(232,96,96,0.15);color:var(--red)}
+.vs-below{background:rgba(232,96,96,0.15);color:#f08080}
 .vs-same{background:rgba(255,118,0,0.12);color:var(--orange-lt)}
 .radar-wrap-results{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;margin-bottom:32px;display:flex;justify-content:center}
 .factor-cards{}
