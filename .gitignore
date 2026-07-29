@@ -12,3 +12,4 @@ lighthouse-report.html
 playwright-report/
 test-results/
 .env
+.env
