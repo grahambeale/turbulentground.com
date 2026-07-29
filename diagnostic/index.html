@@ -114,6 +114,11 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-we
 .progress-bar-wrap{position:fixed;bottom:56px;left:0;right:0;height:2px;background:var(--border);z-index:100}
 .progress-bar{height:100%;background:var(--orange);transition:width .3s ease}
 .survey-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(19,17,16,0.96);border-top:1px solid var(--border2);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px)}
+/* ── Site footer (disclosure) — added Sprint 10; matches index.html's footer pattern, which this page never had ── */
+footer.site-footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.16em;color:#f5f0e8}
+.footer-link{font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;letter-spacing:0.04em}
+.footer-link:hover{color:var(--orange-lt)}
 .footer-count{font-size:12px;color:var(--muted)}
 .footer-count span{color:var(--text);font-weight:500}
 
@@ -1341,5 +1346,16 @@ function navigateToStep(n) {
 }
 </script>
 </main>
+<footer class="site-footer">
+  <span class="footer-brand">TURBULENT GROUND</span>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <a href="../index.html" class="footer-link">Home</a>
+    <a href="../writing.html" class="footer-link">Writing</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+    <a href="../privacy.html" class="footer-link">Privacy</a>
+  </div>
+  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="../zero-humans-in-the-loop.html" style="color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);">Read about it</a>.</span>
+</footer>
 </body>
 </html>
