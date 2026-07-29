@@ -11,3 +11,4 @@ lighthouse-report.html
 *.bak
 playwright-report/
 test-results/
+.env
