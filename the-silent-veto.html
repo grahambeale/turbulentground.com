@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rule That Could Make or Break This Experiment — So Far, Silent · Turbulent Ground</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="description" content="This experiment has a circuit breaker built into it. Five sprints in, it has never once fired, and that turns out to be a more interesting finding than if it had.">
+<meta property="og:title" content="The Rule That Could Make or Break This Experiment — So Far, Silent">
+<meta property="og:description" content="A governance mechanism that never fires isn't necessarily decorative. Or it hasn't been tested yet. I don't know which.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
+  .nav-cta:hover { background: var(--orange) !important; }
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
+  .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
+  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: 13px; }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article a { color: var(--orange-lt); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  article strong { color: var(--ink); font-weight: 500; }
+  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--ink-mid); }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+  .footer-copy a { color: var(--muted); }
+</style>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Turbulent Ground</a>
+  <div class="nav-links">
+    <a href="/writing">Writing</a>
+    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+  </div>
+</nav>
+<main>
+
+<div class="page-wrap">
+  <p class="eyebrow">The Experiment</p>
+  <h1>The Rule That Could Make or Break This Experiment &mdash; So Far, Silent</h1>
+  <div class="byline-row">
+    <span class="byline-name">Graham Beale</span>
+    <span class="byline-meta">&middot; Sprints 2&ndash;5</span>
+  </div>
+
+  <div class="disclosure-note">
+    <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
+  </div>
+
+  <article>
+  <p>This experiment has a circuit breaker designed into it. Five sprints in, it has never once fired, and that turns out to be a more interesting finding than if it had.</p>
+
+  <p>Quick context if you're new here: five AI agents run a weekly product cycle against my live diagnostic site, following Marty Cagan's model. I set the objective for the quarter.</p>
+
+  <p>After that, I don't get a vote, except in one specific, deliberate way: if three of the four non-PM agents object to the PM's sprint objective, they can force a revision. Object twice, and the sprint defaults to the safest, most defensible item on the backlog. I wrote that mechanism assuming it would matter. So far, it's mostly sat there, armed and slightly bored.</p>
+
+  <p>What has fired, twice now, in sprint 5 alone, is something smaller and in some ways more useful: ordinary disagreement that never got close to the threshold.</p>
+
+  <p>QA wanted a full six-page colour-contrast audit; the team computed real WCAG 2.1 contrast ratios for two live issues (one interactive element measuring 3.94:1 against the 4.5:1 threshold, one piece of dead code left over from a removed feature) and logged the rest as deliberately incomplete rather than quietly calling it done.</p>
+
+  <p>Design wanted to shorten the 25-question diagnostic survey, a genuinely credible idea; the team parked it for a sprint, on the grounds that the very data needed to test the idea responsibly was what that sprint's own work was about to start producing.</p>
+
+  <p>Neither disagreement escalated. Neither got smoothed over either. Both got logged, argued, and settled without anyone needing to invoke the nuclear option.</p>
+
+  <p>That's the part worth sitting with. A governance mechanism that never fires isn't necessarily decorative. It can also mean the smaller checks are doing their job well enough that the big one never needs to. I don't know yet which of those two this is.</p>
+
+  <p>Five sprints and one real disagreement in sprint 2 that got escalated to me rather than resolved internally is not much of a sample size to draw a conclusion from.</p>
+
+  <p>There's one honest gap worth naming too. QA's contrast-audit objection got logged in full, and nothing structurally guarantees it gets picked up rather than quietly ageing the way it already did once before. The AI team can voice an objection, but it has no mechanism to force a future sprint to actually act on it. A backlog item and a broken promise currently look identical from the outside, and the only thing telling them apart is whether anyone remembers the dialogue.</p>
+
+  <p>So the veto exists, technically. It has real teeth, on paper. And it has spent five sprints doing absolutely nothing. Which might be exactly what a well-designed safety mechanism is supposed to do, or might just mean it hasn't been tested yet.</p>
+
+  <p>If you've designed governance mechanisms like this professionally, I'd be genuinely interested in your experiences of putting them into practice.</p>
+  </article>
+</div>
+
+</main>
+<footer>
+  <div class="footer-links">
+    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html">Read about it</a>.
+    <a href="/diagnostic">Diagnostic</a>
+    <a href="/writing">Writing</a>
+    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+</footer>
+
+</body>
+</html>
