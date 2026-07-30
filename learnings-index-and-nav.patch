@@ -1,0 +1,408 @@
+diff --git a/about.html b/about.html
+index c23f38d..2d84b2b 100644
+--- a/about.html
++++ b/about.html
+@@ -298,6 +298,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+   <div class="nav-links">
+     <a href="index.html" class="nav-link">Home</a>
+     <a href="writing.html" class="nav-link">Writing</a>
++    <a href="learnings/index.html" class="nav-link">Learnings</a>
+     <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+   </div>
+   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+@@ -309,6 +310,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+ <div class="mobile-menu" id="mobile-menu">
+   <a href="index.html">Home</a>
+   <a href="writing.html">Writing</a>
++  <a href="learnings/index.html">Learnings</a>
+   <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+ </div>
+ 
+diff --git a/care-capital.html b/care-capital.html
+index 273d75a..d3572cc 100644
+--- a/care-capital.html
++++ b/care-capital.html
+@@ -426,6 +426,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+   <div class="nav-links">
+     <a href="index.html" class="nav-link">Home</a>
+     <a href="writing.html" class="nav-link">Writing</a>
++    <a href="learnings/index.html" class="nav-link">Learnings</a>
+     <div class="nav-btn-wrap">
+       <a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a>
+     </div>
+@@ -439,6 +440,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+ <div class="mobile-menu" id="mobile-menu">
+   <a href="index.html">Home</a>
+   <a href="writing.html">Writing</a>
++  <a href="learnings/index.html">Learnings</a>
+   <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+ </div>
+ 
+diff --git a/index.html b/index.html
+index 5de2866..12423e7 100644
+--- a/index.html
++++ b/index.html
+@@ -554,6 +554,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+   </a>
+   <div class="nav-links">
+     <a href="writing.html" class="nav-link">Writing</a>
++    <a href="learnings/index.html" class="nav-link">Learnings</a>
+     <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+   </div>
+   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+@@ -564,6 +565,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+ 
+ <div class="mobile-menu" id="mobile-menu">
+   <a href="writing.html">Writing</a>
++  <a href="learnings/index.html">Learnings</a>
+   <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+ </div>
+ 
+diff --git a/learnings/analytics-data-mean-what-you-think.html b/learnings/analytics-data-mean-what-you-think.html
+index b00be9c..91f8cda 100644
+--- a/learnings/analytics-data-mean-what-you-think.html
++++ b/learnings/analytics-data-mean-what-you-think.html
+@@ -57,6 +57,7 @@
+   <a href="/" class="nav-logo">Turbulent Ground</a>
+   <div class="nav-links">
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+   </div>
+ </nav>
+@@ -112,6 +113,7 @@
+     <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+diff --git a/learnings/index.html b/learnings/index.html
+new file mode 100644
+index 0000000..14ca974
+--- /dev/null
++++ b/learnings/index.html
+@@ -0,0 +1,129 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++<meta charset="UTF-8">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
++<title>Learnings · Turbulent Ground</title>
++<link rel="icon" type="image/png" href="/favicon.png">
++<meta name="description" content="The honest, ongoing record of what happens when five AI agents run a real product team with zero human intervention — findings, failures, and disagreements, as they happen.">
++<meta property="og:title" content="Learnings · Turbulent Ground">
++<meta property="og:description" content="The honest, ongoing record of what happens when five AI agents run a real product team with zero human intervention.">
++<meta property="og:type" content="website">
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
++<style>
++  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
++  :root {
++    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
++    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a;
++    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
++  }
++  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
++  body { min-height: 100vh; }
++  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
++  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
++  .nav-links { display: flex; align-items: center; gap: 28px; }
++  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
++  .nav-links a:hover { color: var(--ink); }
++  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
++  .nav-cta:hover { background: var(--orange) !important; }
++
++  .page-wrap { max-width: 780px; margin: 0 auto; padding: 64px 24px 120px; }
++  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
++  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 300; color: var(--ink); line-height: 1.15; margin-bottom: 16px; }
++  .intro { color: var(--ink-mid); font-size: 16px; max-width: 560px; margin-bottom: 56px; }
++
++  .article-card { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--surface); text-decoration: none; }
++  .article-card:first-of-type { padding-top: 0; }
++  .article-thumb { width: 160px; height: 110px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: var(--surface); }
++  .article-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
++  .article-body { flex: 1; min-width: 0; }
++  .article-date { font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.02em; }
++  .article-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--ink); line-height: 1.25; margin-bottom: 8px; transition: color 0.2s; }
++  .article-card:hover .article-title { color: var(--orange-lt); }
++  .article-summary { color: var(--ink-mid); font-size: 14px; line-height: 1.6; }
++
++  @media (max-width: 560px) {
++    .article-card { flex-direction: column; }
++    .article-thumb { width: 100%; height: 160px; }
++  }
++
++  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
++  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
++  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
++  .footer-links a:hover { color: var(--ink-mid); }
++  .footer-copy { font-size: 12px; color: var(--muted); }
++  .footer-copy a { color: var(--muted); }
++</style>
++<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
++</head>
++<body>
++
++<nav>
++  <a href="/" class="nav-logo">Turbulent Ground</a>
++  <div class="nav-links">
++    <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
++    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
++  </div>
++</nav>
++<main>
++
++<div class="page-wrap">
++  <p class="eyebrow">The Experiment</p>
++  <h1>Learnings</h1>
++  <p class="intro">The honest, ongoing record of what happens when five AI agents run a real product team with zero human intervention — findings, failures, and disagreements, as they happen. Most recent first.</p>
++
++  <a href="/learnings/the-silent-veto" class="article-card">
++    <div class="article-thumb"><img src="/learnings/images/the-silent-veto.png" alt="Break-glass emergency lever sitting untouched in a desert"></div>
++    <div class="article-body">
++      <p class="article-date">Sprints 2&ndash;5</p>
++      <p class="article-title">The Rule That Could Make or Break This Experiment &mdash; So Far, Silent</p>
++      <p class="article-summary">This experiment has a circuit breaker built into it. Five sprints in, it has never once fired &mdash; and that turns out to be a more interesting finding than if it had.</p>
++    </div>
++  </a>
++
++  <a href="/learnings/what-zero-intervention-actually-means" class="article-card">
++    <div class="article-thumb"><img src="/learnings/images/five-sprints-in.png" alt="A locked padlock securing a sandbox where small robot figures build a sandcastle"></div>
++    <div class="article-body">
++      <p class="article-date">Sprints 1&ndash;5</p>
++      <p class="article-title">Five Sprints In: What &ldquo;Zero Human Intervention&rdquo; Actually Means</p>
++      <p class="article-summary">The honest version of what "autonomous" has meant so far: which sprints were self-triggered, why every deploy still needed a manual fix, and the free analytics tool that sat silent for weeks next to a paid one nobody knew was already running.</p>
++    </div>
++  </a>
++
++  <a href="/learnings/analytics-data-mean-what-you-think" class="article-card">
++    <div class="article-thumb"><img src="/learnings/images/analytics-data-mean.png" alt="A small robot examining a number through a magnifying glass"></div>
++    <div class="article-body">
++      <p class="article-date">Sprints 4&ndash;5</p>
++      <p class="article-title">Does Your Analytics Data Mean What You Think It Means?</p>
++      <p class="article-summary">Four sprints running, the team hit two different bugs. Both got solved the same way: not by getting smarter, but by finally questioning something everyone had been treating as fact.</p>
++    </div>
++  </a>
++
++  <a href="/learnings/zero-humans-in-the-loop" class="article-card">
++    <div class="article-thumb"><img src="/learnings/images/zero-humans-in-the-loop.png" alt="Small robot figures building a sandcastle while a figure relaxes in a deck chair"></div>
++    <div class="article-body">
++      <p class="article-date">The premise</p>
++      <p class="article-title">I'm Letting AI Run a Product Team, With Zero Humans in the Loop</p>
++      <p class="article-summary">Five AI agents run a real product team against this live site, following Marty Cagan's empowered model. Here's why I'm testing the exact opposite of my own Care Capital thesis, and what I'm actually watching for.</p>
++    </div>
++  </a>
++
++</div>
++
++</main>
++<footer>
++  <div class="footer-links">
++    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.
++    <a href="/diagnostic">Diagnostic</a>
++    <a href="/writing">Writing</a>
++    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
++    <a href="/privacy">Privacy</a>
++  </div>
++  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
++</footer>
++
++</body>
++</html>
+diff --git a/learnings/the-silent-veto.html b/learnings/the-silent-veto.html
+index ce56719..9fd580c 100644
+--- a/learnings/the-silent-veto.html
++++ b/learnings/the-silent-veto.html
+@@ -57,6 +57,7 @@
+   <a href="/" class="nav-logo">Turbulent Ground</a>
+   <div class="nav-links">
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+   </div>
+ </nav>
+@@ -108,6 +109,7 @@
+     <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+diff --git a/learnings/what-zero-intervention-actually-means.html b/learnings/what-zero-intervention-actually-means.html
+index 54628f1..326bee2 100644
+--- a/learnings/what-zero-intervention-actually-means.html
++++ b/learnings/what-zero-intervention-actually-means.html
+@@ -57,6 +57,7 @@
+   <a href="/" class="nav-logo">Turbulent Ground</a>
+   <div class="nav-links">
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+   </div>
+ </nav>
+@@ -96,6 +97,7 @@
+     <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+diff --git a/learnings/zero-humans-in-the-loop.html b/learnings/zero-humans-in-the-loop.html
+index a66b9eb..056e755 100644
+--- a/learnings/zero-humans-in-the-loop.html
++++ b/learnings/zero-humans-in-the-loop.html
+@@ -88,6 +88,7 @@
+   <a href="/" class="nav-logo">Turbulent Ground</a>
+   <div class="nav-links">
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+   </div>
+ </nav>
+@@ -141,6 +142,7 @@
+     <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="https://www.linkedin.com/in/grahambeale/">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+diff --git a/privacy.html b/privacy.html
+index b0bf9fc..df3c2af 100644
+--- a/privacy.html
++++ b/privacy.html
+@@ -84,6 +84,7 @@
+   <a href="/" class="nav-logo">Turbulent Ground</a>
+   <div class="nav-links">
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+   </div>
+ </nav>
+@@ -161,6 +162,7 @@
+     <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
++    <a href="/learnings">Learnings</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+diff --git a/vercel.json b/vercel.json
+index 6094832..ace19db 100644
+--- a/vercel.json
++++ b/vercel.json
+@@ -2,26 +2,74 @@
+   "cleanUrls": true,
+   "trailingSlash": false,
+   "rewrites": [
+-    { "source": "/diagnostic", "destination": "/diagnostic/index.html" }
++    {
++      "source": "/diagnostic",
++      "destination": "/diagnostic/index.html"
++    },
++    {
++      "source": "/learnings",
++      "destination": "/learnings/index.html"
++    }
+   ],
+   "redirects": [
+-    { "source": "/zero-humans-in-the-loop", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
+-    { "source": "/zero-humans-in-the-loop.html", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
+-    { "source": "/what-zero-intervention-actually-means", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
+-    { "source": "/what-zero-intervention-actually-means.html", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
+-    { "source": "/the-silent-veto", "destination": "/learnings/the-silent-veto", "permanent": true },
+-    { "source": "/the-silent-veto.html", "destination": "/learnings/the-silent-veto", "permanent": true },
+-    { "source": "/analytics-data-mean-what-you-think", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true },
+-    { "source": "/analytics-data-mean-what-you-think.html", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true }
++    {
++      "source": "/zero-humans-in-the-loop",
++      "destination": "/learnings/zero-humans-in-the-loop",
++      "permanent": true
++    },
++    {
++      "source": "/zero-humans-in-the-loop.html",
++      "destination": "/learnings/zero-humans-in-the-loop",
++      "permanent": true
++    },
++    {
++      "source": "/what-zero-intervention-actually-means",
++      "destination": "/learnings/what-zero-intervention-actually-means",
++      "permanent": true
++    },
++    {
++      "source": "/what-zero-intervention-actually-means.html",
++      "destination": "/learnings/what-zero-intervention-actually-means",
++      "permanent": true
++    },
++    {
++      "source": "/the-silent-veto",
++      "destination": "/learnings/the-silent-veto",
++      "permanent": true
++    },
++    {
++      "source": "/the-silent-veto.html",
++      "destination": "/learnings/the-silent-veto",
++      "permanent": true
++    },
++    {
++      "source": "/analytics-data-mean-what-you-think",
++      "destination": "/learnings/analytics-data-mean-what-you-think",
++      "permanent": true
++    },
++    {
++      "source": "/analytics-data-mean-what-you-think.html",
++      "destination": "/learnings/analytics-data-mean-what-you-think",
++      "permanent": true
++    }
+   ],
+   "headers": [
+     {
+       "source": "/(.*)",
+       "headers": [
+-        { "key": "X-Content-Type-Options", "value": "nosniff" },
+-        { "key": "X-Frame-Options", "value": "DENY" },
+-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
++        {
++          "key": "X-Content-Type-Options",
++          "value": "nosniff"
++        },
++        {
++          "key": "X-Frame-Options",
++          "value": "DENY"
++        },
++        {
++          "key": "Referrer-Policy",
++          "value": "strict-origin-when-cross-origin"
++        }
+       ]
+     }
+   ]
+-}
++}
+\ No newline at end of file
+diff --git a/writing.html b/writing.html
+index 63c0864..6e05ca3 100644
+--- a/writing.html
++++ b/writing.html
+@@ -318,6 +318,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+   <div class="nav-links">
+     <a href="index.html" class="nav-link">Home</a>
+     <a href="writing.html" class="nav-link active">Writing</a>
++    <a href="learnings/index.html" class="nav-link">Learnings</a>
+     <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+   </div>
+   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+@@ -329,6 +330,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+ <div class="mobile-menu" id="mobile-menu">
+   <a href="index.html">Home</a>
+   <a href="writing.html" class="active">Writing</a>
++  <a href="learnings/index.html">Learnings</a>
+   <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+ </div>
+ 

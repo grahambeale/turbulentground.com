@@ -2,25 +2,73 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/diagnostic", "destination": "/diagnostic/index.html" }
+    {
+      "source": "/diagnostic",
+      "destination": "/diagnostic/index.html"
+    },
+    {
+      "source": "/learnings",
+      "destination": "/learnings/index.html"
+    }
   ],
   "redirects": [
-    { "source": "/zero-humans-in-the-loop", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
-    { "source": "/zero-humans-in-the-loop.html", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
-    { "source": "/what-zero-intervention-actually-means", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
-    { "source": "/what-zero-intervention-actually-means.html", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
-    { "source": "/the-silent-veto", "destination": "/learnings/the-silent-veto", "permanent": true },
-    { "source": "/the-silent-veto.html", "destination": "/learnings/the-silent-veto", "permanent": true },
-    { "source": "/analytics-data-mean-what-you-think", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true },
-    { "source": "/analytics-data-mean-what-you-think.html", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true }
+    {
+      "source": "/zero-humans-in-the-loop",
+      "destination": "/learnings/zero-humans-in-the-loop",
+      "permanent": true
+    },
+    {
+      "source": "/zero-humans-in-the-loop.html",
+      "destination": "/learnings/zero-humans-in-the-loop",
+      "permanent": true
+    },
+    {
+      "source": "/what-zero-intervention-actually-means",
+      "destination": "/learnings/what-zero-intervention-actually-means",
+      "permanent": true
+    },
+    {
+      "source": "/what-zero-intervention-actually-means.html",
+      "destination": "/learnings/what-zero-intervention-actually-means",
+      "permanent": true
+    },
+    {
+      "source": "/the-silent-veto",
+      "destination": "/learnings/the-silent-veto",
+      "permanent": true
+    },
+    {
+      "source": "/the-silent-veto.html",
+      "destination": "/learnings/the-silent-veto",
+      "permanent": true
+    },
+    {
+      "source": "/analytics-data-mean-what-you-think",
+      "destination": "/learnings/analytics-data-mean-what-you-think",
+      "permanent": true
+    },
+    {
+      "source": "/analytics-data-mean-what-you-think.html",
+      "destination": "/learnings/analytics-data-mean-what-you-think",
+      "permanent": true
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     }
   ]
