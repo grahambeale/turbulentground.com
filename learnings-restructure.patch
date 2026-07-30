@@ -1,0 +1,189 @@
+diff --git a/about.html b/about.html
+index ba6d783..c23f38d 100644
+--- a/about.html
++++ b/about.html
+@@ -391,7 +391,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+     <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+     <a href="privacy.html" class="footer-link">Privacy</a>
+   </div>
+-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Read about it</a>.</span>
++  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Read about it</a>.</span>
+ </footer>
+ 
+ <script>
+diff --git a/care-capital.html b/care-capital.html
+index 070f889..273d75a 100644
+--- a/care-capital.html
++++ b/care-capital.html
+@@ -801,7 +801,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+     <a href="https://www.youtube.com/@TurbulentGround" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">YouTube</a>
+     <a href="privacy.html" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">Privacy</a>
+   </div>
+-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Read about it</a>.</span>
++  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Read about it</a>.</span>
+ </footer>
+ 
+ <!-- ── Nav scroll JS ─────────────────────────────────────────────────── -->
+diff --git a/index.html b/index.html
+index 44c475c..5de2866 100644
+--- a/index.html
++++ b/index.html
+@@ -733,7 +733,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+     <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+     <a href="privacy.html" class="footer-link">Privacy</a>
+   </div>
+-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Read about it</a>.</span>
++  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Read about it</a>.</span>
+ </footer>
+ 
+ <script>
+diff --git a/analytics-data-mean-what-you-think.html b/learnings/analytics-data-mean-what-you-think.html
+similarity index 98%
+rename from analytics-data-mean-what-you-think.html
+rename to learnings/analytics-data-mean-what-you-think.html
+index 8287485..b00be9c 100644
+--- a/analytics-data-mean-what-you-think.html
++++ b/learnings/analytics-data-mean-what-you-think.html
+@@ -4,7 +4,7 @@
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Does Your Analytics Data Mean What You Think It Means? · Turbulent Ground</title>
+-<link rel="icon" type="image/png" href="favicon.png">
++<link rel="icon" type="image/png" href="/favicon.png">
+ <meta name="description" content="Four sprints running, this AI product team hit two different bugs. Both got solved the same way: not by getting smarter, but by finally questioning something everyone had been treating as fact.">
+ <meta property="og:title" content="Does Your Analytics Data Mean What You Think It Means?">
+ <meta property="og:description" content="The real question was never 'is this bad?' It was: does the data mean what you think it means?">
+@@ -109,7 +109,7 @@
+ </main>
+ <footer>
+   <div class="footer-links">
+-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html">Read about it</a>.
++    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+diff --git a/images/analytics-data-mean.png b/learnings/images/analytics-data-mean.png
+similarity index 100%
+rename from images/analytics-data-mean.png
+rename to learnings/images/analytics-data-mean.png
+diff --git a/images/five-sprints-in.png b/learnings/images/five-sprints-in.png
+similarity index 100%
+rename from images/five-sprints-in.png
+rename to learnings/images/five-sprints-in.png
+diff --git a/images/the-silent-veto.png b/learnings/images/the-silent-veto.png
+similarity index 100%
+rename from images/the-silent-veto.png
+rename to learnings/images/the-silent-veto.png
+diff --git a/the-silent-veto.html b/learnings/the-silent-veto.html
+similarity index 98%
+rename from the-silent-veto.html
+rename to learnings/the-silent-veto.html
+index 5d90c6d..ce56719 100644
+--- a/the-silent-veto.html
++++ b/learnings/the-silent-veto.html
+@@ -4,7 +4,7 @@
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>The Rule That Could Make or Break This Experiment — So Far, Silent · Turbulent Ground</title>
+-<link rel="icon" type="image/png" href="favicon.png">
++<link rel="icon" type="image/png" href="/favicon.png">
+ <meta name="description" content="This experiment has a circuit breaker built into it. Five sprints in, it has never once fired, and that turns out to be a more interesting finding than if it had.">
+ <meta property="og:title" content="The Rule That Could Make or Break This Experiment — So Far, Silent">
+ <meta property="og:description" content="A governance mechanism that never fires isn't necessarily decorative. Or it hasn't been tested yet. I don't know which.">
+@@ -105,7 +105,7 @@
+ </main>
+ <footer>
+   <div class="footer-links">
+-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html">Read about it</a>.
++    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+diff --git a/what-zero-intervention-actually-means.html b/learnings/what-zero-intervention-actually-means.html
+similarity index 98%
+rename from what-zero-intervention-actually-means.html
+rename to learnings/what-zero-intervention-actually-means.html
+index 2f7c407..54628f1 100644
+--- a/what-zero-intervention-actually-means.html
++++ b/learnings/what-zero-intervention-actually-means.html
+@@ -4,7 +4,7 @@
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Five Sprints In: What "Zero Human Intervention" Actually Means · Turbulent Ground</title>
+-<link rel="icon" type="image/png" href="favicon.png">
++<link rel="icon" type="image/png" href="/favicon.png">
+ <meta name="description" content="Five sprints in, it's worth being precise about what zero human intervention actually means here. The honest version is more interesting than the clean one.">
+ <meta property="og:title" content="Five Sprints In: What &quot;Zero Human Intervention&quot; Actually Means">
+ <meta property="og:description" content="The decisions are the team's. The plumbing underneath them, apparently, is still mine.">
+@@ -93,7 +93,7 @@
+ </main>
+ <footer>
+   <div class="footer-links">
+-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html">Read about it</a>.
++    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+diff --git a/zero-humans-in-the-loop.html b/learnings/zero-humans-in-the-loop.html
+similarity index 99%
+rename from zero-humans-in-the-loop.html
+rename to learnings/zero-humans-in-the-loop.html
+index a8c8fba..c171b6c 100644
+--- a/zero-humans-in-the-loop.html
++++ b/learnings/zero-humans-in-the-loop.html
+@@ -4,7 +4,7 @@
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>I'm Letting AI Run a Product Team, With Zero Humans in the Loop · Turbulent Ground</title>
+-<link rel="icon" type="image/png" href="favicon.png">
++<link rel="icon" type="image/png" href="/favicon.png">
+ <meta name="description" content="An AI product team is running Marty Cagan's empowered model against a live site, with zero human intervention in product decisions. Here's why, and what I'm testing.">
+ <meta property="og:title" content="I'm Letting AI Run a Product Team, With Zero Humans in the Loop">
+ <meta property="og:description" content="An AI product team is running Marty Cagan's empowered model against a live site, with zero human intervention in product decisions.">
+diff --git a/privacy.html b/privacy.html
+index 94e4f8a..b0bf9fc 100644
+--- a/privacy.html
++++ b/privacy.html
+@@ -158,7 +158,7 @@
+ </main>
+ <footer>
+   <div class="footer-links">
+-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/zero-humans-in-the-loop.html">Read about it</a>.
++    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.
+     <a href="/diagnostic">Diagnostic</a>
+     <a href="/writing">Writing</a>
+     <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+diff --git a/vercel.json b/vercel.json
+index a266f23..6094832 100644
+--- a/vercel.json
++++ b/vercel.json
+@@ -4,6 +4,16 @@
+   "rewrites": [
+     { "source": "/diagnostic", "destination": "/diagnostic/index.html" }
+   ],
++  "redirects": [
++    { "source": "/zero-humans-in-the-loop", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
++    { "source": "/zero-humans-in-the-loop.html", "destination": "/learnings/zero-humans-in-the-loop", "permanent": true },
++    { "source": "/what-zero-intervention-actually-means", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
++    { "source": "/what-zero-intervention-actually-means.html", "destination": "/learnings/what-zero-intervention-actually-means", "permanent": true },
++    { "source": "/the-silent-veto", "destination": "/learnings/the-silent-veto", "permanent": true },
++    { "source": "/the-silent-veto.html", "destination": "/learnings/the-silent-veto", "permanent": true },
++    { "source": "/analytics-data-mean-what-you-think", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true },
++    { "source": "/analytics-data-mean-what-you-think.html", "destination": "/learnings/analytics-data-mean-what-you-think", "permanent": true }
++  ],
+   "headers": [
+     {
+       "source": "/(.*)",
+diff --git a/writing.html b/writing.html
+index 4f6a1b3..63c0864 100644
+--- a/writing.html
++++ b/writing.html
+@@ -615,7 +615,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
+     <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+     <a href="privacy.html" class="footer-link">Privacy</a>
+   </div>
+-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop.html" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Read about it</a>.</span>
++  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Read about it</a>.</span>
+ </footer>
+ 
+ <script>
