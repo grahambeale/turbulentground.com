@@ -84,6 +84,7 @@ section { padding:96px 0; }
 section + section { border-top:1px solid var(--border-n); }
 
 /* ── Nav ──────────────────────────────────────────────────────────── */
+/* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
   height:72px; padding:0 48px;
@@ -115,7 +116,7 @@ section + section { border-top:1px solid var(--border-n); }
 .nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .nav-links { display:flex; align-items:center; gap:24px; }
 .nav-link {
-  font-size:12px; font-weight:400; color:var(--muted);
+  font-size:14px; font-weight:400; color:var(--muted);
   text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
   transition:color 0.2s;
 }
@@ -125,44 +126,49 @@ section + section { border-top:1px solid var(--border-n); }
 .nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
 .nav-btn {
   display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
-  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
   text-decoration:none; padding:9px 20px; border-radius:40px;
   transition:all 0.22s;
 }
 .nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
 
 /* Hamburger + mobile menu */
-.nav-toggle { display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:10px; margin-right:-10px; background:none; border:0; cursor:pointer; z-index:210; }
-.nav-toggle span { display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
 .nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
 .nav-toggle.open span:nth-child(2) { opacity:0; }
 .nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-.mobile-menu { position:fixed; inset:0; z-index:199; background:rgba(14,11,8,0.985); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:2px; padding:100px 36px 40px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
 .mobile-menu.open { opacity:1; visibility:visible; transform:none; }
-.mobile-menu a { font-family:'Outfit',sans-serif; font-weight:400; font-size:20px; letter-spacing:0.05em; color:#e8dcc8; text-decoration:none; padding:12px 0; line-height:1.2; transition:color 0.2s ease; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
-.mobile-menu .mobile-menu-btn { font-family:'Outfit',sans-serif; font-weight:500; font-size:16px; color:#fff; background:#b84215; padding:14px 30px; border-radius:40px; margin-top:26px; }
-@media(max-width:720px) { .nav-links { display:none !important; } .nav-toggle { display:flex !important; } }
-
-/* ── Layout ──────────────────────────────────────────────────────────── */
-.container { max-width:1100px; margin:0 auto; padding:0 48px; }
-.container--narrow { max-width:760px; margin:0 auto; padding:0 48px; }
-
-section { padding:96px 0; }
-section + section { border-top:1px solid var(--border-n); }
-
-/* ── Nav ─────────────────────────────────────────────────────────────── */
-.nav {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  height:72px; padding:0 48px;
-  display:flex; align-items:center; justify-content:space-between;
-  background:transparent;
-  border-bottom:1px solid rgba(245,240,232,0.5);
-  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
-  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
 }
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
 .nav.scrolled {
   height:52px;
   background:rgba(19,17,16,0.96);
@@ -403,47 +409,40 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <body>
 
 <!-- ── Nav ─────────────────────────────────────────────────────────── -->
+<!-- NAV_START -->
 <nav class="nav" id="main-nav">
-  <a href="index.html" class="nav-logo" id="nav-logo">
-    <div class="nav-logo-mark" id="nav-logo-mark">
-      <svg width="40" height="40" viewBox="0 0 52 52">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
         <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
         <g clip-path="url(#nc)">
           <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
-          <path d="M0 5.72 L0 5.72 L8 11.12 L16 6.84 L24 3.12 L32 0.27 L40 9.79 L48 8.84" stroke="#3d2010" stroke-width="1.2" fill="none"/>
           <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
-          <path d="M0 19.24 L0 29.87 L8 12.50 L16 14.61 L24 20.46 L32 29.37 L40 12.38 L48 13.95" stroke="#7a3a18" stroke-width="2" fill="none"/>
           <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
-          <path d="M0 32.76 L0 26.41 L8 27.38 L16 42.05 L24 35.93 L32 17.66 L40 41.11 L48 42.21" stroke="#c25020" stroke-width="2.8" fill="none"/>
           <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
           <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
         </g>
         <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
-      </svg>
-    </div>
+      </svg></div>
     <span class="nav-wordmark">TURBULENT GROUND</span>
   </a>
   <div class="nav-links">
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="writing.html" class="nav-link">Writing</a>
-    <a href="learnings/index.html" class="nav-link">Learnings</a>
-    <div class="nav-btn-wrap">
-      <a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a>
-    </div>
+    <a href="/" class="nav-link">Home</a>
+    <a href="/writing" class="nav-link">Writing</a>
+    <a href="/learnings" class="nav-link">Learnings</a>
+    <div class="nav-btn-wrap"><a href="/diagnostic" class="nav-btn">Take the diagnostic &rarr;</a></div>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
-<main>
-
 <div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="writing.html">Writing</a>
-  <a href="learnings/index.html">Learnings</a>
-  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+  <a href="/">Home</a>
+  <a href="/writing">Writing</a>
+  <a href="/learnings">Learnings</a>
+  <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
 </div>
+<!-- NAV_END -->
 
 <!-- ── Hero ────────────────────────────────────────────────────────── -->
 <section style="min-height:100vh;position:relative;display:flex;align-items:center;padding-top:72px;">
@@ -808,6 +807,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </footer>
 
 <!-- ── Nav scroll JS ─────────────────────────────────────────────────── -->
+<!-- NAV_JS_START -->
 <script>
 (function(){
   var nav=document.getElementById('main-nav');
@@ -822,11 +822,27 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     toggle.setAttribute('aria-expanded',open?'true':'false');
     document.body.style.overflow=open?'hidden':'';
   }
-  toggle.addEventListener('click',function(){ setMenu(!menu.classList.contains('open')); });
-  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+  toggle.addEventListener('click',function(){
+    setMenu(!menu.classList.contains('open'));
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ setMenu(false); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') setMenu(false);
+  });
+  function normalize(p){
+    p=p.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/+$/,'');
+    return p===''?'/':p;
+  }
+  var current=normalize(window.location.pathname);
+  document.querySelectorAll('.nav-link, .mobile-menu a:not(.mobile-menu-btn)').forEach(function(a){
+    var href=normalize(a.getAttribute('href'));
+    if(href===current) a.classList.add('active');
+  });
 })();
 </script>
+<!-- NAV_JS_END -->
 
 </body>
 </html>

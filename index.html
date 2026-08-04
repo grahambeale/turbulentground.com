@@ -61,6 +61,7 @@ body {
 ::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
 
 /* ── Nav ──────────────────────────────────────────────────────────── */
+/* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
   height:72px; padding:0 48px;
@@ -92,7 +93,7 @@ body {
 .nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .nav-links { display:flex; align-items:center; gap:24px; }
 .nav-link {
-  font-size:12px; font-weight:400; color:var(--muted);
+  font-size:14px; font-weight:400; color:var(--muted);
   text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
   transition:color 0.2s;
 }
@@ -102,7 +103,7 @@ body {
 .nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
 .nav-btn {
   display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
-  font-size:13px; font-weight:500; color:#fff; background:#b84215;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
   text-decoration:none; padding:9px 20px; border-radius:40px;
   transition:all 0.22s;
 }
@@ -143,6 +144,8 @@ body {
   color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
   margin-top:28px;
 }
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
 
 /* ── Layout ──────────────────────────────────────────────────────── */
 .container { max-width:1080px; margin:0 auto; padding:0 48px; }
@@ -537,8 +540,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <body>
 
 <!-- Nav -->
+<!-- NAV_START -->
 <nav class="nav" id="main-nav">
-  <a href="index.html" class="nav-logo">
+  <a href="/" class="nav-logo">
     <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
         <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
@@ -554,21 +558,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <span class="nav-wordmark">TURBULENT GROUND</span>
   </a>
   <div class="nav-links">
-    <a href="writing.html" class="nav-link">Writing</a>
-    <a href="learnings/index.html" class="nav-link">Learnings</a>
-    <div class="nav-btn-wrap"><a href="diagnostic/index.html" class="nav-btn">Take the diagnostic &rarr;</a></div>
+    <a href="/" class="nav-link">Home</a>
+    <a href="/writing" class="nav-link">Writing</a>
+    <a href="/learnings" class="nav-link">Learnings</a>
+    <div class="nav-btn-wrap"><a href="/diagnostic" class="nav-btn">Take the diagnostic &rarr;</a></div>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
-<main>
-
 <div class="mobile-menu" id="mobile-menu">
-  <a href="writing.html">Writing</a>
-  <a href="learnings/index.html">Learnings</a>
-  <a href="diagnostic/index.html" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+  <a href="/">Home</a>
+  <a href="/writing">Writing</a>
+  <a href="/learnings">Learnings</a>
+  <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
 </div>
+<!-- NAV_END -->
 
 <!-- 2. Hero -->
 <section class="hero">
@@ -739,6 +744,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:var(--ink-mid);text-decoration:none;border-bottom:1px solid var(--border-dk);">Read about it</a>.</span>
 </footer>
 
+<!-- NAV_JS_START -->
 <script>
 (function(){
   var nav=document.getElementById('main-nav');
@@ -762,8 +768,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape') setMenu(false);
   });
+  function normalize(p){
+    p=p.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/+$/,'');
+    return p===''?'/':p;
+  }
+  var current=normalize(window.location.pathname);
+  document.querySelectorAll('.nav-link, .mobile-menu a:not(.mobile-menu-btn)').forEach(function(a){
+    var href=normalize(a.getAttribute('href'));
+    if(href===current) a.classList.add('active');
+  });
 })();
 </script>
+<!-- NAV_JS_END -->
 
 <!-- Tweaks panel -->
 <div id="tweaks-panel" class="tweaks-panel" hidden>

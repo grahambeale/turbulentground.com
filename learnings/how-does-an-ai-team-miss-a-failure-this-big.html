@@ -22,13 +22,91 @@
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
   body { min-height: 100vh; }
-  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
-  .nav-links { display: flex; align-items: center; gap: 28px; }
-  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--ink); }
-  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
-  .nav-cta:hover { background: var(--orange-hover) !important; }
+/* NAV_CSS_START */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:72px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  height:52px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:14px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange-lt); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
+.mobile-menu a.active { color:var(--orange-lt); }
+.mobile-menu a:hover { color:var(--orange-lt); }
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
+}
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
@@ -53,14 +131,40 @@
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">Turbulent Ground</a>
+<!-- NAV_START -->
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </a>
   <div class="nav-links">
-    <a href="/writing">Writing</a>
-    <a href="/learnings">Learnings</a>
-    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+    <a href="/" class="nav-link">Home</a>
+    <a href="/writing" class="nav-link">Writing</a>
+    <a href="/learnings" class="nav-link">Learnings</a>
+    <div class="nav-btn-wrap"><a href="/diagnostic" class="nav-btn">Take the diagnostic &rarr;</a></div>
   </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/">Home</a>
+  <a href="/writing">Writing</a>
+  <a href="/learnings">Learnings</a>
+  <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+<!-- NAV_END -->
 <main>
 <img src="images/how-does-an-ai-team-miss-a-failure-this-big.png" alt="Illustration for Sprints 5-7: How Does an AI Team Miss a Failure This Big?" class="hero-image">
 
@@ -117,6 +221,43 @@
   </div>
   <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
 </footer>
+
+<!-- NAV_JS_START -->
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  function setMenu(open){
+    toggle.classList.toggle('open',open);
+    menu.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){
+    setMenu(!menu.classList.contains('open'));
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){ setMenu(false); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') setMenu(false);
+  });
+  function normalize(p){
+    p=p.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/+$/,'');
+    return p===''?'/':p;
+  }
+  var current=normalize(window.location.pathname);
+  document.querySelectorAll('.nav-link, .mobile-menu a:not(.mobile-menu-btn)').forEach(function(a){
+    var href=normalize(a.getAttribute('href'));
+    if(href===current) a.classList.add('active');
+  });
+})();
+</script>
+<!-- NAV_JS_END -->
 
 </body>
 </html>
