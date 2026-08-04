@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Does an AI Team Miss a Failure This Big? · Turbulent Ground</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="description" content="The diagnostic's submit button was silently, completely broken since Sprint 5. Four separate QA reviews of that exact page never caught it, because none of them actually tried to use the form as a real visitor would.">
+<meta property="og:title" content="How Does an AI Team Miss a Failure This Big?">
+<meta property="og:description" content="For three sprints running, this AI product team reported a 100% bounce rate. The real story was worse: the submit button had been dead the whole time, and nobody had clicked it.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
+  .nav-cta:hover { background: var(--orange-hover) !important; }
+  .hero-image { width: 100%; max-height: 480px; object-fit: cover; display: block; }
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
+  .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
+  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: 13px; }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article a { color: var(--orange-lt); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  article strong { color: var(--ink); font-weight: 500; }
+  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--ink-mid); }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+  .footer-copy a { color: var(--muted); }
+</style>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Turbulent Ground</a>
+  <div class="nav-links">
+    <a href="/writing">Writing</a>
+    <a href="/learnings">Learnings</a>
+    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+  </div>
+</nav>
+<main>
+<img src="images/how-does-an-ai-team-miss-a-failure-this-big.png" alt="Illustration for Sprints 5-7: How Does an AI Team Miss a Failure This Big?" class="hero-image">
+
+<div class="page-wrap">
+  <p class="eyebrow">The Experiment</p>
+  <h1>How Does an AI Team Miss a Failure This Big?</h1>
+  <div class="byline-row">
+    <span class="byline-name">Graham Beale</span>
+    <span class="byline-meta">&middot; Sprints 5&ndash;7</span>
+  </div>
+
+  <div class="disclosure-note">
+    <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
+  </div>
+
+  <article>
+  <p>For three sprints running, this AI product team reported the same number: a 100% bounce rate on the diagnostic tool. Every single visitor, apparently, left without engaging. Bad, but at least it was consistent.</p>
+
+  <p>Then we found out why it was so consistent. The diagnostic is a single-page app &mdash; every click just swaps content on the same page, no new page ever loads. Which means the tracking tool could only ever report one thing: a single pageview, every time, for every visitor. It didn't matter if someone bounced in two seconds or sat there and completed all 25 questions. Both looked identical to the data. The 100% figure wasn't measuring behaviour. It was the only number that page's tracking was ever capable of producing.</p>
+
+  <p>Once I understood that, a much less comfortable question followed it. If the number can't tell us whether people are engaging, how would we know if the survey was engaging at all? How would we know if it was actually working?</p>
+
+  <p>So I did the obvious thing nobody, including me, had thought to do for weeks. I opened the diagnostic myself and ran it.</p>
+
+  <p>I clicked &ldquo;Send my results.&rdquo; Nothing happened.</p>
+
+  <p>The submit button had been completely broken since sprint 5. Not slow, not flaky &mdash; dead. Every real click threw a silent error before it even reached the server. No message. No submission. Nothing a visitor would ever see or report, because there was nothing to see. It just quietly failed, every time, for weeks.</p>
+
+  <p>The team had reviewed that exact page three separate times since the bug was introduced &mdash; sprint 5, sprint 6, sprint 7 &mdash; on top of whatever review happened when the change first shipped. Four passes. None of them caught it, because none of them actually tried to submit the form as a real visitor would. They reviewed the code. I clicked the button.</p>
+
+  <p>Once I reported it, the team traced the fault to a single leftover reference from an old feature removed in sprint 5, fixed it, and while they were in there, found three more pieces of the same dead code causing the same silent-failure pattern &mdash; one of which would have crashed the entire page for anyone arriving via an old invite link.</p>
+
+  <p>Then I asked the question that actually mattered more than the fix: how do we make sure this doesn't just happen again, because you can't rely on me, and it does cause reputational damage.</p>
+
+  <p>That's the real story here. The team's answer wasn't &ldquo;we'll be more careful.&rdquo; It built three actual layers. A permanent regression test that loads the real page script into a mocked browser and drives it through the whole flow &mdash; proven to fail on the old broken code and pass on the fix, so it's not just decoration. Error telemetry across every page, so a silent JavaScript crash now shows up as a real, visible data point in the next sprint review instead of quietly looking like &ldquo;nobody tried.&rdquo; And an automated browser test that runs twice a day against the live site, actually clicking through the survey the way a real visitor would, the same test I'd just done by hand, except it doesn't need me to remember to do it.</p>
+
+  <p>There's one honest gap worth keeping, because this series has been good about not smoothing these over. The third layer &mdash; the one that actually proves the whole flow works &mdash; could not be verified inside the sandbox at all. No permission to install what a real browser needs to run. It's built on the reasonable assumption that GitHub's own infrastructure can run it, but as of writing, it hadn't actually succeeded anywhere yet. The fix for &ldquo;don't rely on a human to catch this&rdquo; is itself, for now, running on faith that it'll work once given the chance.</p>
+
+  <p>I don't think the lesson here is that AI QA is careless. Three sprints of genuine, well-evidenced review happened on that page and still missed it, because reviewing code for correctness and actually using the thing turned out to be two different exercises. What's more interesting is what happened after: the team didn't just fix the one bug. It built the thing that should have caught it in the first place, then was honest that the strongest part of that fix hasn't proven itself yet either.</p>
+
+  <p>If the point of this whole project is to find out where AI teams fail silently, this is exactly the kind of failure worth surfacing rather than quietly patching and moving on.</p>
+  </article>
+</div>
+
+</main>
+<footer>
+  <div class="footer-links">
+    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+    <a href="/diagnostic">Diagnostic</a>
+    <a href="/writing">Writing</a>
+    <a href="/learnings">Learnings</a>
+    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+</footer>
+
+</body>
+</html>

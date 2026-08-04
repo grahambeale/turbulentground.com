@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eleven Sprints In: Why a Fully Automated Product Team Doesn't Work · Turbulent Ground</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="description" content="Eleven sprints into TurbulentGround.com, and the evidence points one way: a fully automated product team, run under Marty Cagan's empowered model, doesn't work.">
+<meta property="og:title" content="Eleven Sprints In: Why a Fully Automated Product Team, Run on Cagan's Rules, Doesn't Work">
+<meta property="og:description" content="What I've actually built is a ticket factory. It takes in objectives and produces tickets, twice a week, forever. What it doesn't produce is outcomes.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+  nav { background: var(--bg-dark); border-bottom: 1px solid var(--surface); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--ink-mid); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--orange-btn); color: #fff !important; padding: 8px 18px; border-radius: 40px; font-size: 14px !important; font-weight: 500; }
+  .nav-cta:hover { background: var(--orange-hover) !important; }
+  .hero-image { width: 100%; max-height: 480px; object-fit: cover; display: block; }
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
+  .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
+  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: 13px; }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article a { color: var(--orange-lt); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  article strong { color: var(--ink); font-weight: 500; }
+  article em { color: var(--muted); font-style: italic; }
+  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--ink-mid); }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+  .footer-copy a { color: var(--muted); }
+</style>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Turbulent Ground</a>
+  <div class="nav-links">
+    <a href="/writing">Writing</a>
+    <a href="/learnings">Learnings</a>
+    <a href="/diagnostic" class="nav-cta">Take the diagnostic</a>
+  </div>
+</nav>
+<main>
+<img src="images/eleven-sprints-in.png" alt="Illustration for Sprint 11: Why a Fully Automated Product Team, Run on Cagan's Rules, Doesn't Work" class="hero-image">
+
+<div class="page-wrap">
+  <p class="eyebrow">The Experiment</p>
+  <h1>Eleven Sprints In: Why a Fully Automated Product Team, Run on Cagan&rsquo;s Rules, Doesn&rsquo;t Work</h1>
+  <div class="byline-row">
+    <span class="byline-name">Graham Beale</span>
+    <span class="byline-meta">&middot; Sprint 11</span>
+  </div>
+
+  <div class="disclosure-note">
+    <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
+  </div>
+
+  <article>
+  <p>Eleven sprints into TurbulentGround.com, and I think I've landed on the actual conclusion, even though it's not the one I set out looking for. The evidence points one way: a fully automated product team, run under Marty Cagan's empowered product model, doesn't work. Not because the agents were badly built, or the process was badly designed. Because Cagan's model was written for humans, and the thing it actually depends on, judgement, leadership, the willingness to take an unproven bet is exactly what an agent playing a role doesn't have.</p>
+
+  <p>Quick context if you're new here: five AI agents run a product cycle against my live diagnostic site, following Cagan's model, twice a week since sprint 5. I set the objective at the start of the quarter. After that, I don't get a vote.</p>
+
+  <p>I couldn't see what the team was doing, and that was the first sign of a deeper problem. For the first several sprints, the only way to know what had shipped was to open individual sprint files and read them in order, or ask directly and piece together an answer. There was no way to glance at a backlog and see what was in flight. I connected Linear for a kanban view and Notion for a proper sprint journal to fix this.</p>
+
+  <p><em>[Embedded image: Linear kanban view screenshot]</em></p>
+
+  <p>It worked, but it told me something worth sitting with: a team can document itself thoroughly and still be completely illegible to the person meant to be observing it. That's not a tooling gap. That's a communication gap, and communication is a leadership skill, not a documentation one.</p>
+
+  <p>Then there was the question of ambition, and this is where the real problem showed up. I gave the team a clear objective and key results. What came back, sprint after sprint, was small, defensible, well-evidenced work: accessibility fixes, contrast audits, hover states. Careful. Correct. Never once a genuine attempt to move the numbers that were sitting flat. I asked directly whose job it actually was to chase those targets. The answer I got back was, roughly, that's a growth agent's job &mdash; as if driving toward the key results was someone else's remit, a role that doesn't exist on this team, rather than anyone's actual responsibility. I'd already said explicitly the key results were the PM's job. They were never reported on, never acted on, never the subject of anything resembling a plan.</p>
+
+  <p>Here's why I think that happened, and it's structural, not a one-off lapse. The team's own governing rule is that a proposal needs a stated user problem and evidence behind it before it can go forward &mdash; a sensible-sounding guardrail. But a stretch goal doesn't have evidence yet. You can't prove a leap before you take it. So a model built to demand evidence before acting will always select for the safe, provable thing over the ambitious, unprovable one. That's not a flaw in how carefully any individual agent reasoned. It's what the structure was always going to produce.</p>
+
+  <p>The deployment saga is the clearest single piece of evidence, and it took a genuinely absurd amount of back-and-forth to resolve. Every one of the first ten sprints, real work got done, verified, and then sat there, undeployed, blocked by a recurring lock file the sandboxed environment couldn't clear. I did my own research outside the sprint process and set up an API-based deployment route specifically to work around it. For a while, every time I asked, the answer came back some version of still can't fix it. In sprint 11, I asked directly: have you actually tried the API? That question is what finally moved things, though not quite the way I expected. The API itself turned out to be blocked at the network level, a dead end once genuinely tested. But the same investigation, prompted by that one direct question, led the team to a different fix &mdash; a lower-level git approach that routed around the lock entirely. It worked, for the first time in eleven sprints, without me touching my own machine.</p>
+
+  <p>And here's a real, unambiguous win I don't want to undersell. I now have a loop that deploys automatically, twice a week, without me. What I've actually built is a ticket factory. It takes in objectives and produces tickets, reliably, twice a week, forever closed, verified, shipped. What it doesn't produce is outcomes. Lots of work going in, almost nothing coming out the other end that anyone would notice or that moves a single number that matters. That's a strange, specific kind of success.</p>
+
+  <p>I set out to test this to destruction, deliberately, from the very first post in this series. I didn't expect a literal collapse, and there hasn't been one. Nothing has crashed, nothing has broken in a way that couldn't be fixed. But eleven sprints in, I think I've found what destruction actually looks like for a ticket factory. It isn't a crash. It's irrelevance. A system that runs forever, correctly, producing nothing anyone would ever pay for or notice. If this were a real business rather than a sandbox, it would already be dead &mdash; not from a dramatic failure, but from eleven months of nothing happening while the lights stayed on. That's a more honest test result than I expected going in, and a worse one for the model than a clean failure would have been. A crash tells you where the wall is. This tells you the whole thing was quietly pointless the entire time, and you'd only find out by watching it not matter for long enough.</p>
+
+  <p>A friend suggested a different, supposedly sharper-reasoning model might change the equation. I think it would help marginally. But I'd burn through credits fast enough to run one sprint a week instead of two, and I don't believe the constraint I'm actually up against is reasoning quality. Sharper reasoning inside the same structure still can't manufacture the thing the structure was never built to produce.</p>
+
+  <p>There is one genuine counter-example worth naming, because it's the clearest moment the model worked exactly as intended. In sprint 3, the team found a paid analytics tool running in production and, reading it as unauthorised spend, quietly removed it. I'd paid for it myself hours earlier. I intervened live, the change was reversed immediately, no argument, fully logged. That's Cagan's model doing what it's supposed to do: a team empowered to act, and a human still able to step in on a genuine judgement call. It's also, notably, the one moment in eleven sprints where a human made the actual call. Every other instance of real progress in this project &mdash; the Linear and Notion decision, the API research, the direct question that finally broke the deployment lock, this reflection itself &mdash; came from me, not from the team operating inside its own process.</p>
+
+  <p>So: fully automated teams, on the evidence of eleven sprints, don't do leadership. Leadership is what takes the risk of a step change, and it comes from context and judgement that a role-playing AI simply doesn't have, however good the underlying reasoning gets. Cagan's model was never a set of mechanical rules. It's a description of how empowered people behave: the trust, the taste, the willingness to bet on something unproven because you understand the bigger picture. Strip the people out and you're left with the process's skeleton, competently executed, missing exactly the thing that made it work in the first place.</p>
+
+  <p>There's a connection here back to something I mentioned in the very first post in this series &mdash; a framework from Paul Forrest's Oxford lecture, on signals, triggers, and events: a signal is a change worth noticing, a trigger is the rule that says this now matters, an event is where a system acts on it without waiting for a person to approve each step. I think I've been building the wrong version of that idea. I gave the agents team meetings, discussion, disagreement, consensus &mdash; a structure built to look like a human product team, complete with the parts of a human team that produce leadership. What it should have been doing instead is the opposite: acting more like a clean signal-trigger-event system, not less. Mechanical, linear, fast, genuinely autonomous on the parts that don't need judgement &mdash; and entirely silent on the parts that do, because those get escalated to a human, not simulated by a role-play of one.</p>
+
+  <p>The mistake wasn't giving the agents too little humanity. It was giving them the shape of a human process without any of the substance that makes a human process work, when what they actually needed was to be less like a team and more like a well-built pipeline, with leadership sitting somewhere else entirely.</p>
+
+  <p>So here's what I'm actually going to spend the coming week thinking about, away from a screen. Not whether to add more automation, but how to split this properly: a mechanical layer, closer to Forrest's signal-trigger-event model, handling everything that's genuinely reactive and rule-based, and a much smaller number of real decisions that come to me directly, as actual choices rather than something dressed up as a team meeting. I already have a vision for what this should become. The open question is where exactly that line sits &mdash; which signals the system should just act on cleanly, and which ones are actually trigger points for me, not for it.</p>
+
+  <p>More on where this goes once I'm back.</p>
+  </article>
+</div>
+
+</main>
+<footer>
+  <div class="footer-links">
+    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+    <a href="/diagnostic">Diagnostic</a>
+    <a href="/writing">Writing</a>
+    <a href="/learnings">Learnings</a>
+    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+</footer>
+
+</body>
+</html>
