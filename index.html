@@ -30,6 +30,7 @@
   --surface:   #1c1915;
   --orange:    #d9571c;
   --orange-lt: #e8763a;
+  --orange-hover: #a23a13;
   --ink:       #e8dcc8;
   --ink-mid:   #c8b89a;
   --muted:     #9e8e7c;
@@ -105,7 +106,7 @@ body {
   text-decoration:none; padding:9px 20px; border-radius:40px;
   transition:all 0.22s;
 }
-.nav-btn:hover { background:var(--orange); transform:translateY(-1px); }
+.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
 
 /* Hamburger + mobile menu */
 .nav-toggle {
@@ -171,7 +172,7 @@ section { padding:96px 0; }
   border-radius:40px; transition:all 0.22s;
 }
 .btn-primary { background:#b84215; color:#fff; padding:14px 28px; }
-.btn-primary:hover { background:var(--orange); transform:translateY(-2px); }
+.btn-primary:hover { background:var(--orange-hover); transform:translateY(-2px); }
 .btn-ghost-dark { color:var(--muted); padding:14px 0; }
 .btn-ghost-dark:hover { color:var(--dk-text); }
 .btn-ghost-light { color:var(--dk-muted); padding:14px 0; }
@@ -403,7 +404,7 @@ section { padding:96px 0; }
   font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
   cursor:pointer; white-space:nowrap; transition:all 0.22s;
 }
-.email-btn:hover { background:var(--orange-lt); }
+.email-btn:hover { background:var(--orange-hover); }
 .email-note { font-size:11px; color:var(--dk-muted); margin-top:10px; }
 .email-confirm {
   display:none;

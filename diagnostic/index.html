@@ -25,7 +25,7 @@
 :root{
   --bg:#131110;--surface:#1c1915;--surface2:#26211c;
   --border:rgba(217,87,28,0.15);--border2:rgba(232,220,200,0.10);
-  --orange:#d9571c;--orange-lt:#e8763a;--orange-dim:rgba(217,87,28,0.08);--orange-mid:rgba(217,87,28,0.25);
+  --orange:#d9571c;--orange-lt:#e8763a;--orange-hover:#a23a13;--orange-dim:rgba(217,87,28,0.08);--orange-mid:rgba(217,87,28,0.25);
   --text:#e8dcc8;--muted:#9e8e7c;--muted2:#9a8a78;
   --c1:#d9571c;--c2:#c8b89a;--c3:#8ab4c8;--c4:#a8c89a;--c5:#d4a8c8;
   --green:#7ec87e;--amber:#e8a840;--red:#e86060;
@@ -253,7 +253,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
 .nav-btn-wrap{overflow:hidden;flex-shrink:0;max-width:200px;opacity:1;transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;}
 .nav.scrolled .nav-btn-wrap{max-width:0;opacity:0;pointer-events:none;}
 .nav-btn{display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:'Outfit';font-size:13px;font-weight:500;color:#fff;background:#b84215;text-decoration:none;padding:9px 20px;border-radius:40px;letter-spacing:0.04em;transition:all 0.22s;}
-.nav-btn:hover{background:var(--orange);transform:translateY(-1px);}
+.nav-btn:hover{background:var(--orange-hover);transform:translateY(-1px);}
 .nav-logo-mark{flex-shrink:0;width:44px;overflow:hidden;transition:width 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;opacity:1;}
 .nav.scrolled .nav-logo-mark{width:0;opacity:0;}
 
