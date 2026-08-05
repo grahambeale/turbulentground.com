@@ -137,6 +137,16 @@ body {
 }
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+.container { max-width:720px; margin:0 auto; padding:0 48px; }
+.container--wide { max-width:900px; margin:0 auto; padding:0 48px; }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero {
+  padding:calc(64px + 96px) 0 96px;
+  border-bottom:1px solid var(--border);
+}
 .hero-name {
   font-family:'Cormorant Garamond', serif;
   font-size:clamp(52px,8vw,100px);

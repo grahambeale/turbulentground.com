@@ -83,7 +83,13 @@ body {
 section { padding:96px 0; }
 section + section { border-top:1px solid var(--border-n); }
 
-/* ── Nav ──────────────────────────────────────────────────────────── */
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.container { max-width:1100px; margin:0 auto; padding:0 48px; }
+.container--narrow { max-width:760px; margin:0 auto; padding:0 48px; }
+
+section { padding:96px 0; }
+section + section { border-top:1px solid var(--border-n); }
+
 /* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
@@ -169,54 +175,6 @@ section + section { border-top:1px solid var(--border-n); }
 }
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
-.nav.scrolled {
-  height:52px;
-  background:rgba(19,17,16,0.96);
-  backdrop-filter:blur(20px);
-}
-.nav-logo {
-  display:flex; align-items:center; gap:14px;
-  text-decoration:none; cursor:pointer; flex-shrink:0;
-}
-.nav-logo-mark {
-  width:40px; overflow:hidden; flex-shrink:0;
-  transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-}
-.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
-.nav-wordmark {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:20px; letter-spacing:0.18em; line-height:1;
-  color:var(--cream); text-transform:uppercase; white-space:nowrap;
-  transition:font-size 0.3s ease, color 0.2s ease;
-}
-.nav.scrolled .nav-wordmark { font-size:18px; }
-.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
-.nav-links {
-  display:flex; align-items:center; gap:24px;
-  justify-content:flex-end;
-}
-.nav-link {
-  font-family:'Outfit'; font-size:12px; font-weight:400;
-  color:var(--muted); text-decoration:none;
-  letter-spacing:0.05em; white-space:nowrap;
-  transition:color 0.2s;
-}
-.nav-link:hover { color:var(--cream); }
-.nav-link.active { color:var(--orange-lt); font-weight:500; }
-.nav-btn-wrap {
-  overflow:hidden; flex-shrink:0;
-  max-width:200px; opacity:1;
-  transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-}
-.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
-.nav-btn {
-  display:inline-flex; align-items:center; gap:7px;
-  white-space:nowrap; font-family:'Outfit'; font-size:13px; font-weight:500;
-  color:#fff; background:var(--orange); text-decoration:none;
-  padding:9px 20px; border-radius:40px;
-  transition:all 0.22s;
-}
-.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
 
 /* ── Buttons ─────────────────────────────────────────────────────────── */
 .btn {
@@ -443,6 +401,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
 </div>
 <!-- NAV_END -->
+<main>
 
 <!-- ── Hero ────────────────────────────────────────────────────────── -->
 <section style="min-height:100vh;position:relative;display:flex;align-items:center;padding-top:72px;">
