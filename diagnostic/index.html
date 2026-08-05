@@ -913,6 +913,7 @@ function buildShareMessage(teamCode) {
 function copyShare() {
   const msg = document.getElementById('share-message');
   if (msg) navigator.clipboard.writeText(msg.textContent).then(() => {
+    if (typeof plausible === 'function') plausible('Share Triggered');
     alert('Invite message copied to clipboard.');
   });
 }

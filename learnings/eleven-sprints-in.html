@@ -264,6 +264,12 @@
     var href=normalize(a.getAttribute('href'));
     if(href===current) a.classList.add('active');
   });
+  document.querySelectorAll('a[href$="/diagnostic"], a[href$="diagnostic/index.html"]').forEach(function(a){
+    if(a.closest('footer')) return;
+    a.addEventListener('click',function(){
+      if(typeof plausible==='function') plausible('Diagnostic CTA Clicked');
+    });
+  });
 })();
 </script>
 <!-- NAV_JS_END -->
