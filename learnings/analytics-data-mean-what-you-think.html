@@ -126,6 +126,82 @@
   .footer-links a:hover { color: var(--ink-mid); }
   .footer-copy { font-size: 12px; color: var(--muted); }
   .footer-copy a { color: var(--muted); }
+/* FEEDBACK_CSS_START */
+.feedback-tab-wrap {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 150;
+}
+.feedback-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 132px;
+  padding: 12px 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.25);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab:hover,
+.feedback-tab:focus-visible {
+  color: var(--orange-lt);
+  background: var(--bg-warm);
+}
+.feedback-tab:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 2px;
+  border-radius: 10px 0 0 10px;
+}
+.feedback-tab-icon { flex-shrink: 0; opacity: 0.85; }
+.feedback-tab-close {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab-close:hover { color: var(--orange-lt); background: var(--bg-warm); }
+.feedback-tab-close:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 1px;
+}
+.feedback-tab-wrap.dismissed { display: none; }
+
+/* Icon-only on narrow viewports — stays right-center so it never overlaps
+   the diagnostic page's full-width fixed bottom survey bar. */
+@media (max-width: 560px) {
+  .feedback-tab {
+    max-width: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 22px 0 0 22px;
+  }
+  .feedback-tab-label { display: none; }
+}
+/* FEEDBACK_CSS_END */
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 </head>
@@ -266,6 +342,39 @@
 })();
 </script>
 <!-- NAV_JS_END -->
+
+<!-- FEEDBACK_START -->
+<div class="feedback-tab-wrap" id="feedback-tab-wrap">
+  <a href="mailto:feedback@turbulentground.com" class="feedback-tab" id="feedback-tab" aria-label="Spot something broken? Tell the team — opens an email to feedback@turbulentground.com">
+    <svg class="feedback-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+      <path d="m22 6-10 7L2 6"></path>
+    </svg>
+    <span class="feedback-tab-label">Spot something broken? Tell the team</span>
+  </a>
+  <button type="button" class="feedback-tab-close" id="feedback-tab-close" aria-label="Dismiss feedback prompt">&times;</button>
+</div>
+<!-- FEEDBACK_END -->
+
+<!-- FEEDBACK_JS_START -->
+<script>
+(function(){
+  var wrap = document.getElementById('feedback-tab-wrap');
+  var closeBtn = document.getElementById('feedback-tab-close');
+  if (!wrap || !closeBtn) return;
+  try {
+    if (localStorage.getItem('tg-feedback-dismissed') === '1') {
+      wrap.classList.add('dismissed');
+      return;
+    }
+  } catch (e) {}
+  closeBtn.addEventListener('click', function(){
+    wrap.classList.add('dismissed');
+    try { localStorage.setItem('tg-feedback-dismissed', '1'); } catch (e) {}
+  });
+})();
+</script>
+<!-- FEEDBACK_JS_END -->
 
 </body>
 </html>

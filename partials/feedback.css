@@ -1,0 +1,74 @@
+.feedback-tab-wrap {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 150;
+}
+.feedback-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 132px;
+  padding: 12px 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.25);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab:hover,
+.feedback-tab:focus-visible {
+  color: var(--orange-lt);
+  background: var(--bg-warm);
+}
+.feedback-tab:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 2px;
+  border-radius: 10px 0 0 10px;
+}
+.feedback-tab-icon { flex-shrink: 0; opacity: 0.85; }
+.feedback-tab-close {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab-close:hover { color: var(--orange-lt); background: var(--bg-warm); }
+.feedback-tab-close:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 1px;
+}
+.feedback-tab-wrap.dismissed { display: none; }
+
+/* Icon-only on narrow viewports — stays right-center so it never overlaps
+   the diagnostic page's full-width fixed bottom survey bar. */
+@media (max-width: 560px) {
+  .feedback-tab {
+    max-width: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 22px 0 0 22px;
+  }
+  .feedback-tab-label { display: none; }
+}
