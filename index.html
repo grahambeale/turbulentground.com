@@ -217,9 +217,25 @@ section { padding:96px 0; }
 }
 .hero-audience {
   font-size:15px; font-weight:400;
-  color:var(--dim); margin-bottom:36px;
+  color:var(--dim); margin-bottom:28px;
   letter-spacing:0.03em;
 }
+.hero-value-list {
+  list-style:none; margin:0 0 32px; padding:0;
+  display:flex; flex-direction:column; gap:10px;
+  max-width:520px;
+}
+.hero-value-list li {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:14px; font-weight:400; line-height:1.5;
+  color:var(--ink-mid);
+}
+.hero-value-list li::before {
+  content:'';
+  flex-shrink:0; width:6px; height:6px; border-radius:50%;
+  background:var(--orange-lt); margin-top:7px;
+}
+.hero-value-list li strong { color:var(--ink); font-weight:500; }
 .hero-ctas { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
 
 /* Hero aside */
@@ -655,9 +671,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <section class="hero">
   <div class="container">
     <div style="max-width:680px;">
+        <span class="eyebrow">A free diagnostic for AI-era product teams</span>
         <h1 class="display display-xl hero-headline">AI amplifies<br><em>what it finds.</em></h1>
         <p class="hero-sub">In a product team with strong foundations, it sharpens judgement and accelerates delivery. Without them, it accelerates the wrong things faster. The question is what your team is built on.</p>
-        <p class="hero-audience">For product leaders, designers and engineers in real organisations.</p>
+        <p class="hero-audience">For product leaders, designers and engineers across every discipline, not just one, in real organisations.</p>
+        <ul class="hero-value-list">
+          <li><strong>See what's actually helping and what's quietly costing you</strong>, so you can act on it, not just measure it.</li>
+          <li><strong>Get a practical starting point for building trust across a distributed team</strong>, where AI adoption often pulls people apart before it brings them together.</li>
+          <li><strong>8 minutes, completely anonymous, free.</strong> No email required to see your results.</li>
+        </ul>
         <div class="hero-ctas">
           <a href="diagnostic/index.html" class="btn btn-primary">Take the diagnostic &rarr;</a>
           <a href="#why" class="btn btn-ghost-dark">Why this exists &rarr;</a>

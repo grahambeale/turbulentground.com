@@ -49,6 +49,17 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-weight:300;line-height:1.0;margin-bottom:16px;letter-spacing:-0.025em}
 .strapline{font-size:16px;color:var(--muted);margin-bottom:24px;letter-spacing:.01em;font-weight:300}
 .lead{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:28px}
+/* Sprint 13: value-proposition reasons, added directly under .lead in response to Graham's signal
+   (graham-signals.md, 2026-08-06, "Value proposition isn't clear on landing"). Colours are existing
+   tokens only, not new pairs: var(--orange-lt) on var(--bg) verified 6.35:1, var(--text) on var(--bg)
+   already established sitewide — no new contrast surface introduced. Number markers are aria-hidden;
+   the <li> order already conveys sequence to assistive tech. */
+.value-reasons{list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:14px}
+.value-reasons li{display:flex;gap:14px;align-items:flex-start;font-size:15px;color:var(--text);line-height:1.6}
+.value-reasons-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--orange-mid);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--orange-lt);margin-top:1px}
+/* Sprint 13: time/anonymity note placed immediately above the CTA, at the point of decision, per
+   Graham's signals on time commitment and anonymity clarity. var(--muted2) on var(--bg) verified 5.64:1. */
+.time-note{font-size:13px;color:var(--muted2);margin:-8px 0 20px;line-height:1.6}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
 .info-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px 18px}
 .info-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:6px}
@@ -243,6 +254,8 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-
   .overall-card{flex-direction:column;gap:12px}
   .mode-toggle{flex-direction:column}
   .email-row{flex-direction:column}
+  .value-reasons{gap:10px;margin-bottom:22px}
+  .value-reasons li{font-size:14px}
 }
 
 /* Nav links */
@@ -454,6 +467,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <p class="strapline">Investing in the conditions that make great work possible</p>
       <p class="lead">This diagnostic measures the five conditions that determine whether a team can exercise genuine collective judgement, and whether AI will amplify your strengths or your blind spots.</p>
 
+      <ul class="value-reasons" aria-label="Why this is worth your time">
+        <li><span class="value-reasons-num" aria-hidden="true">1</span><span>See where your team's collaboration actually stands, not a vague sense of morale, but five specific, actionable conditions you can act on.</span></li>
+        <li><span class="value-reasons-num" aria-hidden="true">2</span><span>Get a concrete starting point for building the trust a distributed, AI-augmented team needs to keep working well together.</span></li>
+        <li><span class="value-reasons-num" aria-hidden="true">3</span><span>Walk away with something specific enough to make the case for change in a real conversation with your leadership.</span></li>
+      </ul>
+
       <div class="beta-notice">
         <div class="beta-notice-icon">⬡</div>
         <div>
@@ -510,8 +529,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         </select>
       </div>
 
+      <p class="time-note">Takes about 8 minutes. Your individual answers are always anonymous.</p>
       <button class="btn" onclick="startSurvey()">Begin assessment →</button>
-      <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;">Answer honestly. There are no right answers, only accurate ones. Divergence between teammates is often the most useful data. Results are anonymous, no personal information is stored.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;">Answer honestly. There are no right answers, only accurate ones. Divergence between teammates is often the most useful data. Your individual answers are anonymous and never attributed to you. Where enough people from the same organisation respond, we surface aggregated, company-level patterns only, never anything traceable back to an individual.</p>
     </div>
   </div>
 </div>
