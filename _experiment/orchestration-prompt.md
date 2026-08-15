@@ -1,6 +1,6 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.6
+**Version:** 3.7
 **Last updated:** 13 August 2026
 **Applies from:** Sprint 14
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
@@ -301,6 +301,20 @@ Each response is logged to `decision-log.md` with the signal reference. Signals 
 
 **Never commit a file this session did not author.** If `git status` shows changes outside this sprint's own work, unstage them, leave them exactly as found, and log them. Claiming authorship or QA sign-off over unreviewed code is worse than a delayed deploy.
 
+**Step 4c — Notion and Linear sync (restored).** This step previously existed and
+was lost when the prompt was rebuilt from a stale copy earlier this week — restored
+here per Graham's explicit instruction on 16 Aug 2026. Write a summary of this
+sprint to Notion and, where relevant, log any resulting work items in Linear:
+  - Notion: create or update a sprint summary page — objective, key decisions,
+    what shipped, retrospective highlights. Link to the full decision-log.md entry
+    rather than duplicating it in full.
+  - Linear: log any follow-up engineering work identified this sprint as issues,
+    so it's trackable outside the markdown logs.
+  - If either write fails, log `TOOL FAILURE — Notion/Linear — <error>` to
+    decision-log.md per the standing tool-failure rule. Do not silently skip this
+    step and do not treat a dry run as exempt from it once a sprint has been
+    committed as real.
+
 **Step 5 — Post-deploy documentation.** Analytics Agent documents what shipped, what metrics to watch, and expected impact.
 
 **Step 6 — Retrospective.** All five agents answer:
@@ -359,6 +373,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.7 | 16 Aug 2026 | Restored Step 4c (Notion/Linear sync), lost in an earlier rebuild this week. Graham confirmed this previously worked and wants it back — exact original format unknown, written as a reasonable reconstruction for the team to refine. |
 | 3.6 | 15 Aug 2026 | Corrected canonical-location note after migrating to `turbulentground.com/_experiment/` (the only location proven reliably mounted by Cowork tasks after the private-repo and iCloud approaches both failed). No functional change. |
 | 3.5 | 15 Aug 2026 | Migrated source of truth to the private `turbulentground-experiment` GitHub repo, read live by the Cowork tasks. Corrected canonical-location and change-control references (no more project re-upload). Fixed the file-locations filename to `orchestration-prompt.md`. Task instructions rewritten to read this file live rather than embed its rules. |
 | 3.3 | 13 Aug 2026 | **Session lock added** after `decision-log.md` Sprint 13 row 6 confirmed the Sunday and midweek tasks ran concurrently against one repo mount, both deriving "Sprint 13" independently. `sprint-state.json` is now the sole source of the sprint number. Git deployment guidance made environment-aware (Mac vs sandbox) instead of asserting one route for both. Added: `Operation not permitted` on a lock means concurrency, escalate not retry; never commit unauthored changes; verify SHA and Vercel state before logging as shipped. |
