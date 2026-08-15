@@ -51,6 +51,16 @@
       "source": "/analytics-data-mean-what-you-think.html",
       "destination": "/learnings/analytics-data-mean-what-you-think",
       "permanent": true
+    },
+    {
+      "source": "/writing",
+      "destination": "https://www.linkedin.com/in/grahambeale/",
+      "permanent": true
+    },
+    {
+      "source": "/writing.html",
+      "destination": "https://www.linkedin.com/in/grahambeale/",
+      "permanent": true
     }
   ],
   "headers": [
