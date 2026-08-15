@@ -1,0 +1,12 @@
+{
+  "_comment": "Sprint and session locks. See turbulentground-orchestration-prompt.md, Sprint lock section. THIS FILE IS THE ONLY SOURCE OF THE SPRINT NUMBER. Never derive it by counting the sprints/ folder — that is how Sprint 13 produced two Sprint 13s.",
+  "sprint": 13,
+  "status": "complete",
+  "session": null,
+  "session_started": null,
+  "opened": "2026-08-09",
+  "closed": "2026-08-13",
+  "_history": [
+    "2026-08-13: created. Sprint 13 recorded as complete — shipped via commit bc36b93 by Graham's manual intervention after the sandbox session was blocked by a concurrent lock. Next Sunday task will open Sprint 14."
+  ]
+}

@@ -13,3 +13,6 @@ playwright-report/
 test-results/
 .env
 .env
+_experiment/*
+!_experiment/orchestration-prompt.md
+!_experiment/sprint-state.json
