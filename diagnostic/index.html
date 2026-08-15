@@ -1121,7 +1121,7 @@ async function submitCapture() {
     if (json.status === 'verification_sent') {
       // Show "check your email" state
       btn.style.display = 'none';
-      okEl.innerHTML = '✉️ Check your inbox — we\'ve sent a verification link to <strong>' + email + '</strong>. Click it to confirm your email and see your results.';
+      okEl.innerHTML = '✉️ Check your inbox — we\'ve sent a verification link to <strong>' + email + '</strong>. Click it to confirm your email and get your emailed copy.';
       okEl.style.display = 'block';
     } else {
       btn.style.display = 'none';

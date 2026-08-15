@@ -1,9 +1,9 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.5
+**Version:** 3.6
 **Last updated:** 13 August 2026
 **Applies from:** Sprint 14
-**Canonical location:** GitHub repo `grahambeale/turbulentground-experiment`, file `orchestration-prompt.md`, branch `main`. Local working copy: `~/Library/Mobile Documents/com~apple~CloudDocs/Claude/TurbulentGround/orchestration-prompt.md`.
+**Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
 
 > **Change control.** This file is the single source of truth. No scheduled Cowork task may
 > embed a copy of it — every task reads this file at runtime. If a task's behaviour
@@ -359,6 +359,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.6 | 15 Aug 2026 | Corrected canonical-location note after migrating to `turbulentground.com/_experiment/` (the only location proven reliably mounted by Cowork tasks after the private-repo and iCloud approaches both failed). No functional change. |
 | 3.5 | 15 Aug 2026 | Migrated source of truth to the private `turbulentground-experiment` GitHub repo, read live by the Cowork tasks. Corrected canonical-location and change-control references (no more project re-upload). Fixed the file-locations filename to `orchestration-prompt.md`. Task instructions rewritten to read this file live rather than embed its rules. |
 | 3.3 | 13 Aug 2026 | **Session lock added** after `decision-log.md` Sprint 13 row 6 confirmed the Sunday and midweek tasks ran concurrently against one repo mount, both deriving "Sprint 13" independently. `sprint-state.json` is now the sole source of the sprint number. Git deployment guidance made environment-aware (Mac vs sandbox) instead of asserting one route for both. Added: `Operation not permitted` on a lock means concurrency, escalate not retry; never commit unauthored changes; verify SHA and Vercel state before logging as shipped. |
 | 3.2 | 13 Aug 2026 | **Restored two steps lost when v3.0 was rebuilt from a stale copy:** Step 1a (KR status log, incl. the standing acquisition gap) and Step 4a (content requests queue), both recovered from the files themselves. Weekly Summary write demoted into Step 1 to free the 1a slot it had wrongly taken. Added Step 4b. Corrected the git deployment guidance — plain `rm` does work on this Mac; the plumbing route is a fallback, not the default. Added `kr-status.md`, `content-requests.md`, `metrics-baseline.md` to file locations. |
