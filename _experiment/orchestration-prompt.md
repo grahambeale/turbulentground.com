@@ -1,8 +1,8 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.7
-**Last updated:** 13 August 2026
-**Applies from:** Sprint 14
+**Version:** 3.8
+**Last updated:** 17 August 2026
+**Applies from:** Sprint 15
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
 
 > **Change control.** This file is the single source of truth. No scheduled Cowork task may
@@ -31,6 +31,7 @@
 - **Available resources:** `source-material/` contains additional raw material (e.g. Graham's existing articles) the team may draw on. Its presence is not an instruction to use it.
 - **Human override — governance only, logged, never silent.** Graham intervenes solely on **legal, ethical, moral, or reputational** grounds. Logged as `HUMAN OVERRIDE — GOVERNANCE` with the specific trigger stated. Strategy, prioritisation, design taste and technical approach remain autonomous, subject to the standing principles below and the signal mechanism in Step 1b.
 - **Tool failures are logged, not swallowed.** If any required read or write to Airtable, Plausible, GitHub or the filesystem fails, log `TOOL FAILURE — <tool> — <operation> — <error>` to `decision-log.md` and state it in the sprint log. Never silently proceed as though the operation succeeded, and never substitute an estimate for a value that failed to retrieve.
+- **Notion/Linear sync is never skipped, even when deployment happens out-of-band.** Step 4c (Saturday) is not contingent on *this session* being the one that deploys. At the start of **every** session (Sunday or Wednesday), before this session's own Discovery or delivery work, check whether the most recently shipped sprint — confirmed live on `origin/main` per the session's own git reconciliation check — has both a Notion Sprint Journal page and a Linear issue. If either is missing, create it retroactively as this session's first action, referencing the shipped commit and the relevant `decision-log.md`/`sprints/` entries, before proceeding. Added after Sprint 14 shipped via Graham's own out-of-band commit and no session ever reached its Step 4c, so the sync was silently missed until Sprint 15's Discovery caught it three sprints... two days late. Log the check either way — `RECONCILIATION — Notion/Linear sync — Sprint <N> — <found already present | created retroactively>` — to `decision-log.md`, so a clean check is distinguishable from one that was never actually run. **Discovery-only sprints get a Notion/Linear entry too, logged at Discovery with `Status: In progress`**, not held back until a deploy that may not happen through the normal loop that same week — update it in place once delivery/deploy actually completes, rather than creating a second entry.
 
 ---
 
@@ -301,18 +302,26 @@ Each response is logged to `decision-log.md` with the signal reference. Signals 
 
 **Never commit a file this session did not author.** If `git status` shows changes outside this sprint's own work, unstage them, leave them exactly as found, and log them. Claiming authorship or QA sign-off over unreviewed code is worse than a delayed deploy.
 
-**Step 4c — Notion and Linear sync (restored).** This step previously existed and
+**Step 4c — Notion and Linear sync (restored, and hardened after being missed for Sprint 14).** This step previously existed and
 was lost when the prompt was rebuilt from a stale copy earlier this week — restored
-here per Graham's explicit instruction on 16 Aug 2026. Write a summary of this
+here per Graham's explicit instruction on 16 Aug 2026. **Sprint 14 then shipped via
+Graham's own out-of-band commit, no session ever reached this step for it, and the
+gap wasn't caught until Sprint 15's Discovery — see the Master instructions'
+Notion/Linear reconciliation rule, which now catches this at the *start* of every
+session, not only here at the end.** Write a summary of this
 sprint to Notion and, where relevant, log any resulting work items in Linear:
-  - Notion: create or update a sprint summary page — objective, key decisions,
-    what shipped, retrospective highlights. Link to the full decision-log.md entry
-    rather than duplicating it in full.
-  - Linear: log any follow-up engineering work identified this sprint as issues,
-    so it's trackable outside the markdown logs.
+  - Notion: create or update this sprint's Sprint Journal page (may already exist
+    with `Status: In progress` if this sprint's Discovery created it) — objective,
+    key decisions, what shipped, retrospective highlights, `Status` moved to
+    `Shipped` or `Blocked` as actually true, `Deployed` and `Commit` filled in.
+    Link to the full decision-log.md entry rather than duplicating it in full.
+  - Linear: create or update this sprint's issue(s) — mark Done once shipped — and
+    log any further follow-up engineering work identified this sprint as new
+    issues, so it's trackable outside the markdown logs.
   - If either write fails, log `TOOL FAILURE — Notion/Linear — <error>` to
     decision-log.md per the standing tool-failure rule. Do not silently skip this
-    step and do not treat a dry run as exempt from it once a sprint has been
+    step and do not treat a dry run, or a sprint shipped by Graham directly rather
+    than by a session's own Step 4, as exempt from it once a sprint has been
     committed as real.
 
 **Step 5 — Post-deploy documentation.** Analytics Agent documents what shipped, what metrics to watch, and expected impact.
@@ -373,6 +382,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.8 | 17 Aug 2026 | **Notion/Linear sync hardened after Sprint 14 was missed entirely.** Sprint 14 shipped via Graham's own out-of-band commit; no session ever reached Step 4c for it, and the gap sat uncaught until Sprint 15's Discovery, when Graham asked directly why it hadn't happened. Added a Master-instructions rule requiring every session to check, at the *start* of its own work, whether the most recently shipped sprint has a Notion page and Linear issue, and create them retroactively if not — rather than relying solely on Step 4c, which only ever runs if a session itself reaches Saturday. Also: Discovery-only sprints now get a Notion/Linear entry immediately (`Status: In progress`), updated in place once delivery completes, instead of waiting for a deploy that may not happen through the normal loop that week. Sprint 14 and Sprint 15 both retroactively synced this version's own session (Notion pages, Linear issues GRA-34/GRA-35). |
 | 3.7 | 16 Aug 2026 | Restored Step 4c (Notion/Linear sync), lost in an earlier rebuild this week. Graham confirmed this previously worked and wants it back — exact original format unknown, written as a reasonable reconstruction for the team to refine. |
 | 3.6 | 15 Aug 2026 | Corrected canonical-location note after migrating to `turbulentground.com/_experiment/` (the only location proven reliably mounted by Cowork tasks after the private-repo and iCloud approaches both failed). No functional change. |
 | 3.5 | 15 Aug 2026 | Migrated source of truth to the private `turbulentground-experiment` GitHub repo, read live by the Cowork tasks. Corrected canonical-location and change-control references (no more project re-upload). Fixed the file-locations filename to `orchestration-prompt.md`. Task instructions rewritten to read this file live rather than embed its rules. |
