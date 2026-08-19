@@ -16,3 +16,4 @@ test-results/
 _experiment/*
 !_experiment/orchestration-prompt.md
 !_experiment/sprint-state.json
+!_experiment/plausible-api-integration.md
