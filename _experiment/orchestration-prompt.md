@@ -1,6 +1,6 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.8
+**Version:** 3.9
 **Last updated:** 17 August 2026
 **Applies from:** Sprint 15
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
@@ -234,6 +234,26 @@ Each response is logged to `decision-log.md` with the signal reference. Signals 
 
 **Step 3 — Team discussion.** Agents read each other's positions and respond. Disagreements surfaced explicitly, not smoothed over.
 
+**Step 3b — KR-relevance gate (mandatory, before the objective is proposed).**
+Before PM proposes this week's objective, PM must answer in writing, logged to
+decision-log.md: *"KR1 and KR2 have not moved in [N] sprints. Is the objective I am
+about to propose actually capable of moving either KR this quarter — and if not,
+why is it still the right choice for this week?"*
+
+This is not a formality to clear and move past. A genuine "no, and here is why it's
+still right" is an acceptable answer — e.g. necessary technical debt, a governance
+requirement, or explicitly-scoped groundwork for a future KR-moving objective. What
+is NOT acceptable is proposing an objective without having asked the question, or
+answering it with unfounded optimism ("this might help traffic") unsupported by any
+stated mechanism for how.
+
+This gate exists because fifteen sprints of correct, shipped, verified work have not
+moved KR1 or KR2, and Graham's standing concern (graham-signals.md #18, #19) is that
+the team defaults to safe, diagnosable work over the two things that might actually
+move the numbers: an ambitious, unprovable bet, or addressing the standing acquisition
+gap (no role owns getting people to the site). Every sprint objective must be tested
+against this, not just sprints where a signal happens to raise it.
+
 **Step 4 — PM proposes objective.** PM synthesises an objective, stating what user outcome would indicate success, how it connects to the Key Results, and what is out of scope. PM asks each agent directly for objections.
 
 **Step 4a — Content requests queue (optional, non-blocking).** Any agent may log an article idea to `content-requests.md`. This is a parallel queue picked up by the team or by Graham independently of sprint cadence.
@@ -382,6 +402,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.9 | 19 Aug 2026 | Added Step 3b: mandatory KR-relevance gate before every objective proposal, per Graham's direct instruction after Sprint 15 delivered a correct, verified fix with zero KR impact. |
 | 3.8 | 17 Aug 2026 | **Notion/Linear sync hardened after Sprint 14 was missed entirely.** Sprint 14 shipped via Graham's own out-of-band commit; no session ever reached Step 4c for it, and the gap sat uncaught until Sprint 15's Discovery, when Graham asked directly why it hadn't happened. Added a Master-instructions rule requiring every session to check, at the *start* of its own work, whether the most recently shipped sprint has a Notion page and Linear issue, and create them retroactively if not — rather than relying solely on Step 4c, which only ever runs if a session itself reaches Saturday. Also: Discovery-only sprints now get a Notion/Linear entry immediately (`Status: In progress`), updated in place once delivery completes, instead of waiting for a deploy that may not happen through the normal loop that week. Sprint 14 and Sprint 15 both retroactively synced this version's own session (Notion pages, Linear issues GRA-34/GRA-35). |
 | 3.7 | 16 Aug 2026 | Restored Step 4c (Notion/Linear sync), lost in an earlier rebuild this week. Graham confirmed this previously worked and wants it back — exact original format unknown, written as a reasonable reconstruction for the team to refine. |
 | 3.6 | 15 Aug 2026 | Corrected canonical-location note after migrating to `turbulentground.com/_experiment/` (the only location proven reliably mounted by Cowork tasks after the private-repo and iCloud approaches both failed). No functional change. |
