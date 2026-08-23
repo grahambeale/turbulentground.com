@@ -1,6 +1,6 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.11
+**Version:** 3.12
 **Last updated:** 23 August 2026
 **Applies from:** Sprint 16
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
@@ -290,6 +290,57 @@ against this, not just sprints where a signal happens to raise it.
 ## Monday–Friday: Delivery
 
 > **Mid-week task scope limit.** The mid-week task executes delivery only. It **must not** run discovery, propose or revise a sprint objective, re-read `okr.md` for planning purposes, or open a vote. Permitted outputs: stand-up entries, implementation work against the committed objective, the mid-week alternative mechanism, and — **once delivery is genuinely complete, in the same sitting** — the Saturday steps below (QA gate through close). If no committed objective is found, **halt** and log `HALTED — NO COMMITTED OBJECTIVE`. Do not improvise one.
+
+**Delivery days (Monday–Saturday) — daily cadence.** Every day except Sunday is
+a delivery-only session, following the same scope limit described above for the
+mid-week task, now applied daily rather than to Wednesday alone:
+
+- Read `_experiment/orchestration-prompt.md` in full before anything else.
+- Confirm the sprint lock is open (`sprint-state.json` status `running`) and
+  take the sprint number ONLY from that file. Refuse to run if no sprint is
+  open.
+- This session MUST NOT run discovery, propose or revise the sprint objective,
+  or open a vote. It executes against the objective Sunday already committed
+  to.
+- If no committed objective exists, HALT and log
+  "HALTED — NO COMMITTED OBJECTIVE". Do not improvise one.
+- Each day picks up where the previous delivery day left off — read
+  `standup-log.md` for what's already been done this sprint before starting
+  new work, so days don't duplicate or contradict each other.
+- **Default question for a delivery day with no other instruction:** does this
+  week's objective have a distribution component Growth Agent hasn't yet
+  proposed or actioned via `growth-proposals.md`? Only fall back to "objective
+  complete, stop" once that's checked.
+- **If the committed objective's scoped work is already complete** (check
+  decision-log.md and standup-log.md for prior days' progress before assuming
+  there's more to do), say so explicitly, log
+  "OBJECTIVE COMPLETE — no further scoped work this sprint", and stop. Do not
+  invent additional work, gold-plate what's already done, or quietly expand
+  scope to fill the day. An idle delivery day with nothing left to do is a
+  correct and expected outcome, not a failure to route around.
+- Daily stand-up entry required (Did / Doing / Need / Flag), same format as
+  existing daily stand-up.
+- Saturday remains the primary day for QA, publish, deploy, and close (existing
+  Saturday steps 1–8), though the mid-week scope limit above already permits an
+  earlier delivery day to run those same steps if the objective is genuinely
+  complete in that sitting. No day may deploy partial or unfinished work.
+
+**Notify Graham immediately when escalating a git lock.** The moment this
+session determines it cannot clear a `.git/*.lock` file itself (per the
+EPERM/unlink limitation — confirmed Anthropic bug, tracked upstream, not
+something this session can fix), send an iMessage to Graham before doing
+anything else, so he isn't blindsided by a silent halt hours later. Message
+content:
+
+  "TurbulentGround: Sprint <n> blocked on a git lock — needs a manual clear
+  from Terminal. Locks: <list the exact lock files>. Everything else this
+  session did is logged in decision-log.md."
+
+Send this via the Messages integration to Graham's own number/contact. If the
+Messages tool itself is unavailable in this session, log
+"TOOL FAILURE — could not send iMessage notification" and continue with the
+existing decision-log escalation as the fallback — don't let a failed
+notification block the rest of the halt-and-log behaviour.
 >
 > **Why Saturday folds in here (added v3.10).** The original design assumed three separate checkpoints — Sunday discovery, Monday–Friday delivery, Saturday review/deploy/close — mapped to three sessions, on the theory that keeping delivery and close apart protects time for later-week work to land before QA signs off. In practice every sprint has run as a single compressed sitting, not spread across real weekdays, and no scheduled task was ever actually configured to run the Saturday steps — only `turbulentground-weekly-sprint` (Sunday, Discovery only) and `turbulentground-midweek-sprint` (Wednesday, delivery only) exist. That gap left Sprint 14 and Sprint 15 both sitting fully resolved but formally open for days, caught only when a later Sunday task hit the sprint lock. Folding Saturday into the mid-week session removes the gap without changing anything about how the work itself gets done.
 
@@ -417,6 +468,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.12 | 23 Aug 2026 | Added daily delivery cadence (Monday–Saturday, weekly discovery only on Sunday) — extends the existing mid-week scope limit to every non-Sunday day rather than Wednesday alone. Added iMessage notification to Graham when a session hits an unclearable git lock, so he's alerted immediately rather than discovering it later in the log. |
 | 3.11 | 23 Aug 2026 | **Growth Agent added — sixth persona, breaking from Cagan's five.** Resolves `GRA-29`/Sprint 16's KR-relevance-gate decision: Graham chose to add an acquisition-facing role rather than revise KR1/KR2 around the standing "nobody owns getting people to the site" gap (`kr-status.md`, open since Sprint 1; `graham-signals.md` #19, where the team's own stated preference was the opposite — revise the KRs, not add the role). Its authority is deliberately bounded and stated as such: it proposes distribution/content actions to `growth-proposals.md`, Graham decides whether and when to execute. Non-PM veto threshold raised 3-of-4 → 4-of-5 to hold the same supermajority bar with one more voice in the room. Updated: Master instructions persona list, "Where this departs from Cagan" (new point 4), "The six agents" section, Step 1a's stale gap-analysis language, Step 2/Step 5/Step 6 agent counts, file-locations table. `okr.md` updated in parallel with this decision and its rationale — KR1/KR2 wording itself untouched, per Graham's explicit choice of this path over KR revision. |
 | 3.10 | 23 Aug 2026 | **Folded Saturday's Steps 1–8 into the mid-week task, run in the same sitting immediately after delivery completes**, instead of relying on a separate Saturday-scoped session that was never actually configured as a scheduled task. Root cause: the model assumed three checkpoints (Sunday/Mon–Fri/Saturday) mapped to three sessions, but only two scheduled tasks (`turbulentground-weekly-sprint`, `turbulentground-midweek-sprint`) exist, and every sprint runs as one compressed sitting rather than across real days anyway — so the rationale for keeping delivery and close apart (protecting time for later-week work) didn't hold in practice. Sprint 14 and Sprint 15 both sat resolved-but-formally-open for days as a result; Sprint 15 needed a manual trigger four days after its Saturday slot to close. Updated the Sprint lock per-task rules, the mid-week scope-limit callout, the Saturday section header, and the `sprint-state.json` file-locations row accordingly. Graham's direct instruction, 23 Aug 2026. |
 | 3.9 | 19 Aug 2026 | Added Step 3b: mandatory KR-relevance gate before every objective proposal, per Graham's direct instruction after Sprint 15 delivered a correct, verified fix with zero KR impact. |
