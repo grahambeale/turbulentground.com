@@ -1,7 +1,7 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.9
-**Last updated:** 17 August 2026
+**Version:** 3.10
+**Last updated:** 23 August 2026
 **Applies from:** Sprint 15
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
 
@@ -89,8 +89,8 @@ Two sessions writing to one repo breaks the model's core assumption of single-wr
 ### Per-task rules
 
 - **Sunday task:** after acquiring the session lock, if `status` is `running`, **HALT** and log `SPRINT LOCK — sprint <n> still open, discovery not run`. A delayed sprint runs late; it does not run alongside another. If `complete`, increment `sprint`, set `status` to `running`, set `opened`, proceed.
-- **Mid-week task:** refuses to run unless `status` is `running` **and** it can acquire the session lock. See the scope limit under Monday–Friday — it executes delivery only and may not plan. It must take its sprint number from `sprint-state.json`, never derive one.
-- **Saturday task:** sets `status` to `complete` and `closed` as its final action, *after* the sprint log is written, then releases the session lock.
+- **Mid-week task:** refuses to run unless `status` is `running` **and** it can acquire the session lock. See the scope limit under Monday–Friday — it executes delivery only and may not plan. It must take its sprint number from `sprint-state.json`, never derive one. **As of v3.10, once delivery against the committed objective is genuinely complete in the same sitting, the mid-week task continues directly into the Saturday steps (QA gate, publish check, deploy, Notion/Linear sync, retrospective, sprint log, close) below — same session, same session lock, no second trigger required.** If delivery is not complete (blocked, still in progress, or the objective isn't achievable this sprint), it stops after logging why and leaves `status: "running"` for a later session.
+- **Saturday steps, run by whichever session completes them:** there is no separately scheduled Saturday task — v3.10 folds this into the mid-week task by default (see above). Whichever session runs Saturday's Steps 1–8 sets `status` to `complete` and `closed` as its final action, *after* the sprint log is written, then releases the session lock. Before v3.10 this fell to a Saturday-scoped session that was never actually configured, which is why Sprints 14 and 15 both sat closeable-but-unclosed for days until Graham triggered a manual run — see `decision-log.md` Sprint 15 rows 18–21 and Version history below.
 
 ### If a git lock cannot be removed
 
@@ -279,7 +279,9 @@ against this, not just sprints where a signal happens to raise it.
 
 ## Monday–Friday: Delivery
 
-> **Mid-week task scope limit.** The mid-week task executes delivery only. It **must not** run discovery, propose or revise a sprint objective, re-read `okr.md` for planning purposes, or open a vote. Permitted outputs: stand-up entries, implementation work against the committed objective, and (Tuesday only) the mid-week alternative mechanism. If no committed objective is found, **halt** and log `HALTED — NO COMMITTED OBJECTIVE`. Do not improvise one.
+> **Mid-week task scope limit.** The mid-week task executes delivery only. It **must not** run discovery, propose or revise a sprint objective, re-read `okr.md` for planning purposes, or open a vote. Permitted outputs: stand-up entries, implementation work against the committed objective, the mid-week alternative mechanism, and — **once delivery is genuinely complete, in the same sitting** — the Saturday steps below (QA gate through close). If no committed objective is found, **halt** and log `HALTED — NO COMMITTED OBJECTIVE`. Do not improvise one.
+>
+> **Why Saturday folds in here (added v3.10).** The original design assumed three separate checkpoints — Sunday discovery, Monday–Friday delivery, Saturday review/deploy/close — mapped to three sessions, on the theory that keeping delivery and close apart protects time for later-week work to land before QA signs off. In practice every sprint has run as a single compressed sitting, not spread across real weekdays, and no scheduled task was ever actually configured to run the Saturday steps — only `turbulentground-weekly-sprint` (Sunday, Discovery only) and `turbulentground-midweek-sprint` (Wednesday, delivery only) exist. That gap left Sprint 14 and Sprint 15 both sitting fully resolved but formally open for days, caught only when a later Sunday task hit the sprint lock. Folding Saturday into the mid-week session removes the gap without changing anything about how the work itself gets done.
 
 **Daily stand-up** (every weekday, logged to `standup-log.md`), each agent in turn: **Did / Doing / Need / Flag.** Operational coordination, kept separate from the decision log.
 
@@ -296,6 +298,8 @@ against this, not just sprints where a signal happens to raise it.
 ---
 
 ## Saturday: Review, publish, deploy, close
+
+**Runs immediately after Delivery, in the same session, once the committed objective is genuinely complete (v3.10) — normally as the second half of the mid-week task's own sitting, not a separate scheduled task.** If a session's delivery work doesn't reach a complete state, skip these steps, log why, and leave `status: "running"`; a later session (the next mid-week/Sunday task, or a manually-triggered run) picks them up once delivery is actually done.
 
 **Step 1 — QA gate.** QA Agent runs the WCAG 2.2 AA checklist and the technical SEO floor checklist against every changed page, then writes one line to `decision-log.md`: `QA GATE — PASS` or `QA GATE — FAIL: <criterion>`. **Engineering Agent must not deploy without a `PASS` line written this sprint.** A `FAIL` ends the sprint undeployed and is a valid outcome to report honestly, not a problem to work around.
 
@@ -382,7 +386,7 @@ All paths relative to `~/Library/Mobile Documents/com~apple~CloudDocs/Claude/Tur
 | `kr-status.md` | Append-only KR movement and gap log, written at Step 1a | Analytics Agent |
 | `content-requests.md` | Parallel article-idea queue, written at Step 4a | Any agent |
 | `metrics-baseline.md` | Pre-Sprint 1 baseline measurements | Graham |
-| `sprint-state.json` | Sprint lock | Sunday and Saturday tasks |
+| `sprint-state.json` | Sprint lock | Sunday and mid-week tasks (mid-week now also closes, per v3.10) |
 | `funnel-instrumentation-spec.md` | Funnel definitions and sources | Graham / Engineering |
 | `plausible-api-integration.md` | Plausible Stats API patterns | Graham / Engineering |
 | `sprint-log-template.md` | Sprint log template | Graham |
@@ -402,6 +406,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.10 | 23 Aug 2026 | **Folded Saturday's Steps 1–8 into the mid-week task, run in the same sitting immediately after delivery completes**, instead of relying on a separate Saturday-scoped session that was never actually configured as a scheduled task. Root cause: the model assumed three checkpoints (Sunday/Mon–Fri/Saturday) mapped to three sessions, but only two scheduled tasks (`turbulentground-weekly-sprint`, `turbulentground-midweek-sprint`) exist, and every sprint runs as one compressed sitting rather than across real days anyway — so the rationale for keeping delivery and close apart (protecting time for later-week work) didn't hold in practice. Sprint 14 and Sprint 15 both sat resolved-but-formally-open for days as a result; Sprint 15 needed a manual trigger four days after its Saturday slot to close. Updated the Sprint lock per-task rules, the mid-week scope-limit callout, the Saturday section header, and the `sprint-state.json` file-locations row accordingly. Graham's direct instruction, 23 Aug 2026. |
 | 3.9 | 19 Aug 2026 | Added Step 3b: mandatory KR-relevance gate before every objective proposal, per Graham's direct instruction after Sprint 15 delivered a correct, verified fix with zero KR impact. |
 | 3.8 | 17 Aug 2026 | **Notion/Linear sync hardened after Sprint 14 was missed entirely.** Sprint 14 shipped via Graham's own out-of-band commit; no session ever reached Step 4c for it, and the gap sat uncaught until Sprint 15's Discovery, when Graham asked directly why it hadn't happened. Added a Master-instructions rule requiring every session to check, at the *start* of its own work, whether the most recently shipped sprint has a Notion page and Linear issue, and create them retroactively if not — rather than relying solely on Step 4c, which only ever runs if a session itself reaches Saturday. Also: Discovery-only sprints now get a Notion/Linear entry immediately (`Status: In progress`), updated in place once delivery completes, instead of waiting for a deploy that may not happen through the normal loop that week. Sprint 14 and Sprint 15 both retroactively synced this version's own session (Notion pages, Linear issues GRA-34/GRA-35). |
 | 3.7 | 16 Aug 2026 | Restored Step 4c (Notion/Linear sync), lost in an earlier rebuild this week. Graham confirmed this previously worked and wants it back — exact original format unknown, written as a reasonable reconstruction for the team to refine. |
