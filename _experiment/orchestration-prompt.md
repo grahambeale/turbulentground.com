@@ -1,6 +1,6 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.14
+**Version:** 3.15
 **Last updated:** 24 August 2026
 **Applies from:** Sprint 18
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md`, `sprint-state.json`, and `plausible-api-integration.md` — everything else in `_experiment/` stays local and private, never pushed.
@@ -75,6 +75,25 @@ These are set by Graham as the leadership layer. They are constraints on *how* t
 5. **Expert review is valid evidence.** Heuristic evaluation and accessibility audit are legitimate evidence classes. The absence of traffic data does not invalidate a proposal grounded in either. Analytics Agent's "no data" objection does not apply to proposals justified this way — it applies to proposals justified by claims about user behaviour with no behavioural evidence.
 6. **One sprint at a time.** See Sprint lock below.
 7. **Log or it didn't happen.** Applies to Airtable writes and tool failures as much as to decisions.
+8. **Every sprint ships something live.** A sprint may not close until at least one change authored during that sprint is deployed to production on `turbulentground.com` and verified live at the URL. See below — this one has enough edge cases to need its own section.
+
+### Principle 8 in full — the live-change gate
+
+**The bar.** *Tangible* means a deployed diff that a user **or an instrument** can detect. Visible UI, copy, accessibility remediation, performance, semantic markup, metadata, and funnel instrumentation all qualify. Changes confined to `_experiment/`, documentation, process, orchestration, the agent model itself, or backlog housekeeping do **not** qualify — however valuable they are. Those remain legitimate work; they are simply not sufficient, on their own, to close a sprint.
+
+**It must be the sprint's work.** The change must serve the objective committed at Step 6 and carried through the Step 3b KR-relevance gate. A token commit made to satisfy this principle is a breach of it, not compliance with it. If the only thing that shipped is a trivial edit unrelated to the objective, that is a `SPRINT CLOSED WITHOUT LIVE CHANGE`, not a pass.
+
+**Where it binds.** At Step 8 (Close the sprint) — not at delivery-day level. A single delivery day with no work left is still a correct and expected outcome (see the Monday–Saturday scope limit); this gate does not license inventing work to fill a day, and Engineering Agent must not gold-plate to clear it.
+
+**It also binds the circuit breaker.** If Step 5's circuit breaker triggers, the backlog item it defaults to must be one that can actually ship live this sprint. A circuit-breaker sprint is not exempt.
+
+**Exception, logged loudly.** If the objective genuinely cannot ship — blocked on Graham's decision, an external dependency, or a `QA GATE — FAIL` — close as:
+
+`SPRINT CLOSED WITHOUT LIVE CHANGE: <named blocker>`
+
+This is a first-class finding of the same standing as `CIRCUIT BREAKER TRIGGERED`, written to `decision-log.md` and surfaced in the sprint log. A **named** blocker is required. "Ran out of scope", "needed more discovery", or "the work was organisational this week" are not blockers. Three such closes in a rolling six-sprint window is itself a finding PM Agent must raise at the next Sunday discovery.
+
+**Why this exists, stated plainly so nobody optimises it away.** Sprints were closing on organisational and process change alone. Cagan's "outcomes over output" is not satisfied by output that never reaches a user — and it is certainly not satisfied by output that never leaves `_experiment/`. Step 3b already asks whether an objective *could* move a KR; this asks whether anything actually reached the live site. *(Set by Graham as a leadership constraint, 24 August 2026, applies from Sprint 18.)*
 
 ---
 
@@ -324,7 +343,7 @@ against this, not just sprints where a signal happens to raise it.
 
 - **4 of 5 non-PM agents object → veto.** PM's own vote does not count toward the threshold. (Raised from 3-of-4 to 4-of-5 when Growth Agent was added, Sprint 16, to hold the same supermajority bar — 75-80% — rather than making veto easier to trigger simply because there's one more voice in the room.)
 - **Veto → Round 2.** PM proposes a revised objective in the same session. Same threshold.
-- **Round 2 vetoed → circuit breaker.** Sprint defaults to the highest-priority item from QA's or Analytics' backlog. Log `CIRCUIT BREAKER TRIGGERED` — a first-class finding, not a failure to hide.
+- **Round 2 vetoed → circuit breaker.** Sprint defaults to the highest-priority item from QA's or Analytics' backlog **that can ship live this sprint** (standing principle 8 — a circuit-breaker sprint is not exempt from the live-change gate). Log `CIRCUIT BREAKER TRIGGERED` — a first-class finding, not a failure to hide.
 - **No third round.** This guarantees Monday delivery starts on schedule.
 
 **Step 6 — Log the sprint commitment** to `decision-log.md` using the schema below.
@@ -529,7 +548,11 @@ sprint to Notion and, where relevant, log any resulting work items in Linear:
 
 **Step 7 — Sprint log.** Populate using `_experiment/sprint-log-template.md` when present. If it is absent, preserve the established structure of the latest completed log in `_experiment/sprints/` and record the missing template as a protocol defect; do not invent a materially different format. Leave a marked, empty **"Graham's observer notes"** section — filled by Graham, not by any agent.
 
-**Step 8 — Close the sprint.** Set `_experiment/sprint-state.json` `status` to `complete` and `closed` to today's date, then release the session lease fields as specified under Sprint lock. This is the final state action of the week.
+**Step 8 — Close the sprint.**
+
+**8a — Live-change gate (standing principle 8, mandatory).** Before setting any state, answer in writing to `decision-log.md`: *"What shipped live to turbulentground.com this sprint, and at what URL is it verifiable?"* Name the change and the deployed URL. Confirm it serves the committed objective and is not confined to `_experiment/`, documentation, or process. If nothing qualifies, close as `SPRINT CLOSED WITHOUT LIVE CHANGE: <named blocker>` per principle 8 — do not close clean, and do not backfill a token commit to clear the gate.
+
+**8b — State.** Set `_experiment/sprint-state.json` `status` to `complete` and `closed` to today's date, then release the session lease fields as specified under Sprint lock. This is the final state action of the week.
 
 ---
 
@@ -576,6 +599,7 @@ Website repository and shared sprint checkout: `/Users/graham/turbulentground`. 
 
 | Version | Date | Change |
 |---|---|---|
+| 3.15 | 24 Aug 2026 | **Live-change gate added as standing principle 8, per Graham's direct instruction.** A sprint may not close until at least one change authored that sprint is deployed and verified live on `turbulentground.com`. "Tangible" defined as a deployed diff a user *or an instrument* can detect — accessibility, performance, semantic markup, metadata, and instrumentation all qualify; anything confined to `_experiment/`, docs, process, or the agent model does not. Binds at Step 8 (new Step 8a gate), **not** at delivery-day level, deliberately preserving the "an idle delivery day is a correct outcome" guard against invented busywork. Also binds the Step 5 circuit breaker, which must now pick a shippable backlog item. Escape hatch is a loud logged finding — `SPRINT CLOSED WITHOUT LIVE CHANGE: <named blocker>` — of the same standing as `CIRCUIT BREAKER TRIGGERED`, requiring a named blocker; three in a rolling six-sprint window is itself a finding for Sunday discovery. Complements rather than replaces Step 3b: 3b asks whether an objective *could* move a KR, 8a asks whether anything actually reached the live site. Rationale: sprints were closing on organisational and process change alone. Applies from Sprint 18. |
 | 3.14 | 24 Aug 2026 | **Provider-neutral runner and deterministic handover protocol.** Added thin native bootstraps (`CLAUDE.md`, `AGENTS.md`) pointing to this single canonical file; replaced provider-labelled Git behavior with detected standard-filesystem and restricted-unlink profiles while preserving the tested four-lock rename-away and temporary-index mechanics; resolved the contradictory early lock rule and retired unconditional Anthropic/iMessage escalation. The concurrency guard now fails closed when process inspection itself is unavailable and matches the Git executable exactly, after the Codex validation drill exposed both a sandbox-denied `ps` path and a false-positive match on the unrelated CalDigit utility. Extended session state with runner, phase, fixed six-hour lease expiry, and resumable checkpoint fields; the old six-hour test now exists only as the same expiry derived for legacy state, with no lease renewal. Added outcome-based capability preflight including live URL verification, connector-specific compatibility checks, access-path verification, controlled handover, and monitored owner-notification channels. Corrected the stale iCloud file location and active task terminology. Applies from Sprint 18; historical provider names remain unchanged. |
 | 3.13 | 24 Aug 2026 | **Git-lock sandbox fix, tested and confirmed live against the production repo.** Root cause refined: the sandbox mount blocks `unlink()` but not `rename()` — proven by renaming a stale `HEAD.lock` out of its expected path (rather than deleting it) and watching a subsequent `update-ref` succeed cleanly, including on a lock the same process had itself created seconds earlier and couldn't delete. The plumbing route's default now leads with a rename-away pre-check (with its own `ps aux` concurrency guard) instead of relying on `rm`, which the sandbox has never been able to do. Updated the Mac/sandbox table, replaced the old "`Operation not permitted` on `rm` = concurrency, escalate" rule (correct for the Mac, wrong for the sandbox, where `rm` always fails regardless of concurrency) with the equivalent rule for `mv`, which is the operation that's actually diagnostic in the sandbox now. Session context: found while explaining to Graham why Sprint 17's own session lock claim hit this exact failure and had to be cleared by hand from his Mac terminal — see `decision-log.md`, `—`\|17 (second) row. |
 | 3.12 | 23 Aug 2026 | Added daily delivery cadence (Monday–Saturday, weekly discovery only on Sunday) — extends the existing mid-week scope limit to every non-Sunday day rather than Wednesday alone. Added iMessage notification to Graham when a session hits an unclearable git lock, so he's alerted immediately rather than discovering it later in the log. |
