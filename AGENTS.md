@@ -11,7 +11,3 @@ Before taking any action in this repository:
 7. Complete the protocol's capability preflight through every access path the run will actually use.
 8. Never substitute estimates or fabricated data when a capability fails.
 9. Never commit changes authored by another active session.
-
-## Claude local-terminal observation
-
-Plain `rm` has repeatedly removed stale Git lock files from Claude's local terminal sessions on Graham's Mac. This is an observation about that access path on this machine, not a universal Claude behavior and not an assertion about Codex or any other runner. Use the detected filesystem-profile procedure in `_experiment/orchestration-prompt.md`; do not copy or infer a separate Git recovery procedure from this note.

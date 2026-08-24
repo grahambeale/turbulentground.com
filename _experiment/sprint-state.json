@@ -1,9 +1,13 @@
 {
-  "_comment": "Sprint and session locks. See turbulentground-orchestration-prompt.md, Sprint lock section. THIS FILE IS THE ONLY SOURCE OF THE SPRINT NUMBER. Never derive it by counting the sprints/ folder — that is how Sprint 13 produced two Sprint 13s.",
+  "_comment": "Sprint and session lease state. See _experiment/orchestration-prompt.md, Sprint lock section. THIS FILE IS THE ONLY SOURCE OF THE SPRINT NUMBER. New claims set runner, phase, lease_expires and last_checkpoint. Legacy claimed sessions without lease_expires use one compatibility expiry of session_started + 6 hours; there is no separate staleness test. Never derive the sprint number by counting _experiment/sprints/ — that is how Sprint 13 produced two Sprint 13s.",
   "sprint": 17,
   "status": "complete",
   "session": null,
   "session_started": null,
+  "runner": null,
+  "phase": null,
+  "lease_expires": null,
+  "last_checkpoint": null,
   "opened": "2026-08-23",
   "closed": "2026-08-24",
   "_history": [
