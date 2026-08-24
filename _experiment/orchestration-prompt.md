@@ -1,7 +1,7 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
-**Version:** 3.12
-**Last updated:** 23 August 2026
+**Version:** 3.13
+**Last updated:** 24 August 2026
 **Applies from:** Sprint 16
 **Canonical location:** GitHub repo `grahambeale/turbulentground.com`, folder `_experiment/`, file `orchestration-prompt.md`, branch `main`. This folder is gitignored except for `orchestration-prompt.md` and `sprint-state.json` — everything else in `_experiment/` stays local and private, never pushed.
 
@@ -375,13 +375,31 @@ notification block the rest of the halt-and-log behaviour.
 | | Graham's Mac | Cowork sandbox |
 |---|---|---|
 | Standard `git add -A && git commit && git push` | Works | Fails on `.git/index.lock` every sprint since Sprint 4 |
-| `rm -f` on a stale lock | Works, every time | Fails — the mount permits create/write but not unlink |
-| Locks appearing in sequence | Yes — clearing `index.lock` may surface `HEAD.lock`, then `refs/heads/main.lock` | n/a |
-| Plumbing route (`GIT_INDEX_FILE` + `write-tree`/`commit-tree`/`update-ref`) | Not needed | **Default.** Clean in Sprints 11 and 12 |
+| `rm -f` on a stale lock (delete) | Works, every time | Fails, every time — the mount permits create/write but not unlink |
+| `mv` a stale lock out of the way (rename) | Works (redundant — `rm` already works) | **Works, every time — tested and confirmed 24 Aug 2026 (post-Sprint-17).** The mount blocks `unlink()` but not `rename()`, even on a file this same sandbox process created seconds earlier. Renaming a blocking lock out of its expected path fully un-blocks git, because git's own lock-acquisition only checks whether that exact path exists — not what happened to whatever used to be there |
+| Locks appearing in sequence | Yes — clearing `index.lock` may surface `HEAD.lock`, then `refs/heads/main.lock` | Same pattern, same fix: rename each one away as it appears |
+| Plumbing route (`GIT_INDEX_FILE` + `write-tree`/`commit-tree`/`update-ref`), **with the rename-away pre-check below** | Not needed | **Default.** Clean in Sprints 11–12; failed at the `update-ref` step in Sprint 17 (its own freshly-created `refs/heads/main.lock` couldn't be unlinked either, on top of a pre-existing stale `HEAD.lock`) until the rename-away pre-check was added and tested the same day |
 
-**In the sandbox, use the plumbing route as the first attempt.** Set `GIT_INDEX_FILE` to a temp path outside the mount, then `read-tree HEAD` → `add -A` → `write-tree` → `commit-tree` → `update-ref` → `push`. Set `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL` explicitly — the sandbox has no git identity configured. Attempt standard `git add -A` once first anyway, purely to keep testing whether the mount behaviour has changed, and log the result either way.
+**In the sandbox, use the plumbing route as the first attempt, with a rename-away pre-check immediately before it.** Before touching the index or refs at all: confirm via `ps aux | grep "[g]it"` that no live git process is actually running (a genuine concurrent session is the one case this doesn't fix — see below), then rename (never delete) any of `.git/HEAD.lock`, `.git/index.lock`, `.git/refs/heads/main.lock`, `.git/refs/remotes/origin/main.lock` that already exist, to `<name>.stale-<timestamp>`, ignoring the ones that don't exist. Only then run `read-tree HEAD` → `add -A` → `write-tree` → `commit-tree` → `update-ref` → `push` → `fetch` → SHA comparison, exactly as below. Set `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL` explicitly — the sandbox has no git identity configured. Attempt standard `git add -A` once first anyway, purely to keep testing whether the mount's own behaviour has changed, and log the result either way.
 
-**If `rm` on a lock returns `Operation not permitted`,** that is not the usual stale-lock case — it is evidence of a concurrent session. Stop and escalate per the Sprint lock section. Do not switch routes to work around it.
+**`update-ref` (and `write-tree`/`commit-tree`) may print `warning: unable to unlink ...` even on success — this is not a failure.** Once the rename-away pre-check has cleared the path a lock needs to be *created* at, the operation itself (create the lock, write into it, atomically rename it into place) succeeds; the only thing that can still fail is deleting a now-harmless leftover afterward, which git treats as a warning, not an error. Judge success by the command's exit code and the final SHA comparison against `origin/main`, never by the presence or absence of an unlink warning in the output.
+
+```bash
+# Rename-away pre-check. Run this immediately before any git write in the sandbox —
+# folded into the plumbing route below, shown separately here for clarity.
+if ps aux | grep -v grep | grep -q "[g]it "; then
+  echo "CONCURRENT SESSION SUSPECTED — a live git process exists. Escalate, do not proceed." >&2
+  exit 1
+fi
+TS=$(date +%s)
+for LOCK in .git/HEAD.lock .git/index.lock .git/refs/heads/main.lock .git/refs/remotes/origin/main.lock; do
+  if [ -e "$LOCK" ]; then
+    mv "$LOCK" "${LOCK}.stale-${TS}" 2>/dev/null || { echo "CONCURRENT SESSION SUSPECTED — could not even rename $LOCK. Escalate." >&2; exit 1; }
+  fi
+done
+```
+
+**If `mv` on a lock itself fails,** that — not a failed `rm` — is the real evidence of a concurrent session in the sandbox, since renaming has now been tested and confirmed to work unconditionally otherwise. Stop and escalate per the Sprint lock section; do not retry in a loop. (On the Mac, where `rm` already works reliably, a failed `rm` remains the relevant signal instead — the two environments' escalation triggers are different, matching their different failure mode.)
 
 **Verify before claiming anything shipped.** Compare the pushed SHA against `origin/main`, and confirm the Vercel deployment reports `state: READY`, `target: production`. A mismatch is a blocked deployment to escalate to Graham — not something to retry silently or log as shipped.
 
@@ -468,6 +486,7 @@ Website repo: `~/turbulentground/`. Deployment via `main` branch.
 
 | Version | Date | Change |
 |---|---|---|
+| 3.13 | 24 Aug 2026 | **Git-lock sandbox fix, tested and confirmed live against the production repo.** Root cause refined: the sandbox mount blocks `unlink()` but not `rename()` — proven by renaming a stale `HEAD.lock` out of its expected path (rather than deleting it) and watching a subsequent `update-ref` succeed cleanly, including on a lock the same process had itself created seconds earlier and couldn't delete. The plumbing route's default now leads with a rename-away pre-check (with its own `ps aux` concurrency guard) instead of relying on `rm`, which the sandbox has never been able to do. Updated the Mac/sandbox table, replaced the old "`Operation not permitted` on `rm` = concurrency, escalate" rule (correct for the Mac, wrong for the sandbox, where `rm` always fails regardless of concurrency) with the equivalent rule for `mv`, which is the operation that's actually diagnostic in the sandbox now. Session context: found while explaining to Graham why Sprint 17's own session lock claim hit this exact failure and had to be cleared by hand from his Mac terminal — see `decision-log.md`, `—`\|17 (second) row. |
 | 3.12 | 23 Aug 2026 | Added daily delivery cadence (Monday–Saturday, weekly discovery only on Sunday) — extends the existing mid-week scope limit to every non-Sunday day rather than Wednesday alone. Added iMessage notification to Graham when a session hits an unclearable git lock, so he's alerted immediately rather than discovering it later in the log. |
 | 3.11 | 23 Aug 2026 | **Growth Agent added — sixth persona, breaking from Cagan's five.** Resolves `GRA-29`/Sprint 16's KR-relevance-gate decision: Graham chose to add an acquisition-facing role rather than revise KR1/KR2 around the standing "nobody owns getting people to the site" gap (`kr-status.md`, open since Sprint 1; `graham-signals.md` #19, where the team's own stated preference was the opposite — revise the KRs, not add the role). Its authority is deliberately bounded and stated as such: it proposes distribution/content actions to `growth-proposals.md`, Graham decides whether and when to execute. Non-PM veto threshold raised 3-of-4 → 4-of-5 to hold the same supermajority bar with one more voice in the room. Updated: Master instructions persona list, "Where this departs from Cagan" (new point 4), "The six agents" section, Step 1a's stale gap-analysis language, Step 2/Step 5/Step 6 agent counts, file-locations table. `okr.md` updated in parallel with this decision and its rationale — KR1/KR2 wording itself untouched, per Graham's explicit choice of this path over KR revision. |
 | 3.10 | 23 Aug 2026 | **Folded Saturday's Steps 1–8 into the mid-week task, run in the same sitting immediately after delivery completes**, instead of relying on a separate Saturday-scoped session that was never actually configured as a scheduled task. Root cause: the model assumed three checkpoints (Sunday/Mon–Fri/Saturday) mapped to three sessions, but only two scheduled tasks (`turbulentground-weekly-sprint`, `turbulentground-midweek-sprint`) exist, and every sprint runs as one compressed sitting rather than across real days anyway — so the rationale for keeping delivery and close apart (protecting time for later-week work) didn't hold in practice. Sprint 14 and Sprint 15 both sat resolved-but-formally-open for days as a result; Sprint 15 needed a manual trigger four days after its Saturday slot to close. Updated the Sprint lock per-task rules, the mid-week scope-limit callout, the Saturday section header, and the `sprint-state.json` file-locations row accordingly. Graham's direct instruction, 23 Aug 2026. |

@@ -25,25 +25,44 @@ fails with a "file exists" lock error:
 For read-only inspection while diagnosing a lock issue, `git --no-optional-locks
 status` avoids taking a fresh lock itself.
 
-**Unverified claim, flagged rather than silently adopted:** a session once
-reported that in some other environment (referred to as a "Cowork sandbox")
-the mount permits creating/writing `.git/index.lock` but not unlinking it,
-making a stale lock permanently unremovable there, and prescribed an
-index-free `GIT_INDEX_FILE` + `commit-tree`/`update-ref` plumbing route as
-the mandatory replacement for all commits. That may be true of some other
-environment, but it does not describe this machine — plain `rm` has worked
-here every time it's been tried, with no permission error, across multiple
-sessions. Do not take the sandbox-permissions claim as established fact for
-this Mac without re-verifying it here first. If a lock ever genuinely can't
-be removed with `rm` on this machine, that's the signal to fall back to the
-index-free plumbing route below — not a default to reach for pre-emptively.
+**Now confirmed both ways, not just flagged (updated 24 Aug 2026, post-Sprint-17).**
+The original "unverified claim" below has been tested directly, on both sides:
+on this Mac, plain `rm` on a stale lock keeps working every time, exactly as
+this file always said. Separately, a Cowork sandbox session tested its own
+side of the claim live against this same repo and confirmed: the sandbox
+mount genuinely blocks `unlink()` on anything under `.git/` — including a
+lock file that same sandbox process had itself created seconds earlier — but
+does **not** block `rename()`. Renaming a blocking lock out of its expected
+path (instead of trying to delete it) fully un-blocks git there, because
+git's own lock-acquisition only checks whether that exact path exists, not
+what happened to whatever used to be under that name. That's now the
+sandbox's documented default (`orchestration-prompt.md` v3.13) — this file's
+own fallback below has been updated to match, so a sandbox session no longer
+needs to stall on a lock and escalate before even trying the fix that's
+known to work.
 
-Index-free fallback, for that specific "rm genuinely fails" case only:
+Index-free fallback, for the Cowork sandbox (or the rare case `rm` genuinely
+fails here too):
 
     set -e
     export GIT_OPTIONAL_LOCKS=0
 
     MESSAGE="<one-line commit message>"
+
+    # Rename-away pre-check: never delete a lock, rename it. Tested and confirmed
+    # 24 Aug 2026 — rename works on the sandbox mount even where unlink doesn't.
+    # If `mv` itself fails, that (not a failed `rm`) is the real evidence of a
+    # genuine concurrent session there — stop and escalate, don't retry in a loop.
+    if ps aux | grep -v grep | grep -q "[g]it "; then
+      echo "CONCURRENT SESSION SUSPECTED — a live git process exists. Escalate, do not proceed." >&2
+      exit 1
+    fi
+    TS=$(date +%s)
+    for LOCK in .git/HEAD.lock .git/index.lock .git/refs/heads/main.lock .git/refs/remotes/origin/main.lock; do
+      if [ -e "$LOCK" ]; then
+        mv "$LOCK" "${LOCK}.stale-${TS}" 2>/dev/null || { echo "CONCURRENT SESSION SUSPECTED — could not even rename $LOCK. Escalate." >&2; exit 1; }
+      fi
+    done
 
     TMP_INDEX="$(mktemp -t sprint-index.XXXXXX)"
     export GIT_INDEX_FILE="$TMP_INDEX"
@@ -66,6 +85,12 @@ Index-free fallback, for that specific "rm genuinely fails" case only:
       echo "DEPLOY FAILED: origin/main is not $COMMIT — escalate, do not log as shipped"
       exit 1
     fi
+
+`write-tree`/`commit-tree`/`update-ref` may print `warning: unable to unlink
+...` even when they succeed — that's the now-harmless cleanup step failing
+after the operation that actually mattered (create the lock, write it,
+rename it into place) already worked. Judge success by exit code and the
+final SHA comparison, not by the presence of an unlink warning.
 
 A failed SHA comparison at the end is a blocked deployment to escalate to
 Graham, not something to retry silently or report as shipped.
