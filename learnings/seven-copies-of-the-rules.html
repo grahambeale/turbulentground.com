@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seven Copies of the Rules, and I Made Every One of Them · Turbulent Ground</title>
+<link rel="canonical" href="https://turbulentground.com/learnings/seven-copies-of-the-rules">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="description" content="The orchestration prompt existed in seven divergent copies across iCloud, Documents, a frozen upload, a sandbox cache, a stale knowledge base, and the webs">
+<meta property="og:title" content="Seven Copies of the Rules, and I Made Every One of Them">
+<meta property="og:description" content="The orchestration prompt existed in seven divergent copies across iCloud, Documents, a frozen upload, a sandbox cache, a stale knowledge base, and the webs">
+<meta property="og:image" content="https://turbulentground.com/learnings/images/seven-copies-of-the-rules.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://turbulentground.com/learnings/seven-copies-of-the-rules">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Seven Copies of the Rules, and I Made Every One of Them","description":"The orchestration prompt existed in seven divergent copies across iCloud, Documents, a frozen upload, a sandbox cache, a stale knowledge base, and the webs","image":"https://turbulentground.com/learnings/images/seven-copies-of-the-rules.png","datePublished":"2026-08-26","author":{"@type":"Person","name":"Graham Beale"},"publisher":{"@type":"Organization","name":"Turbulent Ground"},"mainEntityOfPage":"https://turbulentground.com/learnings/seven-copies-of-the-rules"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#131110;--dark:#0e0b08;--warm:#1c1915;--surface:#26211c;--orange:#e8763a;--ink:#e8dcc8;--mid:#c8b89a;--muted:#9e8e7c}html{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7}body{min-height:100vh}.nav{height:72px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,240,232,.22)}.brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.18em;color:#f5f0e8;text-decoration:none}.links{display:flex;gap:24px;align-items:center}.links a{color:var(--muted);text-decoration:none}.links a:hover{color:var(--orange)}.cta{background:#b84215!important;color:#fff!important;padding:9px 20px;border-radius:40px}.hero{width:100%;max-height:620px;object-fit:cover;display:block}.page{max-width:680px;margin:0 auto;padding:80px 24px 120px}.eyebrow{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:16px}h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,6vw,52px);font-weight:300;line-height:1.12;margin-bottom:20px}.byline{display:flex;gap:12px;color:var(--muted);font-size:13px;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--surface)}.byline strong{color:var(--mid);font-size:14px}.disclosure{background:var(--warm);border:1px solid var(--surface);border-radius:8px;padding:14px 18px;font-size:13px;color:var(--muted);margin-bottom:40px}.disclosure strong{color:var(--mid)}article p{color:var(--mid);margin-bottom:22px;font-size:16px;line-height:1.8}article h2{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;margin:48px 0 20px}footer{background:var(--dark);border-top:1px solid var(--surface);padding:32px 24px;text-align:center;color:var(--muted);font-size:12px}footer a{color:var(--muted)}@media(max-width:720px){.nav{padding:0 24px}.links a:not(.cta){display:none}.page{padding-top:56px}}
+</style>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+<nav class="nav"><a class="brand" href="/">Turbulent Ground</a><div class="links"><a href="/">Home</a><a href="/learnings">Learnings</a><a class="cta" href="/diagnostic">Take the diagnostic &rarr;</a></div></nav>
+<main>
+<img class="hero" src="/learnings/images/seven-copies-of-the-rules.png" alt="Illustration for Seven Copies of the Rules, and I Made Every One of Them">
+<div class="page">
+  <p class="eyebrow">The Experiment</p>
+  <h1>Seven Copies of the Rules, and I Made Every One of Them</h1>
+  <div class="byline"><strong>Graham Beale</strong><span>&middot; Sprints 12&ndash;15</span></div>
+  <div class="disclosure"><strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.</div>
+  <article>
+    <p>I only found this because I went on holiday.</p>
+    <p>What actually happened is that I stopped for a week and admitted to myself that I'd lost confidence in the output. Not that it was wrong, exactly. I just couldn't tell you why any given sprint had produced what it produced, and I'd stopped being able to predict what the next one would do. That's an uncomfortable thing to notice about a system you built.</p>
+    <p>So I came back wanting to assert some structure, to establish boundaries, and to understand in far more detail what was actually happening. And within a couple of hours the cause was obvious. It was me. I'd created seven copies of the file that tells the team how to operate, across seven different places, and never decided which one was real.</p>
+    <p>I want to write this up properly because it's the least sophisticated failure in this whole experiment, and probably the most useful.</p>
+    <h2>What I'd actually built</h2>
+    <p>The orchestration prompt defines everything: what each agent does, how a sprint runs, where files live. By sprint twelve it existed in two iCloud folders, a Documents folder, a frozen upload inside the Cowork project, a sandbox cache, a stale knowledge base attached to the Claude project, and a CLAUDE.md in the website repo.</p>
+    <p>Seven versions, all slightly different, none of them authoritative. Each session read whichever one it could reach.</p>
+    <p>I didn't decide to do this. It accumulated. Every time I improved something I improved it wherever I happened to be working, and every tool that touched the project made its own copy for its own sensible reasons. I never stopped to ask which one was in charge, because it hadn't occurred to me that it mattered.</p>
+    <h2>The damage, as far as I can reconstruct it</h2>
+    <p>At one point I rebuilt the prompt from what I believed was the current version. It wasn't. Two whole steps disappeared, the KR status log and the content requests queue, and I didn't spot it. They were eventually recovered by reading the output those steps used to produce and working backwards to the instruction that must have created it.</p>
+    <p>The file locations section pointed at a path that doesn't exist. Misspelled, with a stray space in it. I have no idea how many sprints wrote their logs somewhere I never looked.</p>
+    <p>In sprint fifteen a session found its own task instructions truncated. The file stopped mid-sentence, and the description at the top claimed a broader scope than the body actually contained. It had to fall back on a clause in a different document to work out what it was supposed to be doing that day.</p>
+    <p>None of that is the agent's fault. Every one of those sessions did exactly what it was told. The instruction just wasn't what I thought I'd written.</p>
+    <h2>It took me three goes to fix it</h2>
+    <p>I tried a private GitHub repo as the single source of truth. It connected as searchable context rather than a mounted folder, so the scheduled tasks couldn't read it as files. I tried iCloud. Also no.</p>
+    <p>What worked was putting the experiment's files inside the website repository, because that's the only thing the tasks reliably mount. The rules now live inside the product they govern, which I'm not sure is elegant or just the thing that happened to work.</p>
+    <p>The prompt went from version 3.0 to 3.8 in about a week. Most of those revisions were fixing something the previous one broke.</p>
+    <h2>The bit I found hardest to sit with</h2>
+    <p>Sprint fourteen discovered that a claim we'd all been treating as established fact was simply wrong. The diagnostic does not gate your results behind email verification. It never has. Results render the moment you finish, unconditionally.</p>
+    <p>That error had spread into the KR status file, an Airtable field description, the signals file, and live copy on the homepage that I personally wrote and shipped, to fix a contradiction that didn't exist.</p>
+    <p>The team logged it as the ninth instance of a pattern this project keeps finding, a claim repeated as fact and never re-checked, and noted it was the first one entirely self-inflicted. Nothing external caused it. Somebody wrote it down, everyone believed the note, and we built on top of it.</p>
+    <p>That's what seven versions of the rules gets you. When nothing is authoritative, something becomes true just by being written somewhere and not contradicted.</p>
+    <h2>Why it took a break to see it</h2>
+    <p>I've been running this twice a week since sprint five. Every session I'm inside it, reading a log, fixing a file, checking a deploy, writing the next thing. When results looked inconsistent, I looked at the sprint that produced them. Never at the setup underneath.</p>
+    <p>A week away broke that, but not because I came back refreshed with a clear head. I came back uneasy. The honest version is that I'd been carrying a low-level lack of confidence in the whole thing for a while and hadn't stopped long enough to name it. Once I did, the instinct wasn't curiosity, it was control. I wanted to know exactly where every file lived, exactly what each session was reading, exactly what the boundaries were. Less &quot;let me investigate this interesting problem&quot; and more &quot;I don't trust this and I need to see all of it.&quot;</p>
+    <p>That impulse is what found the seven copies. Not insight. Just finally going and looking at everything, because I no longer believed the parts I hadn't checked.</p>
+    <p>There's an uncomfortable symmetry here I've been circling for a few posts. The pattern this team keeps hitting is that it investigates the specific thing in front of it carefully and doesn't step back to ask the structural question underneath. That's exactly what I'd been doing. Nine or ten sprints of examining individual outputs, and not once did I ask whether the instructions producing them were even the ones I'd written.</p>
+    <p>I've been describing that as a limitation of AI teams. It plainly isn't. It's what happens to anyone with their head down in a system they're also responsible for maintaining. What broke it for me wasn't a better process. It was stopping long enough to notice I didn't trust my own experiment.</p>
+    <h2>What I take from it</h2>
+    <p>I've been writing for a while about whether the judgement I put into this system survives. This is the same question one layer further down, and I hadn't thought to ask it. Does the instruction the agent reads even match the one I wrote?</p>
+    <p>For four sprints, sometimes it didn't. There was nothing in place that would have told me.</p>
+    <p>I suspect I'm not unusual here. If you're running agents anywhere real, you'll have instructions in a prompt, a version in a wiki, a copy in someone's notes, a fork in a tool's own config. The agents will follow all of them, carefully. It doesn't announce itself as a failure. It produces confident work that quietly diverges, and you find out when two sessions disagree and you go looking for why.</p>
+    <p>I've put the boring fix in now. One file, one location, everything reads from it, and a check at the start of each session that the copy it's holding is the current one.</p>
+    <p>What still bothers me is that before this, if you'd asked whether I had a single source of truth, I'd have said yes without hesitating. I'd have pointed at a file. I just couldn't have told you which of the seven I meant.</p>
+  </article>
+</div>
+</main>
+<footer><p><a href="/learnings">All learnings</a> &middot; <a href="mailto:feedback@turbulentground.com">Send feedback</a></p><p>Originally built by <a href="https://beale.co.uk">Graham Beale</a>. AI product team from Sprint 1, a live experiment.</p></footer>
+</body>
+</html>
+
