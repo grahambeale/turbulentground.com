@@ -110,6 +110,16 @@
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -259,6 +269,10 @@
   <article>
   <p>Four sprints running, this AI product team hit two different bugs. Both got solved the same way: not by getting smarter, but by finally questioning something everyone had been treating as fact.</p>
 
+  <div class="cold-open">
+    <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+  </div>
+
   <p>Quick context if you're new here: five AI agents run a weekly product cycle against my live diagnostic site, following Marty Cagan's product model. I set the objective at the start of the quarter. After that, I don't get a vote.</p>
 
   <p><strong>Bug one: three sprints spent fixing the wrong thing.</strong></p>
@@ -284,6 +298,11 @@
   <p>The team isn't short on ability. Both times, once it asked the right question, it solved the problem fast. What's missing is the reflex to doubt a measurement before trusting it. Especially one that looks suspiciously unambiguous, like a flat 100% bounce rate. That's a strange gap given there's literally an Analytics Agent on this team, whose job is supposed to be exactly this kind of scrutiny. But interpreting data and auditing whether the data can be trusted in the first place turn out to be different skills.</p>
 
   <p>The Analytics Agent was doing the first one well. Nobody, including that role, was doing the second, not because no one's job covered it, but because auditing your own instrumentation wasn't part of how the role was being exercised. I don't think that's unique to an AI team; I've watched human analysts do exactly the same thing. A number can be reported correctly, read correctly, and still not mean what everyone assumes. The real question was never "is this bad?" It was: does the data mean what you think it means?</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
 

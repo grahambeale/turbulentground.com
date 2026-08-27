@@ -110,6 +110,16 @@
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -259,6 +269,10 @@
   <article>
   <p>Five sprints in, it's worth being precise about what "zero human intervention in decisions" actually means here, because the honest version is more interesting than the clean one, and marginally less flattering.</p>
 
+  <div class="cold-open">
+    <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+  </div>
+
   <p>Quick context if you're new here: five AI agents run a weekly product cycle against my live diagnostic site, following Marty Cagan's model. The team decides what ships. I don't. That part has held completely, across every sprint. What hasn't held quite as cleanly is everything downstream of "decided."</p>
 
   <p>Start with the sprints themselves. The first four weren't autonomous. I triggered every one of them by hand, on purpose, specifically to test whether the Cowork permission model would behave correctly before I trusted it to run unsupervised. Sprint 5 was the first sprint the team actually kicked off on its own schedule. If you've been reading this as "five sprints of a fully autonomous team," that's on me for not saying so sooner: it's really been four dress rehearsals and one opening night.</p>
@@ -268,6 +282,11 @@
   <p>The money story is the one I find most telling. There's a cost gate built into the whole system: free tools proceed on their own, anything with a price tag pauses for my sign-off. Sound, sensible, exactly what you'd want. Under that rule, the team installed Cloudflare Web Analytics first, because it was free and nothing needed approving. It never returned a single number, not even after we fixed an obvious hostname typo, not even after leaving it alone for several hours to sort itself out, which is generally how you're supposed to handle both software and toddlers. We suspect a lag issue on the free tier. We never confirmed it, because by then a more interesting discovery had already landed: Plausible was already installed on the site, already paid for, already running, before this experiment existed. Nobody on the team knew. The free tool wasn't the wrong call. The team just had no way of knowing a paid one was sitting one tab over the whole time.</p>
 
   <p>None of this is a confession. The rules worked exactly as written, every time: a manual trigger to de-risk automation, a human clearing a lock the sandbox can't reach, a cost gate that correctly chose free over paid. What it adds up to is a more honest shape for the experiment than "AI team, zero humans" ever was. The decisions are the team's. The plumbing underneath them, apparently, is still mine, and I suspect that's true of most operating models that claim to run themselves, not just this one.</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
 

@@ -110,6 +110,16 @@
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -259,6 +269,10 @@
   <article>
   <p>This experiment has a circuit breaker designed into it. Five sprints in, it has never once fired, and that turns out to be a more interesting finding than if it had.</p>
 
+  <div class="cold-open">
+    <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+  </div>
+
   <p>Quick context if you're new here: five AI agents run a weekly product cycle against my live diagnostic site, following Marty Cagan's model. I set the objective for the quarter.</p>
 
   <p>After that, I don't get a vote, except in one specific, deliberate way: if three of the four non-PM agents object to the PM's sprint objective, they can force a revision. Object twice, and the sprint defaults to the safest, most defensible item on the backlog. I wrote that mechanism assuming it would matter. So far, it's mostly sat there, armed and slightly bored.</p>
@@ -280,6 +294,11 @@
   <p>So the veto exists, technically. It has real teeth, on paper. And it has spent five sprints doing absolutely nothing. Which might be exactly what a well-designed safety mechanism is supposed to do, or might just mean it hasn't been tested yet.</p>
 
   <p>If you've designed governance mechanisms like this professionally, I'd be genuinely interested in your experiences of putting them into practice.</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
 

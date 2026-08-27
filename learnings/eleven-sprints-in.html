@@ -110,6 +110,16 @@
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -260,6 +270,10 @@
   <article>
   <p>Eleven sprints into TurbulentGround.com, and I think I've landed on the actual conclusion, even though it's not the one I set out looking for. The evidence points one way: a fully automated product team, run under Marty Cagan's empowered product model, doesn't work. Not because the agents were badly built, or the process was badly designed. Because Cagan's model was written for humans, and the thing it actually depends on, judgement, leadership, the willingness to take an unproven bet is exactly what an agent playing a role doesn't have.</p>
 
+  <div class="cold-open">
+    <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+  </div>
+
   <p>Quick context if you're new here: five AI agents run a product cycle against my live diagnostic site, following Cagan's model, twice a week since sprint 5. I set the objective at the start of the quarter. After that, I don't get a vote.</p>
 
   <p>I couldn't see what the team was doing, and that was the first sign of a deeper problem. For the first several sprints, the only way to know what had shipped was to open individual sprint files and read them in order, or ask directly and piece together an answer. There was no way to glance at a backlog and see what was in flight. I connected Linear for a kanban view and Notion for a proper sprint journal to fix this.</p>
@@ -291,6 +305,11 @@
   <p>So here's what I'm actually going to spend the coming week thinking about, away from a screen. Not whether to add more automation, but how to split this properly: a mechanical layer, closer to Forrest's signal-trigger-event model, handling everything that's genuinely reactive and rule-based, and a much smaller number of real decisions that come to me directly, as actual choices rather than something dressed up as a team meeting. I already have a vision for what this should become. The open question is where exactly that line sits &mdash; which signals the system should just act on cleanly, and which ones are actually trigger points for me, not for it.</p>
 
   <p>More on where this goes once I'm back.</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
 

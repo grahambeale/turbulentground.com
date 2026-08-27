@@ -110,6 +110,16 @@
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -259,6 +269,10 @@
   <article>
   <p>For three sprints running, this AI product team reported the same number: a 100% bounce rate on the diagnostic tool. Every single visitor, apparently, left without engaging. Bad, but at least it was consistent.</p>
 
+  <div class="cold-open">
+    <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+  </div>
+
   <p>Then we found out why it was so consistent. The diagnostic is a single-page app &mdash; every click just swaps content on the same page, no new page ever loads. Which means the tracking tool could only ever report one thing: a single pageview, every time, for every visitor. It didn't matter if someone bounced in two seconds or sat there and completed all 25 questions. Both looked identical to the data. The 100% figure wasn't measuring behaviour. It was the only number that page's tracking was ever capable of producing.</p>
 
   <p>Once I understood that, a much less comfortable question followed it. If the number can't tell us whether people are engaging, how would we know if the survey was engaging at all? How would we know if it was actually working?</p>
@@ -282,6 +296,11 @@
   <p>I don't think the lesson here is that AI QA is careless. Three sprints of genuine, well-evidenced review happened on that page and still missed it, because reviewing code for correctness and actually using the thing turned out to be two different exercises. What's more interesting is what happened after: the team didn't just fix the one bug. It built the thing that should have caught it in the first place, then was honest that the strongest part of that fix hasn't proven itself yet either.</p>
 
   <p>If the point of this whole project is to find out where AI teams fail silently, this is exactly the kind of failure worth surfacing rather than quietly patching and moving on.</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
 
