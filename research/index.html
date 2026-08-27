@@ -26,6 +26,16 @@ window.__TG_TOKEN__ = (function () {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
+  /* ── Typography scale ──────────────────────────────────────────────
+     Bumped up from the original build after a real walkthrough flagged
+     the whole page as too small to read comfortably. Base moved
+     15px -> 18px (site pages elsewhere on turbulentground.com mostly
+     leave the root at the browser default of 16px and set body copy
+     around 15-16px; diagnostic/index.html's own question text — the
+     closest equivalent to the pair statements here — is 16px. 18px base
+     with the statement/scale sizes below is deliberately a step above
+     that baseline, not just a marginal nudge, since this is a slow,
+     considered form, not a scannable marketing page. */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
@@ -33,59 +43,76 @@ window.__TG_TOKEN__ = (function () {
     --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
     --border: rgba(232,220,200,0.08);
   }
-  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
   header { padding: 24px; text-align: center; }
-  header a { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.14em; color: var(--ink-mid); text-decoration: none; }
+  header a { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.14em; color: var(--ink-mid); text-decoration: none; }
   header a:hover { color: var(--orange-lt); }
 
-  main { max-width: 640px; margin: 0 auto; padding: 0 24px 140px; }
-  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
-  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 36px); font-weight: 300; color: var(--ink); line-height: 1.25; margin-bottom: 16px; }
-  .intro { color: var(--ink-mid); font-size: 15px; margin-bottom: 32px; }
+  main { max-width: 680px; margin: 0 auto; padding: 0 24px 160px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4.5vw, 42px); font-weight: 300; color: var(--ink); line-height: 1.25; margin-bottom: 18px; }
+  .intro { color: var(--ink-mid); font-size: 1rem; margin-bottom: 36px; }
   .privacy-link { color: var(--orange-lt); }
 
-  fieldset { border: 0; margin-bottom: 40px; }
-  legend { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 16px; }
+  fieldset { border: 0; margin-bottom: 44px; }
+  legend { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--ink); margin-bottom: 18px; }
 
-  .check-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .check-row input[type=checkbox] { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--orange); }
-  .check-row label { color: var(--ink-mid); font-size: 14px; line-height: 1.6; }
-  .check-row .required-tag { color: var(--orange-lt); font-size: 12px; margin-left: 6px; }
+  .check-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .check-row input[type=checkbox] { width: 22px; height: 22px; flex-shrink: 0; margin-top: 3px; accent-color: var(--orange); }
+  .check-row label { color: var(--ink-mid); font-size: 1rem; line-height: 1.6; }
+  .check-row .required-tag { color: var(--orange-lt); font-size: 0.78rem; margin-left: 6px; }
 
-  .field { margin-bottom: 24px; }
-  .field label { display: block; color: var(--ink-mid); font-size: 14px; margin-bottom: 8px; }
+  .field { margin-bottom: 26px; }
+  .field label { display: block; color: var(--ink-mid); font-size: 1rem; margin-bottom: 8px; }
+  .field .optional-tag { color: var(--muted); font-weight: 400; font-size: 0.85em; }
   select, textarea {
     width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
-    border-radius: 8px; padding: 12px 14px; color: var(--ink); font-family: inherit;
-    font-size: 14px;
+    border-radius: 8px; padding: 13px 14px; color: var(--ink); font-family: inherit;
+    font-size: 1rem;
   }
-  textarea { resize: vertical; min-height: 90px; }
+  textarea { resize: vertical; min-height: 100px; }
 
-  .pair-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
-  .pair-item p { color: var(--ink); font-size: 15px; margin-bottom: 14px; }
-  .scale-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  /* ── Pair statements: the primary interaction on the whole page ──── */
+  .pair-progress { margin-bottom: 40px; }
+  .pair-progress-label { font-size: 0.9rem; color: var(--ink-mid); margin-bottom: 8px; }
+  .pair-progress-track { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+  .pair-progress-fill { height: 100%; background: var(--orange); border-radius: 3px; width: 0%; transition: width 0.25s ease; }
+
+  .pair-item { padding: 36px 0; border-bottom: 1px solid var(--border); }
+  .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.5; margin-bottom: 22px; }
+  .scale-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
   .scale-btn {
-    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border);
-    background: var(--bg-warm); color: var(--ink-mid); font-size: 14px; cursor: pointer;
+    aspect-ratio: 1 / 1; width: 100%; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 1.6rem; font-weight: 500; cursor: pointer;
     transition: all 0.15s;
   }
   .scale-btn:hover { border-color: var(--orange-lt); color: var(--ink); }
   .scale-btn[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
   .scale-skip {
-    margin-left: 10px; padding: 0 14px; height: 40px; border-radius: 20px;
-    border: 1px solid var(--border); background: transparent; color: var(--muted);
-    font-size: 13px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 24px;
+    border: 1px dashed var(--border); background: transparent; color: var(--muted);
+    font-size: 0.92rem; cursor: pointer;
   }
-  .scale-skip[aria-pressed="true"] { border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
-  .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 6px; max-width: 232px; }
+  .scale-skip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); display: inline-block; }
+  .scale-skip[aria-pressed="true"] { border-style: solid; border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
+  .scale-skip[aria-pressed="true"]::before { background: var(--muted); }
+  @media (max-width: 480px) {
+    .scale-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .scale-btn { font-size: 1.2rem; border-radius: 12px; }
+  }
 
   .btn {
-    display: inline-flex; align-items: center; gap: 8px; background: var(--orange);
-    color: #fff; border: none; border-radius: 40px; padding: 13px 28px;
-    font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit;
+    /* #b84215 (not --orange) at rest, matching the sitewide CTA convention
+       fixed in Sprint 11 — white-on-var(--orange) measures 3.93:1 with axe,
+       below the 4.5:1 AA threshold for normal-weight text. #b84215 measures
+       5.86:1. */
+    display: inline-flex; align-items: center; gap: 8px; background: #b84215;
+    color: #fff; border: none; border-radius: 40px; padding: 15px 30px;
+    font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit;
   }
   .btn:hover { background: var(--orange-hover); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -93,34 +120,64 @@ window.__TG_TOKEN__ = (function () {
 
   .footer-bar {
     position: fixed; bottom: 0; left: 0; right: 0; background: rgba(19,17,16,0.96);
-    border-top: 1px solid var(--border); padding: 14px 24px; display: flex;
+    border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
     justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 50;
   }
-  .footer-count { color: var(--muted); font-size: 13px; }
+  .footer-count { color: var(--ink-mid); font-size: 0.92rem; }
 
   .screen { display: none; }
   .screen.active { display: block; }
 
-  .error-msg { color: var(--orange-lt); font-size: 13px; margin-top: 8px; display: none; }
+  .error-msg { color: var(--orange-lt); font-size: 0.92rem; margin-top: 10px; display: none; }
   .error-msg.visible { display: block; }
 
-  .done-wrap { text-align: center; padding: 80px 0; }
-  .done-wrap h1 { margin-bottom: 12px; }
-  .done-wrap p { color: var(--ink-mid); }
+  .loading-wrap { text-align: center; padding: 90px 0; color: var(--muted); }
 
-  .loading-wrap { text-align: center; padding: 80px 0; color: var(--muted); }
-  .greeting { color: var(--ink-mid); font-size: 15px; margin-bottom: 8px; }
+  /* ── Consent-screen greeting: the warmest moment on the page ──────
+     TODO (flagged, not building now): this screen is a strong candidate
+     for a short, personal video introduction from Graham once that's
+     ready to produce — replacing or sitting above the text greeting
+     below. Leaving this note here as the marker for that future task. */
+  .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
 
-  .email-capture { margin: -4px 0 14px 32px; }
+  .email-capture { margin: -6px 0 16px 36px; }
   .email-capture input[type=email] {
     width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
-    border-radius: 8px; padding: 10px 12px; color: var(--ink); font-family: inherit;
-    font-size: 14px; margin-top: 8px;
+    border-radius: 8px; padding: 12px 14px; color: var(--ink); font-family: inherit;
+    font-size: 1rem; margin-top: 10px;
   }
-  .email-capture p { color: var(--muted); font-size: 13px; }
-  .email-capture .email-status { font-size: 12px; margin-top: 6px; display: none; }
+  .email-capture p { color: var(--muted); font-size: 0.88rem; }
+  .email-capture .email-status { font-size: 0.85rem; margin-top: 8px; display: none; }
   .email-capture .email-status.saved { display: block; color: var(--orange-lt); }
   .email-capture .email-status.error { display: block; color: var(--orange-lt); }
+
+  /* ── Thank-you screen ─────────────────────────────────────────────── */
+  .done-wrap { text-align: center; padding: 90px 0 40px; }
+  .done-check {
+    width: 76px; height: 76px; margin: 0 auto 32px; border-radius: 50%;
+    border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center;
+    animation: done-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .done-check svg { width: 36px; height: 36px; }
+  .done-check svg path {
+    stroke: var(--orange-lt); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 40; stroke-dashoffset: 40;
+    animation: done-draw 0.45s 0.35s ease forwards;
+  }
+  @keyframes done-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes done-draw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .done-check { animation: none; }
+    .done-check svg path { animation: none; stroke-dashoffset: 0; }
+  }
+  .done-wrap h1 { margin-bottom: 20px; }
+  .done-wrap .done-message { color: var(--ink-mid); font-size: 1.05rem; max-width: 480px; margin: 0 auto 36px; text-align: left; }
+  .done-wrap .done-message p { margin-bottom: 16px; }
+  .done-next { text-align: left; max-width: 480px; margin: 0 auto; border-top: 1px solid var(--border); padding-top: 28px; }
+  .done-next-label { font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .done-next ul { list-style: none; }
+  .done-next li { display: flex; gap: 12px; color: var(--ink-mid); font-size: 0.98rem; margin-bottom: 14px; line-height: 1.6; }
+  .done-next li::before { content: '→'; color: var(--orange-lt); flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -137,7 +194,6 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 0b: INVALID TOKEN ============ -->
   <section class="screen" id="screen-invalid">
     <div class="loading-wrap">
-      <p class="eyebrow">TurbulentGround Research</p>
       <h1>This link isn't valid.</h1>
       <p>Please check the link you were sent, or contact Graham directly if you think this is a mistake.</p>
     </div>
@@ -145,7 +201,10 @@ window.__TG_TOKEN__ = (function () {
 
   <!-- ============ SCREEN 1: CONSENT ============ -->
   <section class="screen" id="screen-consent">
-    <p class="eyebrow">TurbulentGround Research</p>
+    <!-- The masthead above already says "Turbulent Ground" — the old
+         "TurbulentGround Research" eyebrow here was just a smaller
+         repeat of it, so it's gone. The greeting below is the page's
+         real opening line now. -->
     <p class="greeting" id="consent-greeting"></p>
     <h1>Before you start</h1>
     <p class="intro">
@@ -178,7 +237,7 @@ window.__TG_TOKEN__ = (function () {
       </div>
 
       <p class="error-msg" id="consent-error">Taking part is required to continue.</p>
-      <div style="margin-top:24px;">
+      <div style="margin-top:28px;">
         <button type="submit" class="btn">Continue</button>
       </div>
     </form>
@@ -188,11 +247,10 @@ window.__TG_TOKEN__ = (function () {
   <section class="screen" id="screen-context">
     <p class="eyebrow">A little about you</p>
     <h1>Optional context</h1>
-    <p class="intro">None of these are required. They help interpret patterns across responses, not identify you individually.</p>
 
     <form id="context-form">
       <div class="field">
-        <label for="ctx-role">What best describes your current role?</label>
+        <label for="ctx-role">What best describes your current role? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-role">
           <option value="">— Select —</option>
           <option>Individual contributor</option>
@@ -204,7 +262,7 @@ window.__TG_TOKEN__ = (function () {
         </select>
       </div>
       <div class="field">
-        <label for="ctx-responsibility">Do you have direct responsibility for how a team builds or ships product?</label>
+        <label for="ctx-responsibility">Do you have direct responsibility for how a team builds or ships product? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-responsibility">
           <option value="">— Select —</option>
           <option>Yes</option>
@@ -213,7 +271,7 @@ window.__TG_TOKEN__ = (function () {
         </select>
       </div>
       <div class="field">
-        <label for="ctx-org-size">Roughly how many people work in your organisation?</label>
+        <label for="ctx-org-size">Roughly how many people work in your organisation? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-org-size">
           <option value="">— Select —</option>
           <option>1–10</option>
@@ -224,7 +282,7 @@ window.__TG_TOKEN__ = (function () {
         </select>
       </div>
 
-      <div style="margin-top:24px;">
+      <div style="margin-top:28px;">
         <button type="submit" class="btn">Continue</button>
       </div>
     </form>
@@ -232,16 +290,20 @@ window.__TG_TOKEN__ = (function () {
 
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
-    <p class="eyebrow">Twelve pairs</p>
-    <h1>Your experience of this shift</h1>
+    <h1>Your experience of the AI shift</h1>
     <p class="intro">For each statement: how much do you agree, from 1 (strongly disagree) to 5 (strongly agree)? Or choose "Prefer not to say" — that's a distinct option, not a middle value.</p>
+
+    <div class="pair-progress">
+      <p class="pair-progress-label" id="pair-progress-label">Statement 1 of 24</p>
+      <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
+    </div>
 
     <div id="pairs-list"></div>
 
     <fieldset>
       <legend>Anything else?</legend>
       <div class="field">
-        <label for="open-comment">Is there anything about how AI is changing your work that these questions didn't capture?</label>
+        <label for="open-comment">Is there anything about how AI is changing your work that these questions didn't capture? <span class="optional-tag">(optional)</span></label>
         <textarea id="open-comment" maxlength="5000"></textarea>
       </div>
     </fieldset>
@@ -252,9 +314,27 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 4: DONE ============ -->
   <section class="screen" id="screen-done">
     <div class="done-wrap">
-      <p class="eyebrow">Thank you</p>
-      <h1>Your response has been recorded.</h1>
-      <p>That's everything for now. If you agreed to the 30-day follow-up, I'll be in touch.</p>
+      <div class="done-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
+      </div>
+      <h1>Thank you.</h1>
+      <div class="done-message">
+        <p>I genuinely appreciate you taking the time for this — it isn't a short survey, and I know that. Your answers are already part of what I'm learning from this work.</p>
+      </div>
+      <!-- The three bullets below are my best inference of plausible next
+           steps from the project's design docs (results/tension display
+           and the 30-day follow-up are both planned but not yet built;
+           findings are intended to be published eventually). This is not
+           exact copy I was given — please review and adjust the specific
+           wording before this goes live. -->
+      <div class="done-next">
+        <p class="done-next-label">What happens next</p>
+        <ul>
+          <li>Your response joins the study's dataset — the personal results view isn't built yet, so there's nothing to see immediately, but it's coming.</li>
+          <li>If you agreed to the 30-day follow-up, I'll email you in about a month to see how things have shifted.</li>
+          <li>Once there's enough data to say something honest, I'll publish what this study finds — patterns, not identifiable answers.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -277,60 +357,57 @@ window.__TG_TOKEN__ = (function () {
   var hasEmailOnFile = false; // from /api/research-lookup
   var emailCaptured = false;  // true once a plausible email has been saved via /api/research-capture-email
 
-  // Twelve domains, in the exact order and wording specified. Each domain
-  // carries its two statements (s1 = "first statement" as listed in the
-  // brief, s2 = "second statement"), plus which JSON schema key
-  // (contribution vs conditions) each statement maps to.
+  // Twelve domains, in the exact order specified. Each domain carries its
+  // two statements (s1 = "first statement" as listed in the brief, s2 =
+  // "second statement"), plus which JSON schema key (contribution vs
+  // conditions) each statement maps to.
   //
-  // ASSUMPTION FLAGGED FOR REVIEW: the brief's paired-question schema
-  // distinguishes "conditions you're working within" from "the
-  // contribution you're making yourself" (per research/privacy.md), but
-  // did not specify which of the two listed statements is which for each
-  // domain. Statements framed as the respondent's own active behaviour
-  // ("I do X") are mapped to `contribution`; statements framed as what the
-  // environment/organisation/others provide are mapped to `conditions`.
-  // This mapping was inferred per-domain from statement content, not from
-  // a fixed position rule (it isn't consistently "always statement 1" or
-  // "always statement 2" — check domains 2, 4, 6, 10, 11, 12 against 1, 3,
-  // 5, 7, 8, 9). Confirm this mapping is correct before trusting it for
-  // any tension analysis built on this data.
+  // Wording revised per the plain-language copyediting pass (2026-08-28)
+  // — meaning, the contribution/conditions mapping, and which statement
+  // leads each pair are all UNCHANGED from the original build; only the
+  // phrasing changed. That mapping was inferred per-domain from statement
+  // content in the original build (self-agency language = contribution,
+  // environment/other-provided language = conditions) and is NOT a fixed
+  // "always statement 1" rule — it varies by domain (compare domains 2,
+  // 4, 6, 10, 11, 12 against 1, 3, 5, 7, 8, 9). Confirm it's correct
+  // before trusting it for any tension analysis built on this data.
   var DOMAINS = [
     { key: 'd1',  name: 'Judgement',
       s1: { text: "I trust my own judgement over an AI's suggestion when the two disagree.", field: 'contribution' },
       s2: { text: "I have enough information to know when an AI's suggestion is wrong.", field: 'conditions' } },
     { key: 'd2',  name: 'Time and workload',
-      s1: { text: "The time AI saves me actually gets reinvested in doing things properly, not just absorbed into more work.", field: 'conditions' },
-      s2: { text: "I protect the time AI frees up, rather than letting it quietly fill back up with more tasks.", field: 'contribution' } },
+      s1: { text: "Time AI saves me goes into doing things properly, not just more work.", field: 'conditions' },
+      s2: { text: "I protect the time AI frees up, instead of letting new tasks fill it straight back up.", field: 'contribution' } },
     { key: 'd3',  name: 'Working relationships',
-      s1: { text: "I still make time to properly understand what my colleagues are dealing with, rather than assuming AI tools have made that check-in unnecessary.", field: 'contribution' },
-      s2: { text: "The people I work with make time to properly understand what I'm dealing with, rather than assuming an AI summary tells them enough.", field: 'conditions' } },
+      s1: { text: "I still make time to understand what my colleagues are dealing with, rather than assuming AI makes that unnecessary.", field: 'contribution' },
+      s2: { text: "The people I work with make time to understand what I'm dealing with, rather than relying on an AI summary.", field: 'conditions' } },
     { key: 'd4',  name: 'Skill and craft',
-      s1: { text: "My organisation makes space for me to check and refine AI-assisted work properly, not just ship whatever it produces.", field: 'conditions' },
-      s2: { text: "I hold AI-assisted work to the same standard I'd hold my own, even when nobody would notice if I didn't.", field: 'contribution' } },
+      s1: { text: "My organisation gives me time to check and improve AI-assisted work, not just ship what it produces.", field: 'conditions' },
+      s2: { text: "I hold AI-assisted work to the same standard as my own, even when no one would notice if I didn't.", field: 'contribution' } },
     { key: 'd5',  name: 'Autonomy',
-      s1: { text: "I use AI tools in ways I'd be comfortable explaining to anyone, whether I'm being monitored or not.", field: 'contribution' },
-      s2: { text: "I'm not closely monitored on how I use AI tools day to day.", field: 'conditions' } },
+      s1: { text: "I'd be comfortable explaining how I use AI to anyone, whether I'm being watched or not.", field: 'contribution' },
+      s2: { text: "No one closely watches how I use AI day to day.", field: 'conditions' } },
     { key: 'd6',  name: 'Learning',
-      s1: { text: "I have genuine opportunities to build skills that AI can't do for me.", field: 'conditions' },
-      s2: { text: "I actively work on skills AI can't replace, rather than letting them atrophy because AI covers the gap.", field: 'contribution' } },
+      s1: { text: "I have real chances to build skills AI can't do for me.", field: 'conditions' },
+      s2: { text: "I keep working on skills AI can't replace, rather than letting them fade because AI covers the gap.", field: 'contribution' } },
     { key: 'd7',  name: 'Trust',
       s1: { text: "I trust colleagues to make their own judgement calls about when to rely on AI.", field: 'contribution' },
       s2: { text: "I'm trusted to use my own judgement about when to rely on AI output.", field: 'conditions' } },
     { key: 'd8',  name: 'Being seen',
-      s1: { text: "I recognise other people's contributions honestly, even when AI made part of the work faster or easier.", field: 'contribution' },
-      s2: { text: "My contribution is recognised for the judgement I brought, not just discounted because AI was involved.", field: 'conditions' } },
+      s1: { text: "I give others credit honestly, even when AI made their work faster or easier.", field: 'contribution' },
+      s2: { text: "I get credit for the judgement I brought, not less just because AI was involved.", field: 'conditions' } },
     { key: 'd9',  name: 'Meaning',
-      s1: { text: "I actively look for the connection between my daily tasks and something that matters, even as AI takes over more of the routine parts.", field: 'contribution' },
-      s2: { text: "My day-to-day work still connects clearly to something that matters, even as AI takes over more of the routine parts.", field: 'conditions' } },
+      s1: { text: "I look for the connection between my daily tasks and something that matters, even as AI takes over more routine work.", field: 'contribution' },
+      s2: { text: "My day-to-day work still connects to something that matters, even as AI takes over more routine work.", field: 'conditions' } },
     { key: 'd10', name: 'Pace',
-      s1: { text: "The pace I'm expected to work at, now AI can speed things up, is still sustainable.", field: 'conditions' },
-      s2: { text: "I set a pace for myself that I could sustain indefinitely, rather than matching whatever speed AI makes possible.", field: 'contribution' } },
+      s1: { text: "Now AI can speed things up, the pace I'm expected to work at is still sustainable.", field: 'conditions' },
+      s2: { text: "I set my own pace, one I could keep up for good, rather than matching whatever speed AI makes possible.", field: 'contribution' } },
     { key: 'd11', name: 'AI in team decisions',
       s1: { text: "My organisation has a clear, sensible approach to how AI should be used in our work.", field: 'conditions' },
-      s2: { text: "I actively shape how AI gets used in my team's work, rather than just reacting to what's imposed on me.", field: 'contribution' } },
+      s2: { text: "I help shape how my team uses AI, rather than just reacting to decisions made for me.", field: 'contribution' } },
     { key: 'd12', name: 'Job security',
       s1: { text: "AI genuinely threatens the long-term security of my role.", field: 'conditions' },
-      s2: { text: "I'm actively building skills or options that would matter even if my current role changed because of AI.", field: 'contribution' } }
+      s2: { text: "I'm building skills or options that would matter even if AI changed my role.", field: 'contribution' } }
   ];
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip', conditions: 1-5|'skip' }
@@ -339,6 +416,8 @@ window.__TG_TOKEN__ = (function () {
   // rule (moot in this build since all twelve always render, but kept
   // correct for when a future version adds conditional logic).
   var pairResponses = {};
+  var TOTAL_STATEMENTS = 24;
+  var statementsAnswered = 0;
 
   // ---- screen switching ----
   function showScreen(id) {
@@ -362,7 +441,7 @@ window.__TG_TOKEN__ = (function () {
       hasEmailOnFile = data.hasEmail === true;
       var name = (typeof data.name === 'string') ? data.name.trim() : '';
       var greetingEl = document.getElementById('consent-greeting');
-      greetingEl.textContent = name ? ('Hi ' + name + ', welcome to TurbulentGround Research.') : 'Welcome to TurbulentGround Research.';
+      greetingEl.textContent = name ? ('Hi ' + name + ', welcome.') : 'Welcome.';
       showScreen('screen-consent');
     })
     .catch(function () {
@@ -488,8 +567,10 @@ window.__TG_TOKEN__ = (function () {
       p.textContent = item.stmt.text;
       row.appendChild(p);
 
-      var scaleRow = document.createElement('div');
-      scaleRow.className = 'scale-row';
+      var scaleGrid = document.createElement('div');
+      scaleGrid.className = 'scale-grid';
+      scaleGrid.setAttribute('role', 'group');
+      scaleGrid.setAttribute('aria-label', item.stmt.text);
 
       for (var v = 1; v <= 5; v++) {
         (function (value) {
@@ -500,11 +581,17 @@ window.__TG_TOKEN__ = (function () {
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Rate ' + value + ' out of 5');
           btn.addEventListener('click', function () {
-            setResponse(domainKey, field, value, scaleRow);
+            setResponse(domainKey, field, value, scaleGrid, skipBtn);
           });
-          scaleRow.appendChild(btn);
+          scaleGrid.appendChild(btn);
         })(v);
       }
+      row.appendChild(scaleGrid);
+
+      var labels = document.createElement('div');
+      labels.className = 'scale-labels';
+      labels.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
+      row.appendChild(labels);
 
       var skipBtn = document.createElement('button');
       skipBtn.type = 'button';
@@ -512,34 +599,32 @@ window.__TG_TOKEN__ = (function () {
       skipBtn.textContent = 'Prefer not to say';
       skipBtn.setAttribute('aria-pressed', 'false');
       skipBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'skip', scaleRow);
+        setResponse(domainKey, field, 'skip', scaleGrid, skipBtn);
       });
-      scaleRow.appendChild(skipBtn);
-
-      row.appendChild(scaleRow);
-
-      var labels = document.createElement('div');
-      labels.className = 'scale-labels';
-      labels.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
-      row.appendChild(labels);
+      row.appendChild(skipBtn);
 
       list.appendChild(row);
     });
   }
 
-  function setResponse(domainKey, field, value, scaleRowEl) {
+  function setResponse(domainKey, field, value, scaleGridEl, skipBtnEl) {
+    var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
     if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
     pairResponses[domainKey][field] = value;
+    if (!wasAnswered) statementsAnswered++;
 
-    // update pressed state within this statement's own button row only
-    var buttons = scaleRowEl.querySelectorAll('.scale-btn, .scale-skip');
-    buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
-    var pressed = Array.prototype.find.call(buttons, function (b) {
-      return (value === 'skip') ? b.classList.contains('scale-skip') : b.textContent === String(value);
-    });
-    if (pressed) pressed.setAttribute('aria-pressed', 'true');
+    var scaleButtons = scaleGridEl.querySelectorAll('.scale-btn');
+    scaleButtons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    skipBtnEl.setAttribute('aria-pressed', 'false');
+    if (value === 'skip') {
+      skipBtnEl.setAttribute('aria-pressed', 'true');
+    } else {
+      var pressed = Array.prototype.find.call(scaleButtons, function (b) { return b.textContent === String(value); });
+      if (pressed) pressed.setAttribute('aria-pressed', 'true');
+    }
 
     updateFooterCount();
+    updateProgress();
   }
 
   function computeCompletion() {
@@ -557,6 +642,15 @@ window.__TG_TOKEN__ = (function () {
     var c = computeCompletion();
     document.getElementById('footer-count').textContent = c.pairsAnswered + ' of 12 pairs answered';
   }
+
+  function updateProgress() {
+    var n = Math.min(statementsAnswered, TOTAL_STATEMENTS);
+    var displayN = Math.min(n + 1, TOTAL_STATEMENTS);
+    document.getElementById('pair-progress-label').textContent =
+      n >= TOTAL_STATEMENTS ? 'All 24 statements answered' : ('Statement ' + displayN + ' of ' + TOTAL_STATEMENTS);
+    document.getElementById('pair-progress-fill').style.width = Math.round((n / TOTAL_STATEMENTS) * 100) + '%';
+  }
+  updateProgress();
 
   // ---- submit ----
   document.getElementById('submit-btn').addEventListener('click', function () {
