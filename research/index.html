@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>TurbulentGround Research</title>
+<script>
+// Token handling: read + strip from the visible URL as the very first
+// thing that runs, before anything is painted, so it never sits in the
+// address bar or gets captured in a screenshot. Stored in memory only
+// (module-level var below) for the life of this page load.
+window.__TG_TOKEN__ = (function () {
+  var params = new URLSearchParams(window.location.search);
+  var t = params.get('t') || '';
+  if (window.history && window.history.replaceState) {
+    var url = new URL(window.location.href);
+    url.searchParams.delete('t');
+    window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+  }
+  return t;
+})();
+</script>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+    --border: rgba(232,220,200,0.08);
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+  :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
+
+  header { padding: 24px; text-align: center; }
+  header a { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.14em; color: var(--ink-mid); text-decoration: none; }
+  header a:hover { color: var(--orange-lt); }
+
+  main { max-width: 640px; margin: 0 auto; padding: 0 24px 140px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 36px); font-weight: 300; color: var(--ink); line-height: 1.25; margin-bottom: 16px; }
+  .intro { color: var(--ink-mid); font-size: 15px; margin-bottom: 32px; }
+  .privacy-link { color: var(--orange-lt); }
+
+  fieldset { border: 0; margin-bottom: 40px; }
+  legend { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 16px; }
+
+  .check-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .check-row input[type=checkbox] { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--orange); }
+  .check-row label { color: var(--ink-mid); font-size: 14px; line-height: 1.6; }
+  .check-row .required-tag { color: var(--orange-lt); font-size: 12px; margin-left: 6px; }
+
+  .field { margin-bottom: 24px; }
+  .field label { display: block; color: var(--ink-mid); font-size: 14px; margin-bottom: 8px; }
+  select, textarea {
+    width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; color: var(--ink); font-family: inherit;
+    font-size: 14px;
+  }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .pair-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .pair-item p { color: var(--ink); font-size: 15px; margin-bottom: 14px; }
+  .scale-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .scale-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 14px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .scale-btn:hover { border-color: var(--orange-lt); color: var(--ink); }
+  .scale-btn[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .scale-skip {
+    margin-left: 10px; padding: 0 14px; height: 40px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+    font-size: 13px; cursor: pointer;
+  }
+  .scale-skip[aria-pressed="true"] { border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 6px; max-width: 232px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--orange);
+    color: #fff; border: none; border-radius: 40px; padding: 13px 28px;
+    font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit;
+  }
+  .btn:hover { background: var(--orange-hover); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink-mid); }
+
+  .footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; background: rgba(19,17,16,0.96);
+    border-top: 1px solid var(--border); padding: 14px 24px; display: flex;
+    justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 50;
+  }
+  .footer-count { color: var(--muted); font-size: 13px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .error-msg { color: var(--orange-lt); font-size: 13px; margin-top: 8px; display: none; }
+  .error-msg.visible { display: block; }
+
+  .done-wrap { text-align: center; padding: 80px 0; }
+  .done-wrap h1 { margin-bottom: 12px; }
+  .done-wrap p { color: var(--ink-mid); }
+</style>
+</head>
+<body>
+
+<header><a href="/">Turbulent Ground</a></header>
+
+<main>
+
+  <!-- ============ SCREEN 1: CONSENT ============ -->
+  <section class="screen active" id="screen-consent">
+    <p class="eyebrow">TurbulentGround Research</p>
+    <h1>Before you start</h1>
+    <p class="intro">
+      This is a short, invited research study — not a mass survey. Full detail on what's collected and why is in the
+      <a class="privacy-link" href="/research/privacy.md" target="_blank" rel="noopener">privacy notice</a>.
+      Please read it before continuing.
+    </p>
+
+    <form id="consent-form">
+      <div class="check-row">
+        <input type="checkbox" id="consent-taking-part" required>
+        <label for="consent-taking-part">I agree to take part in this research.<span class="required-tag">Required</span></label>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="consent-30day">
+        <label for="consent-30day">I'm happy to be contacted again in 30 days for a single follow-up.</label>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="consent-quote-anon">
+        <label for="consent-quote-anon">I'm happy for anonymised, aggregated patterns from my comments to be used in what's published.</label>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="consent-quote-name">
+        <label for="consent-quote-name">I'm open to being quoted by name (I'll always be asked separately, about the specific quote, before this happens).</label>
+      </div>
+
+      <p class="error-msg" id="consent-error">Taking part is required to continue.</p>
+      <div style="margin-top:24px;">
+        <button type="submit" class="btn">Continue</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ SCREEN 2: CONTEXT ============ -->
+  <section class="screen" id="screen-context">
+    <p class="eyebrow">A little about you</p>
+    <h1>Optional context</h1>
+    <p class="intro">None of these are required. They help interpret patterns across responses, not identify you individually.</p>
+
+    <form id="context-form">
+      <div class="field">
+        <label for="ctx-role">What best describes your current role?</label>
+        <select id="ctx-role">
+          <option value="">— Select —</option>
+          <option>Individual contributor</option>
+          <option>Team lead or manager</option>
+          <option>Head of function or above</option>
+          <option>Founder or C-suite</option>
+          <option>Other</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="ctx-responsibility">Do you have direct responsibility for how a team builds or ships product?</label>
+        <select id="ctx-responsibility">
+          <option value="">— Select —</option>
+          <option>Yes</option>
+          <option>No</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="ctx-org-size">Roughly how many people work in your organisation?</label>
+        <select id="ctx-org-size">
+          <option value="">— Select —</option>
+          <option>1–10</option>
+          <option>11–50</option>
+          <option>51–500</option>
+          <option>500+</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+
+      <div style="margin-top:24px;">
+        <button type="submit" class="btn">Continue</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
+  <section class="screen" id="screen-pairs">
+    <p class="eyebrow">Twelve pairs</p>
+    <h1>Your experience of this shift</h1>
+    <p class="intro">For each statement: how much do you agree, from 1 (strongly disagree) to 5 (strongly agree)? Or choose "Prefer not to say" — that's a distinct option, not a middle value.</p>
+
+    <div id="pairs-list"></div>
+
+    <fieldset>
+      <legend>Anything else?</legend>
+      <div class="field">
+        <label for="open-comment">Is there anything about how AI is changing your work that these questions didn't capture?</label>
+        <textarea id="open-comment" maxlength="5000"></textarea>
+      </div>
+    </fieldset>
+
+    <p class="error-msg" id="submit-error">Something went wrong submitting your response. Please try again.</p>
+  </section>
+
+  <!-- ============ SCREEN 4: DONE ============ -->
+  <section class="screen" id="screen-done">
+    <div class="done-wrap">
+      <p class="eyebrow">Thank you</p>
+      <h1>Your response has been recorded.</h1>
+      <p>That's everything for now. If you agreed to the 30-day follow-up, I'll be in touch.</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer-bar" id="footer-bar" style="display:none;">
+  <span class="footer-count" id="footer-count">0 of 12 pairs answered</span>
+  <button class="btn" id="submit-btn">Submit</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- state ----
+  var token = window.__TG_TOKEN__ || '';
+  var startedAt = null; // set when consent screen is completed
+  var consent = { takingPart: false, contact30Day: false, quoteAnonymously: false, quoteByName: false };
+  var context = { role: '', teamResponsibility: '', orgSize: '' };
+
+  // Twelve domains, in the exact order and wording specified. Each domain
+  // carries its two statements (s1 = "first statement" as listed in the
+  // brief, s2 = "second statement"), plus which JSON schema key
+  // (contribution vs conditions) each statement maps to.
+  //
+  // ASSUMPTION FLAGGED FOR REVIEW: the brief's paired-question schema
+  // distinguishes "conditions you're working within" from "the
+  // contribution you're making yourself" (per research/privacy.md), but
+  // did not specify which of the two listed statements is which for each
+  // domain. Statements framed as the respondent's own active behaviour
+  // ("I do X") are mapped to `contribution`; statements framed as what the
+  // environment/organisation/others provide are mapped to `conditions`.
+  // This mapping was inferred per-domain from statement content, not from
+  // a fixed position rule (it isn't consistently "always statement 1" or
+  // "always statement 2" — check domains 2, 4, 6, 10, 11, 12 against 1, 3,
+  // 5, 7, 8, 9). Confirm this mapping is correct before trusting it for
+  // any tension analysis built on this data.
+  var DOMAINS = [
+    { key: 'd1',  name: 'Judgement',
+      s1: { text: "I trust my own judgement over an AI's suggestion when the two disagree.", field: 'contribution' },
+      s2: { text: "I have enough information to know when an AI's suggestion is wrong.", field: 'conditions' } },
+    { key: 'd2',  name: 'Time and workload',
+      s1: { text: "The time AI saves me actually gets reinvested in doing things properly, not just absorbed into more work.", field: 'conditions' },
+      s2: { text: "I protect the time AI frees up, rather than letting it quietly fill back up with more tasks.", field: 'contribution' } },
+    { key: 'd3',  name: 'Working relationships',
+      s1: { text: "I still make time to properly understand what my colleagues are dealing with, rather than assuming AI tools have made that check-in unnecessary.", field: 'contribution' },
+      s2: { text: "The people I work with make time to properly understand what I'm dealing with, rather than assuming an AI summary tells them enough.", field: 'conditions' } },
+    { key: 'd4',  name: 'Skill and craft',
+      s1: { text: "My organisation makes space for me to check and refine AI-assisted work properly, not just ship whatever it produces.", field: 'conditions' },
+      s2: { text: "I hold AI-assisted work to the same standard I'd hold my own, even when nobody would notice if I didn't.", field: 'contribution' } },
+    { key: 'd5',  name: 'Autonomy',
+      s1: { text: "I use AI tools in ways I'd be comfortable explaining to anyone, whether I'm being monitored or not.", field: 'contribution' },
+      s2: { text: "I'm not closely monitored on how I use AI tools day to day.", field: 'conditions' } },
+    { key: 'd6',  name: 'Learning',
+      s1: { text: "I have genuine opportunities to build skills that AI can't do for me.", field: 'conditions' },
+      s2: { text: "I actively work on skills AI can't replace, rather than letting them atrophy because AI covers the gap.", field: 'contribution' } },
+    { key: 'd7',  name: 'Trust',
+      s1: { text: "I trust colleagues to make their own judgement calls about when to rely on AI.", field: 'contribution' },
+      s2: { text: "I'm trusted to use my own judgement about when to rely on AI output.", field: 'conditions' } },
+    { key: 'd8',  name: 'Being seen',
+      s1: { text: "I recognise other people's contributions honestly, even when AI made part of the work faster or easier.", field: 'contribution' },
+      s2: { text: "My contribution is recognised for the judgement I brought, not just discounted because AI was involved.", field: 'conditions' } },
+    { key: 'd9',  name: 'Meaning',
+      s1: { text: "I actively look for the connection between my daily tasks and something that matters, even as AI takes over more of the routine parts.", field: 'contribution' },
+      s2: { text: "My day-to-day work still connects clearly to something that matters, even as AI takes over more of the routine parts.", field: 'conditions' } },
+    { key: 'd10', name: 'Pace',
+      s1: { text: "The pace I'm expected to work at, now AI can speed things up, is still sustainable.", field: 'conditions' },
+      s2: { text: "I set a pace for myself that I could sustain indefinitely, rather than matching whatever speed AI makes possible.", field: 'contribution' } },
+    { key: 'd11', name: 'AI in team decisions',
+      s1: { text: "My organisation has a clear, sensible approach to how AI should be used in our work.", field: 'conditions' },
+      s2: { text: "I actively shape how AI gets used in my team's work, rather than just reacting to what's imposed on me.", field: 'contribution' } },
+    { key: 'd12', name: 'Job security',
+      s1: { text: "AI genuinely threatens the long-term security of my role.", field: 'conditions' },
+      s2: { text: "I'm actively building skills or options that would matter even if my current role changed because of AI.", field: 'contribution' } }
+  ];
+
+  // pairResponses[domainKey] = { contribution: 1-5|'skip', conditions: 1-5|'skip' }
+  // Keys are only ever added once a statement is actually answered/skipped
+  // by the respondent — never pre-populated, per the "omit unshown domains"
+  // rule (moot in this build since all twelve always render, but kept
+  // correct for when a future version adds conditional logic).
+  var pairResponses = {};
+
+  // ---- screen switching ----
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function (el) { el.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    document.getElementById('footer-bar').style.display = (id === 'screen-pairs') ? 'flex' : 'none';
+    window.scrollTo(0, 0);
+  }
+
+  // ---- screen 1: consent ----
+  document.getElementById('consent-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var takingPart = document.getElementById('consent-taking-part').checked;
+    var errorEl = document.getElementById('consent-error');
+    if (!takingPart) {
+      errorEl.classList.add('visible');
+      return;
+    }
+    errorEl.classList.remove('visible');
+    consent.takingPart = true;
+    consent.contact30Day = document.getElementById('consent-30day').checked;
+    consent.quoteAnonymously = document.getElementById('consent-quote-anon').checked;
+    consent.quoteByName = document.getElementById('consent-quote-name').checked;
+
+    // "Started At" is set here: the consent screen has just been completed.
+    startedAt = new Date().toISOString();
+
+    showScreen('screen-context');
+  });
+
+  // ---- screen 2: context ----
+  document.getElementById('context-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    context.role = document.getElementById('ctx-role').value;
+    context.teamResponsibility = document.getElementById('ctx-responsibility').value;
+    context.orgSize = document.getElementById('ctx-org-size').value;
+    renderPairs();
+    showScreen('screen-pairs');
+  });
+
+  // ---- screen 3: build the round-robin pair list ----
+  // Interleaving requirement: the two statements within a domain must not
+  // sit adjacent on screen. Round-robin layout below: every domain's FIRST
+  // statement across one pass (in domain order 1-12), then every domain's
+  // SECOND statement in a second pass (same domain order). This is a
+  // first-pass design choice, untested, and may need revision after the
+  // mechanics test — e.g. it means statement pairs from the same domain
+  // are exactly 12 items apart, which may or may not be far enough to stop
+  // a respondent connecting them, and a fully randomised order (rather
+  // than this fixed two-pass structure) hasn't been tried.
+  function renderPairs() {
+    var list = document.getElementById('pairs-list');
+    list.innerHTML = '';
+
+    var pass1 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s1 }; });
+    var pass2 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s2 }; });
+    var ordered = pass1.concat(pass2);
+
+    ordered.forEach(function (item) {
+      var domainKey = item.domain.key;
+      var field = item.stmt.field; // 'contribution' | 'conditions'
+
+      var row = document.createElement('div');
+      row.className = 'pair-item';
+
+      var p = document.createElement('p');
+      p.textContent = item.stmt.text;
+      row.appendChild(p);
+
+      var scaleRow = document.createElement('div');
+      scaleRow.className = 'scale-row';
+
+      for (var v = 1; v <= 5; v++) {
+        (function (value) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'scale-btn';
+          btn.textContent = String(value);
+          btn.setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-label', 'Rate ' + value + ' out of 5');
+          btn.addEventListener('click', function () {
+            setResponse(domainKey, field, value, scaleRow);
+          });
+          scaleRow.appendChild(btn);
+        })(v);
+      }
+
+      var skipBtn = document.createElement('button');
+      skipBtn.type = 'button';
+      skipBtn.className = 'scale-skip';
+      skipBtn.textContent = 'Prefer not to say';
+      skipBtn.setAttribute('aria-pressed', 'false');
+      skipBtn.addEventListener('click', function () {
+        setResponse(domainKey, field, 'skip', scaleRow);
+      });
+      scaleRow.appendChild(skipBtn);
+
+      row.appendChild(scaleRow);
+
+      var labels = document.createElement('div');
+      labels.className = 'scale-labels';
+      labels.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
+      row.appendChild(labels);
+
+      list.appendChild(row);
+    });
+  }
+
+  function setResponse(domainKey, field, value, scaleRowEl) {
+    if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
+    pairResponses[domainKey][field] = value;
+
+    // update pressed state within this statement's own button row only
+    var buttons = scaleRowEl.querySelectorAll('.scale-btn, .scale-skip');
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    var pressed = Array.prototype.find.call(buttons, function (b) {
+      return (value === 'skip') ? b.classList.contains('scale-skip') : b.textContent === String(value);
+    });
+    if (pressed) pressed.setAttribute('aria-pressed', 'true');
+
+    updateFooterCount();
+  }
+
+  function computeCompletion() {
+    var pairsAnswered = 0;
+    DOMAINS.forEach(function (d) {
+      var pair = pairResponses[d.key];
+      if (!pair) return;
+      var hasReal = (typeof pair.contribution === 'number') || (typeof pair.conditions === 'number');
+      if (hasReal) pairsAnswered++;
+    });
+    return { pairsAnswered: pairsAnswered, meetsCompletionFloor: pairsAnswered >= 10 };
+  }
+
+  function updateFooterCount() {
+    var c = computeCompletion();
+    document.getElementById('footer-count').textContent = c.pairsAnswered + ' of 12 pairs answered';
+  }
+
+  // ---- submit ----
+  document.getElementById('submit-btn').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+    var errorEl = document.getElementById('submit-error');
+    errorEl.classList.remove('visible');
+
+    var c = computeCompletion();
+    var openComment = document.getElementById('open-comment').value.trim();
+
+    var payload = {
+      token: token,
+      consent: consent,
+      startedAt: startedAt,
+      pairResponses: pairResponses,
+      pairsAnswered: c.pairsAnswered,
+      meetsCompletionFloor: c.meetsCompletionFloor,
+      openComment: openComment || undefined,
+      role: context.role || undefined,
+      teamResponsibility: context.teamResponsibility || undefined,
+      orgSize: context.orgSize || undefined
+    };
+
+    fetch('/api/research-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('submit failed');
+      return res.json();
+    }).then(function () {
+      showScreen('screen-done');
+    }).catch(function () {
+      errorEl.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
