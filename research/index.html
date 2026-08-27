@@ -107,6 +107,20 @@ window.__TG_TOKEN__ = (function () {
   .done-wrap { text-align: center; padding: 80px 0; }
   .done-wrap h1 { margin-bottom: 12px; }
   .done-wrap p { color: var(--ink-mid); }
+
+  .loading-wrap { text-align: center; padding: 80px 0; color: var(--muted); }
+  .greeting { color: var(--ink-mid); font-size: 15px; margin-bottom: 8px; }
+
+  .email-capture { margin: -4px 0 14px 32px; }
+  .email-capture input[type=email] {
+    width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; color: var(--ink); font-family: inherit;
+    font-size: 14px; margin-top: 8px;
+  }
+  .email-capture p { color: var(--muted); font-size: 13px; }
+  .email-capture .email-status { font-size: 12px; margin-top: 6px; display: none; }
+  .email-capture .email-status.saved { display: block; color: var(--orange-lt); }
+  .email-capture .email-status.error { display: block; color: var(--orange-lt); }
 </style>
 </head>
 <body>
@@ -115,9 +129,24 @@ window.__TG_TOKEN__ = (function () {
 
 <main>
 
+  <!-- ============ SCREEN 0: LOADING ============ -->
+  <section class="screen active" id="screen-loading">
+    <div class="loading-wrap"><p>Checking your invite…</p></div>
+  </section>
+
+  <!-- ============ SCREEN 0b: INVALID TOKEN ============ -->
+  <section class="screen" id="screen-invalid">
+    <div class="loading-wrap">
+      <p class="eyebrow">TurbulentGround Research</p>
+      <h1>This link isn't valid.</h1>
+      <p>Please check the link you were sent, or contact Graham directly if you think this is a mistake.</p>
+    </div>
+  </section>
+
   <!-- ============ SCREEN 1: CONSENT ============ -->
-  <section class="screen active" id="screen-consent">
+  <section class="screen" id="screen-consent">
     <p class="eyebrow">TurbulentGround Research</p>
+    <p class="greeting" id="consent-greeting"></p>
     <h1>Before you start</h1>
     <p class="intro">
       This is a short, invited research study — not a mass survey. Full detail on what's collected and why is in the
@@ -133,6 +162,11 @@ window.__TG_TOKEN__ = (function () {
       <div class="check-row">
         <input type="checkbox" id="consent-30day">
         <label for="consent-30day">I'm happy to be contacted again in 30 days for a single follow-up.</label>
+      </div>
+      <div class="email-capture" id="email-capture" style="display:none;">
+        <p>We don't have an email on file for you — add one if you'd like the 30-day follow-up.</p>
+        <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
+        <p class="email-status" id="email-capture-status"></p>
       </div>
       <div class="check-row">
         <input type="checkbox" id="consent-quote-anon">
@@ -240,6 +274,8 @@ window.__TG_TOKEN__ = (function () {
   var startedAt = null; // set when consent screen is completed
   var consent = { takingPart: false, contact30Day: false, quoteAnonymously: false, quoteByName: false };
   var context = { role: '', teamResponsibility: '', orgSize: '' };
+  var hasEmailOnFile = false; // from /api/research-lookup
+  var emailCaptured = false;  // true once a plausible email has been saved via /api/research-capture-email
 
   // Twelve domains, in the exact order and wording specified. Each domain
   // carries its two statements (s1 = "first statement" as listed in the
@@ -312,6 +348,81 @@ window.__TG_TOKEN__ = (function () {
     window.scrollTo(0, 0);
   }
 
+  // ---- screen 0: token lookup, before the consent screen is ever shown ----
+  // A network failure here is treated the same as an invalid token (fails
+  // safe: no token means no survey, rather than silently letting a lookup
+  // error through to the consent screen as if everything were fine).
+  fetch('/api/research-lookup?t=' + encodeURIComponent(token))
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || data.valid !== true) {
+        showScreen('screen-invalid');
+        return;
+      }
+      hasEmailOnFile = data.hasEmail === true;
+      var name = (typeof data.name === 'string') ? data.name.trim() : '';
+      var greetingEl = document.getElementById('consent-greeting');
+      greetingEl.textContent = name ? ('Hi ' + name + ', welcome to TurbulentGround Research.') : 'Welcome to TurbulentGround Research.';
+      showScreen('screen-consent');
+    })
+    .catch(function () {
+      showScreen('screen-invalid');
+    });
+
+  // ---- email capture (for invitees with no email on file) ----
+  var email30Checkbox = document.getElementById('consent-30day');
+  var emailCaptureWrap = document.getElementById('email-capture');
+  var emailCaptureInput = document.getElementById('email-capture-input');
+  var emailCaptureStatus = document.getElementById('email-capture-status');
+
+  function looksLikeEmailClientSide(value) {
+    if (typeof value !== 'string') return false;
+    var trimmed = value.trim();
+    var at = trimmed.indexOf('@');
+    if (at <= 0) return false;
+    var domain = trimmed.slice(at + 1);
+    if (!domain || domain.indexOf('.') <= 0) return false;
+    if (/\s/.test(trimmed)) return false;
+    return true;
+  }
+
+  email30Checkbox.addEventListener('change', function () {
+    if (this.checked && !hasEmailOnFile) {
+      emailCaptureWrap.style.display = 'block';
+    } else {
+      emailCaptureWrap.style.display = 'none';
+    }
+  });
+
+  // Captured on blur, not batched into final submission: if someone
+  // abandons the survey after consenting but before finishing, the email
+  // they've already agreed to be contacted on should still be saved.
+  emailCaptureInput.addEventListener('blur', function () {
+    var value = emailCaptureInput.value;
+    if (!looksLikeEmailClientSide(value)) {
+      emailCaptured = false;
+      return;
+    }
+    emailCaptureStatus.textContent = 'Saving…';
+    emailCaptureStatus.className = 'email-status saved';
+    fetch('/api/research-capture-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token, email: value.trim() })
+    }).then(function (res) {
+      if (!res.ok) throw new Error('capture failed');
+      return res.json();
+    }).then(function () {
+      emailCaptured = true;
+      emailCaptureStatus.textContent = 'Saved.';
+      emailCaptureStatus.className = 'email-status saved';
+    }).catch(function () {
+      emailCaptured = false;
+      emailCaptureStatus.textContent = 'Could not save that email — please check it and try again.';
+      emailCaptureStatus.className = 'email-status error';
+    });
+  });
+
   // ---- screen 1: consent ----
   document.getElementById('consent-form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -323,7 +434,12 @@ window.__TG_TOKEN__ = (function () {
     }
     errorEl.classList.remove('visible');
     consent.takingPart = true;
-    consent.contact30Day = document.getElementById('consent-30day').checked;
+    // Checking the 30-day box with no valid-looking email on file (and
+    // none successfully captured yet) is treated as consent not yet
+    // given, per the brief — rather than fighting the checkbox's own
+    // visual checked state, this gates what's actually sent at submission.
+    var thirtyDayChecked = document.getElementById('consent-30day').checked;
+    consent.contact30Day = thirtyDayChecked && (hasEmailOnFile || emailCaptured);
     consent.quoteAnonymously = document.getElementById('consent-quote-anon').checked;
     consent.quoteByName = document.getElementById('consent-quote-name').checked;
 
@@ -471,6 +587,14 @@ window.__TG_TOKEN__ = (function () {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     }).then(function (res) {
+      if (res.status === 409) {
+        errorEl.textContent = 'This invite has already been used — your response was already recorded.';
+        throw new Error('already submitted');
+      }
+      if (res.status === 403) {
+        errorEl.textContent = "This invite link isn't recognised.";
+        throw new Error('invalid token');
+      }
       if (!res.ok) throw new Error('submit failed');
       return res.json();
     }).then(function () {

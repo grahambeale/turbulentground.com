@@ -8,22 +8,30 @@
 // /research/ at all — a documented, deliberate exception to the Phase 3
 // path boundary, required by Vercel's serverless-function routing
 // convention (functions must live under top-level /api/), not scope creep.
+// Also standalone from api/research-lookup.js and
+// api/research-capture-email.js — the Identity lookup below is
+// deliberately duplicated rather than shared, same reasoning.
 //
 // Env var required: AIRTABLE_RESEARCH_TOKEN — a personal access token with
 // data.records:write scoped to base app7dKDinTjxczEfD. Deliberately
 // separate from the existing AIRTABLE_TOKEN used by Phase 2, so a scope
 // mistake on one token can't silently touch the other base.
 //
-// KNOWN GAP (flagged, not solved here — see brief): this route does not
-// verify the submitted token against the Identity table before accepting
-// a write. There is no check that the token exists, is unused, or belongs
-// to a real invitee. Any string in `token` is accepted and written as-is.
-// Closing this gap means a server-side Airtable read against the Identity
-// table before accepting the POST — deliberately out of scope for this
-// build.
+// Token validation: the submitted token is now checked against the
+// Identity table before anything is written to Responses (previously a
+// known, flagged gap — any string was accepted). Unknown token -> 403,
+// no write. Already-completed token -> 409, no write, no duplicate
+// Responses record. Valid + not yet completed -> writes Responses as
+// before, then marks the Identity record's Invite Status as completed,
+// which is what makes the token genuinely single-use.
+//
+// This route never writes an email address anywhere, under any
+// circumstance — that is the sole responsibility of
+// api/research-capture-email.js, writing to Identity only.
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
-const AIRTABLE_TABLE_ID = "tblL9mf8VfAmbhuG7";
+const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
+const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
 
 const FIELD = {
   token: "flduL4PmBEfH9rLpz",
@@ -41,6 +49,17 @@ const FIELD = {
   pairsAnswered: "fldybjxPuIHJ7wx6k",
   meetsCompletionFloor: "fldc1EMbDAHAO99Av",
 };
+
+const IDENTITY_FIELD = {
+  token: "fld6danERot7gjOqb",
+  inviteStatus: "fldEhm06lLDvEeF6q",
+};
+
+// Paired with scripts/generate-invite.mjs's INVITE_STATUS_SENT = "Sent".
+// Same caveat: the field's existing choices couldn't be inspected (see
+// generate-invite.mjs comment), so this uses typecast to create the
+// option if it doesn't already exist.
+const INVITE_STATUS_COMPLETED = "Completed";
 
 const DOMAIN_KEYS = ["d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12"];
 const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip"]);
@@ -76,6 +95,20 @@ function validatePairResponses(pairResponses) {
     }
   }
   return null;
+}
+
+async function findIdentityRecord(token, airtableToken) {
+  const formula = `{${IDENTITY_FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
+  const url =
+    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}` +
+    `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1&returnFieldsByFieldId=true`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${airtableToken}` } });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Identity lookup failed: ${err}`);
+  }
+  const data = await res.json();
+  return data.records && data.records[0];
 }
 
 export default async function handler(req, res) {
@@ -114,6 +147,23 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  let identityRecord;
+  try {
+    identityRecord = await findIdentityRecord(token, airtableToken);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(502).json({ error: "Could not validate your invite. Please try again." });
+  }
+
+  if (!identityRecord) {
+    return res.status(403).json({ error: "This invite link isn't recognised." });
+  }
+
+  const currentStatus = identityRecord.fields[IDENTITY_FIELD.inviteStatus];
+  if (currentStatus === INVITE_STATUS_COMPLETED) {
+    return res.status(409).json({ error: "This invite has already been used." });
+  }
+
   const fields = {
     [FIELD.token]: token,
     [FIELD.consentTakingPart]: consent.takingPart === true,
@@ -144,7 +194,7 @@ export default async function handler(req, res) {
 
   try {
     const airtableRes = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`,
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`,
       {
         method: "POST",
         headers: {
@@ -163,6 +213,34 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("Airtable fetch error:", err);
     return res.status(502).json({ error: "Could not save your response. Please try again." });
+  }
+
+  // Mark the invite as used. Best-effort logged, but not fatal to the
+  // response the visitor sees — their answer is already safely written to
+  // Responses at this point, and failing the whole request over a status
+  // update would be worse than a token that's very rarely reusable due to
+  // a transient Airtable error.
+  try {
+    const patchRes = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identityRecord.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${airtableToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fields: { [IDENTITY_FIELD.inviteStatus]: INVITE_STATUS_COMPLETED },
+          typecast: true,
+        }),
+      }
+    );
+    if (!patchRes.ok) {
+      const err = await patchRes.text();
+      console.error("Identity status update failed (non-fatal):", err);
+    }
+  } catch (err) {
+    console.error("Identity status update fetch error (non-fatal):", err);
   }
 
   return res.status(200).json({ status: "submitted", pairsAnswered, meetsCompletionFloor });
