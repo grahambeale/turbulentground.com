@@ -69,7 +69,7 @@ if (!name) {
 }
 
 const env = loadEnvLocal();
-const airtableToken = env.AIRTABLE_RESEARCH_TOKEN;
+const airtableToken = process.env.AIRTABLE_RESEARCH_TOKEN || env.AIRTABLE_RESEARCH_TOKEN;
 if (!airtableToken) {
   console.error("AIRTABLE_RESEARCH_TOKEN not set in .env.local");
   process.exit(1);
@@ -109,7 +109,7 @@ if (!res.ok) {
 const data = await res.json();
 const recordId = data.records[0].id;
 
-const base = env.RESEARCH_BASE_URL || "https://turbulentground.com";
+const base = process.env.RESEARCH_BASE_URL || env.RESEARCH_BASE_URL || "https://turbulentground.com";
 const url = `${base}/research?t=${token}`;
 
 console.log(`Identity record created: ${recordId}`);
@@ -117,6 +117,6 @@ console.log(`Invite URL: ${url}`);
 
 if (!email) {
   console.log(
-    "No email on file — the 30-day follow-up cannot be sent to this person automatically."
+    "No email on file. The 30-day follow-up cannot be sent to this person automatically."
   );
 }

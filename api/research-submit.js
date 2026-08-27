@@ -192,34 +192,8 @@ export default async function handler(req, res) {
   }
   if (typeof data.orgSize === "string" && data.orgSize) fields[FIELD.orgSize] = data.orgSize;
 
-  try {
-    const airtableRes = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${airtableToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ records: [{ fields }] }),
-      }
-    );
-
-    if (!airtableRes.ok) {
-      const err = await airtableRes.text();
-      console.error("Airtable write failed:", err);
-      return res.status(502).json({ error: "Could not save your response. Please try again." });
-    }
-  } catch (err) {
-    console.error("Airtable fetch error:", err);
-    return res.status(502).json({ error: "Could not save your response. Please try again." });
-  }
-
-  // Mark the invite as used. Best-effort logged, but not fatal to the
-  // response the visitor sees — their answer is already safely written to
-  // Responses at this point, and failing the whole request over a status
-  // update would be worse than a token that's very rarely reusable due to
-  // a transient Airtable error.
+  // Reserve the invite before writing the response. If the response write
+  // fails, restore the previous status so the participant can retry.
   try {
     const patchRes = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identityRecord.id}`,
@@ -237,10 +211,55 @@ export default async function handler(req, res) {
     );
     if (!patchRes.ok) {
       const err = await patchRes.text();
-      console.error("Identity status update failed (non-fatal):", err);
+      console.error("Identity status update failed:", err);
+      return res.status(502).json({ error: "Could not save your response. Please try again." });
     }
   } catch (err) {
-    console.error("Identity status update fetch error (non-fatal):", err);
+    console.error("Identity status update fetch error:", err);
+    return res.status(502).json({ error: "Could not save your response. Please try again." });
+  }
+
+  try {
+    const airtableRes = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${airtableToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ records: [{ fields }] }),
+      }
+    );
+
+    if (!airtableRes.ok) {
+      const err = await airtableRes.text();
+      throw new Error(`Airtable write failed: ${err}`);
+    }
+  } catch (err) {
+    console.error("Airtable response write error:", err.message);
+    try {
+      const rollbackRes = await fetch(
+        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identityRecord.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${airtableToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fields: { [IDENTITY_FIELD.inviteStatus]: currentStatus || "Sent" },
+            typecast: true,
+          }),
+        }
+      );
+      if (!rollbackRes.ok) {
+        console.error("Identity status rollback failed:", await rollbackRes.text());
+      }
+    } catch (rollbackErr) {
+      console.error("Identity status rollback fetch error:", rollbackErr);
+    }
+    return res.status(502).json({ error: "Could not save your response. Please try again." });
   }
 
   return res.status(200).json({ status: "submitted", pairsAnswered, meetsCompletionFloor });

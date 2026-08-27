@@ -223,7 +223,7 @@ window.__TG_TOKEN__ = (function () {
         <label for="consent-30day">I'm happy to be contacted again in 30 days for a single follow-up.</label>
       </div>
       <div class="email-capture" id="email-capture" style="display:none;">
-        <p>We don't have an email on file for you — add one if you'd like the 30-day follow-up.</p>
+        <p>We don't have your email. Add it if you'd like the 30-day follow-up.</p>
         <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
         <p class="email-status" id="email-capture-status"></p>
       </div>
@@ -245,8 +245,7 @@ window.__TG_TOKEN__ = (function () {
 
   <!-- ============ SCREEN 2: CONTEXT ============ -->
   <section class="screen" id="screen-context">
-    <p class="eyebrow">A little about you</p>
-    <h1>Optional context</h1>
+    <h1>A little about you</h1>
 
     <form id="context-form">
       <div class="field">
@@ -262,7 +261,7 @@ window.__TG_TOKEN__ = (function () {
         </select>
       </div>
       <div class="field">
-        <label for="ctx-responsibility">Do you have direct responsibility for how a team builds or ships product? <span class="optional-tag">(optional)</span></label>
+        <label for="ctx-responsibility">Are you responsible for how a team builds or ships product? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-responsibility">
           <option value="">— Select —</option>
           <option>Yes</option>
@@ -468,6 +467,13 @@ window.__TG_TOKEN__ = (function () {
   email30Checkbox.addEventListener('change', function () {
     if (this.checked && !hasEmailOnFile) {
       emailCaptureWrap.style.display = 'block';
+      if (!emailCaptured) {
+        // Follow-up consent is not valid until its contact address has
+        // actually been captured. Keep the field visible, but do not leave
+        // the checkbox claiming consent that cannot yet be acted on.
+        this.checked = false;
+        emailCaptureInput.focus();
+      }
     } else {
       emailCaptureWrap.style.display = 'none';
     }
@@ -493,6 +499,7 @@ window.__TG_TOKEN__ = (function () {
       return res.json();
     }).then(function () {
       emailCaptured = true;
+      email30Checkbox.checked = true;
       emailCaptureStatus.textContent = 'Saved.';
       emailCaptureStatus.className = 'email-status saved';
     }).catch(function () {
@@ -513,10 +520,8 @@ window.__TG_TOKEN__ = (function () {
     }
     errorEl.classList.remove('visible');
     consent.takingPart = true;
-    // Checking the 30-day box with no valid-looking email on file (and
-    // none successfully captured yet) is treated as consent not yet
-    // given, per the brief — rather than fighting the checkbox's own
-    // visual checked state, this gates what's actually sent at submission.
+    // Checking the 30-day box with no email on file only becomes consent
+    // after the address has been captured successfully.
     var thirtyDayChecked = document.getElementById('consent-30day').checked;
     consent.contact30Day = thirtyDayChecked && (hasEmailOnFile || emailCaptured);
     consent.quoteAnonymously = document.getElementById('consent-quote-anon').checked;
