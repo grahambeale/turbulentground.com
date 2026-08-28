@@ -42,15 +42,14 @@ I ask you to please **not** include anything about your physical or mental healt
 
 ## Consent, and what each part means
 
-When you start, you'll be asked to agree to each of these separately. You can say yes to some and no to others.
+When you start, taking part and contributing to anonymised, aggregated findings are one required agreement because creating those findings is the purpose of the study. The other choices are separate and optional.
 
-1. **Taking part.** Answering the survey itself.
+1. **Taking part.** Answering the survey and allowing your responses to contribute to anonymised, aggregated research findings.
 2. **Being contacted again in 30 days.** A single follow-up email. You can opt out of this alone and still take part now.
 3. **Receiving your response summary.** After completing the study, you can separately ask me to email a factual record of your answers.
-4. **Being quoted anonymously.** I may use anonymised, aggregated patterns from open comments in what I publish. No names, no identifying detail.
-5. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
+4. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
 
-Saying no to 3, 4 and 5 does not affect anything else. Your responses still count.
+Saying no to receiving a response summary, the 30-day follow-up or being quoted by name does not affect your participation. Your responses still count.
 
 ## How your response is linked to you
 

@@ -21,6 +21,7 @@ process.env.RESEND_FROM = "Turbulent Ground <results@example.com>";
 
 try {
   const calls = [];
+  let cohortSize = 5;
   global.fetch = async (url, options = {}) => {
     calls.push({ url: String(url), options });
     if (String(url).includes("tblwpricYYzx4rmiR?") && (!options.method || options.method === "GET")) {
@@ -30,10 +31,19 @@ try {
         fldEhm06lLDvEeF6q: "Completed",
       } }] }) };
     }
-    if (String(url).includes("tblL9mf8VfAmbhuG7?")) {
+    if (String(url).includes("tblL9mf8VfAmbhuG7?") && String(url).includes("filterByFormula")) {
       return { ok: true, json: async () => ({ records: [{ id: "recResponse", fields: {
         fldvxb2mrIYVKLGVM: JSON.stringify({ d1: { contribution: 4, conditions: 3 } }),
       } }] }) };
+    }
+    if (String(url).includes("tblL9mf8VfAmbhuG7?")) {
+      return { ok: true, json: async () => ({ records: [1, 2, 3, 4, 5].slice(0, cohortSize).map((value) => ({
+        id: `recCohort${value}`,
+        fields: {
+          fldvxb2mrIYVKLGVM: JSON.stringify({ d1: { contribution: value, conditions: 3 } }),
+          fldc1EMbDAHAO99Av: true,
+        },
+      })) }) };
     }
     if (String(url).includes("api.resend.com/emails")) {
       return { ok: true, json: async () => ({ id: "email_123" }) };
@@ -55,11 +65,21 @@ try {
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
   check("describes results without an overall score", /not an overall score/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
+  check("includes the early cohort average", /Early study average 3\.0 \/ 5 \(n=5\)/.test(sendBody.html));
+  check("labels the five-response comparison as provisional", /based on 5 eligible completed responses/i.test(sendBody.html) && /may move substantially/i.test(sendBody.html));
 
   const audit = calls.find(call => call.url.includes("tblwpricYYzx4rmiR/recIdentity"));
   const auditBody = JSON.parse(audit.options.body);
   check("records results-email consent", auditBody.fields.fldDQkh2LSSVjacTx === true);
   check("records a sent timestamp", typeof auditBody.fields.fldcGbn19ft4z1OPe === "string");
+
+  cohortSize = 4;
+  const secondRes = mockRes();
+  await handler({ method: "POST", body: { token: "second-valid-token" } }, secondRes);
+  const sends = calls.filter(call => call.url.includes("api.resend.com/emails"));
+  const secondSendBody = JSON.parse(sends.at(-1).options.body);
+  check("withholds the benchmark below five eligible responses", !/Early study average/.test(secondSendBody.html));
+  check("explains why a four-response comparison is withheld", /Only 4 eligible completed responses are currently available/i.test(secondSendBody.html));
   console.log("\nALL CHECKS PASSED");
 } finally {
   global.fetch = oldFetch;

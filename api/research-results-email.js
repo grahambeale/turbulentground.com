@@ -2,9 +2,9 @@
 // body: { token, email? }
 //
 // Sends a completed participant a factual summary of their own paired
-// responses. It deliberately does not calculate an overall score, benchmark,
-// percentile, or interpretation. Those methods are not yet defined or
-// validated for this research instrument.
+// responses. Once five completed responses exist, it also shows the current
+// invited-cohort mean for each statement, labelled as an early benchmark with
+// its cohort size. It never calculates an overall score or percentile.
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -22,6 +22,7 @@ const IDENTITY_FIELD = {
 const RESPONSE_FIELD = {
   token: "flduL4PmBEfH9rLpz",
   pairResponsesJson: "fldvxb2mrIYVKLGVM",
+  meetsCompletionFloor: "fldc1EMbDAHAO99Av",
 };
 
 const DOMAINS = [
@@ -60,22 +61,72 @@ async function findRecord(tableId, token, tokenFieldId, airtableToken) {
   return data.records && data.records[0];
 }
 
-function buildEmailHtml(name, pairs) {
+async function listResponsePairs(airtableToken) {
+  const allPairs = [];
+  let offset = "";
+  do {
+    const params = new URLSearchParams({ pageSize: "100", returnFieldsByFieldId: "true" });
+    params.append("fields[]", RESPONSE_FIELD.pairResponsesJson);
+    params.append("fields[]", RESPONSE_FIELD.meetsCompletionFloor);
+    if (offset) params.set("offset", offset);
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}?${params}`,
+      { headers: { Authorization: `Bearer ${airtableToken}` } }
+    );
+    if (!response.ok) throw new Error(`Airtable cohort lookup failed: ${await response.text()}`);
+    const data = await response.json();
+    for (const record of data.records || []) {
+      if (record.fields[RESPONSE_FIELD.meetsCompletionFloor] !== true) continue;
+      try { allPairs.push(JSON.parse(record.fields[RESPONSE_FIELD.pairResponsesJson] || "{}")); }
+      catch { /* Exclude unreadable records from the benchmark. */ }
+    }
+    offset = data.offset || "";
+  } while (offset);
+  return allPairs;
+}
+
+function computeBenchmark(allPairs) {
+  if (allPairs.length < 5) return { cohortSize: allPairs.length, domains: null };
+  const domains = {};
+  for (const [key] of DOMAINS) {
+    domains[key] = {};
+    for (const field of ["contribution", "conditions"]) {
+      const values = allPairs.map(pairs => pairs?.[key]?.[field]).filter(value => typeof value === "number");
+      domains[key][field] = values.length
+        ? { mean: values.reduce((sum, value) => sum + value, 0) / values.length, n: values.length }
+        : null;
+    }
+  }
+  return { cohortSize: allPairs.length, domains };
+}
+
+function benchmarkValue(entry) {
+  return entry ? `Early study average ${entry.mean.toFixed(1)} / 5 (n=${entry.n})` : "No study average yet";
+}
+
+function buildEmailHtml(name, pairs, benchmark) {
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
+    const domainBenchmark = benchmark.domains && benchmark.domains[key];
+    const contributionBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.contribution);
+    const conditionsBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.conditions);
     return `<tr>
       <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#e8dcc8;font-family:Arial,sans-serif;font-size:14px;">${escapeHtml(label)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.contribution)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.conditions)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.conditions)}${conditionsBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${conditionsBenchmark}</span>` : ""}</td>
     </tr>`;
   }).join("");
 
   const greeting = name ? `Hello ${escapeHtml(name)},` : "Hello,";
+  const benchmarkNote = benchmark.domains
+    ? `The early study averages below are based on ${benchmark.cohortSize} eligible completed responses from this invite-only cohort. They are provisional and may move substantially as more people take part.`
+    : `Only ${benchmark.cohortSize} eligible completed ${benchmark.cohortSize === 1 ? "response is" : "responses are"} currently available, so a study comparison would not yet be meaningful. Your summary will show your own answers only.`;
   return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
-      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This is a record of how you answered across the 12 themes. It is not an overall score or a comparison with other participants.</p>
+      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This is a record of how you answered across the 12 themes. It is not an overall score.</p>
+      <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
       <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:24px;">
         <thead><tr>
           <th align="left" style="padding:10px 8px;border-bottom:2px solid #c9470e;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;">Theme</th>
@@ -108,10 +159,12 @@ export default async function handler(req, res) {
 
   let identity;
   let responseRecord;
+  let allPairs;
   try {
-    [identity, responseRecord] = await Promise.all([
+    [identity, responseRecord, allPairs] = await Promise.all([
       findRecord(IDENTITY_TABLE_ID, token, IDENTITY_FIELD.token, airtableToken),
       findRecord(RESPONSES_TABLE_ID, token, RESPONSE_FIELD.token, airtableToken),
+      listResponsePairs(airtableToken),
     ]);
   } catch (error) {
     console.error(error.message);
@@ -133,6 +186,7 @@ export default async function handler(req, res) {
   let pairs;
   try { pairs = JSON.parse(responseRecord.fields[RESPONSE_FIELD.pairResponsesJson] || "{}"); }
   catch { return res.status(502).json({ error: "Could not read your saved responses" }); }
+  const benchmark = computeBenchmark(allPairs);
 
   const name = identity.fields[IDENTITY_FIELD.name] || "";
   const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -146,7 +200,7 @@ export default async function handler(req, res) {
       from: resendFrom,
       to: [email],
       subject: "Your AI shift response summary",
-      html: buildEmailHtml(name, pairs),
+      html: buildEmailHtml(name, pairs, benchmark),
     }),
   });
   if (!emailResponse.ok) {

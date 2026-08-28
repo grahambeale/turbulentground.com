@@ -103,8 +103,6 @@ window.__TG_TOKEN__ = (function () {
   .statement-help[hidden] { display: none; }
 
   /* ── Pair statements: the primary interaction on the whole page ──── */
-  .pair-progress { margin-bottom: 40px; }
-  .pair-progress-label { font-size: 0.9rem; color: var(--ink-mid); margin-bottom: 8px; }
   .pair-progress-track { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
   .pair-progress-fill { height: 100%; background: var(--orange); border-radius: 3px; width: 0%; transition: width 0.25s ease; }
 
@@ -151,12 +149,19 @@ window.__TG_TOKEN__ = (function () {
   .footer-bar {
     position: fixed; bottom: 0; left: 0; right: 0; background: rgba(19,17,16,0.96);
     border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
-    justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 50;
+    justify-content: center; align-items: center; gap: 24px; backdrop-filter: blur(20px); z-index: 50;
   }
-  .footer-count { color: var(--ink-mid); font-size: 0.92rem; }
+  .footer-progress { flex: 1; max-width: 680px; }
+  .footer-count { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 7px; }
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
-  .footer-back { padding: 13px 22px; }
+  #screen-pairs { position: relative; }
+  .survey-back {
+    position: absolute; top: -42px; left: 0; border: 0; background: transparent;
+    color: var(--ink-mid); font: inherit; font-size: 0.92rem; cursor: pointer;
+    padding: 8px 0; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .survey-back[hidden] { display: none; }
 
   .screen { display: none; }
   .screen.active { display: block; }
@@ -235,6 +240,8 @@ window.__TG_TOKEN__ = (function () {
   @media (max-width: 560px) {
     .results-email-row { flex-direction: column; }
     .results-email-row .btn { width: 100%; }
+    .footer-bar { gap: 14px; padding: 12px 18px; }
+    .survey-back { top: -38px; }
   }
 </style>
 </head>
@@ -274,7 +281,7 @@ window.__TG_TOKEN__ = (function () {
     <form id="consent-form">
       <div class="check-row">
         <input type="checkbox" id="consent-taking-part" required>
-        <label for="consent-taking-part">I agree to take part in this research.<span class="required-tag">Required</span></label>
+        <label for="consent-taking-part">I agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label>
       </div>
       <div class="check-row">
         <input type="checkbox" id="consent-30day">
@@ -284,10 +291,6 @@ window.__TG_TOKEN__ = (function () {
         <p>We don't have your email. Add it if you'd like the 30-day follow-up.</p>
         <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
         <p class="email-status" id="email-capture-status"></p>
-      </div>
-      <div class="check-row">
-        <input type="checkbox" id="consent-quote-anon">
-        <label for="consent-quote-anon">I'm happy for anonymised, aggregated patterns from my comments to be used in what's published.</label>
       </div>
       <div class="check-row">
         <input type="checkbox" id="consent-quote-name">
@@ -368,6 +371,7 @@ window.__TG_TOKEN__ = (function () {
 
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
+    <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
     <h1>Your experience of the AI shift</h1>
     <button class="guidance-btn" id="guidance-btn" type="button">How this works</button>
 
@@ -376,11 +380,6 @@ window.__TG_TOKEN__ = (function () {
       <p>You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. If a statement doesn't fit your work, choose "Not applicable".</p>
       <form method="dialog"><button class="btn" type="submit">Got it</button></form>
     </dialog>
-
-    <div class="pair-progress">
-      <p class="pair-progress-label" id="pair-progress-label" aria-live="polite">Statement 1 of 24</p>
-      <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
-    </div>
 
     <div id="pairs-list"></div>
 
@@ -403,13 +402,13 @@ window.__TG_TOKEN__ = (function () {
       </div>
       <h1>Thank you.</h1>
       <div class="done-message">
-        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your answers are already part of what I'm learning from this work.</p>
+        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that.</p>
       </div>
       <div class="done-next">
         <p class="done-next-label">What happens next</p>
         <ul>
           <li>Your response has joined the study's dataset.</li>
-          <li>You can receive a personal summary of your responses now. It records your answers without turning them into an overall score.</li>
+          <li>You can receive a personal summary now. Once at least five completed responses meet the study's inclusion threshold, it also includes an early comparison with the current study average and states the cohort size. The average may change as more people take part.</li>
           <li>If you agreed to the 30-day follow-up, I'll email you in about a month to see how things have shifted.</li>
           <li>Once there's enough data to say something honest, I'll publish the patterns this study finds, never identifiable answers.</li>
         </ul>
@@ -429,9 +428,11 @@ window.__TG_TOKEN__ = (function () {
 </main>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
-  <span class="footer-count" id="footer-count">Statement 1 of 24</span>
+  <div class="footer-progress">
+    <span class="footer-count" id="pair-progress-label" aria-live="polite">Statement 1 of 24</span>
+    <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
+  </div>
   <div class="footer-actions">
-    <button class="btn btn-ghost footer-back" id="back-btn" type="button" hidden>Back</button>
     <button class="btn" id="submit-btn" type="button" hidden>Submit</button>
   </div>
 </div>
@@ -607,7 +608,6 @@ window.__TG_TOKEN__ = (function () {
 
   // ---- screen 1: consent ----
   var takingPartCheckbox = document.getElementById('consent-taking-part');
-  var quoteAnonCheckbox = document.getElementById('consent-quote-anon');
   var quoteNameCheckbox = document.getElementById('consent-quote-name');
   var consentThanks = document.getElementById('consent-thanks');
   var consentThanksTitle = document.getElementById('consent-thanks-title');
@@ -620,7 +620,7 @@ window.__TG_TOKEN__ = (function () {
     if (!takingPart) return;
 
     var stayingInvolved = email30Checkbox.checked;
-    var supportingFindings = quoteAnonCheckbox.checked || quoteNameCheckbox.checked;
+    var supportingFindings = quoteNameCheckbox.checked;
 
     if (stayingInvolved && supportingFindings) {
       consentThanksTitle.textContent = 'You will be part of this research community.';
@@ -633,7 +633,7 @@ window.__TG_TOKEN__ = (function () {
     }
   }
 
-  [takingPartCheckbox, email30Checkbox, quoteAnonCheckbox, quoteNameCheckbox].forEach(function (checkbox) {
+  [takingPartCheckbox, email30Checkbox, quoteNameCheckbox].forEach(function (checkbox) {
     checkbox.addEventListener('change', updateConsentAcknowledgement);
   });
 
@@ -651,7 +651,7 @@ window.__TG_TOKEN__ = (function () {
     // after the address has been captured successfully.
     var thirtyDayChecked = document.getElementById('consent-30day').checked;
     consent.contact30Day = thirtyDayChecked && (hasEmailOnFile || emailCaptured);
-    consent.quoteAnonymously = document.getElementById('consent-quote-anon').checked;
+    consent.quoteAnonymously = true;
     consent.quoteByName = document.getElementById('consent-quote-name').checked;
 
     // "Started At" is set here: the consent screen has just been completed.
@@ -791,7 +791,6 @@ window.__TG_TOKEN__ = (function () {
     document.getElementById('submit-btn').hidden = !atEnd;
     document.getElementById('back-btn').hidden = currentStatementIndex === 0;
     document.getElementById('guidance-btn').hidden = atEnd;
-    updateFooterCount();
     updateProgress();
 
     if (!atEnd && rows[currentStatementIndex]) {
@@ -820,7 +819,6 @@ window.__TG_TOKEN__ = (function () {
       if (pressed) pressed.setAttribute('aria-pressed', 'true');
     }
 
-    updateFooterCount();
     updateProgress();
     var nextStatementIndex = currentStatementIndex + 1;
     window.clearTimeout(autoAdvanceTimer);
@@ -836,12 +834,6 @@ window.__TG_TOKEN__ = (function () {
       if (hasReal) pairsAnswered++;
     });
     return { pairsAnswered: pairsAnswered, meetsCompletionFloor: pairsAnswered >= 10 };
-  }
-
-  function updateFooterCount() {
-    document.getElementById('footer-count').textContent = currentStatementIndex >= TOTAL_STATEMENTS
-      ? 'All 24 statements answered'
-      : ('Statement ' + (currentStatementIndex + 1) + ' of ' + TOTAL_STATEMENTS);
   }
 
   function updateProgress() {
