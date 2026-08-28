@@ -65,8 +65,9 @@ try {
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
   check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
-  check("includes the early cohort average", /Early study average 3\.0 \/ 5 \(n=5\)/.test(sendBody.html));
-  check("labels the five-response comparison as provisional", /based on 5 eligible completed responses/i.test(sendBody.html) && /may move substantially/i.test(sendBody.html));
+  check("includes the current study benchmark", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
+  check("warns that the early benchmark may fluctuate", /likely to fluctuate frequently during the early phase/i.test(sendBody.html));
+  check("does not reveal the response count", !/eligible completed responses|\(n=\d+\)/i.test(sendBody.html));
   check("shows lens-level benchmark cards", /Your contribution/.test(sendBody.html) && /Conditions around you/.test(sendBody.html));
   check("shows a signed benchmark difference", /\+1\.0 above the benchmark/.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
@@ -81,8 +82,8 @@ try {
   await handler({ method: "POST", body: { token: "second-valid-token" } }, secondRes);
   const sends = calls.filter(call => call.url.includes("api.resend.com/emails"));
   const secondSendBody = JSON.parse(sends.at(-1).options.body);
-  check("withholds the benchmark below five eligible responses", !/Early study average/.test(secondSendBody.html));
-  check("explains why a four-response comparison is withheld", /Only 4 eligible completed responses are currently available/i.test(secondSendBody.html));
+  check("withholds the benchmark below five eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
+  check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 4|4 eligible/i.test(secondSendBody.html));
   console.log("\nALL CHECKS PASSED");
 } finally {
   global.fetch = oldFetch;

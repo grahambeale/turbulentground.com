@@ -3,8 +3,8 @@
 //
 // Sends a completed participant a factual summary of their own paired
 // responses. Once five completed responses exist, it also shows the current
-// invited-cohort mean for each statement, labelled as an early benchmark with
-// its cohort size. It also compares the participant and cohort averages within
+// invited-cohort mean for each statement, labelled as an early benchmark. It
+// also compares the participant and cohort averages within
 // each of the two lenses. It never collapses the lenses into one overall score.
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
@@ -102,7 +102,7 @@ function computeBenchmark(allPairs) {
 }
 
 function benchmarkValue(entry) {
-  return entry ? `Early study average ${entry.mean.toFixed(1)} / 5 (n=${entry.n})` : "No study average yet";
+  return entry ? `Current study benchmark ${entry.mean.toFixed(1)} / 5` : "No study benchmark yet";
 }
 
 function numericValues(pairs, field) {
@@ -177,8 +177,8 @@ function buildEmailHtml(name, pairs, benchmark) {
 
   const greeting = name ? `Hello ${escapeHtml(name)},` : "Hello,";
   const benchmarkNote = benchmark.domains
-    ? `The current study benchmark below is based on ${benchmark.cohortSize} eligible completed responses from this invite-only cohort. It is provisional and may move substantially as more people take part.`
-    : `Only ${benchmark.cohortSize} eligible completed ${benchmark.cohortSize === 1 ? "response is" : "responses are"} currently available, so a study comparison would not yet be meaningful. Your summary will show your own answers only.`;
+    ? `The comparison benchmark is likely to fluctuate frequently during the early phase of this research.`
+    : `A comparison benchmark is not available yet. Your summary will show your own answers only.`;
   const contributionSummary = lensSummary(pairs, benchmark, "contribution");
   const conditionsSummary = lensSummary(pairs, benchmark, "conditions");
   const summaryCards = benchmark.domains ? `<table role="presentation" style="width:100%;border-collapse:separate;border-spacing:8px;margin:18px -8px 8px;">
