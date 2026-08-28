@@ -34,6 +34,7 @@ You've received an invitation because [I know you personally / you were referred
 |---|---|---|
 | Your email address | To send the invite and, if you agree, the 30-day follow-up | Consent |
 | Your responses to the paired questions | This is the research itself | Consent |
+| Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
 | Anything you write in open comments | To find real, common patterns in how people are experiencing this | Consent |
 | Which stage of the survey you reached, and when | To improve the survey itself, and to know if it's asking too much of people | Consent |
 

@@ -306,6 +306,23 @@ window.__TG_TOKEN__ = (function () {
         </select>
       </div>
       <div class="field">
+        <label for="ctx-discipline">Which discipline best describes your work? <span class="optional-tag">(optional)</span></label>
+        <select id="ctx-discipline">
+          <option value="">— Select —</option>
+          <option>Product management</option>
+          <option>Design</option>
+          <option>Engineering</option>
+          <option>Research</option>
+          <option>Delivery or programme management</option>
+          <option>Data or analytics</option>
+          <option>Growth or marketing</option>
+          <option>Operations</option>
+          <option>Other product discipline</option>
+          <option>I don't work in product</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="field">
         <label for="ctx-responsibility">Are you responsible for how a team builds or ships product? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-responsibility">
           <option value="">— Select —</option>
@@ -406,7 +423,7 @@ window.__TG_TOKEN__ = (function () {
   var token = window.__TG_TOKEN__ || '';
   var startedAt = null; // set when consent screen is completed
   var consent = { takingPart: false, contact30Day: false, quoteAnonymously: false, quoteByName: false };
-  var context = { role: '', teamResponsibility: '', orgSize: '' };
+  var context = { role: '', discipline: '', teamResponsibility: '', orgSize: '' };
   var hasEmailOnFile = false; // from /api/research-lookup
   var emailCaptured = false;  // true once a plausible email has been saved via /api/research-capture-email
 
@@ -625,6 +642,7 @@ window.__TG_TOKEN__ = (function () {
   document.getElementById('context-form').addEventListener('submit', function (e) {
     e.preventDefault();
     context.role = document.getElementById('ctx-role').value;
+    context.discipline = document.getElementById('ctx-discipline').value;
     context.teamResponsibility = document.getElementById('ctx-responsibility').value;
     context.orgSize = document.getElementById('ctx-org-size').value;
     renderPairs();
@@ -843,6 +861,7 @@ window.__TG_TOKEN__ = (function () {
       meetsCompletionFloor: c.meetsCompletionFloor,
       openComment: openComment || undefined,
       role: context.role || undefined,
+      discipline: context.discipline || undefined,
       teamResponsibility: context.teamResponsibility || undefined,
       orgSize: context.orgSize || undefined
     };

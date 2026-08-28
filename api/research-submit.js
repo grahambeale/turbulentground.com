@@ -44,6 +44,7 @@ const FIELD = {
   pairResponsesJson: "fldvxb2mrIYVKLGVM",
   openComment: "fldnLAxDsWQFrusiD",
   role: "fldLpRW2iICNOHKc9",
+  discipline: "fldAHP8vHMM5R3od0",
   teamResponsibility: "fldP3feAS0fMX9w5N",
   orgSize: "fldNrxY2Jm8OOcBFm",
   pairsAnswered: "fldybjxPuIHJ7wx6k",
@@ -187,6 +188,9 @@ export default async function handler(req, res) {
     fields[FIELD.openComment] = data.openComment.trim().slice(0, 5000);
   }
   if (typeof data.role === "string" && data.role) fields[FIELD.role] = data.role;
+  if (typeof data.discipline === "string" && data.discipline) {
+    fields[FIELD.discipline] = data.discipline;
+  }
   if (typeof data.teamResponsibility === "string" && data.teamResponsibility) {
     fields[FIELD.teamResponsibility] = data.teamResponsibility;
   }
