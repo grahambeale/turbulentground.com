@@ -116,8 +116,13 @@ window.__TG_TOKEN__ = (function () {
   #open-comment:focus { border-color: var(--orange-lt); }
 
   .guidance-btn, .statement-help-toggle {
-    border: 0; background: transparent; color: var(--orange-lt); font: inherit;
-    font-size: 0.9rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent;
+    color: var(--muted); font: inherit; font-size: 0.82rem; cursor: pointer; padding: 4px 0;
+  }
+  .guidance-btn:hover, .statement-help-toggle:hover { color: var(--ink-mid); }
+  .context-icon {
+    display: inline-grid; place-items: center; width: 17px; height: 17px;
+    border: 1px solid currentColor; border-radius: 50%; font-size: 0.7rem; line-height: 1;
   }
   .guidance-btn { margin: -8px 0 26px; }
   .guidance-btn[hidden] { display: none; }
@@ -190,10 +195,12 @@ window.__TG_TOKEN__ = (function () {
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
   .survey-back {
-    display: inline-flex; border: 0; background: transparent;
+    display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent;
     color: var(--ink-mid); font: inherit; font-size: 0.92rem; cursor: pointer;
-    padding: 8px 4px; text-decoration: underline; text-underline-offset: 3px;
+    padding: 8px 4px;
   }
+  .back-icon { font-size: 1.15rem; line-height: 1; }
+  .survey-back:hover { color: var(--ink); }
   .survey-back[hidden] { display: none; }
 
   .screen { display: none; }
@@ -407,7 +414,7 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <button class="guidance-btn" id="guidance-btn" type="button">How this works</button>
+    <button class="guidance-btn" id="guidance-btn" type="button"><span class="context-icon" aria-hidden="true">i</span>How this works</button>
 
     <dialog class="survey-guidance" id="survey-guidance" aria-labelledby="survey-guidance-title">
       <h2 id="survey-guidance-title">How this works</h2>
@@ -462,7 +469,7 @@ window.__TG_TOKEN__ = (function () {
 </main>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
-  <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
+  <button class="survey-back" id="back-btn" type="button" hidden><span class="back-icon" aria-hidden="true">←</span>Back</button>
   <div class="footer-progress">
     <span class="footer-count" id="pair-progress-label" aria-live="polite">1 of 24</span>
     <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
@@ -742,7 +749,14 @@ window.__TG_TOKEN__ = (function () {
       var helpToggle = document.createElement('button');
       helpToggle.type = 'button';
       helpToggle.className = 'statement-help-toggle';
-      helpToggle.textContent = 'What do you mean?';
+      var helpIcon = document.createElement('span');
+      helpIcon.className = 'context-icon';
+      helpIcon.setAttribute('aria-hidden', 'true');
+      helpIcon.textContent = '?';
+      var helpLabel = document.createElement('span');
+      helpLabel.textContent = 'What do you mean?';
+      helpToggle.appendChild(helpIcon);
+      helpToggle.appendChild(helpLabel);
       helpToggle.setAttribute('aria-expanded', 'false');
       helpToggle.setAttribute('aria-controls', helpId);
 
@@ -756,7 +770,7 @@ window.__TG_TOKEN__ = (function () {
         var opening = help.hidden;
         help.hidden = !opening;
         helpToggle.setAttribute('aria-expanded', String(opening));
-        helpToggle.textContent = opening ? 'Hide explanation' : 'What do you mean?';
+        helpLabel.textContent = opening ? 'Hide explanation' : 'What do you mean?';
       });
 
       var scaleGrid = document.createElement('div');
