@@ -259,13 +259,8 @@ window.__TG_TOKEN__ = (function () {
     .done-check svg path { animation: none; stroke-dashoffset: 0; }
   }
   .done-wrap h1 { margin-bottom: 20px; }
-  .done-wrap .done-message { color: var(--ink-mid); font-size: 1.05rem; max-width: 480px; margin: 0 auto 36px; text-align: left; }
+  .done-wrap .done-message { color: var(--ink-mid); font-size: 1.05rem; max-width: 480px; margin: 0 auto; text-align: left; }
   .done-wrap .done-message p { margin-bottom: 16px; }
-  .done-next { text-align: left; max-width: 480px; margin: 0 auto; border-top: 1px solid var(--border); padding-top: 28px; }
-  .done-next-label { font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
-  .done-next ul { list-style: none; }
-  .done-next li { display: flex; gap: 12px; color: var(--ink-mid); font-size: 0.98rem; margin-bottom: 14px; line-height: 1.6; }
-  .done-next li::before { content: '→'; color: var(--orange-lt); flex-shrink: 0; }
   .results-email {
     max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
     background: var(--bg-warm); border: 1px solid var(--border); border-radius: 10px;
@@ -445,20 +440,11 @@ window.__TG_TOKEN__ = (function () {
       </div>
       <h1>Thank you.</h1>
       <div class="done-message">
-        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that.</p>
-      </div>
-      <div class="done-next">
-        <p class="done-next-label">What happens next</p>
-        <ul>
-          <li>Your response has joined the study's dataset.</li>
-          <li>You can receive a personal comparison now. When the comparison benchmark is available, it shows your contribution and working conditions against it. The benchmark is likely to fluctuate frequently during the early phase of this research.</li>
-          <li>If you agreed to study emails, I'll contact you no more than once every 30 days with follow-up questions or findings. You can unsubscribe at any time.</li>
-          <li>Once there's enough data to say something honest, I'll publish the patterns this study finds, never identifiable answers.</li>
-        </ul>
+        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your response has joined the study's dataset.</p>
       </div>
       <form class="results-email" id="results-email-form">
         <h2>Email my benchmark comparison</h2>
-        <p id="results-email-copy">Enter your email address and I'll send your comparison immediately.</p>
+        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
         <div class="results-email-row">
           <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
           <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
@@ -979,7 +965,7 @@ window.__TG_TOKEN__ = (function () {
     if (hasEmailOnFile) {
       input.hidden = true;
       input.required = false;
-      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your comparison immediately.';
+      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.';
     } else {
       input.hidden = false;
       input.required = true;
