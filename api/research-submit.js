@@ -36,7 +36,7 @@ const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
 const FIELD = {
   token: "flduL4PmBEfH9rLpz",
   consentTakingPart: "fldMx0Ta5VNoKJJyU",
-  consent30Day: "flduWhkQo6u5O3nIp",
+  consentStudyEmails: "flduWhkQo6u5O3nIp",
   consentQuoteAnon: "fldrkZLOa0Z58uxEs",
   consentQuoteName: "fldDMxw9XFHCUItsx",
   startedAt: "fldsN6iDwlfMkxamH",
@@ -168,7 +168,7 @@ export default async function handler(req, res) {
   const fields = {
     [FIELD.token]: token,
     [FIELD.consentTakingPart]: consent.takingPart === true,
-    [FIELD.consent30Day]: consent.contact30Day === true,
+    [FIELD.consentStudyEmails]: consent.contactStudyEmails === true,
     [FIELD.consentQuoteAnon]: consent.quoteAnonymously === true,
     [FIELD.consentQuoteName]: consent.quoteByName === true,
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),

@@ -317,11 +317,11 @@ window.__TG_TOKEN__ = (function () {
         <label for="consent-taking-part">I agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label>
       </div>
       <div class="check-row">
-        <input type="checkbox" id="consent-30day">
-        <label for="consent-30day">I'm happy to be contacted again in 30 days for a single follow-up.</label>
+        <input type="checkbox" id="consent-study-emails">
+        <label for="consent-study-emails">I'm happy to receive occasional emails from Turbulent Ground about this study, including follow-up questions and its findings. You'll email me no more than once every 30 days, and I can unsubscribe at any time.</label>
       </div>
       <div class="email-capture" id="email-capture" style="display:none;">
-        <p>We don't have your email. Add it if you'd like the 30-day follow-up.</p>
+        <p>We don't have your email. Add it if you'd like to receive occasional emails about this study.</p>
         <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
         <p class="email-status" id="email-capture-status"></p>
       </div>
@@ -437,7 +437,7 @@ window.__TG_TOKEN__ = (function () {
         <ul>
           <li>Your response has joined the study's dataset.</li>
           <li>You can receive a personal comparison now. When the comparison benchmark is available, it shows your contribution and working conditions against it. The benchmark is likely to fluctuate frequently during the early phase of this research.</li>
-          <li>If you agreed to the 30-day follow-up, I'll email you in about a month to see how things have shifted.</li>
+          <li>If you agreed to study emails, I'll contact you no more than once every 30 days with follow-up questions or findings. You can unsubscribe at any time.</li>
           <li>Once there's enough data to say something honest, I'll publish the patterns this study finds, never identifiable answers.</li>
         </ul>
       </div>
@@ -473,7 +473,7 @@ window.__TG_TOKEN__ = (function () {
   // ---- state ----
   var token = window.__TG_TOKEN__ || '';
   var startedAt = null; // set when consent screen is completed
-  var consent = { takingPart: false, contact30Day: false, quoteAnonymously: false, quoteByName: false };
+  var consent = { takingPart: false, contactStudyEmails: false, quoteAnonymously: false, quoteByName: false };
   var context = { role: '', discipline: '', teamResponsibility: '', orgSize: '' };
   var hasEmailOnFile = false; // from /api/research-lookup
   var emailCaptured = false;  // true once a plausible email has been saved via /api/research-capture-email
@@ -573,7 +573,7 @@ window.__TG_TOKEN__ = (function () {
     });
 
   // ---- email capture (for invitees with no email on file) ----
-  var email30Checkbox = document.getElementById('consent-30day');
+  var studyEmailsCheckbox = document.getElementById('consent-study-emails');
   var emailCaptureWrap = document.getElementById('email-capture');
   var emailCaptureInput = document.getElementById('email-capture-input');
   var emailCaptureStatus = document.getElementById('email-capture-status');
@@ -589,7 +589,7 @@ window.__TG_TOKEN__ = (function () {
     return true;
   }
 
-  email30Checkbox.addEventListener('change', function () {
+  studyEmailsCheckbox.addEventListener('change', function () {
     if (this.checked && !hasEmailOnFile) {
       emailCaptureWrap.style.display = 'block';
       if (!emailCaptured) {
@@ -624,7 +624,7 @@ window.__TG_TOKEN__ = (function () {
       return res.json();
     }).then(function () {
       emailCaptured = true;
-      email30Checkbox.checked = true;
+      studyEmailsCheckbox.checked = true;
       updateConsentAcknowledgement();
       emailCaptureStatus.textContent = 'Saved.';
       emailCaptureStatus.className = 'email-status saved';
@@ -648,7 +648,7 @@ window.__TG_TOKEN__ = (function () {
     consentThanks.hidden = !takingPart;
     if (!takingPart) return;
 
-    var stayingInvolved = email30Checkbox.checked;
+    var stayingInvolved = studyEmailsCheckbox.checked;
     var supportingFindings = quoteNameCheckbox.checked;
 
     if (stayingInvolved && supportingFindings) {
@@ -662,7 +662,7 @@ window.__TG_TOKEN__ = (function () {
     }
   }
 
-  [takingPartCheckbox, email30Checkbox, quoteNameCheckbox].forEach(function (checkbox) {
+  [takingPartCheckbox, studyEmailsCheckbox, quoteNameCheckbox].forEach(function (checkbox) {
     checkbox.addEventListener('change', updateConsentAcknowledgement);
   });
 
@@ -676,10 +676,10 @@ window.__TG_TOKEN__ = (function () {
     }
     errorEl.classList.remove('visible');
     consent.takingPart = true;
-    // Checking the 30-day box with no email on file only becomes consent
+    // Checking the study-emails box with no email on file only becomes consent
     // after the address has been captured successfully.
-    var thirtyDayChecked = document.getElementById('consent-30day').checked;
-    consent.contact30Day = thirtyDayChecked && (hasEmailOnFile || emailCaptured);
+    var studyEmailsChecked = document.getElementById('consent-study-emails').checked;
+    consent.contactStudyEmails = studyEmailsChecked && (hasEmailOnFile || emailCaptured);
     consent.quoteAnonymously = true;
     consent.quoteByName = document.getElementById('consent-quote-name').checked;
 

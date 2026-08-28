@@ -167,8 +167,8 @@
     }).then(function (data) {
       inviteUrl.value = data.inviteUrl;
       resultNote.textContent = data.hasEmail
-        ? 'This person can receive the 30-day follow-up.'
-        : 'No email was saved, so the 30-day follow-up cannot be sent automatically.';
+        ? 'This person can choose to receive occasional emails about the study.'
+        : 'No email was saved, so study emails cannot be sent automatically.';
       result.classList.add('visible');
       document.getElementById('name').value = '';
       document.getElementById('email').value = '';

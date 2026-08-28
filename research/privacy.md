@@ -26,13 +26,13 @@ You've received an invitation because [I know you personally / you were referred
 - Optionally add open comments in your own words
 - See a personal result: not a score, but the gap between those two things
 - Choose one small change to try over the next 30 days
-- Optionally, hear from me again in 30 days to see how it went
+- Optionally, receive occasional emails about this study, no more than once every 30 days
 
 ## What I collect, and why
 
 | What | Why | Lawful basis |
 |---|---|---|
-| Your email address | To send the invite and, if you ask for them, your personal response summary and the 30-day follow-up | Consent |
+| Your email address | To send the invite and, if you ask for them, your personal response summary and occasional emails about this study | Consent |
 | Your responses to the paired questions | This is the research itself | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
 | Anything you write in open comments | To find real, common patterns in how people are experiencing this | Consent |
@@ -45,15 +45,15 @@ I ask you to please **not** include anything about your physical or mental healt
 When you start, taking part and contributing to anonymised, aggregated findings are one required agreement because creating those findings is the purpose of the study. The other choices are separate and optional.
 
 1. **Taking part.** Answering the survey and allowing your responses to contribute to anonymised, aggregated research findings.
-2. **Being contacted again in 30 days.** A single follow-up email. You can opt out of this alone and still take part now.
+2. **Receiving occasional study emails.** These may include follow-up questions and findings from this study. I will email no more than once every 30 days. You can unsubscribe at any time and still take part now.
 3. **Receiving your response summary.** After completing the study, you can separately ask me to email a factual record of your answers.
 4. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
 
-Saying no to receiving a response summary, the 30-day follow-up or being quoted by name does not affect your participation. Your responses still count.
+Saying no to receiving a response summary, study emails or being quoted by name does not affect your participation. Your responses still count.
 
 ## How your response is linked to you
 
-Your invitation link is unique to you. This lets me follow up with you in 30 days without asking you to identify yourself again. It also means, honestly, that your response is not anonymous to me while I hold it: I can see it was you.
+Your invitation link is unique to you. This lets me link your communication choices to your response without asking you to identify yourself again. It also means, honestly, that your response is not anonymous to me while I hold it: I can see it was you.
 
 I keep who you are and what you said in two separate places. The people and systems analysing the content of responses, including any AI tools I use (see below), only ever see your answers, never your name or email.
 
@@ -81,7 +81,7 @@ Your response is kept for 24 months from when you complete it, then deleted or s
 - **See what I hold about you, or get a copy.** Email me.
 - **Correct it.** Email me.
 - **Delete it, at any time, for any reason, no explanation needed.** Use the link in any email I send you, or go to [turbulentground.com/research/erasure]. This removes your identity and your responses. It's immediate and it's not something I review first.
-- **Withdraw consent for future contact, but keep your existing response counted.** Same link, different option.
+- **Unsubscribe from study emails, but keep your existing response counted.** Use the unsubscribe link in any study email or email graham@turbulentground.com.
 - **Ask me not to contact you again, ever, including in a future round of this research.** I'll keep a record that lets me recognise your email address and skip you, without keeping anything else about you.
 
 ## Questions or concerns

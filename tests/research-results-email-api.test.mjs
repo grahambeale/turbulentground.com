@@ -71,6 +71,7 @@ try {
   check("shows lens-level benchmark cards", /Your contribution/.test(sendBody.html) && /Conditions around you/.test(sendBody.html));
   check("shows a signed benchmark difference", /\+1\.0 above the benchmark/.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
+  check("includes a study-email unsubscribe route", /Unsubscribe%20from%20study%20emails/.test(sendBody.html));
 
   const audit = calls.find(call => call.url.includes("tblwpricYYzx4rmiR/recIdentity"));
   const auditBody = JSON.parse(audit.options.body);

@@ -90,7 +90,7 @@ export default async function handler(req, res) {
     fields[FIELD.email] = email;
   } else {
     fields[FIELD.notes] =
-      "No email on file — invited via LinkedIn or similar, 30-day follow-up cannot be automated for this person";
+      "No email on file. Invited via LinkedIn or similar, so study emails cannot be automated for this person";
   }
 
   try {
