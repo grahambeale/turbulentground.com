@@ -1,93 +1,108 @@
-# Privacy notice: TurbulentGround Research
-
-**Status: DRAFT. Not legal advice. Review before publishing, ideally with someone qualified given this covers workplace disclosures and special category risk.**
-
-Placeholder markers `[ ]` need a decision before this goes live.
+# Privacy notice: Turbulent Ground Research
 
 ---
 
 ## Who is responsible for your data
 
-I'm Graham Beale, and I'm the data controller for this research: the person legally responsible for how your information is collected and used.
+**Mr Graham Beale, trading as Turbulent Ground**, is the data controller for this research. That means I am legally responsible for deciding how and why your personal information is used.
 
-Contact: graham@turbulentground.com (for anything about this research) · graham@beale.co.uk (for anything else)
+ICO registration reference: **ZC232927**. You can check the public register at [ico.org.uk/register](https://ico.org.uk/register).
 
-**Note to self before publishing:** no correspondence address is included here. Confirm with the ICO fees line whether a postal address is required on a privacy notice itself (as opposed to the public register, which is a separate question already flagged), and whether email-only contact is acceptable in the meantime. ICO registration is not yet complete either way. Register before the first real invite goes out, not before the mechanics test.
+For anything about this research or your information, email [graham@turbulentground.com](mailto:graham@turbulentground.com).
 
 ## What this is
 
-TurbulentGround is my ongoing, public experiment into AI product teams. This part of it is different: a small, invited research study into how people are actually experiencing the shift AI is bringing to their work.
+This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
 
-You've received an invitation because [I know you personally / you were referred by someone I know; delete as appropriate]. This is not a mass survey. It's a small, trusted group.
+The aim is to understand how AI is changing people's work, and the personal and organisational conditions that help them use it with judgement, agency and care.
+
+I may have your name and email because I know you through my professional network, because someone introduced or recommended you, or because you provided them after receiving an invitation through another channel.
 
 ## What I'm asking you to do
 
-- Answer a set of paired questions about the conditions you're working within versus the contribution you're making yourself
-- Optionally add open comments in your own words
-- See a personal result: not a score, but the gap between those two things
-- Choose one small change to try over the next 30 days
-- Optionally, receive occasional emails about this study, no more than once every 30 days
+- Optionally describe your role, professional discipline, product responsibility and organisation size
+- Answer 24 statements about your own contribution and the conditions around you
+- Optionally add a comment in your own words
+- Optionally receive an emailed comparison of your answers with the current study benchmark
+- Optionally receive occasional study emails, no more than once every 30 days
 
 ## What I collect, and why
 
 | What | Why | Lawful basis |
 |---|---|---|
-| Your email address | To send the invite and, if you ask for them, your personal response summary and occasional emails about this study | Consent |
-| Your responses to the paired questions | This is the research itself | Consent |
+| Your name, email address, unique invitation token, invitation date and participation status | To select and invite participants, control access, prevent duplicate responses and administer the study | Legitimate interests |
+| Your email address and email preferences | To send your requested comparison and, if you choose, occasional follow-up questions and findings | Consent |
+| Your answers to the 24 statements | To conduct the research, create your comparison and calculate anonymised, aggregated study benchmarks and findings | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
-| Anything you write in open comments | To find real, common patterns in how people are experiencing this | Consent |
-| Which stage of the survey you reached, and when | To improve the survey itself, and to know if it's asking too much of people | Consent |
+| Anything you write in the optional comment | To identify common themes and experiences that the fixed statements may not capture | Consent |
+| When you started and completed, how many paired themes you answered, and whether your response meets the benchmark inclusion threshold | To administer the study, calculate the benchmark fairly and understand whether the survey is asking too much | Consent and legitimate interests |
+| Basic website and server information, such as page visits, request times, device or browser information and security logs | To operate, secure and improve the website | Legitimate interests |
 
-I ask you to please **not** include anything about your physical or mental health, or identify a colleague by name, in your open comments. If you do, that response is set aside and excluded from analysis rather than read or used, because that kind of information needs a separate, explicit basis I haven't asked you for.
+You do not have to take part. The context questions and open comment are optional, and each statement also offers “Prefer not to say” and “Not applicable”.
+
+Where I rely on legitimate interests, those interests are selecting and administering a small invite-only study, keeping the survey secure, preventing duplicate submissions and maintaining a reliable website. I limit this processing to what is reasonably necessary and give you the right to object below.
+
+Please do **not** include information about your physical or mental health, alleged wrongdoing, trade-union membership or any other sensitive personal information. Do not identify a colleague or anyone else by name. If you include this unexpectedly, I will remove it from the research dataset where reasonably possible and will not intentionally use it in the analysis.
 
 ## Consent, and what each part means
 
-When you start, taking part and contributing to anonymised, aggregated findings are one required agreement because creating those findings is the purpose of the study. The other choices are separate and optional.
+Taking part and allowing your responses to contribute to anonymised, aggregated findings are one required agreement because creating those findings is the purpose of the study. The other choices are separate and optional.
 
-1. **Taking part.** Answering the survey and allowing your responses to contribute to anonymised, aggregated research findings.
+1. **Taking part.** Answering the survey and allowing your responses to be analysed and contribute to anonymised, aggregated research findings and benchmarks.
 2. **Receiving occasional study emails.** These may include follow-up questions and findings from this study. I will email no more than once every 30 days. You can unsubscribe at any time and still take part now.
-3. **Receiving your response summary.** After completing the study, you can separately ask me to email a factual record of your answers.
+3. **Receiving your comparison.** After completing the study, you can separately ask me to email your answers and, when enough eligible responses exist, compare them with the current study benchmark.
 4. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
 
-Saying no to receiving a response summary, study emails or being quoted by name does not affect your participation. Your responses still count.
+Saying no to a comparison, study emails or being quoted by name does not affect your participation. Your responses still count.
+
+You can withdraw consent by emailing me. I will stop using and delete or anonymise the personal data covered by that consent. Information already irreversibly anonymised, combined into aggregate statistics or published without identifying you is no longer personal data and cannot be separated back out.
+
+## Your personal comparison and the benchmark
+
+If you request it, your comparison shows your answers across 12 themes. It keeps “your contribution” and “conditions around you” separate and may show how each compares with the mean of eligible completed responses.
+
+The benchmark is only shown once there are enough eligible completed responses. It is likely to fluctuate frequently during the early phase of the research. The comparison is descriptive, not a psychological assessment, and it is not used to make decisions about your employment or access to anything.
 
 ## How your response is linked to you
 
-Your invitation link is unique to you. This lets me link your communication choices to your response without asking you to identify yourself again. It also means, honestly, that your response is not anonymous to me while I hold it: I can see it was you.
+Your invitation link contains a unique token. The same token links your identity record to your response, controls access to the survey, prevents duplicate submissions and lets me send a requested comparison. Your response is therefore **pseudonymous, not anonymous**, while I retain that link.
 
-I keep who you are and what you said in two separate places. The people and systems analysing the content of responses, including any AI tools I use (see below), only ever see your answers, never your name or email.
+I store identity and contact details separately from survey responses in Airtable. Access is limited to me and the service providers needed to run the study. When analysing response content, I work from the response dataset without names or email addresses wherever reasonably possible.
 
 ## Where your data goes, including AI
 
-I'm honest about this because it's relevant to what I'm asking you to trust me with.
+I may use AI tools, including services from OpenAI and Anthropic, to help review the research design, organise pseudonymous responses and identify themes in comments. I do not intentionally provide names or email addresses together with response content. AI output is treated as assistance, not as an automated decision about you, and I review the findings myself.
 
-Some analysis of open comments, at the pattern level, is done using Anthropic's Claude. This tool sees your written responses but never your name or email address, and I don't paste anything you write into any other AI tool outside this workflow.
+The main services involved are:
+- **Airtable:** stores identity records, consent records and survey responses in separate tables
+- **Resend:** sends requested comparisons and study emails
+- **Vercel:** hosts the website and server functions
+- **OpenAI and Anthropic:** may assist with pseudonymous research analysis and review
 
-Other services involved in running this:
-- **Airtable:** storing your responses
-- **Resend:** sending you emails
-- **Vercel:** hosting the website
-- **Plausible:** anonymous site analytics. No cookies, and it never sees your invitation token
-- **Heart Internet:** domain registration only. Doesn't see your responses
-
-None of these are given your name and your response content together, except where stated above.
+Some suppliers process data in the United States or other countries outside the UK. Where UK data protection law requires it, restricted transfers are covered by an adequacy regulation or contractual safeguards such as the UK International Data Transfer Addendum or International Data Transfer Agreement. Email me if you would like more information about the safeguards relevant to your data.
 
 ## How long I keep it
 
-Your response is kept for 24 months from when you complete it, then deleted or stripped of anything that could identify you. If you ask me to delete it sooner, see below.
+I keep identifiable invitation, contact, consent and response records for up to 24 months after you complete the study, unless you withdraw sooner. After that, I delete them or irreversibly remove the link to you. I may keep anonymised aggregate statistics and published findings indefinitely because they no longer identify you.
+
+If you unsubscribe or ask not to be invited again, I may retain the minimum information needed to respect that request. Website and supplier logs are kept for the shorter operational periods set by those services.
 
 ## Your rights, and how to use them
 
-- **See what I hold about you, or get a copy.** Email me.
-- **Correct it.** Email me.
-- **Delete it, at any time, for any reason, no explanation needed.** Use the link in any email I send you, or go to [turbulentground.com/research/erasure]. This removes your identity and your responses. It's immediate and it's not something I review first.
-- **Unsubscribe from study emails, but keep your existing response counted.** Use the unsubscribe link in any study email or email graham@turbulentground.com.
-- **Ask me not to contact you again, ever, including in a future round of this research.** I'll keep a record that lets me recognise your email address and skip you, without keeping anything else about you.
+- **Access:** ask for a copy of the personal information I hold about you.
+- **Correction:** ask me to correct inaccurate or incomplete information.
+- **Erasure or restriction:** ask me to delete your personal information or limit how I use it, where the law gives you that right.
+- **Portability:** ask for information you provided in a commonly used electronic format, where this right applies.
+- **Withdraw consent:** withdraw consent for research use or study emails at any time, without affecting processing already carried out lawfully.
+
+**Your right to object:** where I rely on legitimate interests, you can object to that use of your personal information. You can always object to direct marketing. Email [graham@turbulentground.com](mailto:graham@turbulentground.com).
+
+To unsubscribe from study emails but keep your existing response in the research, use the unsubscribe option in an email or contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.
 
 ## Questions or concerns
 
-Email me directly: [email]. If you're not satisfied with my answer, you can raise it with the Information Commissioner's Office at ico.org.uk.
+Email me at [graham@turbulentground.com](mailto:graham@turbulentground.com). If you are not satisfied with my response, you can complain to the [Information Commissioner's Office](https://ico.org.uk/make-a-complaint/data-protection-complaints/data-protection-complaints/).
 
 ---
 
-**Last updated:** [date, on publish]
+**Last updated:** 28 August 2026
