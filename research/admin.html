@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="description" content="Private invite generator for TurbulentGround research.">
+<link rel="canonical" href="https://www.turbulentground.com/research/admin">
+<title>Create a research invite — TurbulentGround</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-light: #e8763a; --orange-dark: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+    --border: rgba(232,220,200,0.12); --success: #a9c79e;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.65; }
+  body { min-height: 100vh; }
+  :focus-visible { outline: 3px solid #ffb37a; outline-offset: 3px; }
+  header { padding: 24px; text-align: center; }
+  header a { color: var(--ink-mid); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.14em; text-decoration: none; }
+  main { width: min(100% - 40px, 620px); margin: 48px auto 100px; }
+  .eyebrow { color: var(--orange-light); font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.15em; margin-bottom: 12px; text-transform: uppercase; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(38px, 8vw, 58px); font-weight: 300; line-height: 1.08; margin-bottom: 18px; }
+  .intro { color: var(--ink-mid); margin-bottom: 36px; }
+  .panel { background: var(--bg-warm); border: 1px solid var(--border); border-radius: 14px; padding: clamp(22px, 5vw, 34px); }
+  .field { margin-bottom: 24px; }
+  label { color: var(--ink-mid); display: block; font-weight: 500; margin-bottom: 8px; }
+  .optional { color: var(--muted); font-size: 0.88em; font-weight: 400; }
+  input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font: inherit; padding: 13px 14px; width: 100%; }
+  input:focus { border-color: var(--orange-light); }
+  button { background: #b84215; border: 0; border-radius: 40px; color: #fff; cursor: pointer; font: inherit; font-weight: 500; padding: 13px 24px; }
+  button:hover { background: var(--orange-dark); }
+  button:disabled { cursor: wait; opacity: 0.55; }
+  .message { color: var(--orange-light); display: none; margin-top: 18px; }
+  .message.visible { display: block; }
+  .result { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: none; margin-top: 28px; padding: 22px; }
+  .result.visible { display: block; }
+  .result h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+  .result-note { color: var(--ink-mid); margin-bottom: 16px; }
+  .invite-row { align-items: stretch; display: flex; gap: 10px; }
+  .invite-row input { color: var(--success); font-size: 0.88rem; }
+  .invite-row button { border-radius: 8px; flex: 0 0 auto; }
+  .copy-status { color: var(--success); font-size: 0.9rem; min-height: 1.5em; margin-top: 10px; }
+  .privacy-note { color: var(--muted); font-size: 0.86rem; margin-top: 28px; }
+  @media (max-width: 520px) {
+    main { margin-top: 24px; }
+    .invite-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<header><a href="/">Turbulent Ground</a></header>
+<main>
+  <p class="eyebrow">Private research admin</p>
+  <h1>Create an invite</h1>
+  <p class="intro">Add the person you want to invite. You’ll get a unique link to copy and send yourself.</p>
+
+  <section class="panel" aria-labelledby="invite-form-heading">
+    <h2 id="invite-form-heading" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Invite details</h2>
+    <form id="invite-form">
+      <div class="field">
+        <label for="access-key">Access key</label>
+        <input id="access-key" name="access-key" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" autocomplete="off" maxlength="200" required>
+      </div>
+      <div class="field">
+        <label for="email">Email <span class="optional">(optional)</span></label>
+        <input id="email" name="email" type="email" autocomplete="off" maxlength="320">
+      </div>
+      <button id="create-button" type="submit">Create invite</button>
+      <p class="message" id="message" role="alert"></p>
+    </form>
+
+    <div class="result" id="result" aria-live="polite">
+      <h2>Invite ready</h2>
+      <p class="result-note" id="result-note"></p>
+      <div class="invite-row">
+        <input id="invite-url" type="text" readonly aria-label="Generated invite link">
+        <button id="copy-button" type="button">Copy link</button>
+      </div>
+      <p class="copy-status" id="copy-status"></p>
+    </div>
+  </section>
+
+  <p class="privacy-note">The access key stays in this browser tab only. Invite details are sent directly to the protected research service.</p>
+</main>
+<script>
+(function () {
+  'use strict';
+  var form = document.getElementById('invite-form');
+  var button = document.getElementById('create-button');
+  var message = document.getElementById('message');
+  var result = document.getElementById('result');
+  var resultNote = document.getElementById('result-note');
+  var inviteUrl = document.getElementById('invite-url');
+  var copyStatus = document.getElementById('copy-status');
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    button.disabled = true;
+    button.textContent = 'Creating…';
+    message.classList.remove('visible');
+    result.classList.remove('visible');
+    copyStatus.textContent = '';
+
+    var key = document.getElementById('access-key').value;
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+
+    fetch('/api/research-invite', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name, email: email || undefined })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not create the invite');
+        return data;
+      });
+    }).then(function (data) {
+      inviteUrl.value = data.inviteUrl;
+      resultNote.textContent = data.hasEmail
+        ? 'This person can receive the 30-day follow-up.'
+        : 'No email was saved, so the 30-day follow-up cannot be sent automatically.';
+      result.classList.add('visible');
+      document.getElementById('name').value = '';
+      document.getElementById('email').value = '';
+      inviteUrl.focus();
+      inviteUrl.select();
+    }).catch(function (error) {
+      message.textContent = error.message;
+      message.classList.add('visible');
+    }).finally(function () {
+      button.disabled = false;
+      button.textContent = 'Create invite';
+    });
+  });
+
+  document.getElementById('copy-button').addEventListener('click', function () {
+    navigator.clipboard.writeText(inviteUrl.value).then(function () {
+      copyStatus.textContent = 'Copied.';
+    }).catch(function () {
+      inviteUrl.focus();
+      inviteUrl.select();
+      copyStatus.textContent = 'Select the link and copy it manually.';
+    });
+  });
+})();
+</script>
+</body>
+</html>
