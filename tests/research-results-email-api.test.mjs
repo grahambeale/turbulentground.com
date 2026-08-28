@@ -63,10 +63,13 @@ try {
   const sendBody = JSON.parse(send.options.body);
   check("sends to the stored email", sendBody.to[0] === "alex@example.com");
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
-  check("describes results without an overall score", /not an overall score/i.test(sendBody.html));
+  check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
   check("includes the early cohort average", /Early study average 3\.0 \/ 5 \(n=5\)/.test(sendBody.html));
   check("labels the five-response comparison as provisional", /based on 5 eligible completed responses/i.test(sendBody.html) && /may move substantially/i.test(sendBody.html));
+  check("shows lens-level benchmark cards", /Your contribution/.test(sendBody.html) && /Conditions around you/.test(sendBody.html));
+  check("shows a signed benchmark difference", /\+1\.0 above the benchmark/.test(sendBody.html));
+  check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
 
   const audit = calls.find(call => call.url.includes("tblwpricYYzx4rmiR/recIdentity"));
   const auditBody = JSON.parse(audit.options.body);

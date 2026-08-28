@@ -4,7 +4,8 @@
 // Sends a completed participant a factual summary of their own paired
 // responses. Once five completed responses exist, it also shows the current
 // invited-cohort mean for each statement, labelled as an early benchmark with
-// its cohort size. It never calculates an overall score or percentile.
+// its cohort size. It also compares the participant and cohort averages within
+// each of the two lenses. It never collapses the lenses into one overall score.
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -104,6 +105,63 @@ function benchmarkValue(entry) {
   return entry ? `Early study average ${entry.mean.toFixed(1)} / 5 (n=${entry.n})` : "No study average yet";
 }
 
+function numericValues(pairs, field) {
+  return DOMAINS.map(([key]) => pairs?.[key]?.[field]).filter(value => typeof value === "number");
+}
+
+function mean(values) {
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
+function lensSummary(pairs, benchmark, field) {
+  const participantMean = mean(numericValues(pairs, field));
+  if (!benchmark.domains) return { participantMean, benchmarkMean: null, difference: null };
+  const benchmarkMeans = DOMAINS
+    .map(([key]) => benchmark.domains[key]?.[field]?.mean)
+    .filter(value => typeof value === "number");
+  const benchmarkMean = mean(benchmarkMeans);
+  return {
+    participantMean,
+    benchmarkMean,
+    difference: participantMean === null || benchmarkMean === null ? null : participantMean - benchmarkMean,
+  };
+}
+
+function differenceLabel(difference) {
+  if (difference === null) return "Benchmark not available yet";
+  if (Math.abs(difference) < 0.05) return "In line with the benchmark";
+  return `${difference > 0 ? "+" : ""}${difference.toFixed(1)} ${difference > 0 ? "above" : "below"} the benchmark`;
+}
+
+function scalePosition(value) {
+  return Math.max(0, Math.min(100, ((value - 1) / 4) * 100));
+}
+
+function comparisonBar(value, benchmarkEntry) {
+  if (typeof value !== "number") return "";
+  const participantWidth = scalePosition(value);
+  const benchmarkMarker = benchmarkEntry ? scalePosition(benchmarkEntry.mean) : null;
+  return `<div role="img" aria-label="Your response ${value} out of 5${benchmarkEntry ? `; current benchmark ${benchmarkEntry.mean.toFixed(1)} out of 5` : ""}" style="margin-top:8px;">
+    <div style="position:relative;height:10px;background:#3a332d;border-radius:999px;overflow:visible;">
+      <div style="height:10px;width:${participantWidth}%;background:#e55b20;border-radius:999px;"></div>
+      ${benchmarkMarker === null ? "" : `<div title="Current benchmark" style="position:absolute;left:${benchmarkMarker}%;top:-4px;width:2px;height:18px;background:#e8dcc8;"></div>`}
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:4px;color:#786b5e;font-family:Arial,sans-serif;font-size:10px;"><span>1</span><span>5</span></div>
+  </div>`;
+}
+
+function lensCard(label, summary) {
+  const participant = summary.participantMean === null ? "Not available" : `${summary.participantMean.toFixed(1)} / 5`;
+  const cohort = summary.benchmarkMean === null ? "Not available yet" : `${summary.benchmarkMean.toFixed(1)} / 5`;
+  const difference = differenceLabel(summary.difference);
+  return `<td valign="top" style="width:50%;padding:16px;background:#1c1916;border:1px solid #3a332d;">
+    <p style="margin:0 0 8px;color:#9e8e7c;font-family:Arial,sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;">${escapeHtml(label)}</p>
+    <p style="margin:0;color:#e8dcc8;font-family:Georgia,serif;font-size:28px;">${participant}</p>
+    <p style="margin:6px 0 0;color:#d0bea2;font-family:Arial,sans-serif;font-size:13px;">Current benchmark ${cohort}</p>
+    <p style="margin:10px 0 0;color:#ef7b45;font-family:Arial,sans-serif;font-size:14px;font-weight:700;">${escapeHtml(difference)}</p>
+  </td>`;
+}
+
 function buildEmailHtml(name, pairs, benchmark) {
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
@@ -112,21 +170,28 @@ function buildEmailHtml(name, pairs, benchmark) {
     const conditionsBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.conditions);
     return `<tr>
       <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#e8dcc8;font-family:Arial,sans-serif;font-size:14px;">${escapeHtml(label)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.conditions)}${conditionsBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${conditionsBenchmark}</span>` : ""}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}${comparisonBar(pair.contribution, domainBenchmark?.contribution)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.conditions)}${conditionsBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${conditionsBenchmark}</span>` : ""}${comparisonBar(pair.conditions, domainBenchmark?.conditions)}</td>
     </tr>`;
   }).join("");
 
   const greeting = name ? `Hello ${escapeHtml(name)},` : "Hello,";
   const benchmarkNote = benchmark.domains
-    ? `The early study averages below are based on ${benchmark.cohortSize} eligible completed responses from this invite-only cohort. They are provisional and may move substantially as more people take part.`
+    ? `The current study benchmark below is based on ${benchmark.cohortSize} eligible completed responses from this invite-only cohort. It is provisional and may move substantially as more people take part.`
     : `Only ${benchmark.cohortSize} eligible completed ${benchmark.cohortSize === 1 ? "response is" : "responses are"} currently available, so a study comparison would not yet be meaningful. Your summary will show your own answers only.`;
+  const contributionSummary = lensSummary(pairs, benchmark, "contribution");
+  const conditionsSummary = lensSummary(pairs, benchmark, "conditions");
+  const summaryCards = benchmark.domains ? `<table role="presentation" style="width:100%;border-collapse:separate;border-spacing:8px;margin:18px -8px 8px;">
+    <tr>${lensCard("Your contribution", contributionSummary)}${lensCard("Conditions around you", conditionsSummary)}</tr>
+  </table>
+  <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#9e8e7c;">The orange bar is your response. The light marker is the current study benchmark.</p>` : "";
   return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
-      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This is a record of how you answered across the 12 themes. It is not an overall score.</p>
+      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
       <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
+      ${summaryCards}
       <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:24px;">
         <thead><tr>
           <th align="left" style="padding:10px 8px;border-bottom:2px solid #c9470e;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;">Theme</th>

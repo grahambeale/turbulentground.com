@@ -436,17 +436,17 @@ window.__TG_TOKEN__ = (function () {
         <p class="done-next-label">What happens next</p>
         <ul>
           <li>Your response has joined the study's dataset.</li>
-          <li>You can receive a personal summary now. Once at least five completed responses meet the study's inclusion threshold, it also includes an early comparison with the current study average and states the cohort size. The average may change as more people take part.</li>
+          <li>You can receive a personal comparison now. Once at least five completed responses meet the study's inclusion threshold, it shows your contribution and working conditions against the current study benchmark. It also shows the cohort size because the benchmark may change as more people take part.</li>
           <li>If you agreed to the 30-day follow-up, I'll email you in about a month to see how things have shifted.</li>
           <li>Once there's enough data to say something honest, I'll publish the patterns this study finds, never identifiable answers.</li>
         </ul>
       </div>
       <form class="results-email" id="results-email-form">
-        <h2>Email my response summary</h2>
-        <p id="results-email-copy">Enter your email address and I'll send your summary immediately.</p>
+        <h2>Email my benchmark comparison</h2>
+        <p id="results-email-copy">Enter your email address and I'll send your comparison immediately.</p>
         <div class="results-email-row">
           <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-          <button class="btn" id="results-email-button" type="submit">Email my summary</button>
+          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
         </div>
         <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
       </form>
@@ -941,7 +941,7 @@ window.__TG_TOKEN__ = (function () {
     if (hasEmailOnFile) {
       input.hidden = true;
       input.required = false;
-      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your summary immediately.';
+      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your comparison immediately.';
     } else {
       input.hidden = false;
       input.required = true;
@@ -982,7 +982,7 @@ window.__TG_TOKEN__ = (function () {
       status.textContent = error.message;
       status.hidden = false;
       button.disabled = false;
-      button.textContent = 'Email my summary';
+      button.textContent = 'Email my comparison';
     });
   });
 
