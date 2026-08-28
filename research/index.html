@@ -853,7 +853,7 @@ window.__TG_TOKEN__ = (function () {
     document.getElementById('pairs-list').hidden = atEnd;
     document.getElementById('open-comment-fieldset').hidden = !atEnd;
     document.getElementById('submit-btn').hidden = !atEnd;
-    document.getElementById('back-btn').hidden = currentStatementIndex === 0;
+    document.getElementById('back-btn').hidden = false;
     document.getElementById('guidance-btn').hidden = atEnd;
     updateProgress();
 
@@ -915,6 +915,10 @@ window.__TG_TOKEN__ = (function () {
 
   document.getElementById('back-btn').addEventListener('click', function () {
     window.clearTimeout(autoAdvanceTimer);
+    if (currentStatementIndex === 0) {
+      showScreen('screen-context');
+      return;
+    }
     showStatement(currentStatementIndex - 1);
   });
 
