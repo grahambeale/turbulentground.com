@@ -34,6 +34,10 @@
   .optional { color: var(--muted); font-size: 0.88em; font-weight: 400; }
   input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font: inherit; padding: 13px 14px; width: 100%; }
   input:focus { border-color: var(--orange-light); }
+  .remember-row { align-items: flex-start; display: flex; gap: 11px; margin: -6px 0 26px; }
+  .remember-row input { flex: 0 0 auto; height: 20px; margin-top: 3px; width: 20px; accent-color: var(--orange); }
+  .remember-row label { color: var(--ink-mid); font-size: 0.92rem; font-weight: 400; margin: 0; }
+  .remember-row small { color: var(--muted); display: block; font-size: 0.86em; margin-top: 3px; }
   button { background: #b84215; border: 0; border-radius: 40px; color: #fff; cursor: pointer; font: inherit; font-weight: 500; padding: 13px 24px; }
   button:hover { background: var(--orange-dark); }
   button:disabled { cursor: wait; opacity: 0.55; }
@@ -68,6 +72,13 @@
         <label for="access-key">Access key</label>
         <input id="access-key" name="access-key" type="password" autocomplete="current-password" required>
       </div>
+      <div class="remember-row">
+        <input id="remember-key" name="remember-key" type="checkbox">
+        <label for="remember-key">
+          Remember the access key on this device
+          <small>Anyone using this browser profile will be able to create invites.</small>
+        </label>
+      </div>
       <div class="field">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" autocomplete="off" maxlength="200" required>
@@ -91,7 +102,7 @@
     </div>
   </section>
 
-  <p class="privacy-note">The access key stays in this browser tab only. Invite details are sent directly to the protected research service.</p>
+  <p class="privacy-note">Unless you choose to remember it, the access key stays in this browser tab only. Invite details are sent directly to the protected research service.</p>
 </main>
 <script>
 (function () {
@@ -103,6 +114,26 @@
   var resultNote = document.getElementById('result-note');
   var inviteUrl = document.getElementById('invite-url');
   var copyStatus = document.getElementById('copy-status');
+  var accessKey = document.getElementById('access-key');
+  var rememberKey = document.getElementById('remember-key');
+  var storageKey = 'tgResearchAdminKey';
+
+  try {
+    var savedKey = window.localStorage.getItem(storageKey);
+    if (savedKey) {
+      accessKey.value = savedKey;
+      rememberKey.checked = true;
+    }
+  } catch (_) {
+    // Some privacy modes disable local storage. The form still works for
+    // the current tab, so remembering simply becomes unavailable.
+  }
+
+  rememberKey.addEventListener('change', function () {
+    if (!rememberKey.checked) {
+      try { window.localStorage.removeItem(storageKey); } catch (_) {}
+    }
+  });
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -112,9 +143,14 @@
     result.classList.remove('visible');
     copyStatus.textContent = '';
 
-    var key = document.getElementById('access-key').value;
+    var key = accessKey.value;
     var name = document.getElementById('name').value.trim();
     var email = document.getElementById('email').value.trim();
+
+    try {
+      if (rememberKey.checked) window.localStorage.setItem(storageKey, key);
+      else window.localStorage.removeItem(storageKey);
+    } catch (_) {}
 
     fetch('/api/research-invite', {
       method: 'POST',
