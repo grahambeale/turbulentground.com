@@ -290,7 +290,7 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <p class="intro">For each statement: how much do you agree, from 1 (strongly disagree) to 5 (strongly agree)? Or choose "Prefer not to say" — that's a distinct option, not a middle value.</p>
+    <p class="intro">For each statement, choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). You can also choose "Prefer not to say".</p>
 
     <div class="pair-progress">
       <p class="pair-progress-label" id="pair-progress-label">Statement 1 of 24</p>
@@ -302,7 +302,7 @@ window.__TG_TOKEN__ = (function () {
     <fieldset>
       <legend>Anything else?</legend>
       <div class="field">
-        <label for="open-comment">Is there anything about how AI is changing your work that these questions didn't capture? <span class="optional-tag">(optional)</span></label>
+        <label for="open-comment">Is there anything else you'd like to tell me about how AI is affecting your work? <span class="optional-tag">(optional)</span></label>
         <textarea id="open-comment" maxlength="5000"></textarea>
       </div>
     </fieldset>
@@ -372,41 +372,41 @@ window.__TG_TOKEN__ = (function () {
   // before trusting it for any tension analysis built on this data.
   var DOMAINS = [
     { key: 'd1',  name: 'Judgement',
-      s1: { text: "I trust my own judgement over an AI's suggestion when the two disagree.", field: 'contribution' },
-      s2: { text: "I have enough information to know when an AI's suggestion is wrong.", field: 'conditions' } },
+      s1: { text: "I trust my judgement when it conflicts with an AI suggestion.", field: 'contribution' },
+      s2: { text: "I have enough information to recognise when an AI suggestion is wrong.", field: 'conditions' } },
     { key: 'd2',  name: 'Time and workload',
-      s1: { text: "Time AI saves me goes into doing things properly, not just more work.", field: 'conditions' },
-      s2: { text: "I protect the time AI frees up, instead of letting new tasks fill it straight back up.", field: 'contribution' } },
+      s1: { text: "The time AI saves me helps me improve my work, rather than simply do more.", field: 'conditions' },
+      s2: { text: "I protect the time AI frees up instead of filling it with new tasks.", field: 'contribution' } },
     { key: 'd3',  name: 'Working relationships',
-      s1: { text: "I still make time to understand what my colleagues are dealing with, rather than assuming AI makes that unnecessary.", field: 'contribution' },
-      s2: { text: "The people I work with make time to understand what I'm dealing with, rather than relying on an AI summary.", field: 'conditions' } },
+      s1: { text: "I still make time to understand what my colleagues are dealing with, even when AI makes that seem less necessary.", field: 'contribution' },
+      s2: { text: "My colleagues make time to understand what I'm dealing with rather than relying on an AI summary.", field: 'conditions' } },
     { key: 'd4',  name: 'Skill and craft',
-      s1: { text: "My organisation gives me time to check and improve AI-assisted work, not just ship what it produces.", field: 'conditions' },
-      s2: { text: "I hold AI-assisted work to the same standard as my own, even when no one would notice if I didn't.", field: 'contribution' } },
+      s1: { text: "My organisation gives me time to check and improve AI-assisted work.", field: 'conditions' },
+      s2: { text: "I hold AI-assisted work to the same standard as my other work, even when no one would notice.", field: 'contribution' } },
     { key: 'd5',  name: 'Autonomy',
-      s1: { text: "I'd be comfortable explaining how I use AI to anyone, whether I'm being watched or not.", field: 'contribution' },
+      s1: { text: "I'm comfortable explaining how I use AI, regardless of who asks.", field: 'contribution' },
       s2: { text: "No one closely watches how I use AI day to day.", field: 'conditions' } },
     { key: 'd6',  name: 'Learning',
-      s1: { text: "I have real chances to build skills AI can't do for me.", field: 'conditions' },
-      s2: { text: "I keep working on skills AI can't replace, rather than letting them fade because AI covers the gap.", field: 'contribution' } },
+      s1: { text: "I have opportunities to build skills AI can't develop for me.", field: 'conditions' },
+      s2: { text: "I keep developing skills AI can't replace.", field: 'contribution' } },
     { key: 'd7',  name: 'Trust',
-      s1: { text: "I trust colleagues to make their own judgement calls about when to rely on AI.", field: 'contribution' },
-      s2: { text: "I'm trusted to use my own judgement about when to rely on AI output.", field: 'conditions' } },
+      s1: { text: "I trust my colleagues to decide when to rely on AI.", field: 'contribution' },
+      s2: { text: "I'm trusted to decide when to rely on AI output.", field: 'conditions' } },
     { key: 'd8',  name: 'Being seen',
-      s1: { text: "I give others credit honestly, even when AI made their work faster or easier.", field: 'contribution' },
-      s2: { text: "I get credit for the judgement I brought, not less just because AI was involved.", field: 'conditions' } },
+      s1: { text: "I give others full credit for their work, even when AI made it faster or easier.", field: 'contribution' },
+      s2: { text: "I receive credit for the judgement I bring to AI-assisted work.", field: 'conditions' } },
     { key: 'd9',  name: 'Meaning',
-      s1: { text: "I look for the connection between my daily tasks and something that matters, even as AI takes over more routine work.", field: 'contribution' },
-      s2: { text: "My day-to-day work still connects to something that matters, even as AI takes over more routine work.", field: 'conditions' } },
+      s1: { text: "As AI takes over routine tasks, I look for the parts of my work that matter.", field: 'contribution' },
+      s2: { text: "As AI takes over routine tasks, my day-to-day work still feels connected to something that matters.", field: 'conditions' } },
     { key: 'd10', name: 'Pace',
-      s1: { text: "Now AI can speed things up, the pace I'm expected to work at is still sustainable.", field: 'conditions' },
-      s2: { text: "I set my own pace, one I could keep up for good, rather than matching whatever speed AI makes possible.", field: 'contribution' } },
+      s1: { text: "The pace expected of me remains sustainable, even when AI makes faster work possible.", field: 'conditions' },
+      s2: { text: "I set a pace I can sustain, rather than matching the speed AI makes possible.", field: 'contribution' } },
     { key: 'd11', name: 'AI in team decisions',
-      s1: { text: "My organisation has a clear, sensible approach to how AI should be used in our work.", field: 'conditions' },
-      s2: { text: "I help shape how my team uses AI, rather than just reacting to decisions made for me.", field: 'contribution' } },
+      s1: { text: "My organisation has a clear approach to how AI should be used in our work.", field: 'conditions' },
+      s2: { text: "I help shape how my team uses AI instead of only reacting to decisions made for me.", field: 'contribution' } },
     { key: 'd12', name: 'Job security',
-      s1: { text: "AI genuinely threatens the long-term security of my role.", field: 'conditions' },
-      s2: { text: "I'm building skills or options that would matter even if AI changed my role.", field: 'contribution' } }
+      s1: { text: "AI threatens the long-term security of my role.", field: 'conditions' },
+      s2: { text: "I'm building skills or options that would still matter if AI changed my role.", field: 'contribution' } }
   ];
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip', conditions: 1-5|'skip' }
