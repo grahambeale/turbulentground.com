@@ -202,6 +202,7 @@ window.__TG_TOKEN__ = (function () {
   .back-icon { font-size: 1.15rem; line-height: 1; }
   .survey-back:hover { color: var(--ink); }
   .survey-back[hidden] { display: none; }
+  .context-actions { display: flex; align-items: center; gap: 18px; margin-top: 28px; }
 
   .screen { display: none; }
   .screen.active { display: block; }
@@ -405,7 +406,8 @@ window.__TG_TOKEN__ = (function () {
         </div>
       </fieldset>
 
-      <div style="margin-top:28px;">
+      <div class="context-actions">
+        <button class="survey-back" id="context-back" type="button"><span class="back-icon" aria-hidden="true">←</span>Back</button>
         <button type="submit" class="btn">Continue</button>
       </div>
     </form>
@@ -620,6 +622,14 @@ window.__TG_TOKEN__ = (function () {
   // Captured on blur, not batched into final submission: if someone
   // abandons the survey after consenting but before finishing, the email
   // they've already agreed to be contacted on should still be saved.
+  // Return from an autocomplete selection must not implicitly submit the
+  // parent consent form before the remaining choices have been reviewed.
+  emailCaptureInput.addEventListener('keydown', function (event) {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    emailCaptureInput.blur();
+  });
+
   emailCaptureInput.addEventListener('blur', function () {
     var value = emailCaptureInput.value;
     if (!looksLikeEmailClientSide(value)) {
@@ -703,6 +713,10 @@ window.__TG_TOKEN__ = (function () {
   });
 
   // ---- screen 2: context ----
+  document.getElementById('context-back').addEventListener('click', function () {
+    showScreen('screen-consent');
+  });
+
   document.getElementById('context-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var formData = new FormData(e.currentTarget);
