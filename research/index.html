@@ -129,9 +129,9 @@ window.__TG_TOKEN__ = (function () {
   .survey-guidance::backdrop { background: rgba(14,11,8,0.78); backdrop-filter: blur(4px); }
   .survey-guidance h2 { font-family: 'Cormorant Garamond', serif; color: var(--ink); font-size: 1.8rem; font-weight: 400; margin-bottom: 12px; }
   .survey-guidance p { margin-bottom: 20px; }
-  .statement-help-toggle { display: block; margin: -10px 0 20px; }
+  .statement-help-toggle { display: block; margin: 20px 0 0; }
   .statement-help {
-    margin: -8px 0 22px; padding: 14px 16px; border-left: 2px solid var(--orange);
+    margin: 12px 0 0; padding: 14px 16px; border-left: 2px solid var(--orange);
     background: var(--bg-warm); color: var(--ink-mid); font-size: 0.95rem; line-height: 1.55;
   }
   .statement-help[hidden] { display: none; }
@@ -192,7 +192,7 @@ window.__TG_TOKEN__ = (function () {
   .survey-back {
     display: inline-flex; border: 0; background: transparent;
     color: var(--ink-mid); font: inherit; font-size: 0.92rem; cursor: pointer;
-    margin: 2px 0 -12px; padding: 8px 0; text-decoration: underline; text-underline-offset: 3px;
+    padding: 8px 4px; text-decoration: underline; text-underline-offset: 3px;
   }
   .survey-back[hidden] { display: none; }
 
@@ -409,7 +409,6 @@ window.__TG_TOKEN__ = (function () {
       <form method="dialog"><button class="btn" type="submit">Got it</button></form>
     </dialog>
 
-    <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
     <div id="pairs-list"></div>
 
     <fieldset id="open-comment-fieldset" hidden>
@@ -457,8 +456,9 @@ window.__TG_TOKEN__ = (function () {
 </main>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
+  <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
   <div class="footer-progress">
-    <span class="footer-count" id="pair-progress-label" aria-live="polite">Statement 1 of 24</span>
+    <span class="footer-count" id="pair-progress-label" aria-live="polite">1 of 24</span>
     <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
   </div>
   <div class="footer-actions">
@@ -739,14 +739,12 @@ window.__TG_TOKEN__ = (function () {
       helpToggle.textContent = 'What do you mean?';
       helpToggle.setAttribute('aria-expanded', 'false');
       helpToggle.setAttribute('aria-controls', helpId);
-      row.appendChild(helpToggle);
 
       var help = document.createElement('p');
       help.id = helpId;
       help.className = 'statement-help';
       help.textContent = item.stmt.help;
       help.hidden = true;
-      row.appendChild(help);
 
       helpToggle.addEventListener('click', function () {
         var opening = help.hidden;
@@ -804,6 +802,8 @@ window.__TG_TOKEN__ = (function () {
       });
       alternatives.appendChild(skipBtn);
       row.appendChild(alternatives);
+      row.appendChild(helpToggle);
+      row.appendChild(help);
 
       list.appendChild(row);
     });
@@ -869,8 +869,7 @@ window.__TG_TOKEN__ = (function () {
   function updateProgress() {
     var n = Math.min(currentStatementIndex, TOTAL_STATEMENTS);
     var displayN = Math.min(currentStatementIndex + 1, TOTAL_STATEMENTS);
-    document.getElementById('pair-progress-label').textContent =
-      n >= TOTAL_STATEMENTS ? 'All 24 statements answered' : ('Statement ' + displayN + ' of ' + TOTAL_STATEMENTS);
+    document.getElementById('pair-progress-label').textContent = displayN + ' of ' + TOTAL_STATEMENTS;
     document.getElementById('pair-progress-fill').style.width = Math.round((n / TOTAL_STATEMENTS) * 100) + '%';
   }
   updateProgress();
