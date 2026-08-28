@@ -179,11 +179,10 @@ window.__TG_TOKEN__ = (function () {
   .footer-count { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 7px; }
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
-  #screen-pairs { position: relative; }
   .survey-back {
-    position: absolute; top: -42px; left: 0; border: 0; background: transparent;
+    display: inline-flex; border: 0; background: transparent;
     color: var(--ink-mid); font: inherit; font-size: 0.92rem; cursor: pointer;
-    padding: 8px 0; text-decoration: underline; text-underline-offset: 3px;
+    margin: 2px 0 -12px; padding: 8px 0; text-decoration: underline; text-underline-offset: 3px;
   }
   .survey-back[hidden] { display: none; }
 
@@ -266,7 +265,6 @@ window.__TG_TOKEN__ = (function () {
     .results-email-row .btn { width: 100%; }
     .choice-grid { grid-template-columns: 1fr; }
     .footer-bar { gap: 14px; padding: 12px 18px; }
-    .survey-back { top: -38px; }
   }
 </style>
 </head>
@@ -392,7 +390,6 @@ window.__TG_TOKEN__ = (function () {
 
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
-    <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
     <h1>Your experience of the AI shift</h1>
     <button class="guidance-btn" id="guidance-btn" type="button">How this works</button>
 
@@ -402,6 +399,7 @@ window.__TG_TOKEN__ = (function () {
       <form method="dialog"><button class="btn" type="submit">Got it</button></form>
     </dialog>
 
+    <button class="survey-back" id="back-btn" type="button" hidden>Back</button>
     <div id="pairs-list"></div>
 
     <fieldset id="open-comment-fieldset" hidden>
