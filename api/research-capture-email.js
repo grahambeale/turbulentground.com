@@ -7,9 +7,9 @@
 // top-level /api/. Standalone — shares no code with api/submit.js,
 // api/verify.js, api/research-submit.js, or api/research-lookup.js.
 //
-// This is the ONLY code path in this build allowed to write an email
-// address, and it writes to the Identity table only — never touches
-// Responses. Called the moment a plausible-looking email is typed for
+// This and api/research-results-email.js are the only code paths in this
+// build allowed to write an email address. Both write to the Identity table
+// only and never touch Responses. Called the moment a plausible-looking email is typed for
 // someone with no email on file, independent of final survey submission,
 // so an abandoned survey doesn't lose an already-consented-to email.
 //

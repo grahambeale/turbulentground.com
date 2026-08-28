@@ -220,6 +220,22 @@ window.__TG_TOKEN__ = (function () {
   .done-next ul { list-style: none; }
   .done-next li { display: flex; gap: 12px; color: var(--ink-mid); font-size: 0.98rem; margin-bottom: 14px; line-height: 1.6; }
   .done-next li::before { content: '→'; color: var(--orange-lt); flex-shrink: 0; }
+  .results-email {
+    max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
+    background: var(--bg-warm); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .results-email h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 400; margin-bottom: 8px; }
+  .results-email p { color: var(--ink-mid); font-size: 0.95rem; margin-bottom: 16px; }
+  .results-email-row { display: flex; align-items: stretch; gap: 10px; }
+  .results-email input[type=email] {
+    min-width: 0; flex: 1; background: var(--surface); border: 1px solid rgba(232,220,200,0.28);
+    border-radius: 8px; padding: 12px 14px; color: var(--ink); font: inherit; font-size: 1rem;
+  }
+  .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
+  @media (max-width: 560px) {
+    .results-email-row { flex-direction: column; }
+    .results-email-row .btn { width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -297,7 +313,7 @@ window.__TG_TOKEN__ = (function () {
       <div class="field">
         <label for="ctx-role">What best describes your current role? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-role">
-          <option value="">— Select —</option>
+          <option value="">Select</option>
           <option>Individual contributor</option>
           <option>Team lead or manager</option>
           <option>Head of function or above</option>
@@ -309,7 +325,7 @@ window.__TG_TOKEN__ = (function () {
       <div class="field">
         <label for="ctx-discipline">Which discipline best describes your work? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-discipline">
-          <option value="">— Select —</option>
+          <option value="">Select</option>
           <option>Product management</option>
           <option>Design</option>
           <option>Engineering</option>
@@ -326,7 +342,7 @@ window.__TG_TOKEN__ = (function () {
       <div class="field">
         <label for="ctx-responsibility">Are you responsible for how a team builds or ships product? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-responsibility">
-          <option value="">— Select —</option>
+          <option value="">Select</option>
           <option>Yes</option>
           <option>No</option>
           <option>Prefer not to say</option>
@@ -335,7 +351,7 @@ window.__TG_TOKEN__ = (function () {
       <div class="field">
         <label for="ctx-org-size">Roughly how many people work in your organisation? <span class="optional-tag">(optional)</span></label>
         <select id="ctx-org-size">
-          <option value="">— Select —</option>
+          <option value="">Select</option>
           <option>1–10</option>
           <option>11–50</option>
           <option>51–500</option>
@@ -387,22 +403,26 @@ window.__TG_TOKEN__ = (function () {
       </div>
       <h1>Thank you.</h1>
       <div class="done-message">
-        <p>I genuinely appreciate you taking the time for this — it isn't a short survey, and I know that. Your answers are already part of what I'm learning from this work.</p>
+        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your answers are already part of what I'm learning from this work.</p>
       </div>
-      <!-- The three bullets below are my best inference of plausible next
-           steps from the project's design docs (results/tension display
-           and the 30-day follow-up are both planned but not yet built;
-           findings are intended to be published eventually). This is not
-           exact copy I was given — please review and adjust the specific
-           wording before this goes live. -->
       <div class="done-next">
         <p class="done-next-label">What happens next</p>
         <ul>
-          <li>Your response joins the study's dataset — the personal results view isn't built yet, so there's nothing to see immediately, but it's coming.</li>
+          <li>Your response has joined the study's dataset.</li>
+          <li>You can receive a personal summary of your responses now. It records your answers without turning them into an overall score.</li>
           <li>If you agreed to the 30-day follow-up, I'll email you in about a month to see how things have shifted.</li>
-          <li>Once there's enough data to say something honest, I'll publish what this study finds — patterns, not identifiable answers.</li>
+          <li>Once there's enough data to say something honest, I'll publish the patterns this study finds, never identifiable answers.</li>
         </ul>
       </div>
+      <form class="results-email" id="results-email-form">
+        <h2>Email my response summary</h2>
+        <p id="results-email-copy">Enter your email address and I'll send your summary immediately.</p>
+        <div class="results-email-row">
+          <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+          <button class="btn" id="results-email-button" type="submit">Email my summary</button>
+        </div>
+        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
+      </form>
     </div>
   </section>
 
@@ -579,7 +599,7 @@ window.__TG_TOKEN__ = (function () {
       emailCaptureStatus.className = 'email-status saved';
     }).catch(function () {
       emailCaptured = false;
-      emailCaptureStatus.textContent = 'Could not save that email — please check it and try again.';
+      emailCaptureStatus.textContent = 'Could not save that email. Please check it and try again.';
       emailCaptureStatus.className = 'email-status error';
     });
   });
@@ -873,7 +893,7 @@ window.__TG_TOKEN__ = (function () {
       body: JSON.stringify(payload)
     }).then(function (res) {
       if (res.status === 409) {
-        errorEl.textContent = 'This invite has already been used — your response was already recorded.';
+        errorEl.textContent = 'This invite has already been used. Your response was already recorded.';
         throw new Error('already submitted');
       }
       if (res.status === 403) {
@@ -884,10 +904,63 @@ window.__TG_TOKEN__ = (function () {
       return res.json();
     }).then(function () {
       showScreen('screen-done');
+      prepareResultsEmail();
     }).catch(function () {
       errorEl.classList.add('visible');
       btn.disabled = false;
       btn.textContent = 'Submit';
+    });
+  });
+
+  function prepareResultsEmail() {
+    var input = document.getElementById('results-email-input');
+    var copy = document.getElementById('results-email-copy');
+    if (emailCaptured && emailCaptureInput.value) input.value = emailCaptureInput.value;
+    if (hasEmailOnFile) {
+      input.hidden = true;
+      input.required = false;
+      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your summary immediately.';
+    } else {
+      input.hidden = false;
+      input.required = true;
+    }
+  }
+
+  document.getElementById('results-email-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var button = document.getElementById('results-email-button');
+    var input = document.getElementById('results-email-input');
+    var status = document.getElementById('results-email-status');
+    var email = input.hidden ? '' : input.value.trim();
+
+    if (!input.hidden && !looksLikeEmailClientSide(email)) {
+      status.textContent = 'Please enter a valid email address.';
+      status.hidden = false;
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Sending...';
+    status.hidden = true;
+    fetch('/api/research-results-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token, email: email || undefined })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not send your summary');
+        return data;
+      });
+    }).then(function () {
+      status.textContent = 'Sent. Check your inbox.';
+      status.hidden = false;
+      button.hidden = true;
+      input.hidden = true;
+    }).catch(function (error) {
+      status.textContent = error.message;
+      status.hidden = false;
+      button.disabled = false;
+      button.textContent = 'Email my summary';
     });
   });
 

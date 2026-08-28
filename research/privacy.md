@@ -12,13 +12,13 @@ I'm Graham Beale, and I'm the data controller for this research: the person lega
 
 Contact: graham@turbulentground.com (for anything about this research) · graham@beale.co.uk (for anything else)
 
-**Note to self before publishing:** no correspondence address is included here. Confirm with the ICO fees line whether a postal address is required on a privacy notice itself (as opposed to the public register, which is a separate question already flagged), and whether email-only contact is acceptable in the meantime. ICO registration is not yet complete either way — register before the first real invite goes out, not before the mechanics test.
+**Note to self before publishing:** no correspondence address is included here. Confirm with the ICO fees line whether a postal address is required on a privacy notice itself (as opposed to the public register, which is a separate question already flagged), and whether email-only contact is acceptable in the meantime. ICO registration is not yet complete either way. Register before the first real invite goes out, not before the mechanics test.
 
 ## What this is
 
 TurbulentGround is my ongoing, public experiment into AI product teams. This part of it is different: a small, invited research study into how people are actually experiencing the shift AI is bringing to their work.
 
-You've received an invitation because [I know you personally / you were referred by someone I know — delete as appropriate]. This is not a mass survey. It's a small, trusted group.
+You've received an invitation because [I know you personally / you were referred by someone I know; delete as appropriate]. This is not a mass survey. It's a small, trusted group.
 
 ## What I'm asking you to do
 
@@ -32,7 +32,7 @@ You've received an invitation because [I know you personally / you were referred
 
 | What | Why | Lawful basis |
 |---|---|---|
-| Your email address | To send the invite and, if you agree, the 30-day follow-up | Consent |
+| Your email address | To send the invite and, if you ask for them, your personal response summary and the 30-day follow-up | Consent |
 | Your responses to the paired questions | This is the research itself | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
 | Anything you write in open comments | To find real, common patterns in how people are experiencing this | Consent |
@@ -46,10 +46,11 @@ When you start, you'll be asked to agree to each of these separately. You can sa
 
 1. **Taking part.** Answering the survey itself.
 2. **Being contacted again in 30 days.** A single follow-up email. You can opt out of this alone and still take part now.
-3. **Being quoted anonymously.** I may use anonymised, aggregated patterns from open comments in what I publish. No names, no identifying detail.
-4. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
+3. **Receiving your response summary.** After completing the study, you can separately ask me to email a factual record of your answers.
+4. **Being quoted anonymously.** I may use anonymised, aggregated patterns from open comments in what I publish. No names, no identifying detail.
+5. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
 
-Saying no to 3 and 4 does not affect anything else. Your responses still count.
+Saying no to 3, 4 and 5 does not affect anything else. Your responses still count.
 
 ## How your response is linked to you
 
@@ -64,11 +65,11 @@ I'm honest about this because it's relevant to what I'm asking you to trust me w
 Some analysis of open comments, at the pattern level, is done using Anthropic's Claude. This tool sees your written responses but never your name or email address, and I don't paste anything you write into any other AI tool outside this workflow.
 
 Other services involved in running this:
-- **Airtable** — storing your responses
-- **Resend** — sending you emails
-- **Vercel** — hosting the website
-- **Plausible** — anonymous site analytics. No cookies, and it never sees your invitation token
-- **Heart Internet** — domain registration only. Doesn't see your responses
+- **Airtable:** storing your responses
+- **Resend:** sending you emails
+- **Vercel:** hosting the website
+- **Plausible:** anonymous site analytics. No cookies, and it never sees your invitation token
+- **Heart Internet:** domain registration only. Doesn't see your responses
 
 None of these are given your name and your response content together, except where stated above.
 
