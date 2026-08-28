@@ -82,6 +82,7 @@ window.__TG_TOKEN__ = (function () {
   .pair-progress-fill { height: 100%; background: var(--orange); border-radius: 3px; width: 0%; transition: width 0.25s ease; }
 
   .pair-item { padding: 36px 0; border-bottom: 1px solid var(--border); }
+  .pair-item[hidden] { display: none; }
   .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.5; margin-bottom: 22px; }
   .scale-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
   .scale-btn {
@@ -124,6 +125,9 @@ window.__TG_TOKEN__ = (function () {
     justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 50;
   }
   .footer-count { color: var(--ink-mid); font-size: 0.92rem; }
+  .footer-actions { display: flex; align-items: center; gap: 12px; }
+  .footer-actions [hidden] { display: none; }
+  .footer-back { padding: 13px 22px; }
 
   .screen { display: none; }
   .screen.active { display: block; }
@@ -290,16 +294,16 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <p class="intro">For each statement, choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). You can also choose "Prefer not to say".</p>
+    <p class="intro">You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. You can also choose "Prefer not to say".</p>
 
     <div class="pair-progress">
-      <p class="pair-progress-label" id="pair-progress-label">Statement 1 of 24</p>
+      <p class="pair-progress-label" id="pair-progress-label" aria-live="polite">Statement 1 of 24</p>
       <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
     </div>
 
     <div id="pairs-list"></div>
 
-    <fieldset>
+    <fieldset id="open-comment-fieldset" hidden>
       <legend>Anything else?</legend>
       <div class="field">
         <label for="open-comment">Is there anything else you'd like to tell me about how AI is affecting your work? <span class="optional-tag">(optional)</span></label>
@@ -340,8 +344,11 @@ window.__TG_TOKEN__ = (function () {
 </main>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
-  <span class="footer-count" id="footer-count">0 of 12 pairs answered</span>
-  <button class="btn" id="submit-btn">Submit</button>
+  <span class="footer-count" id="footer-count">Statement 1 of 24</span>
+  <div class="footer-actions">
+    <button class="btn btn-ghost footer-back" id="back-btn" type="button" hidden>Back</button>
+    <button class="btn" id="submit-btn" type="button" hidden>Submit</button>
+  </div>
 </div>
 
 <script>
@@ -372,41 +379,41 @@ window.__TG_TOKEN__ = (function () {
   // before trusting it for any tension analysis built on this data.
   var DOMAINS = [
     { key: 'd1',  name: 'Judgement',
-      s1: { text: "I trust my judgement when it conflicts with an AI suggestion.", field: 'contribution' },
-      s2: { text: "I have enough information to recognise when an AI suggestion is wrong.", field: 'conditions' } },
+      s1: { text: "When AI and I disagree, I rely on my own judgement.", field: 'contribution' },
+      s2: { text: "I can recognise when an AI suggestion is wrong.", field: 'conditions' } },
     { key: 'd2',  name: 'Time and workload',
-      s1: { text: "The time AI saves me helps me improve my work, rather than simply do more.", field: 'conditions' },
-      s2: { text: "I protect the time AI frees up instead of filling it with new tasks.", field: 'contribution' } },
+      s1: { text: "When AI saves me time, I can use it to improve my work.", field: 'conditions' },
+      s2: { text: "I keep some of the time AI saves me free from new tasks.", field: 'contribution' } },
     { key: 'd3',  name: 'Working relationships',
-      s1: { text: "I still make time to understand what my colleagues are dealing with, even when AI makes that seem less necessary.", field: 'contribution' },
-      s2: { text: "My colleagues make time to understand what I'm dealing with rather than relying on an AI summary.", field: 'conditions' } },
+      s1: { text: "I use conversations, not AI summaries, to understand colleagues' work.", field: 'contribution' },
+      s2: { text: "My colleagues speak with me instead of relying on AI summaries.", field: 'conditions' } },
     { key: 'd4',  name: 'Skill and craft',
-      s1: { text: "My organisation gives me time to check and improve AI-assisted work.", field: 'conditions' },
-      s2: { text: "I hold AI-assisted work to the same standard as my other work, even when no one would notice.", field: 'contribution' } },
+      s1: { text: "My organisation allows enough time to check AI-assisted work.", field: 'conditions' },
+      s2: { text: "I check AI-assisted work as carefully as work I do without AI.", field: 'contribution' } },
     { key: 'd5',  name: 'Autonomy',
-      s1: { text: "I'm comfortable explaining how I use AI, regardless of who asks.", field: 'contribution' },
-      s2: { text: "No one closely watches how I use AI day to day.", field: 'conditions' } },
+      s1: { text: "I'm comfortable explaining how I use AI at work.", field: 'contribution' },
+      s2: { text: "I can use AI without close day-to-day monitoring.", field: 'conditions' } },
     { key: 'd6',  name: 'Learning',
-      s1: { text: "I have opportunities to build skills AI can't develop for me.", field: 'conditions' },
-      s2: { text: "I keep developing skills AI can't replace.", field: 'contribution' } },
+      s1: { text: "I have opportunities at work to build skills AI cannot replace.", field: 'conditions' },
+      s2: { text: "I actively develop skills AI cannot replace.", field: 'contribution' } },
     { key: 'd7',  name: 'Trust',
       s1: { text: "I trust my colleagues to decide when to rely on AI.", field: 'contribution' },
       s2: { text: "I'm trusted to decide when to rely on AI output.", field: 'conditions' } },
     { key: 'd8',  name: 'Being seen',
-      s1: { text: "I give others full credit for their work, even when AI made it faster or easier.", field: 'contribution' },
-      s2: { text: "I receive credit for the judgement I bring to AI-assisted work.", field: 'conditions' } },
+      s1: { text: "I give colleagues full credit when AI helps them work faster.", field: 'contribution' },
+      s2: { text: "I receive credit for the judgement I add to AI-assisted work.", field: 'conditions' } },
     { key: 'd9',  name: 'Meaning',
-      s1: { text: "As AI takes over routine tasks, I look for the parts of my work that matter.", field: 'contribution' },
-      s2: { text: "As AI takes over routine tasks, my day-to-day work still feels connected to something that matters.", field: 'conditions' } },
+      s1: { text: "As AI changes my tasks, I seek out meaningful work.", field: 'contribution' },
+      s2: { text: "The work I do alongside AI feels meaningful.", field: 'conditions' } },
     { key: 'd10', name: 'Pace',
-      s1: { text: "The pace expected of me remains sustainable, even when AI makes faster work possible.", field: 'conditions' },
-      s2: { text: "I set a pace I can sustain, rather than matching the speed AI makes possible.", field: 'contribution' } },
+      s1: { text: "The pace expected of me when using AI is sustainable.", field: 'conditions' },
+      s2: { text: "I set a sustainable pace when I work with AI.", field: 'contribution' } },
     { key: 'd11', name: 'AI in team decisions',
-      s1: { text: "My organisation has a clear approach to how AI should be used in our work.", field: 'conditions' },
-      s2: { text: "I help shape how my team uses AI instead of only reacting to decisions made for me.", field: 'contribution' } },
+      s1: { text: "My organisation clearly explains how AI should be used.", field: 'conditions' },
+      s2: { text: "I influence how my team uses AI.", field: 'contribution' } },
     { key: 'd12', name: 'Job security',
-      s1: { text: "AI threatens the long-term security of my role.", field: 'conditions' },
-      s2: { text: "I'm building skills or options that would still matter if AI changed my role.", field: 'contribution' } }
+      s1: { text: "I feel secure in my role as AI changes work.", field: 'conditions' },
+      s2: { text: "I am preparing for ways AI could change my role.", field: 'contribution' } }
   ];
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip', conditions: 1-5|'skip' }
@@ -417,6 +424,9 @@ window.__TG_TOKEN__ = (function () {
   var pairResponses = {};
   var TOTAL_STATEMENTS = 24;
   var statementsAnswered = 0;
+  var orderedStatements = [];
+  var currentStatementIndex = 0;
+  var autoAdvanceTimer = null;
 
   // ---- screen switching ----
   function showScreen(id) {
@@ -559,14 +569,16 @@ window.__TG_TOKEN__ = (function () {
 
     var pass1 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s1 }; });
     var pass2 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s2 }; });
-    var ordered = pass1.concat(pass2);
+    orderedStatements = pass1.concat(pass2);
 
-    ordered.forEach(function (item) {
+    orderedStatements.forEach(function (item, index) {
       var domainKey = item.domain.key;
       var field = item.stmt.field; // 'contribution' | 'conditions'
 
       var row = document.createElement('div');
       row.className = 'pair-item';
+      row.hidden = index !== currentStatementIndex;
+      row.setAttribute('data-statement-index', String(index));
 
       var p = document.createElement('p');
       p.textContent = item.stmt.text;
@@ -610,6 +622,27 @@ window.__TG_TOKEN__ = (function () {
 
       list.appendChild(row);
     });
+    showStatement(0);
+  }
+
+  function showStatement(index) {
+    currentStatementIndex = Math.max(0, Math.min(index, TOTAL_STATEMENTS));
+    var rows = document.querySelectorAll('.pair-item');
+    rows.forEach(function (row, rowIndex) { row.hidden = rowIndex !== currentStatementIndex; });
+
+    var atEnd = currentStatementIndex >= TOTAL_STATEMENTS;
+    document.getElementById('pairs-list').hidden = atEnd;
+    document.getElementById('open-comment-fieldset').hidden = !atEnd;
+    document.getElementById('submit-btn').hidden = !atEnd;
+    document.getElementById('back-btn').hidden = currentStatementIndex === 0;
+    updateFooterCount();
+    updateProgress();
+
+    if (!atEnd && rows[currentStatementIndex]) {
+      rows[currentStatementIndex].setAttribute('tabindex', '-1');
+      rows[currentStatementIndex].focus({ preventScroll: true });
+    }
+    window.scrollTo(0, 0);
   }
 
   function setResponse(domainKey, field, value, scaleGridEl, skipBtnEl) {
@@ -630,6 +663,9 @@ window.__TG_TOKEN__ = (function () {
 
     updateFooterCount();
     updateProgress();
+    var nextStatementIndex = currentStatementIndex + 1;
+    window.clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex); }, 220);
   }
 
   function computeCompletion() {
@@ -644,18 +680,24 @@ window.__TG_TOKEN__ = (function () {
   }
 
   function updateFooterCount() {
-    var c = computeCompletion();
-    document.getElementById('footer-count').textContent = c.pairsAnswered + ' of 12 pairs answered';
+    document.getElementById('footer-count').textContent = currentStatementIndex >= TOTAL_STATEMENTS
+      ? 'All 24 statements answered'
+      : ('Statement ' + (currentStatementIndex + 1) + ' of ' + TOTAL_STATEMENTS);
   }
 
   function updateProgress() {
-    var n = Math.min(statementsAnswered, TOTAL_STATEMENTS);
-    var displayN = Math.min(n + 1, TOTAL_STATEMENTS);
+    var n = Math.min(currentStatementIndex, TOTAL_STATEMENTS);
+    var displayN = Math.min(currentStatementIndex + 1, TOTAL_STATEMENTS);
     document.getElementById('pair-progress-label').textContent =
       n >= TOTAL_STATEMENTS ? 'All 24 statements answered' : ('Statement ' + displayN + ' of ' + TOTAL_STATEMENTS);
     document.getElementById('pair-progress-fill').style.width = Math.round((n / TOTAL_STATEMENTS) * 100) + '%';
   }
   updateProgress();
+
+  document.getElementById('back-btn').addEventListener('click', function () {
+    window.clearTimeout(autoAdvanceTimer);
+    showStatement(currentStatementIndex - 1);
+  });
 
   // ---- submit ----
   document.getElementById('submit-btn').addEventListener('click', function () {
