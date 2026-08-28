@@ -101,6 +101,7 @@ window.__TG_TOKEN__ = (function () {
   .scale-skip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); display: inline-block; }
   .scale-skip[aria-pressed="true"] { border-style: solid; border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
   .scale-skip[aria-pressed="true"]::before { background: var(--muted); }
+  .response-alternatives { display: flex; flex-wrap: wrap; gap: 10px; }
   @media (max-width: 480px) {
     .scale-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .scale-btn { font-size: 1.2rem; border-radius: 12px; }
@@ -294,7 +295,7 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <p class="intro">You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. You can also choose "Prefer not to say".</p>
+    <p class="intro">You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. If a statement doesn't fit your work, choose "Not applicable".</p>
 
     <div class="pair-progress">
       <p class="pair-progress-label" id="pair-progress-label" aria-live="polite">Statement 1 of 24</p>
@@ -416,7 +417,7 @@ window.__TG_TOKEN__ = (function () {
       s2: { text: "I am preparing for ways AI could change my role.", field: 'contribution' } }
   ];
 
-  // pairResponses[domainKey] = { contribution: 1-5|'skip', conditions: 1-5|'skip' }
+  // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable' }
   // Keys are only ever added once a statement is actually answered/skipped
   // by the respondent — never pre-populated, per the "omit unshown domains"
   // rule (moot in this build since all twelve always render, but kept
@@ -598,7 +599,7 @@ window.__TG_TOKEN__ = (function () {
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Rate ' + value + ' out of 5');
           btn.addEventListener('click', function () {
-            setResponse(domainKey, field, value, scaleGrid, skipBtn);
+            setResponse(domainKey, field, value, scaleGrid, [skipBtn, naBtn]);
           });
           scaleGrid.appendChild(btn);
         })(v);
@@ -610,15 +611,29 @@ window.__TG_TOKEN__ = (function () {
       labels.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
       row.appendChild(labels);
 
+      var alternatives = document.createElement('div');
+      alternatives.className = 'response-alternatives';
+
+      var naBtn = document.createElement('button');
+      naBtn.type = 'button';
+      naBtn.className = 'scale-skip';
+      naBtn.textContent = 'Not applicable';
+      naBtn.setAttribute('aria-pressed', 'false');
+      naBtn.addEventListener('click', function () {
+        setResponse(domainKey, field, 'not_applicable', scaleGrid, [skipBtn, naBtn]);
+      });
+      alternatives.appendChild(naBtn);
+
       var skipBtn = document.createElement('button');
       skipBtn.type = 'button';
       skipBtn.className = 'scale-skip';
       skipBtn.textContent = 'Prefer not to say';
       skipBtn.setAttribute('aria-pressed', 'false');
       skipBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'skip', scaleGrid, skipBtn);
+        setResponse(domainKey, field, 'skip', scaleGrid, [skipBtn, naBtn]);
       });
-      row.appendChild(skipBtn);
+      alternatives.appendChild(skipBtn);
+      row.appendChild(alternatives);
 
       list.appendChild(row);
     });
@@ -645,7 +660,7 @@ window.__TG_TOKEN__ = (function () {
     window.scrollTo(0, 0);
   }
 
-  function setResponse(domainKey, field, value, scaleGridEl, skipBtnEl) {
+  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls) {
     var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
     if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
     pairResponses[domainKey][field] = value;
@@ -653,9 +668,12 @@ window.__TG_TOKEN__ = (function () {
 
     var scaleButtons = scaleGridEl.querySelectorAll('.scale-btn');
     scaleButtons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
-    skipBtnEl.setAttribute('aria-pressed', 'false');
-    if (value === 'skip') {
-      skipBtnEl.setAttribute('aria-pressed', 'true');
+    alternativeBtnEls.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    if (value === 'skip' || value === 'not_applicable') {
+      var selectedAlternative = alternativeBtnEls.find(function (b) {
+        return value === 'skip' ? b.textContent === 'Prefer not to say' : b.textContent === 'Not applicable';
+      });
+      if (selectedAlternative) selectedAlternative.setAttribute('aria-pressed', 'true');
     } else {
       var pressed = Array.prototype.find.call(scaleButtons, function (b) { return b.textContent === String(value); });
       if (pressed) pressed.setAttribute('aria-pressed', 'true');

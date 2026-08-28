@@ -62,7 +62,7 @@ const IDENTITY_FIELD = {
 const INVITE_STATUS_COMPLETED = "Completed";
 
 const DOMAIN_KEYS = ["d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12"];
-const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip"]);
+const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip", "not_applicable"]);
 
 function isPlainObject(v) {
   return typeof v === "object" && v !== null && !Array.isArray(v);
@@ -90,7 +90,7 @@ function validatePairResponses(pairResponses) {
     for (const stmt of ["contribution", "conditions"]) {
       if (!(stmt in pair)) continue; // a statement key may be omitted, not every domain need have both
       if (!VALID_VALUES.has(pair[stmt])) {
-        return `domain ${key}.${stmt} must be 1-5 or "skip", got ${JSON.stringify(pair[stmt])}`;
+        return `domain ${key}.${stmt} must be 1-5, "skip", or "not_applicable", got ${JSON.stringify(pair[stmt])}`;
       }
     }
   }
