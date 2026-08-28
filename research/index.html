@@ -74,6 +74,32 @@ window.__TG_TOKEN__ = (function () {
     font-size: 1rem;
   }
   textarea { resize: vertical; min-height: 100px; }
+  #open-comment {
+    min-height: 190px; padding: 18px; background: var(--surface);
+    border-color: rgba(232,220,200,0.28); font-size: 1.1rem; line-height: 1.6;
+  }
+  #open-comment:hover { border-color: rgba(232,220,200,0.42); }
+  #open-comment:focus { border-color: var(--orange-lt); }
+
+  .guidance-btn, .statement-help-toggle {
+    border: 0; background: transparent; color: var(--orange-lt); font: inherit;
+    font-size: 0.9rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+  .guidance-btn { margin: -8px 0 26px; }
+  .guidance-btn[hidden] { display: none; }
+  .survey-guidance {
+    width: min(520px, calc(100% - 32px)); padding: 28px; border: 1px solid rgba(232,220,200,0.2);
+    border-radius: 12px; background: var(--bg-warm); color: var(--ink-mid);
+  }
+  .survey-guidance::backdrop { background: rgba(14,11,8,0.78); backdrop-filter: blur(4px); }
+  .survey-guidance h2 { font-family: 'Cormorant Garamond', serif; color: var(--ink); font-size: 1.8rem; font-weight: 400; margin-bottom: 12px; }
+  .survey-guidance p { margin-bottom: 20px; }
+  .statement-help-toggle { display: block; margin: -10px 0 20px; }
+  .statement-help {
+    margin: -8px 0 22px; padding: 14px 16px; border-left: 2px solid var(--orange);
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 0.95rem; line-height: 1.55;
+  }
+  .statement-help[hidden] { display: none; }
 
   /* ── Pair statements: the primary interaction on the whole page ──── */
   .pair-progress { margin-bottom: 40px; }
@@ -314,7 +340,13 @@ window.__TG_TOKEN__ = (function () {
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <p class="intro">You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. If a statement doesn't fit your work, choose "Not applicable".</p>
+    <button class="guidance-btn" id="guidance-btn" type="button">How this works</button>
+
+    <dialog class="survey-guidance" id="survey-guidance" aria-labelledby="survey-guidance-title">
+      <h2 id="survey-guidance-title">How this works</h2>
+      <p>You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. If a statement doesn't fit your work, choose "Not applicable".</p>
+      <form method="dialog"><button class="btn" type="submit">Got it</button></form>
+    </dialog>
 
     <div class="pair-progress">
       <p class="pair-progress-label" id="pair-progress-label" aria-live="polite">Statement 1 of 24</p>
@@ -399,41 +431,41 @@ window.__TG_TOKEN__ = (function () {
   // before trusting it for any tension analysis built on this data.
   var DOMAINS = [
     { key: 'd1',  name: 'Judgement',
-      s1: { text: "When AI and I disagree, I rely on my own judgement.", field: 'contribution' },
-      s2: { text: "I can recognise when an AI suggestion is wrong.", field: 'conditions' } },
+      s1: { text: "When AI and I disagree, I rely on my own judgement.", help: "This asks whether you defer to AI or rely on your own judgement when your conclusions differ.", field: 'contribution' },
+      s2: { text: "I can recognise when an AI suggestion is wrong.", help: "This asks whether you feel able to spot inaccurate or unsuitable AI output.", field: 'conditions' } },
     { key: 'd2',  name: 'Time and workload',
-      s1: { text: "When AI saves me time, I can use it to improve my work.", field: 'conditions' },
-      s2: { text: "I keep some of the time AI saves me free from new tasks.", field: 'contribution' } },
+      s1: { text: "When AI saves me time, I can use it to improve my work.", help: "This asks whether saved time can go into quality, rather than only increasing output.", field: 'conditions' },
+      s2: { text: "I keep some of the time AI saves me free from new tasks.", help: "This asks whether you personally protect any saved time from immediately becoming more work.", field: 'contribution' } },
     { key: 'd3',  name: 'Working relationships',
-      s1: { text: "I use conversations, not AI summaries, to understand colleagues' work.", field: 'contribution' },
-      s2: { text: "My colleagues speak with me instead of relying on AI summaries.", field: 'conditions' } },
+      s1: { text: "I talk to colleagues directly instead of relying on AI summaries.", help: "This asks whether you speak with people themselves to understand their work.", field: 'contribution' },
+      s2: { text: "My colleagues speak with me instead of relying on AI summaries.", help: "This asks whether colleagues speak with you directly to understand your work.", field: 'conditions' } },
     { key: 'd4',  name: 'Skill and craft',
-      s1: { text: "My organisation allows enough time to check AI-assisted work.", field: 'conditions' },
-      s2: { text: "I check AI-assisted work as carefully as work I do without AI.", field: 'contribution' } },
+      s1: { text: "My organisation allows enough time to check AI-assisted work.", help: "This asks whether deadlines and expectations leave time to review and improve AI output.", field: 'conditions' },
+      s2: { text: "I check AI-assisted work as carefully as work I do without AI.", help: "This asks whether you apply the same quality checks whether or not AI was involved.", field: 'contribution' } },
     { key: 'd5',  name: 'Autonomy',
-      s1: { text: "I'm comfortable explaining how I use AI at work.", field: 'contribution' },
-      s2: { text: "I can use AI without close day-to-day monitoring.", field: 'conditions' } },
+      s1: { text: "I'm comfortable explaining how I use AI at work.", help: "This asks whether you can openly account for when and how you use AI.", field: 'contribution' },
+      s2: { text: "I can use AI without close day-to-day monitoring.", help: "This asks how much freedom you have over your routine use of AI.", field: 'conditions' } },
     { key: 'd6',  name: 'Learning',
-      s1: { text: "I have opportunities at work to build skills AI cannot replace.", field: 'conditions' },
-      s2: { text: "I actively develop skills AI cannot replace.", field: 'contribution' } },
+      s1: { text: "I have opportunities at work to build skills AI cannot replace.", help: "This asks whether your work gives you opportunities to develop distinctly human capability.", field: 'conditions' },
+      s2: { text: "I actively develop skills AI cannot replace.", help: "This asks whether you personally invest in capabilities that remain useful alongside AI.", field: 'contribution' } },
     { key: 'd7',  name: 'Trust',
-      s1: { text: "I trust my colleagues to decide when to rely on AI.", field: 'contribution' },
-      s2: { text: "I'm trusted to decide when to rely on AI output.", field: 'conditions' } },
+      s1: { text: "I trust my colleagues to decide when to rely on AI.", help: "This asks whether you give colleagues discretion over their use of AI.", field: 'contribution' },
+      s2: { text: "I'm trusted to decide when to rely on AI output.", help: "This asks whether others give you discretion over your use of AI.", field: 'conditions' } },
     { key: 'd8',  name: 'Being seen',
-      s1: { text: "I give colleagues full credit when AI helps them work faster.", field: 'contribution' },
-      s2: { text: "I receive credit for the judgement I add to AI-assisted work.", field: 'conditions' } },
+      s1: { text: "I give colleagues full credit when AI helps them work faster.", help: "This asks whether AI involvement changes how you recognise another person's contribution.", field: 'contribution' },
+      s2: { text: "I receive credit for the judgement I add to AI-assisted work.", help: "This asks whether others recognise the human judgement you add when AI is involved.", field: 'conditions' } },
     { key: 'd9',  name: 'Meaning',
-      s1: { text: "As AI changes my tasks, I seek out meaningful work.", field: 'contribution' },
-      s2: { text: "The work I do alongside AI feels meaningful.", field: 'conditions' } },
+      s1: { text: "As AI changes my tasks, I seek out meaningful work.", help: "This asks whether you actively look for purpose as the content of your work changes.", field: 'contribution' },
+      s2: { text: "The work I do alongside AI feels meaningful.", help: "This asks whether your current work with AI feels connected to something that matters.", field: 'conditions' } },
     { key: 'd10', name: 'Pace',
-      s1: { text: "The pace expected of me when using AI is sustainable.", field: 'conditions' },
-      s2: { text: "I set a sustainable pace when I work with AI.", field: 'contribution' } },
+      s1: { text: "The pace expected of me when using AI is sustainable.", help: "This asks whether external expectations remain manageable when AI makes faster work possible.", field: 'conditions' },
+      s2: { text: "I set a sustainable pace when I work with AI.", help: "This asks whether you personally maintain a pace you could keep up over time.", field: 'contribution' } },
     { key: 'd11', name: 'AI in team decisions',
-      s1: { text: "My organisation clearly explains how AI should be used.", field: 'conditions' },
-      s2: { text: "I influence how my team uses AI.", field: 'contribution' } },
+      s1: { text: "My organisation clearly explains how AI should be used.", help: "This asks whether the organisation provides understandable guidance about appropriate AI use.", field: 'conditions' },
+      s2: { text: "I influence how my team uses AI.", help: "This asks whether you have a voice in your team's shared AI practices.", field: 'contribution' } },
     { key: 'd12', name: 'Job security',
-      s1: { text: "I feel secure in my role as AI changes work.", field: 'conditions' },
-      s2: { text: "I am preparing for ways AI could change my role.", field: 'contribution' } }
+      s1: { text: "I feel secure in my role as AI changes work.", help: "This asks about your sense of longer-term role security as AI changes working practices.", field: 'conditions' },
+      s2: { text: "I am preparing for ways AI could change my role.", help: "This asks whether you are taking steps to adapt to possible changes in your role.", field: 'contribution' } }
   ];
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable' }
@@ -639,6 +671,29 @@ window.__TG_TOKEN__ = (function () {
       p.textContent = item.stmt.text;
       row.appendChild(p);
 
+      var helpId = 'statement-help-' + index;
+      var helpToggle = document.createElement('button');
+      helpToggle.type = 'button';
+      helpToggle.className = 'statement-help-toggle';
+      helpToggle.textContent = 'What do you mean?';
+      helpToggle.setAttribute('aria-expanded', 'false');
+      helpToggle.setAttribute('aria-controls', helpId);
+      row.appendChild(helpToggle);
+
+      var help = document.createElement('p');
+      help.id = helpId;
+      help.className = 'statement-help';
+      help.textContent = item.stmt.help;
+      help.hidden = true;
+      row.appendChild(help);
+
+      helpToggle.addEventListener('click', function () {
+        var opening = help.hidden;
+        help.hidden = !opening;
+        helpToggle.setAttribute('aria-expanded', String(opening));
+        helpToggle.textContent = opening ? 'Hide explanation' : 'What do you mean?';
+      });
+
       var scaleGrid = document.createElement('div');
       scaleGrid.className = 'scale-grid';
       scaleGrid.setAttribute('role', 'group');
@@ -704,6 +759,7 @@ window.__TG_TOKEN__ = (function () {
     document.getElementById('open-comment-fieldset').hidden = !atEnd;
     document.getElementById('submit-btn').hidden = !atEnd;
     document.getElementById('back-btn').hidden = currentStatementIndex === 0;
+    document.getElementById('guidance-btn').hidden = atEnd;
     updateFooterCount();
     updateProgress();
 
@@ -765,6 +821,11 @@ window.__TG_TOKEN__ = (function () {
     document.getElementById('pair-progress-fill').style.width = Math.round((n / TOTAL_STATEMENTS) * 100) + '%';
   }
   updateProgress();
+
+  var surveyGuidance = document.getElementById('survey-guidance');
+  document.getElementById('guidance-btn').addEventListener('click', function () {
+    surveyGuidance.showModal();
+  });
 
   document.getElementById('back-btn').addEventListener('click', function () {
     window.clearTimeout(autoAdvanceTimer);
