@@ -33,14 +33,24 @@ try {
     }
     if (String(url).includes("tblL9mf8VfAmbhuG7?") && String(url).includes("filterByFormula")) {
       return { ok: true, json: async () => ({ records: [{ id: "recResponse", fields: {
-        fldvxb2mrIYVKLGVM: JSON.stringify({ d1: { contribution: 4, conditions: 3 } }),
+        fldvxb2mrIYVKLGVM: JSON.stringify({
+          d1: { contribution: 4, conditions: 2 },
+          d2: { contribution: 2, conditions: 5 },
+          d3: { contribution: 5, conditions: 2 },
+          d4: { contribution: 5, conditions: 3 },
+        }),
       } }] }) };
     }
     if (String(url).includes("tblL9mf8VfAmbhuG7?")) {
       return { ok: true, json: async () => ({ records: [1, 2, 3, 4, 5].slice(0, cohortSize).map((value) => ({
         id: `recCohort${value}`,
         fields: {
-          fldvxb2mrIYVKLGVM: JSON.stringify({ d1: { contribution: value, conditions: 3 } }),
+          fldvxb2mrIYVKLGVM: JSON.stringify({
+            d1: { contribution: 3, conditions: 3 },
+            d2: { contribution: 3, conditions: 3 },
+            d3: { contribution: 3, conditions: 3 },
+            d4: { contribution: 3, conditions: 3 },
+          }),
           fldc1EMbDAHAO99Av: true,
         },
       })) }) };
@@ -70,6 +80,10 @@ try {
   check("does not reveal the response count", !/eligible completed responses|\(n=\d+\)/i.test(sendBody.html));
   check("shows lens-level benchmark cards", /Your contribution/.test(sendBody.html) && /Conditions around you/.test(sendBody.html));
   check("shows a signed benchmark difference", /\+1\.0 above the benchmark/.test(sendBody.html));
+  check("shows concise benchmark highlights", /Benchmark highlights/.test(sendBody.html));
+  check("shows above and below contribution highlights", /Skill and craft[\s\S]*\+2\.0[\s\S]*Time and workload[\s\S]*-1\.0/.test(sendBody.html));
+  check("shows above and below conditions highlights", /Conditions around you[\s\S]*Time and workload[\s\S]*\+2\.0[\s\S]*Judgement[\s\S]*-1\.0/.test(sendBody.html));
+  check("qualifies the organisation comparison", /not an assessment of your whole organisation/i.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
   check("includes a study-email unsubscribe route", /Unsubscribe%20from%20study%20emails/.test(sendBody.html));
 
@@ -85,6 +99,7 @@ try {
   const secondSendBody = JSON.parse(sends.at(-1).options.body);
   check("withholds the benchmark below five eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
   check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 4|4 eligible/i.test(secondSendBody.html));
+  check("withholds highlights when the benchmark is unavailable", !/Benchmark highlights/.test(secondSendBody.html));
   console.log("\nALL CHECKS PASSED");
 } finally {
   global.fetch = oldFetch;

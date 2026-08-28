@@ -133,6 +133,35 @@ function differenceLabel(difference) {
   return `${difference > 0 ? "+" : ""}${difference.toFixed(1)} ${difference > 0 ? "above" : "below"} the benchmark`;
 }
 
+function lensHighlights(pairs, benchmark, field) {
+  if (!benchmark.domains) return null;
+  const differences = DOMAINS.map(([key, label]) => {
+    const response = pairs?.[key]?.[field];
+    const benchmarkEntry = benchmark.domains[key]?.[field];
+    if (typeof response !== "number" || !benchmarkEntry) return null;
+    return { label, difference: response - benchmarkEntry.mean };
+  }).filter(Boolean);
+  return {
+    above: differences.filter(item => item.difference > 0.05)
+      .sort((a, b) => b.difference - a.difference).slice(0, 2),
+    below: differences.filter(item => item.difference < -0.05)
+      .sort((a, b) => a.difference - b.difference).slice(0, 2),
+  };
+}
+
+function highlightItems(items, emptyLabel) {
+  if (!items.length) return `<span style="color:#9e8e7c;">${escapeHtml(emptyLabel)}</span>`;
+  return items.map(item => `${escapeHtml(item.label)} <strong style="color:#ef7b45;white-space:nowrap;">${item.difference > 0 ? "+" : ""}${item.difference.toFixed(1)}</strong>`).join("<br>");
+}
+
+function highlightsCard(label, highlights) {
+  return `<td valign="top" style="width:50%;padding:16px;background:#1c1916;border:1px solid #3a332d;">
+    <p style="margin:0 0 12px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:16px;font-weight:700;">${escapeHtml(label)}</p>
+    <p style="margin:0 0 12px;color:#d0bea2;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;"><strong style="color:#e8dcc8;">Above benchmark</strong><br>${highlightItems(highlights.above, "No themes above the benchmark")}</p>
+    <p style="margin:0;color:#d0bea2;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;"><strong style="color:#e8dcc8;">Below benchmark</strong><br>${highlightItems(highlights.below, "No themes below the benchmark")}</p>
+  </td>`;
+}
+
 function scalePosition(value) {
   return Math.max(0, Math.min(100, ((value - 1) / 4) * 100));
 }
@@ -185,6 +214,14 @@ function buildEmailHtml(name, pairs, benchmark) {
     <tr>${lensCard("Your contribution", contributionSummary)}${lensCard("Conditions around you", conditionsSummary)}</tr>
   </table>
   <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#9e8e7c;">The orange bar is your response. The light marker is the current study benchmark.</p>` : "";
+  const contributionHighlights = lensHighlights(pairs, benchmark, "contribution");
+  const conditionsHighlights = lensHighlights(pairs, benchmark, "conditions");
+  const highlights = benchmark.domains ? `<h2 style="margin:28px 0 8px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">Benchmark highlights</h2>
+  <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">These are the largest differences in your answers. They are not strengths or weaknesses. Conditions around you reflects your experience of work, not an assessment of your whole organisation.</p>
+  <table role="presentation" style="width:100%;border-collapse:separate;border-spacing:8px;margin:12px -8px 8px;"><tr>
+    ${highlightsCard("Your contribution", contributionHighlights)}
+    ${highlightsCard("Conditions around you", conditionsHighlights)}
+  </tr></table>` : "";
   return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
@@ -192,6 +229,7 @@ function buildEmailHtml(name, pairs, benchmark) {
       <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
       <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
       ${summaryCards}
+      ${highlights}
       <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:24px;">
         <thead><tr>
           <th align="left" style="padding:10px 8px;border-bottom:2px solid #c9470e;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;">Theme</th>
