@@ -595,6 +595,7 @@ window.__TG_TOKEN__ = (function () {
     }).then(function () {
       emailCaptured = true;
       email30Checkbox.checked = true;
+      updateConsentAcknowledgement();
       emailCaptureStatus.textContent = 'Saved.';
       emailCaptureStatus.className = 'email-status saved';
     }).catch(function () {
