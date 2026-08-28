@@ -88,8 +88,9 @@ window.__TG_TOKEN__ = (function () {
   .guidance-btn { margin: -8px 0 26px; }
   .guidance-btn[hidden] { display: none; }
   .survey-guidance {
+    position: fixed; inset: 0; margin: auto; height: fit-content; max-height: calc(100dvh - 32px);
     width: min(520px, calc(100% - 32px)); padding: 28px; border: 1px solid rgba(232,220,200,0.2);
-    border-radius: 12px; background: var(--bg-warm); color: var(--ink-mid);
+    border-radius: 12px; background: var(--bg-warm); color: var(--ink-mid); overflow-y: auto;
   }
   .survey-guidance::backdrop { background: rgba(14,11,8,0.78); backdrop-filter: blur(4px); }
   .survey-guidance h2 { font-family: 'Cormorant Garamond', serif; color: var(--ink); font-size: 1.8rem; font-weight: 400; margin-bottom: 12px; }
