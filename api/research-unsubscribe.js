@@ -1,10 +1,8 @@
 // GET /api/research-unsubscribe?t=TOKEN
-//   Returns a confirmation page that immediately sends the POST from a real
-//   browser. Keeping the mutation out of GET prevents email link scanners
-//   from unsubscribing participants merely by inspecting a message.
+//   Returns a confirmation page. Opening the link never changes consent.
 // POST /api/research-unsubscribe
-// body: { token }
-//   Sets study-email consent to false on the participant's response.
+// body: { token, feedback? }
+//   Sets study-email consent to false and stores optional feedback.
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
@@ -12,7 +10,11 @@ const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
 const FIELD = {
   token: "flduL4PmBEfH9rLpz",
   consentStudyEmails: "flduWhkQo6u5O3nIp",
+  unsubscribeFeedback: "fldRWiyUJF7rMf3Zk",
+  unsubscribedAt: "fldMhpdR9iQHKiGou",
 };
+
+const MAX_FEEDBACK_LENGTH = 1000;
 
 function tokenFrom(req) {
   if (req.method === "GET") {
@@ -22,6 +24,13 @@ function tokenFrom(req) {
   try { data = typeof req.body === "string" ? JSON.parse(req.body) : req.body; }
   catch { return ""; }
   return typeof data?.token === "string" ? data.token.trim() : "";
+}
+
+function feedbackFrom(req) {
+  let data;
+  try { data = typeof req.body === "string" ? JSON.parse(req.body) : req.body; }
+  catch { return ""; }
+  return typeof data?.feedback === "string" ? data.feedback.trim() : "";
 }
 
 function page(token) {
@@ -34,45 +43,64 @@ function page(token) {
   <meta name="robots" content="noindex,nofollow">
   <title>Study email preferences | Turbulent Ground</title>
   <style>
-    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#131110;color:#e8dcc8;font-family:Arial,sans-serif;display:grid;place-items:center;padding:24px}.card{width:min(620px,100%);padding:42px;background:#1c1916;border:1px solid #3a332d}h1{margin:0 0 18px;font:400 clamp(2rem,6vw,3.5rem)/1.05 Georgia,serif}p{color:#d0bea2;font-size:1.05rem;line-height:1.65}.brand{margin-bottom:46px;color:#d0bea2;font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.status{color:#ef7b45;font-weight:700}.button{display:none;margin-top:22px;border:0;border-radius:999px;background:#c9470e;color:#fff;padding:14px 24px;font:700 1rem Arial,sans-serif;cursor:pointer}
+    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#131110;color:#e8dcc8;font-family:Arial,sans-serif;display:grid;place-items:center;padding:24px}.card{width:min(650px,100%);padding:clamp(28px,6vw,48px);background:#1c1916;border:1px solid #3a332d}h1{margin:0 0 18px;font:400 clamp(2rem,6vw,3.5rem)/1.05 Georgia,serif}p{color:#d0bea2;font-size:1.05rem;line-height:1.65}.brand{margin-bottom:42px;color:#d0bea2;font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.field{margin-top:30px}label{display:block;margin-bottom:10px;color:#e8dcc8;font-weight:700;font-size:1.05rem}textarea{display:block;width:100%;min-height:130px;resize:vertical;border:1px solid #62574c;border-radius:8px;background:#131110;color:#fff;padding:15px;font:1rem/1.5 Arial,sans-serif}textarea:focus{outline:3px solid #ef7b45;outline-offset:2px}.hint{margin:8px 0 0;color:#a99780;font-size:.9rem}.actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:28px}.button{border:0;border-radius:999px;background:#c9470e;color:#fff;padding:15px 25px;font:700 1rem Arial,sans-serif;cursor:pointer}.button:focus-visible,.keep:focus-visible{outline:3px solid #efaa78;outline-offset:4px}.button:disabled{cursor:wait;opacity:.65}.keep{color:#cbbba3;text-underline-offset:4px}.status{color:#ef7b45;font-weight:700}.error{margin-top:18px;color:#ff9d70;font-weight:700}.hidden{display:none}
   </style>
 </head>
 <body>
   <main class="card">
     <div class="brand">Turbulent Ground</div>
-    <h1 id="title">Updating your preferences</h1>
-    <p class="status" id="status" role="status" aria-live="polite">Unsubscribing you from study emails…</p>
-    <p id="detail">Your research response will remain part of the study.</p>
-    <button class="button" id="retry" type="button">Try again</button>
+    <section id="choice">
+      <h1>Unsubscribe from study emails?</h1>
+      <p>You will stop receiving findings, follow-up questions and opportunities to contribute to the research community.</p>
+      <p>Your existing research response will remain part of the study.</p>
+      <form id="unsubscribe-form">
+        <div class="field">
+          <label for="feedback">Would you like to tell me why? <span class="hint">(optional)</span></label>
+          <textarea id="feedback" name="feedback" maxlength="1000" placeholder="Your feedback will help me improve the study emails."></textarea>
+          <p class="hint">Please do not include sensitive information or name anyone else.</p>
+        </div>
+        <div class="actions">
+          <button class="button" id="confirm" type="submit">Confirm unsubscribe</button>
+          <a class="keep" href="/research/">Keep receiving study emails</a>
+        </div>
+        <p class="error hidden" id="error" role="alert">I could not update your preference just now. Please try again, or email privacy@turbulentground.com.</p>
+      </form>
+    </section>
+    <section class="hidden" id="success" aria-live="polite">
+      <h1 tabindex="-1">You’re unsubscribed.</h1>
+      <p class="status">You will not receive further study emails.</p>
+      <p>Your existing research response remains part of the study. You do not need to do anything else.</p>
+    </section>
   </main>
   <script>
     (function () {
       var token = ${safeToken};
-      var title = document.getElementById('title');
-      var status = document.getElementById('status');
-      var detail = document.getElementById('detail');
-      var retry = document.getElementById('retry');
-      function unsubscribe() {
-        retry.style.display = 'none';
-        status.textContent = 'Unsubscribing you from study emails…';
+      var form = document.getElementById('unsubscribe-form');
+      var choice = document.getElementById('choice');
+      var success = document.getElementById('success');
+      var feedback = document.getElementById('feedback');
+      var confirm = document.getElementById('confirm');
+      var error = document.getElementById('error');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        confirm.disabled = true;
+        confirm.textContent = 'Updating preference…';
+        error.classList.add('hidden');
         fetch('/api/research-unsubscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token })
+          body: JSON.stringify({ token: token, feedback: feedback.value })
         }).then(function (response) {
           if (!response.ok) throw new Error('request failed');
-          title.textContent = 'You’re unsubscribed.';
-          status.textContent = 'You will not receive further study community emails.';
-          detail.textContent = 'Your existing research response remains part of the study. You do not need to do anything else.';
+          choice.classList.add('hidden');
+          success.classList.remove('hidden');
+          success.querySelector('h1').focus();
         }).catch(function () {
-          title.textContent = 'That didn’t work.';
-          status.textContent = 'I couldn’t update your preference just now.';
-          detail.textContent = 'Please try again, or email privacy@turbulentground.com.';
-          retry.style.display = 'inline-block';
+          confirm.disabled = false;
+          confirm.textContent = 'Confirm unsubscribe';
+          error.classList.remove('hidden');
         });
-      }
-      retry.addEventListener('click', unsubscribe);
-      unsubscribe();
+      });
     }());
   </script>
 </body>
@@ -100,6 +128,10 @@ export default async function handler(req, res) {
   }
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   if (!token) return res.status(400).json({ error: "Invalid unsubscribe link" });
+  const feedback = feedbackFrom(req);
+  if (feedback.length > MAX_FEEDBACK_LENGTH) {
+    return res.status(400).json({ error: "Feedback is too long" });
+  }
 
   const airtableToken = process.env.AIRTABLE_RESEARCH_TOKEN;
   if (!airtableToken) {
@@ -118,7 +150,13 @@ export default async function handler(req, res) {
             Authorization: `Bearer ${airtableToken}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ fields: { [FIELD.consentStudyEmails]: false } }),
+          body: JSON.stringify({
+            fields: {
+              [FIELD.consentStudyEmails]: false,
+              [FIELD.unsubscribedAt]: new Date().toISOString(),
+              ...(feedback ? { [FIELD.unsubscribeFeedback]: feedback } : {}),
+            },
+          }),
         }
       );
       if (!patch.ok) throw new Error(`Airtable update failed: ${await patch.text()}`);

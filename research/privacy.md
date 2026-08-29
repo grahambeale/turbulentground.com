@@ -32,6 +32,7 @@ I may have your name and email because I know you through my professional networ
 |---|---|---|
 | Your name, email address, unique invitation token, invitation date and participation status | To select and invite participants, control access, prevent duplicate responses and administer the study | Legitimate interests |
 | Your email address and email preferences | To send your requested comparison and, if you choose, occasional follow-up questions and findings | Consent |
+| Optional feedback you give when unsubscribing from study emails | To understand why people leave and improve study communications | Legitimate interests |
 | Your answers to the 24 statements | To conduct the research, create your comparison and calculate anonymised, aggregated study benchmarks and findings | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
 | Anything you write in the optional comment | To identify common themes and experiences that the fixed statements may not capture | Consent |
@@ -97,7 +98,7 @@ If you unsubscribe or ask not to be invited again, I may retain the minimum info
 
 **Your right to object:** where I rely on legitimate interests, you can object to that use of your personal information. You can always object to direct marketing. Email [graham@turbulentground.com](mailto:graham@turbulentground.com).
 
-To unsubscribe from study emails but keep your existing response in the research, use the unsubscribe link in any study email. It will update your preference immediately. You can also contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.
+To unsubscribe from study emails but keep your existing response in the research, use the unsubscribe link in any study email. The link opens a confirmation page where you can optionally explain why you are leaving. Your preference changes only when you select “Confirm unsubscribe”. This feedback is optional and is used only to improve study communications. You can also contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.
 
 ## Questions or concerns
 
@@ -105,4 +106,4 @@ Email me at [graham@turbulentground.com](mailto:graham@turbulentground.com). If 
 
 ---
 
-**Last updated:** 28 August 2026
+**Last updated:** 29 August 2026

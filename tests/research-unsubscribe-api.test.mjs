@@ -36,17 +36,24 @@ try {
 
   const pageRes = mockRes();
   await handler({ method: "GET", query: { t: "valid-token" } }, pageRes);
-  check("serves an immediate unsubscribe confirmation page", pageRes._status === 200 && /Unsubscribing you from study emails/.test(pageRes._body));
+  check("serves a deliberate unsubscribe confirmation page", pageRes._status === 200 && /Unsubscribe from study emails\?/.test(pageRes._body));
   check("does not mutate consent during the GET", calls.length === 0);
   check("prevents the page being cached", pageRes._headers["Cache-Control"] === "no-store");
-  check("the browser confirms the opt-out by POST", /method: 'POST'/.test(pageRes._body));
+  check("asks for optional feedback", /Would you like to tell me why\?/.test(pageRes._body));
+  check("requires the confirmation form before POST", /form\.addEventListener\('submit'/.test(pageRes._body) && !/unsubscribe\(\);/.test(pageRes._body));
 
   const postRes = mockRes();
-  await handler({ method: "POST", body: { token: "valid-token" } }, postRes);
+  await handler({ method: "POST", body: { token: "valid-token", feedback: "Too many emails for me." } }, postRes);
   check("returns success after opting out", postRes._status === 200 && postRes._body?.success === true);
   const patch = calls.find(call => call.url.includes("tblL9mf8VfAmbhuG7/recResponse"));
   const patchBody = JSON.parse(patch.options.body);
   check("sets study-email consent to false", patchBody.fields.flduWhkQo6u5O3nIp === false);
+  check("stores optional feedback separately", patchBody.fields.fldRWiyUJF7rMf3Zk === "Too many emails for me.");
+  check("records when the participant unsubscribed", !Number.isNaN(Date.parse(patchBody.fields.fldMhpdR9iQHKiGou)));
+
+  const tooLongRes = mockRes();
+  await handler({ method: "POST", body: { token: "valid-token", feedback: "x".repeat(1001) } }, tooLongRes);
+  check("rejects feedback beyond the stated limit", tooLongRes._status === 400);
 
   const invalidRes = mockRes();
   await handler({ method: "POST", body: { token: "" } }, invalidRes);
