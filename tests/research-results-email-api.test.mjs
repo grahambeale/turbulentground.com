@@ -85,7 +85,8 @@ try {
   check("shows above and below conditions highlights", /Conditions around you[\s\S]*Time and workload[\s\S]*\+2\.0[\s\S]*Judgement[\s\S]*-1\.0/.test(sendBody.html));
   check("qualifies the organisation comparison", /not an assessment of your whole organisation/i.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
-  check("includes a study-email unsubscribe route", /Unsubscribe%20from%20study%20emails/.test(sendBody.html));
+  check("keeps the requested comparison separate from study emails", /requested comparison is separate from optional study emails/i.test(sendBody.html));
+  check("includes a one-click study-email unsubscribe route", /https:\/\/www\.turbulentground\.com\/api\/research-unsubscribe\?t=valid-token/.test(sendBody.html));
 
   const audit = calls.find(call => call.url.includes("tblwpricYYzx4rmiR/recIdentity"));
   const auditBody = JSON.parse(audit.options.body);

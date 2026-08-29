@@ -191,7 +191,7 @@ function lensCard(label, summary) {
   </td>`;
 }
 
-function buildEmailHtml(name, pairs, benchmark) {
+function buildEmailHtml(name, pairs, benchmark, token) {
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
     const domainBenchmark = benchmark.domains && benchmark.domains[key];
@@ -239,7 +239,7 @@ function buildEmailHtml(name, pairs, benchmark) {
       </table>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;margin-top:24px;">The response scale runs from 1, strongly disagree, to 5, strongly agree. These results are descriptive and should not be treated as a psychological assessment.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
-      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">If you agreed to future emails about this study, you can <a href="mailto:graham@turbulentground.com?subject=Unsubscribe%20from%20study%20emails" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </div></body></html>`;
 }
 
@@ -304,7 +304,7 @@ export default async function handler(req, res) {
       from: resendFrom,
       to: [email],
       subject: "Your AI shift response summary",
-      html: buildEmailHtml(name, pairs, benchmark),
+      html: buildEmailHtml(name, pairs, benchmark, token),
     }),
   });
   if (!emailResponse.ok) {

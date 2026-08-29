@@ -49,7 +49,7 @@ Please do **not** include information about your physical or mental health, alle
 Taking part and allowing your responses to contribute to anonymised, aggregated findings are one required agreement because creating those findings is the purpose of the study. The other choices are separate and optional.
 
 1. **Taking part.** Answering the survey and allowing your responses to be analysed and contribute to anonymised, aggregated research findings and benchmarks.
-2. **Receiving occasional study emails.** These may include follow-up questions and findings from this study. I will email no more than once every 30 days. You can unsubscribe at any time and still take part now.
+2. **Receiving occasional study emails.** These may include findings, follow-up questions and opportunities to contribute to the research community. I will email no more than once every 30 days. You can unsubscribe at any time and still take part now.
 3. **Receiving your comparison.** After completing the study, you can separately ask me to email your answers and, when enough eligible responses exist, compare them with the current study benchmark.
 4. **Being quoted by name.** I will never do this without asking you separately, after the fact, about that specific quote.
 
@@ -97,7 +97,7 @@ If you unsubscribe or ask not to be invited again, I may retain the minimum info
 
 **Your right to object:** where I rely on legitimate interests, you can object to that use of your personal information. You can always object to direct marketing. Email [graham@turbulentground.com](mailto:graham@turbulentground.com).
 
-To unsubscribe from study emails but keep your existing response in the research, use the unsubscribe option in an email or contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.
+To unsubscribe from study emails but keep your existing response in the research, use the unsubscribe link in any study email. It will update your preference immediately. You can also contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.
 
 ## Questions or concerns
 
