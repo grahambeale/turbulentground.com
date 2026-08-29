@@ -25,7 +25,7 @@ window.__TG_TOKEN__ = (function () {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,close,code,domain,group,groups,manage_accounts,more_horiz,palette,person,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,circle,close,code,domain,flare,group,groups,manage_accounts,more_horiz,palette,person,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
 <style>
   /* ── Typography scale ──────────────────────────────────────────────
      Bumped up from the original build after a real walkthrough flagged
@@ -142,8 +142,68 @@ window.__TG_TOKEN__ = (function () {
   .statement-help[hidden] { display: none; }
 
   /* ── Pair statements: the primary interaction on the whole page ──── */
-  .pair-progress-track { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
-  .pair-progress-fill { height: 100%; background: var(--orange); border-radius: 3px; width: 0%; transition: width 0.25s ease; }
+  .journey-progress { min-width: 0; flex: 1; max-width: 1180px; position: relative; padding-top: 2px; }
+  .journey-viewport {
+    overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 0 4px 2px;
+    mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+  }
+  .journey-viewport::-webkit-scrollbar { display: none; }
+  .journey-route {
+    --station-space: 92px; display: flex; align-items: flex-end; min-width: max-content;
+    height: 74px; padding: 0 24px 7px; position: relative; transition: transform 0.35s ease;
+  }
+  .journey-route::after {
+    content: ''; position: absolute; left: 30px; right: 30px; bottom: 15px;
+    height: 2px; background: var(--ink-mid); opacity: 0.78;
+  }
+  .journey-station {
+    width: var(--station-space); flex: 0 0 var(--station-space); height: 66px;
+    position: relative; display: flex; justify-content: center; align-items: flex-end;
+  }
+  .journey-theme {
+    position: absolute; left: 50%; top: 0; width: 90px; transform: translateX(-50%);
+    color: var(--ink-mid); font-family: 'Cormorant Garamond', serif; font-size: 0.76rem;
+    line-height: 1.05; text-align: center; transition: color 0.2s ease, transform 0.25s ease;
+  }
+  .journey-node {
+    position: relative; z-index: 2; width: 17px; height: 17px; border: 3px solid var(--ink-mid);
+    border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 2px var(--bg);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, opacity 0.22s ease;
+  }
+  .journey-station.current .journey-theme { color: var(--orange-lt); transform: translateX(-50%) translateY(-2px); }
+  .journey-station.current .journey-node {
+    border-color: var(--orange-lt); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange);
+    transform: scale(1.08); animation: station-pulse 1.8s ease-in-out infinite;
+  }
+  .journey-station.departing .journey-node { animation: station-explode 0.52s cubic-bezier(.2,.75,.25,1) forwards; }
+  .journey-station.departing .journey-theme { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  .journey-burst { position: absolute; z-index: 4; left: 50%; bottom: 6px; width: 1px; height: 1px; pointer-events: none; }
+  .journey-fragment {
+    position: absolute; left: -8px; top: -8px; color: var(--orange-lt); font-size: 16px;
+    animation: station-fragment 0.52s cubic-bezier(.15,.7,.35,1) forwards;
+  }
+  .journey-remaining {
+    display: flex; justify-content: center; align-items: baseline; gap: 7px; min-height: 28px;
+    color: var(--muted); font-size: 0.78rem; letter-spacing: 0.02em;
+  }
+  .journey-remaining strong {
+    color: var(--ink); font-family: 'Cormorant Garamond', serif; font-size: 1.22rem;
+    font-weight: 400; line-height: 1;
+  }
+  @keyframes station-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange); }
+    50% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 8px rgba(217,87,28,0.25); }
+  }
+  @keyframes station-explode {
+    0% { transform: scale(1.08); opacity: 1; }
+    52% { transform: scale(2.35); opacity: 0.9; box-shadow: 0 0 18px 5px rgba(232,118,58,0.6); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  @keyframes station-fragment {
+    0% { transform: rotate(var(--angle)) translateX(0) scale(0.7); opacity: 1; }
+    42% { opacity: 1; }
+    100% { transform: rotate(var(--angle)) translateX(var(--distance)) scale(0); opacity: 0; }
+  }
 
   .pair-item { padding: 36px 0; border-bottom: 1px solid var(--border); }
   .pair-item[hidden] { display: none; }
@@ -190,8 +250,6 @@ window.__TG_TOKEN__ = (function () {
     border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
     justify-content: center; align-items: center; gap: 24px; backdrop-filter: blur(20px); z-index: 50;
   }
-  .footer-progress { flex: 1; max-width: 680px; }
-  .footer-count { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 7px; }
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
   .survey-back {
@@ -203,6 +261,20 @@ window.__TG_TOKEN__ = (function () {
   .survey-back:hover { color: var(--ink); }
   .survey-back[hidden] { display: none; }
   .context-actions { display: flex; align-items: center; gap: 18px; margin-top: 28px; }
+
+  @media (max-width: 760px) {
+    .footer-bar { gap: 10px; padding: 10px 12px; }
+    .survey-back { align-self: flex-end; margin-bottom: 8px; font-size: 0.82rem; }
+    .journey-route { --station-space: 78px; height: 66px; }
+    .journey-theme { width: 76px; font-size: 0.68rem; }
+    .journey-remaining { justify-content: flex-start; padding-left: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey-route, .journey-theme, .journey-node { transition: none; }
+    .journey-station.current .journey-node, .journey-station.departing .journey-node,
+    .journey-fragment { animation: none; }
+  }
 
   .screen { display: none; }
   .screen.active { display: block; }
@@ -458,9 +530,11 @@ window.__TG_TOKEN__ = (function () {
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
   <button class="survey-back" id="back-btn" type="button" hidden><span class="back-icon" aria-hidden="true">←</span>Back</button>
-  <div class="footer-progress">
-    <span class="footer-count" id="pair-progress-label" aria-live="polite">1 of 24</span>
-    <div class="pair-progress-track"><div class="pair-progress-fill" id="pair-progress-fill"></div></div>
+  <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Survey journey" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="24 questions left">
+    <div class="journey-viewport" id="journey-viewport">
+      <div class="journey-route" id="journey-route"></div>
+    </div>
+    <div class="journey-remaining" aria-live="polite"><strong id="questions-left">24</strong><span id="questions-left-copy">questions left</span></div>
   </div>
   <div class="footer-actions">
     <button class="btn" id="submit-btn" type="button" hidden>Submit</button>
@@ -543,6 +617,9 @@ window.__TG_TOKEN__ = (function () {
   var orderedStatements = [];
   var currentStatementIndex = 0;
   var autoAdvanceTimer = null;
+  var journeyAnimationTimer = null;
+  var localJourneyPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+    new URLSearchParams(window.location.search).get('preview') === 'journey';
 
   // ---- screen switching ----
   function showScreen(id) {
@@ -556,22 +633,27 @@ window.__TG_TOKEN__ = (function () {
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  fetch('/api/research-lookup?t=' + encodeURIComponent(token))
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || data.valid !== true) {
+  if (localJourneyPreview) {
+    renderPairs();
+    showScreen('screen-pairs');
+  } else {
+    fetch('/api/research-lookup?t=' + encodeURIComponent(token))
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (!data || data.valid !== true) {
+          showScreen('screen-invalid');
+          return;
+        }
+        hasEmailOnFile = data.hasEmail === true;
+        var name = (typeof data.name === 'string') ? data.name.trim() : '';
+        var greetingEl = document.getElementById('consent-greeting');
+        greetingEl.textContent = name ? ('Hi ' + name + ', welcome.') : 'Welcome.';
+        showScreen('screen-consent');
+      })
+      .catch(function () {
         showScreen('screen-invalid');
-        return;
-      }
-      hasEmailOnFile = data.hasEmail === true;
-      var name = (typeof data.name === 'string') ? data.name.trim() : '';
-      var greetingEl = document.getElementById('consent-greeting');
-      greetingEl.textContent = name ? ('Hi ' + name + ', welcome.') : 'Welcome.';
-      showScreen('screen-consent');
-    })
-    .catch(function () {
-      showScreen('screen-invalid');
-    });
+      });
+  }
 
   // ---- email capture (for invitees with no email on file) ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
@@ -869,10 +951,12 @@ window.__TG_TOKEN__ = (function () {
       if (pressed) pressed.setAttribute('aria-pressed', 'true');
     }
 
-    updateProgress();
     var nextStatementIndex = currentStatementIndex + 1;
     window.clearTimeout(autoAdvanceTimer);
-    autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex); }, 220);
+    updateRemainingCount(nextStatementIndex);
+    animateStationDeparture();
+    var delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 540;
+    autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex); }, delay);
   }
 
   function computeCompletion() {
@@ -888,9 +972,58 @@ window.__TG_TOKEN__ = (function () {
 
   function updateProgress() {
     var n = Math.min(currentStatementIndex, TOTAL_STATEMENTS);
-    var displayN = Math.min(currentStatementIndex + 1, TOTAL_STATEMENTS);
-    document.getElementById('pair-progress-label').textContent = displayN + ' of ' + TOTAL_STATEMENTS;
-    document.getElementById('pair-progress-fill').style.width = Math.round((n / TOTAL_STATEMENTS) * 100) + '%';
+    updateRemainingCount(n);
+    var route = document.getElementById('journey-route');
+    route.innerHTML = '';
+    orderedStatements.slice(n).forEach(function (item, offset) {
+      var station = document.createElement('div');
+      station.className = 'journey-station' + (offset === 0 ? ' current' : '');
+      station.setAttribute('data-question-index', String(n + offset));
+      var theme = document.createElement('span');
+      theme.className = 'journey-theme';
+      theme.textContent = item.domain.name;
+      var node = document.createElement('span');
+      node.className = 'journey-node';
+      node.setAttribute('aria-hidden', 'true');
+      station.appendChild(theme);
+      station.appendChild(node);
+      route.appendChild(station);
+    });
+    document.getElementById('journey-viewport').scrollLeft = 0;
+  }
+
+  function updateRemainingCount(answeredCount) {
+    var n = Math.min(answeredCount, TOTAL_STATEMENTS);
+    var questionsLeft = Math.max(TOTAL_STATEMENTS - n, 0);
+    var progress = document.getElementById('journey-progress');
+    var count = document.getElementById('questions-left');
+    var copy = document.getElementById('questions-left-copy');
+    count.textContent = questionsLeft ? String(questionsLeft) : 'All';
+    copy.textContent = questionsLeft === 1 ? 'question left' : (questionsLeft ? 'questions left' : 'questions answered');
+    progress.setAttribute('aria-valuenow', String(n));
+    progress.setAttribute('aria-valuetext', questionsLeft ? questionsLeft + (questionsLeft === 1 ? ' question left' : ' questions left') : 'All questions answered');
+  }
+
+  function animateStationDeparture() {
+    var station = document.querySelector('.journey-station.current');
+    if (!station) return;
+    station.classList.add('departing');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var burst = document.createElement('span');
+    burst.className = 'journey-burst';
+    burst.setAttribute('aria-hidden', 'true');
+    for (var i = 0; i < 12; i++) {
+      var fragment = document.createElement('span');
+      fragment.className = 'material-symbols-outlined journey-fragment';
+      fragment.textContent = i % 3 === 0 ? 'flare' : 'circle';
+      fragment.style.setProperty('--angle', (i * 30) + 'deg');
+      fragment.style.setProperty('--distance', (i % 2 === 0 ? 48 : 36) + 'px');
+      fragment.style.fontSize = (i % 3 === 0 ? 18 : 10) + 'px';
+      burst.appendChild(fragment);
+    }
+    station.appendChild(burst);
+    window.clearTimeout(journeyAnimationTimer);
+    journeyAnimationTimer = window.setTimeout(function () { burst.remove(); }, 560);
   }
   updateProgress();
 
