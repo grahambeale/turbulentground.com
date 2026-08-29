@@ -38,4 +38,19 @@ No visible P0, P1, or P2 issues remain. Theme labels and stations are legible at
 
 The first implementation updated the remaining count only after the transition and used a subtler burst. It was revised so the count changes as soon as an answer is chosen and the station departure now has a clearer 12-fragment explosion. The final desktop and footer comparison captures reflect the revised version.
 
+### Route endpoint and final input refinement
+
+- User source captures:
+  - `/var/folders/nf/k_4g44qx6pn4k86dzz0s9ldw0000gp/T/codex-clipboard-100f25a2-d126-449a-a9b6-bab54d7a2ec7.png`
+  - `/var/folders/nf/k_4g44qx6pn4k86dzz0s9ldw0000gp/T/codex-clipboard-7869f37e-e0f5-472e-aaa6-d1516fb311c8.png`
+- Revised implementation captures:
+  - `/private/tmp/tg-journey-one-left.png`, 1265 × 712 at a 1265 × 712 CSS viewport and 1× density
+  - `/private/tmp/tg-journey-final-input.png`, 1265 × 712 at a 1265 × 712 CSS viewport and 1× density
+- Focused comparison: `/private/tmp/tg-journey-line-end-comparison.png`
+- Final-screen comparison: `/private/tmp/tg-journey-final-screen-comparison.png`
+
+The earlier route retained a full-width line after its final visible station, which weakened the proximity-to-completion signal. The route now sizes to its remaining stations and terminates at the final node. Verified states include six stations remaining and one station remaining. On the final free-text screen, the route and count are hidden completely, while Back and Submit remain visible at opposite edges of the footer.
+
+Fonts and typography, spacing and layout rhythm, colour tokens, icon quality, and copy remain consistent with the selected visual direction and the existing survey. No new image assets were required. No P0, P1, or P2 findings remain. Browser console errors: none.
+
 Final result: passed.

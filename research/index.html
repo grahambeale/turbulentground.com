@@ -149,11 +149,14 @@ window.__TG_TOKEN__ = (function () {
   }
   .journey-viewport::-webkit-scrollbar { display: none; }
   .journey-route {
-    --station-space: 92px; display: flex; align-items: flex-end; min-width: max-content;
+    --station-space: 92px; display: flex; align-items: flex-end; width: max-content;
     height: 74px; padding: 0 24px 7px; position: relative; transition: transform 0.35s ease;
   }
   .journey-route::after {
-    content: ''; position: absolute; left: 30px; right: 30px; bottom: 15px;
+    content: ''; position: absolute;
+    left: calc(24px + (var(--station-space) / 2));
+    right: calc(24px + (var(--station-space) / 2));
+    bottom: 15px;
     height: 2px; background: var(--ink-mid); opacity: 0.78;
   }
   .journey-station {
@@ -190,6 +193,7 @@ window.__TG_TOKEN__ = (function () {
     color: var(--ink); font-family: 'Cormorant Garamond', serif; font-size: 1.22rem;
     font-weight: 400; line-height: 1;
   }
+  .journey-progress[hidden] { display: none; }
   @keyframes station-pulse {
     0%, 100% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange); }
     50% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 8px rgba(217,87,28,0.25); }
@@ -250,6 +254,7 @@ window.__TG_TOKEN__ = (function () {
     border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
     justify-content: center; align-items: center; gap: 24px; backdrop-filter: blur(20px); z-index: 50;
   }
+  .footer-bar.final-step { justify-content: space-between; }
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
   .survey-back {
@@ -923,6 +928,8 @@ window.__TG_TOKEN__ = (function () {
     document.getElementById('submit-btn').hidden = !atEnd;
     document.getElementById('back-btn').hidden = false;
     document.getElementById('guidance-btn').hidden = atEnd;
+    document.getElementById('journey-progress').hidden = atEnd;
+    document.getElementById('footer-bar').classList.toggle('final-step', atEnd);
     updateProgress();
 
     if (!atEnd && rows[currentStatementIndex]) {
