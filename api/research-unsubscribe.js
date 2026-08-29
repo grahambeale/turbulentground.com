@@ -43,7 +43,7 @@ function page(token) {
   <meta name="robots" content="noindex,nofollow">
   <title>Study email preferences | Turbulent Ground</title>
   <style>
-    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#131110;color:#e8dcc8;font-family:Arial,sans-serif;display:grid;place-items:center;padding:24px}.card{width:min(650px,100%);padding:clamp(28px,6vw,48px);background:#1c1916;border:1px solid #3a332d}h1{margin:0 0 18px;font:400 clamp(2rem,6vw,3.5rem)/1.05 Georgia,serif}p{color:#d0bea2;font-size:1.05rem;line-height:1.65}.brand{margin-bottom:42px;color:#d0bea2;font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.field{margin-top:30px}label{display:block;margin-bottom:10px;color:#e8dcc8;font-weight:700;font-size:1.05rem}textarea{display:block;width:100%;min-height:130px;resize:vertical;border:1px solid #62574c;border-radius:8px;background:#131110;color:#fff;padding:15px;font:1rem/1.5 Arial,sans-serif}textarea:focus{outline:3px solid #ef7b45;outline-offset:2px}.hint{margin:8px 0 0;color:#a99780;font-size:.9rem}.actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:28px}.button{border:0;border-radius:999px;background:#c9470e;color:#fff;padding:15px 25px;font:700 1rem Arial,sans-serif;cursor:pointer}.button:focus-visible,.keep:focus-visible{outline:3px solid #efaa78;outline-offset:4px}.button:disabled{cursor:wait;opacity:.65}.keep{color:#cbbba3;text-underline-offset:4px}.status{color:#ef7b45;font-weight:700}.error{margin-top:18px;color:#ff9d70;font-weight:700}.hidden{display:none}
+    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#131110;color:#e8dcc8;font-family:Arial,sans-serif;display:grid;place-items:center;padding:24px}.card{width:min(650px,100%);padding:clamp(28px,6vw,48px);background:#1c1916;border:1px solid #3a332d}h1{margin:0 0 18px;font:400 clamp(2rem,6vw,3.5rem)/1.05 Georgia,serif}p{color:#d0bea2;font-size:1.05rem;line-height:1.65}.brand{margin-bottom:42px;color:#d0bea2;font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.field{margin-top:30px}label{display:block;margin-bottom:10px;color:#e8dcc8;font-weight:700;font-size:1.05rem}textarea{display:block;width:100%;min-height:130px;resize:vertical;border:1px solid #62574c;border-radius:8px;background:#131110;color:#fff;padding:15px;font:1rem/1.5 Arial,sans-serif}textarea:focus{outline:3px solid #ef7b45;outline-offset:2px}.hint{margin:8px 0 0;color:#a99780;font-size:.9rem}.actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:28px}.button{border:0;border-radius:999px;background:#c9470e;color:#fff;padding:15px 25px;font:700 1rem Arial,sans-serif;cursor:pointer}.button:focus-visible,.keep:focus-visible{outline:3px solid #efaa78;outline-offset:4px}.button:disabled{cursor:wait;opacity:.65}.keep{border:0;background:transparent;color:#cbbba3;padding:10px 0;font:1rem Arial,sans-serif;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.status{color:#ef7b45;font-weight:700}.error{margin-top:18px;color:#ff9d70;font-weight:700}.hidden{display:none}
   </style>
 </head>
 <body>
@@ -61,7 +61,7 @@ function page(token) {
         </div>
         <div class="actions">
           <button class="button" id="confirm" type="submit">Confirm unsubscribe</button>
-          <a class="keep" href="/research/">Keep receiving study emails</a>
+          <button class="keep" id="keep" type="button">Keep receiving study emails</button>
         </div>
         <p class="error hidden" id="error" role="alert">I could not update your preference just now. Please try again, or email privacy@turbulentground.com.</p>
       </form>
@@ -71,6 +71,11 @@ function page(token) {
       <p class="status">You will not receive further study emails.</p>
       <p>Your existing research response remains part of the study. You do not need to do anything else.</p>
     </section>
+    <section class="hidden" id="kept" aria-live="polite">
+      <h1 tabindex="-1">You’re still subscribed.</h1>
+      <p class="status">Your email preference has not changed.</p>
+      <p>You can close this page. You will continue to receive study emails no more than once every 30 days.</p>
+    </section>
   </main>
   <script>
     (function () {
@@ -78,9 +83,15 @@ function page(token) {
       var form = document.getElementById('unsubscribe-form');
       var choice = document.getElementById('choice');
       var success = document.getElementById('success');
+      var kept = document.getElementById('kept');
       var feedback = document.getElementById('feedback');
       var confirm = document.getElementById('confirm');
       var error = document.getElementById('error');
+      document.getElementById('keep').addEventListener('click', function () {
+        choice.classList.add('hidden');
+        kept.classList.remove('hidden');
+        kept.querySelector('h1').focus();
+      });
       form.addEventListener('submit', function (event) {
         event.preventDefault();
         confirm.disabled = true;

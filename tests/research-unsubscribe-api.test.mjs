@@ -41,6 +41,8 @@ try {
   check("prevents the page being cached", pageRes._headers["Cache-Control"] === "no-store");
   check("asks for optional feedback", /Would you like to tell me why\?/.test(pageRes._body));
   check("requires the confirmation form before POST", /form\.addEventListener\('submit'/.test(pageRes._body) && !/unsubscribe\(\);/.test(pageRes._body));
+  check("keeps the participant subscribed without leaving the page", /You’re still subscribed\./.test(pageRes._body) && /getElementById\('keep'\)\.addEventListener/.test(pageRes._body));
+  check("does not send the participant to the token-protected survey", !/href="\/research\//.test(pageRes._body));
 
   const postRes = mockRes();
   await handler({ method: "POST", body: { token: "valid-token", feedback: "Too many emails for me." } }, postRes);
