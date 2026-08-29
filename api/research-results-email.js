@@ -351,7 +351,7 @@ function lensCard(label, summary) {
   </td>`;
 }
 
-function buildEmailHtml(name, pairs, benchmark, token) {
+export function buildEmailHtml(name, pairs, benchmark, token) {
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
     const domainBenchmark = benchmark.domains && benchmark.domains[key];

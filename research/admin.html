@@ -102,6 +102,19 @@
     </div>
   </section>
 
+  <section class="panel" aria-labelledby="preview-heading" style="margin-top:24px;">
+    <h2 id="preview-heading" style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;margin-bottom:8px;">Preview the results email</h2>
+    <p class="result-note">Send the current template with fictional answers. This does not create or change participant data.</p>
+    <form id="preview-form">
+      <div class="field">
+        <label for="preview-email">Send preview to</label>
+        <input id="preview-email" name="preview-email" type="email" autocomplete="email" maxlength="320" value="graham@beale.co.uk" required>
+      </div>
+      <button id="preview-button" type="submit">Send results preview</button>
+      <p class="message" id="preview-message" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
   <p class="privacy-note">Unless you choose to remember it, the access key stays in this browser tab only. Invite details are sent directly to the protected research service.</p>
 </main>
 <script>
@@ -190,6 +203,40 @@
       inviteUrl.focus();
       inviteUrl.select();
       copyStatus.textContent = 'Select the link and copy it manually.';
+    });
+  });
+
+  var previewForm = document.getElementById('preview-form');
+  var previewButton = document.getElementById('preview-button');
+  var previewMessage = document.getElementById('preview-message');
+  previewForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var key = accessKey.value;
+    var email = document.getElementById('preview-email').value.trim();
+    previewButton.disabled = true;
+    previewButton.textContent = 'Sending…';
+    previewMessage.classList.remove('visible');
+    fetch('/api/research-results-preview', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not send the preview');
+        return data;
+      });
+    }).then(function () {
+      previewMessage.textContent = 'Preview sent. Check your inbox.';
+      previewMessage.classList.add('visible');
+    }).catch(function (error) {
+      previewMessage.textContent = error.message;
+      previewMessage.classList.add('visible');
+    }).finally(function () {
+      previewButton.disabled = false;
+      previewButton.textContent = 'Send results preview';
     });
   });
 })();
