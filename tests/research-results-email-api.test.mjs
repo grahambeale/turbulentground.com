@@ -74,6 +74,13 @@ try {
   check("sends to the stored email", sendBody.to[0] === "alex@example.com");
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
   check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
+  check("leads with an immediate personal summary", sendBody.html.indexOf("Your response at a glance") < sendBody.html.indexOf("Your emerging benchmark comparison"));
+  check("shows the participant's most positive personal responses", /What you report bringing[\s\S]*Working relationships[\s\S]*Speaking directly with colleagues/.test(sendBody.html));
+  check("shows what the environment supports", /What your environment enables[\s\S]*Time and workload[\s\S]*Being able to use AI-saved time/.test(sendBody.html));
+  check("shows less-supported surrounding conditions", /Less supported in your answers[\s\S]*Working relationships/.test(sendBody.html));
+  check("shows the largest paired tensions", /Where the tension sits[\s\S]*Working relationships[\s\S]*own action higher than the condition around you \(5 compared with 2\)/.test(sendBody.html));
+  check("provides tailored discussion questions", /Questions worth discussing[\s\S]*Where could direct conversation protect context/.test(sendBody.html));
+  check("does not present the personal summary as a diagnosis", /not a score, diagnosis or judgement of your ability/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
   check("includes the current study benchmark", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
   check("warns that the early benchmark may fluctuate", /likely to fluctuate frequently during the early phase/i.test(sendBody.html));
@@ -101,6 +108,7 @@ try {
   check("withholds the benchmark below five eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
   check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 4|4 eligible/i.test(secondSendBody.html));
   check("withholds highlights when the benchmark is unavailable", !/Benchmark highlights/.test(secondSendBody.html));
+  check("still provides personal value before a benchmark exists", /Your response at a glance/.test(secondSendBody.html) && /Questions worth discussing/.test(secondSendBody.html));
   console.log("\nALL CHECKS PASSED");
 } finally {
   global.fetch = oldFetch;

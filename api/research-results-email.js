@@ -34,6 +34,70 @@ const DOMAINS = [
   ["d11", "AI in team decisions"], ["d12", "Job security"],
 ];
 
+const DOMAIN_INSIGHT = {
+  d1: {
+    contribution: "Relying on your own judgement when you and AI disagree",
+    conditions: "Recognising when an AI suggestion is wrong",
+    prompt: "What helps you decide when to question an AI suggestion?",
+    comparable: false,
+  },
+  d2: {
+    contribution: "Keeping some AI-saved time free from new tasks",
+    conditions: "Being able to use AI-saved time to improve your work",
+    prompt: "What happens to the time AI saves you?",
+  },
+  d3: {
+    contribution: "Speaking directly with colleagues instead of relying on AI summaries",
+    conditions: "Having colleagues speak with you instead of relying on AI summaries",
+    prompt: "Where could direct conversation protect context that an AI summary misses?",
+  },
+  d4: {
+    contribution: "Checking AI-assisted work as carefully as other work",
+    conditions: "Having enough organisational time to check AI-assisted work",
+    prompt: "Where does the time needed to check AI-assisted work currently come from?",
+  },
+  d5: {
+    contribution: "Being comfortable explaining how you use AI at work",
+    conditions: "Being able to use AI without close day-to-day monitoring",
+    prompt: "What would make it easier to discuss AI use openly while keeping appropriate oversight?",
+  },
+  d6: {
+    contribution: "Actively developing skills that AI cannot replace",
+    conditions: "Having opportunities at work to build skills that AI cannot replace",
+    prompt: "Which skills do you need more opportunity to develop at work?",
+  },
+  d7: {
+    contribution: "Trusting colleagues to decide when to rely on AI",
+    conditions: "Being trusted to decide when to rely on AI output",
+    prompt: "Is trust around AI use given consistently in both directions?",
+  },
+  d8: {
+    contribution: "Giving colleagues full credit when AI helps them work faster",
+    conditions: "Receiving credit for the judgement you add to AI-assisted work",
+    prompt: "How could your team make human judgement in AI-assisted work more visible?",
+  },
+  d9: {
+    contribution: "Seeking out meaningful work as AI changes your tasks",
+    conditions: "Experiencing the work you do alongside AI as meaningful",
+    prompt: "Which parts of your changing work feel most worth protecting or developing?",
+  },
+  d10: {
+    contribution: "Setting a sustainable pace when working with AI",
+    conditions: "Experiencing the pace expected of you as sustainable",
+    prompt: "Is the pace AI makes possible becoming the pace people are expected to maintain?",
+  },
+  d11: {
+    contribution: "Influencing how your team uses AI",
+    conditions: "Receiving clear organisational guidance about AI use",
+    prompt: "Where do you need more clarity or influence over how AI is used?",
+  },
+  d12: {
+    contribution: "Preparing for ways AI could change your role",
+    conditions: "Feeling secure in your role as AI changes work",
+    prompt: "What would help you prepare for change without making uncertainty harder to carry?",
+  },
+};
+
 function looksLikeEmail(value) {
   return typeof value === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
@@ -162,6 +226,102 @@ function highlightsCard(label, highlights) {
   </td>`;
 }
 
+function rankedResponses(pairs, field, predicate = () => true) {
+  return DOMAINS.map(([key, label], order) => ({
+    key,
+    label,
+    order,
+    value: pairs?.[key]?.[field],
+    text: DOMAIN_INSIGHT[key][field],
+  })).filter(item => typeof item.value === "number" && predicate(item));
+}
+
+function personalInsights(pairs) {
+  const contribution = rankedResponses(pairs, "contribution")
+    .filter(item => item.value >= 4)
+    .sort((a, b) => b.value - a.value || a.order - b.order)
+    .slice(0, 3);
+  const conditions = rankedResponses(pairs, "conditions", item => item.key !== "d1");
+  const enabled = conditions.filter(item => item.value >= 4)
+    .sort((a, b) => b.value - a.value || a.order - b.order)
+    .slice(0, 2);
+  const constrained = conditions.filter(item => item.value <= 2)
+    .sort((a, b) => a.value - b.value || a.order - b.order)
+    .slice(0, 2);
+  const tensions = DOMAINS.map(([key, label], order) => {
+    const contributionValue = pairs?.[key]?.contribution;
+    const conditionsValue = pairs?.[key]?.conditions;
+    if (DOMAIN_INSIGHT[key].comparable === false || typeof contributionValue !== "number" || typeof conditionsValue !== "number") return null;
+    return {
+      key,
+      label,
+      order,
+      contributionValue,
+      conditionsValue,
+      difference: contributionValue - conditionsValue,
+    };
+  }).filter(item => item && Math.abs(item.difference) >= 1)
+    .sort((a, b) => Math.abs(b.difference) - Math.abs(a.difference) || a.order - b.order)
+    .slice(0, 3);
+
+  const questionKeys = [];
+  for (const item of [...tensions, ...constrained, ...contribution]) {
+    if (!questionKeys.includes(item.key)) questionKeys.push(item.key);
+    if (questionKeys.length === 3) break;
+  }
+  return { contribution, enabled, constrained, tensions, questionKeys };
+}
+
+function responseList(items, emptyText) {
+  if (!items.length) return `<p style="margin:0;color:#9e8e7c;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">${escapeHtml(emptyText)}</p>`;
+  return `<ul style="margin:0;padding-left:20px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.65;">${items.map(item =>
+    `<li style="margin:0 0 8px;"><strong style="color:#e8dcc8;">${escapeHtml(item.label)}</strong><br>${escapeHtml(item.text)} <span style="color:#9e8e7c;white-space:nowrap;">(${item.value} / 5)</span></li>`
+  ).join("")}</ul>`;
+}
+
+function tensionList(items) {
+  if (!items.length) return `<p style="margin:0;color:#9e8e7c;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">Your answers did not show a large gap within the comparable paired themes.</p>`;
+  return `<ul style="margin:0;padding-left:20px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.65;">${items.map(item => {
+    const description = item.difference > 0
+      ? `You rated your own action higher than the condition around you (${item.contributionValue} compared with ${item.conditionsValue}).`
+      : `You rated the condition around you higher than your own action (${item.conditionsValue} compared with ${item.contributionValue}).`;
+    return `<li style="margin:0 0 8px;"><strong style="color:#e8dcc8;">${escapeHtml(item.label)}</strong><br>${escapeHtml(description)}</li>`;
+  }).join("")}</ul>`;
+}
+
+function reflectionList(keys) {
+  if (!keys.length) return "";
+  return `<ul style="margin:0;padding-left:20px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.65;">${keys.map(key =>
+    `<li style="margin:0 0 8px;">${escapeHtml(DOMAIN_INSIGHT[key].prompt)}</li>`
+  ).join("")}</ul>`;
+}
+
+function personalSummary(pairs) {
+  const insight = personalInsights(pairs);
+  return `<h2 style="margin:28px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your response at a glance</h2>
+    <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This reflects how you answered today. It is not a score, diagnosis or judgement of your ability.</p>
+    <div style="margin-top:18px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What you report bringing</h3>
+      ${responseList(insight.contribution, "You did not strongly agree with any personal-practice statement. The detailed responses below preserve the full picture.")}
+    </div>
+    <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What your environment enables</h3>
+      <p style="margin:0 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">More supported in your answers</p>
+      ${responseList(insight.enabled, "No surrounding-condition statement received an agreement response of 4 or 5.")}
+      <p style="margin:16px 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Less supported in your answers</p>
+      ${responseList(insight.constrained, "No surrounding-condition statement received a disagreement response of 1 or 2.")}
+    </div>
+    <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
+      <h3 style="margin:0 0 8px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Where the tension sits</h3>
+      <p style="margin:0 0 12px;color:#9e8e7c;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;">These are the largest gaps between what you report doing and what you experience around you. A gap is a prompt for reflection, not proof of its cause.</p>
+      ${tensionList(insight.tensions)}
+    </div>
+    <div style="margin-top:12px;padding:18px;background:#231c17;border-left:3px solid #e55b20;">
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Questions worth discussing</h3>
+      ${reflectionList(insight.questionKeys)}
+    </div>`;
+}
+
 function scalePosition(value) {
   return Math.max(0, Math.min(100, ((value - 1) / 4) * 100));
 }
@@ -222,14 +382,20 @@ function buildEmailHtml(name, pairs, benchmark, token) {
     ${highlightsCard("Your contribution", contributionHighlights)}
     ${highlightsCard("Conditions around you", conditionsHighlights)}
   </tr></table>` : "";
+  const participantSummary = personalSummary(pairs);
+  const benchmarkSection = benchmark.domains ? `<h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your emerging benchmark comparison</h2>
+    <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
+    ${summaryCards}
+    ${highlights}` : `<h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your emerging benchmark comparison</h2>
+    <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>`;
   return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
       <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
-      <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
-      ${summaryCards}
-      ${highlights}
+      ${participantSummary}
+      ${benchmarkSection}
+      <h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your detailed responses</h2>
       <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:24px;">
         <thead><tr>
           <th align="left" style="padding:10px 8px;border-bottom:2px solid #c9470e;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;">Theme</th>
