@@ -21,7 +21,7 @@ process.env.RESEND_FROM = "Turbulent Ground <results@example.com>";
 
 try {
   const calls = [];
-  let cohortSize = 5;
+  let cohortSize = 15;
   global.fetch = async (url, options = {}) => {
     calls.push({ url: String(url), options });
     if (String(url).includes("tblwpricYYzx4rmiR?") && (!options.method || options.method === "GET")) {
@@ -42,7 +42,7 @@ try {
       } }] }) };
     }
     if (String(url).includes("tblL9mf8VfAmbhuG7?")) {
-      return { ok: true, json: async () => ({ records: [1, 2, 3, 4, 5].slice(0, cohortSize).map((value) => ({
+      return { ok: true, json: async () => ({ records: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].slice(0, cohortSize).map((value) => ({
         id: `recCohort${value}`,
         fields: {
           fldvxb2mrIYVKLGVM: JSON.stringify({
@@ -100,13 +100,13 @@ try {
   check("records results-email consent", auditBody.fields.fldDQkh2LSSVjacTx === true);
   check("records a sent timestamp", typeof auditBody.fields.fldcGbn19ft4z1OPe === "string");
 
-  cohortSize = 4;
+  cohortSize = 14;
   const secondRes = mockRes();
   await handler({ method: "POST", body: { token: "second-valid-token" } }, secondRes);
   const sends = calls.filter(call => call.url.includes("api.resend.com/emails"));
   const secondSendBody = JSON.parse(sends.at(-1).options.body);
-  check("withholds the benchmark below five eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
-  check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 4|4 eligible/i.test(secondSendBody.html));
+  check("withholds the benchmark below fifteen eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
+  check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 14|14 eligible/i.test(secondSendBody.html));
   check("withholds highlights when the benchmark is unavailable", !/Benchmark highlights/.test(secondSendBody.html));
   check("still provides personal value before a benchmark exists", /Your response at a glance/.test(secondSendBody.html) && /Questions worth discussing/.test(secondSendBody.html));
   console.log("\nALL CHECKS PASSED");

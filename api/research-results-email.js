@@ -150,8 +150,14 @@ async function listResponsePairs(airtableToken) {
   return allPairs;
 }
 
+// Minimum eligible (Meets Completion Floor) responses before a benchmark
+// mean is considered meaningful enough to show. Raised from 5 to 15 —
+// 5 responses is too few for a mean to be statistically meaningful,
+// independent of anything else.
+const BENCHMARK_MIN_COHORT = 15;
+
 function computeBenchmark(allPairs) {
-  if (allPairs.length < 5) return { cohortSize: allPairs.length, domains: null };
+  if (allPairs.length < BENCHMARK_MIN_COHORT) return { cohortSize: allPairs.length, domains: null };
   const domains = {};
   for (const [key] of DOMAINS) {
     domains[key] = {};
