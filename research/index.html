@@ -729,6 +729,12 @@ window.plausible = window.plausible || function () {
       return;
     }
 
+    // Count a resumed journey only when meaningful, consented progress has
+    // actually been restored and the participant is returning to the
+    // questionnaire. A saved shell from an abandoned consent screen does
+    // not qualify.
+    trackResearchEvent('Research: Resumed');
+
     startedAt = new Date().toISOString();
     renderPairs();
 

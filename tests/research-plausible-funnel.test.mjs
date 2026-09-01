@@ -11,6 +11,7 @@ console.log("research-plausible-funnel.test.mjs");
 
 const expectedEvents = [
   "Research: Invite Validated",
+  "Research: Resumed",
   "Research: Consent Completed",
   "Research: Profile Completed",
   "Research: 25% Complete",
@@ -28,6 +29,9 @@ for (const eventName of expectedEvents) {
   check(`fires ${eventName}`,
     html.includes(`trackResearchEvent('${eventName}')`));
 }
+
+check("fires resumed only after restored participation consent is confirmed",
+  /function resumeFromSavedState\(saved\) \{[\s\S]*if \(!consent\.takingPart\) \{[\s\S]*return;[\s\S]*trackResearchEvent\('Research: Resumed'\);[\s\S]*showScreen\('screen-pairs'\)/.test(html));
 
 check("tracks quarter milestones from actual newly answered statements",
   /if \(!wasAnswered\) \{[\s\S]*statementsAnswered\+\+[\s\S]*statementsAnswered === 6[\s\S]*statementsAnswered === 12[\s\S]*statementsAnswered === 18[\s\S]*statementsAnswered === TOTAL_STATEMENTS/.test(html));
