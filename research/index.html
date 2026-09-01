@@ -386,6 +386,14 @@ window.plausible = window.plausible || function () {
     </div>
   </section>
 
+  <!-- ============ SCREEN 0c: ALREADY COMPLETED ============ -->
+  <section class="screen" id="screen-completed">
+    <div class="loading-wrap">
+      <h1>You've already completed this.</h1>
+      <p>Thank you again for taking part.</p>
+    </div>
+  </section>
+
   <!-- ============ SCREEN 1: CONSENT ============ -->
   <section class="screen" id="screen-consent">
     <!-- The masthead above already says "Turbulent Ground" — the old
@@ -666,6 +674,16 @@ window.plausible = window.plausible || function () {
       .then(function (data) {
         if (!data || data.valid !== true) {
           showScreen('screen-invalid');
+          return;
+        }
+        if (data.completed === true) {
+          // Checked before anything about the consent screen is touched:
+          // a completed token has nothing to resume (savedState is
+          // already null for it server-side) and nothing to gain by
+          // starting a "new" survey that can only be rejected at the end.
+          // Stop here, immediately, rather than let the respondent click
+          // through 24 statements before finding out it was pointless.
+          showScreen('screen-completed');
           return;
         }
         hasEmailOnFile = data.hasEmail === true;

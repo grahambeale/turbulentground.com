@@ -9,10 +9,12 @@
 //
 // Exposes the absolute minimum needed for the consent-screen greeting and
 // resume: whether a token is real, a first name, whether an email is
-// already on file, and — if a Responses record already exists for this
-// token — that record's own saved consent/context/pairResponses, so the
-// survey can resume where the respondent left off. Never returns the
-// email address itself, Invite Status, or any other Identity field.
+// already on file, whether Identity already marks this token Completed,
+// and — if a Responses record already exists for this token — that
+// record's own saved consent/context/pairResponses, so the survey can
+// resume where the respondent left off. Never returns the email address
+// itself, the raw Invite Status string, or any other Identity field —
+// `completed` is a derived boolean, not a passthrough of the field.
 //
 // savedState is safe to return here: it's a person's own prior progress,
 // gated by the same token that already controls everything else in this
@@ -27,6 +29,17 @@
 // even offer a completed response back to the client for a fake "resume"
 // that could never actually save again.
 //
+// `completed` is the fix for a gap found in testing: without it, a
+// completed token's savedState is null (correct — nothing to resume),
+// but the client had no way to distinguish "never started" from "already
+// finished," so it silently offered a blank survey and only rejected at
+// the final Submit click. research/index.html now checks this flag
+// before rendering the consent screen and stops immediately if it's
+// true. Checked directly against Identity's Invite Status (the actual
+// source of truth used to block resubmission everywhere else), not
+// inferred from the Responses record, so it's correct even for a
+// completed token that somehow has no Responses record at all.
+//
 // Env var: AIRTABLE_RESEARCH_TOKEN (same as the other research/* routes).
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
@@ -37,7 +50,12 @@ const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
   name: "fldGto31lmx5KwyNr",
   email: "fldePJtCCYwLsmNjp",
+  inviteStatus: "fldEhm06lLDvEeF6q",
 };
+
+// Same field/value pairing api/research-submit.js and
+// api/research-save-progress.js already use to block resubmission.
+const INVITE_STATUS_COMPLETED = "Completed";
 
 const RESPONSE_FIELD = {
   token: "flduL4PmBEfH9rLpz",
@@ -119,6 +137,7 @@ export default async function handler(req, res) {
 
   const name = firstNameOf(record.fields[IDENTITY_FIELD.name]);
   const hasEmail = typeof record.fields[IDENTITY_FIELD.email] === "string" && record.fields[IDENTITY_FIELD.email].trim() !== "";
+  const completed = record.fields[IDENTITY_FIELD.inviteStatus] === INVITE_STATUS_COMPLETED;
 
   let savedState = null;
   try {
@@ -149,5 +168,5 @@ export default async function handler(req, res) {
     console.error("Responses lookup for resume failed (non-fatal):", err.message);
   }
 
-  return res.status(200).json({ valid: true, name, hasEmail, savedState });
+  return res.status(200).json({ valid: true, name, hasEmail, completed, savedState });
 }
