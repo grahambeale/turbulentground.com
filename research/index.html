@@ -21,6 +21,15 @@ window.__TG_TOKEN__ = (function () {
   return t;
 })();
 </script>
+<script>
+// Queue privacy-safe research journey events until Plausible's deferred
+// script has loaded. Event calls below contain only a fixed stage name:
+// never the invite token, profile choices, answers, email or free text.
+window.plausible = window.plausible || function () {
+  (window.plausible.q = window.plausible.q || []).push(arguments);
+};
+</script>
+<script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -625,12 +634,22 @@ window.__TG_TOKEN__ = (function () {
   var journeyAnimationTimer = null;
   var localJourneyPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
     new URLSearchParams(window.location.search).get('preview') === 'journey';
+  var researchEventsSent = {};
+
+  function trackResearchEvent(name) {
+    if (localJourneyPreview || researchEventsSent[name]) return;
+    researchEventsSent[name] = true;
+    window.plausible(name);
+  }
 
   // ---- screen switching ----
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(function (el) { el.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
     document.getElementById('footer-bar').style.display = (id === 'screen-pairs') ? 'flex' : 'none';
+    if (id === 'screen-consent' || id === 'screen-context' || id === 'screen-pairs') {
+      trackResearchEvent('Research: Invite Validated');
+    }
     window.scrollTo(0, 0);
   }
 
@@ -914,6 +933,7 @@ window.__TG_TOKEN__ = (function () {
     // "Started At" is set here: the consent screen has just been completed.
     startedAt = new Date().toISOString();
 
+    trackResearchEvent('Research: Consent Completed');
     showScreen('screen-context');
   });
 
@@ -930,6 +950,7 @@ window.__TG_TOKEN__ = (function () {
     context.teamResponsibility = formData.get('ctx-responsibility') || '';
     context.orgSize = formData.get('ctx-org-size') || '';
     renderPairs();
+    trackResearchEvent('Research: Profile Completed');
     showScreen('screen-pairs');
   });
 
@@ -1104,7 +1125,13 @@ window.__TG_TOKEN__ = (function () {
     var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
     if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
     pairResponses[domainKey][field] = value;
-    if (!wasAnswered) statementsAnswered++;
+    if (!wasAnswered) {
+      statementsAnswered++;
+      if (statementsAnswered === 6) trackResearchEvent('Research: 25% Complete');
+      if (statementsAnswered === 12) trackResearchEvent('Research: 50% Complete');
+      if (statementsAnswered === 18) trackResearchEvent('Research: 75% Complete');
+      if (statementsAnswered === TOTAL_STATEMENTS) trackResearchEvent('Research: Questions Completed');
+    }
 
     applyPressedState(scaleGridEl, alternativeBtnEls, value);
     scheduleCheckpointSave();
@@ -1240,6 +1267,7 @@ window.__TG_TOKEN__ = (function () {
       if (!res.ok) throw new Error('submit failed');
       return res.json();
     }).then(function () {
+      trackResearchEvent('Research: Submitted');
       showScreen('screen-done');
       prepareResultsEmail();
     }).catch(function () {
@@ -1289,6 +1317,7 @@ window.__TG_TOKEN__ = (function () {
         return data;
       });
     }).then(function () {
+      trackResearchEvent('Research: Comparison Requested');
       status.textContent = 'Sent. Check your inbox.';
       status.hidden = false;
       button.hidden = true;
