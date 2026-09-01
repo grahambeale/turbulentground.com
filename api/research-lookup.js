@@ -4,22 +4,53 @@
 // api/research-submit.js: this file lives outside /research/ because
 // Vercel only recognises serverless functions under top-level /api/.
 // Standalone — shares no code with api/submit.js or api/verify.js
-// (Phase 2's diagnostic routes), or with api/research-submit.js.
+// (Phase 2's diagnostic routes), api/research-submit.js, or
+// api/research-save-progress.js.
 //
-// Exposes the absolute minimum needed for the consent-screen greeting:
-// whether a token is real, a first name, and whether an email is already
-// on file. Never returns the email address itself, Invite Status, or any
-// other Identity field.
+// Exposes the absolute minimum needed for the consent-screen greeting and
+// resume: whether a token is real, a first name, whether an email is
+// already on file, and — if a Responses record already exists for this
+// token — that record's own saved consent/context/pairResponses, so the
+// survey can resume where the respondent left off. Never returns the
+// email address itself, Invite Status, or any other Identity field.
+//
+// savedState is safe to return here: it's a person's own prior progress,
+// gated by the same token that already controls everything else in this
+// build. It never exposes another participant's data.
+//
+// savedState is intentionally omitted (returned as null) once the found
+// Responses record's own "Completed At" is set — i.e. once the survey
+// has actually been finished. Resuming must never reopen a completed
+// response; the hard block against re-submitting lives in
+// api/research-submit.js and api/research-save-progress.js (via
+// Identity's Invite Status), but there's no reason for this endpoint to
+// even offer a completed response back to the client for a fake "resume"
+// that could never actually save again.
 //
 // Env var: AIRTABLE_RESEARCH_TOKEN (same as the other research/* routes).
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
+const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
 
-const FIELD = {
+const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
   name: "fldGto31lmx5KwyNr",
   email: "fldePJtCCYwLsmNjp",
+};
+
+const RESPONSE_FIELD = {
+  token: "flduL4PmBEfH9rLpz",
+  consentTakingPart: "fldMx0Ta5VNoKJJyU",
+  consentStudyEmails: "flduWhkQo6u5O3nIp",
+  consentQuoteAnon: "fldrkZLOa0Z58uxEs",
+  consentQuoteName: "fldDMxw9XFHCUItsx",
+  completedAt: "fld8sYjswX21vvVXz",
+  pairResponsesJson: "fldvxb2mrIYVKLGVM",
+  role: "fldLpRW2iICNOHKc9",
+  discipline: "fldAHP8vHMM5R3od0",
+  teamResponsibility: "fldP3feAS0fMX9w5N",
+  orgSize: "fldNrxY2Jm8OOcBFm",
 };
 
 function firstNameOf(fullName) {
@@ -28,6 +59,20 @@ function firstNameOf(fullName) {
   if (!trimmed) return "";
   const parts = trimmed.split(/\s+/);
   return parts.length > 1 ? parts[0] : trimmed;
+}
+
+async function findResponseRecord(token, airtableToken) {
+  const formula = `{${RESPONSE_FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
+  const url =
+    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}` +
+    `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1&returnFieldsByFieldId=true`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${airtableToken}` } });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Responses lookup failed: ${err}`);
+  }
+  const data = await res.json();
+  return data.records && data.records[0];
 }
 
 export default async function handler(req, res) {
@@ -46,7 +91,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
-  const formula = `{${FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
+  const formula = `{${IDENTITY_FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
   const url =
     `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}` +
     `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1&returnFieldsByFieldId=true`;
@@ -72,8 +117,37 @@ export default async function handler(req, res) {
     return res.status(200).json({ valid: false });
   }
 
-  const name = firstNameOf(record.fields[FIELD.name]);
-  const hasEmail = typeof record.fields[FIELD.email] === "string" && record.fields[FIELD.email].trim() !== "";
+  const name = firstNameOf(record.fields[IDENTITY_FIELD.name]);
+  const hasEmail = typeof record.fields[IDENTITY_FIELD.email] === "string" && record.fields[IDENTITY_FIELD.email].trim() !== "";
 
-  return res.status(200).json({ valid: true, name, hasEmail });
+  let savedState = null;
+  try {
+    const responseRecord = await findResponseRecord(token, airtableToken);
+    if (responseRecord && !responseRecord.fields[RESPONSE_FIELD.completedAt]) {
+      const f = responseRecord.fields;
+      let pairResponses = {};
+      try { pairResponses = JSON.parse(f[RESPONSE_FIELD.pairResponsesJson] || "{}"); } catch { /* corrupt/missing, treat as empty */ }
+      savedState = {
+        consent: {
+          takingPart: f[RESPONSE_FIELD.consentTakingPart] === true,
+          contactStudyEmails: f[RESPONSE_FIELD.consentStudyEmails] === true,
+          quoteAnonymously: f[RESPONSE_FIELD.consentQuoteAnon] === true,
+          quoteByName: f[RESPONSE_FIELD.consentQuoteName] === true,
+        },
+        context: {
+          role: f[RESPONSE_FIELD.role] || "",
+          discipline: f[RESPONSE_FIELD.discipline] || "",
+          teamResponsibility: f[RESPONSE_FIELD.teamResponsibility] || "",
+          orgSize: f[RESPONSE_FIELD.orgSize] || "",
+        },
+        pairResponses: pairResponses,
+      };
+    }
+  } catch (err) {
+    // A failed resume-state lookup should not break the whole page load —
+    // worst case, the respondent starts from the beginning again.
+    console.error("Responses lookup for resume failed (non-fatal):", err.message);
+  }
+
+  return res.status(200).json({ valid: true, name, hasEmail, savedState });
 }

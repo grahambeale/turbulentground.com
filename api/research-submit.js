@@ -8,9 +8,15 @@
 // /research/ at all — a documented, deliberate exception to the Phase 3
 // path boundary, required by Vercel's serverless-function routing
 // convention (functions must live under top-level /api/), not scope creep.
-// Also standalone from api/research-lookup.js and
-// api/research-capture-email.js — the Identity lookup below is
-// deliberately duplicated rather than shared, same reasoning.
+// Also standalone from api/research-lookup.js,
+// api/research-capture-email.js, and api/research-save-progress.js — the
+// Identity lookup below is deliberately duplicated rather than shared,
+// same reasoning. The one exception is validatePairResponses(), factored
+// into api/_research-lib.mjs and imported here and by
+// api/research-save-progress.js, since duplicating it a third time (this
+// file, save-progress, and any future route) was judged not worth the
+// standalone principle for a pure, stateless validation function with no
+// Airtable calls in it.
 //
 // Env var required: AIRTABLE_RESEARCH_TOKEN — a personal access token with
 // data.records:write scoped to base app7dKDinTjxczEfD. Deliberately
@@ -21,9 +27,15 @@
 // Identity table before anything is written to Responses (previously a
 // known, flagged gap — any string was accepted). Unknown token -> 403,
 // no write. Already-completed token -> 409, no write, no duplicate
-// Responses record. Valid + not yet completed -> writes Responses as
-// before, then marks the Identity record's Invite Status as completed,
-// which is what makes the token genuinely single-use.
+// Responses record. Valid + not yet completed -> writes Responses, then
+// marks the Identity record's Invite Status as completed, which is what
+// makes the token genuinely single-use.
+//
+// Responses write is update-in-place if a row already exists for this
+// token (created by a prior partial save via
+// api/research-save-progress.js), otherwise a fresh insert — so a
+// completed survey that had partial saves along the way ends up as one
+// Responses record, not two.
 //
 // This route never writes an email address anywhere, under any
 // circumstance — that is the sole responsibility of
@@ -62,12 +74,7 @@ const IDENTITY_FIELD = {
 // option if it doesn't already exist.
 const INVITE_STATUS_COMPLETED = "Completed";
 
-const DOMAIN_KEYS = ["d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12"];
-const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip", "not_applicable"]);
-
-function isPlainObject(v) {
-  return typeof v === "object" && v !== null && !Array.isArray(v);
-}
+import { isPlainObject, DOMAIN_KEYS, validatePairResponses } from "./_research-lib.mjs";
 
 // Re-derives pairsAnswered / meetsCompletionFloor server-side rather than
 // trusting the client-computed values, since the client is untrusted input.
@@ -83,21 +90,6 @@ function computeCompletion(pairResponses) {
   return { pairsAnswered, meetsCompletionFloor: pairsAnswered >= 10 };
 }
 
-function validatePairResponses(pairResponses) {
-  if (!isPlainObject(pairResponses)) return "pairResponses must be an object";
-  for (const [key, pair] of Object.entries(pairResponses)) {
-    if (!DOMAIN_KEYS.includes(key)) return `unknown domain key: ${key}`;
-    if (!isPlainObject(pair)) return `domain ${key} must be an object`;
-    for (const stmt of ["contribution", "conditions"]) {
-      if (!(stmt in pair)) continue; // a statement key may be omitted, not every domain need have both
-      if (!VALID_VALUES.has(pair[stmt])) {
-        return `domain ${key}.${stmt} must be 1-5, "skip", or "not_applicable", got ${JSON.stringify(pair[stmt])}`;
-      }
-    }
-  }
-  return null;
-}
-
 async function findIdentityRecord(token, airtableToken) {
   const formula = `{${IDENTITY_FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
   const url =
@@ -107,6 +99,25 @@ async function findIdentityRecord(token, airtableToken) {
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`Identity lookup failed: ${err}`);
+  }
+  const data = await res.json();
+  return data.records && data.records[0];
+}
+
+// A partial save (api/research-save-progress.js) may already have created
+// a Responses row for this token. Final submission must update that same
+// row rather than insert a second one — otherwise a completed survey that
+// had a partial save leaves two Responses records behind, one abandoned
+// draft and one final.
+async function findResponseRecord(token, airtableToken) {
+  const formula = `{${FIELD.token}}="${token.replace(/"/g, '\\"')}"`;
+  const url =
+    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}` +
+    `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1&returnFieldsByFieldId=true`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${airtableToken}` } });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Responses lookup failed: ${err}`);
   }
   const data = await res.json();
   return data.records && data.records[0];
@@ -224,17 +235,24 @@ export default async function handler(req, res) {
   }
 
   try {
-    const airtableRes = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${airtableToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ records: [{ fields }] }),
-      }
-    );
+    // Update-in-place if a partial save already created a Responses row
+    // for this token, so completing a survey after a partial save leaves
+    // exactly one record, not two. See findResponseRecord() above.
+    const existingResponse = await findResponseRecord(token, airtableToken);
+    const writeUrl = existingResponse
+      ? `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}/${existingResponse.id}`
+      : `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`;
+    const writeMethod = existingResponse ? "PATCH" : "POST";
+    const writeBody = existingResponse ? { fields } : { records: [{ fields }] };
+
+    const airtableRes = await fetch(writeUrl, {
+      method: writeMethod,
+      headers: {
+        Authorization: `Bearer ${airtableToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(writeBody),
+    });
 
     if (!airtableRes.ok) {
       const err = await airtableRes.text();

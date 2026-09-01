@@ -653,12 +653,144 @@ window.__TG_TOKEN__ = (function () {
         var name = (typeof data.name === 'string') ? data.name.trim() : '';
         var greetingEl = document.getElementById('consent-greeting');
         greetingEl.textContent = name ? ('Hi ' + name + ', welcome.') : 'Welcome.';
-        showScreen('screen-consent');
+
+        if (data.savedState && isPlainObjectClient(data.savedState)) {
+          resumeFromSavedState(data.savedState);
+        } else {
+          showScreen('screen-consent');
+        }
       })
       .catch(function () {
         showScreen('screen-invalid');
       });
   }
+
+  function isPlainObjectClient(v) {
+    return typeof v === 'object' && v !== null && !Array.isArray(v);
+  }
+
+  // Restores prior progress into the same in-memory state a normal walk
+  // through consent -> context -> pairs would have produced, then jumps
+  // straight to the pairs screen at the first genuinely unanswered
+  // statement — not the beginning, and not re-asking consent/context
+  // that was already given. Only reachable when the lookup response
+  // actually included savedState, which the server already withholds for
+  // a completed response (see api/research-lookup.js) — so this path
+  // itself never resumes something already finished.
+  function resumeFromSavedState(saved) {
+    if (isPlainObjectClient(saved.consent)) {
+      consent.takingPart = saved.consent.takingPart === true;
+      consent.contactStudyEmails = saved.consent.contactStudyEmails === true;
+      consent.quoteAnonymously = saved.consent.quoteAnonymously === true;
+      consent.quoteByName = saved.consent.quoteByName === true;
+      document.getElementById('consent-taking-part').checked = consent.takingPart;
+      document.getElementById('consent-study-emails').checked = consent.contactStudyEmails;
+      document.getElementById('consent-quote-name').checked = consent.quoteByName;
+    }
+    if (isPlainObjectClient(saved.context)) {
+      context.role = saved.context.role || '';
+      context.discipline = saved.context.discipline || '';
+      context.teamResponsibility = saved.context.teamResponsibility || '';
+      context.orgSize = saved.context.orgSize || '';
+      restoreChoiceField('ctx-role', context.role);
+      restoreChoiceField('ctx-discipline', context.discipline);
+      restoreChoiceField('ctx-responsibility', context.teamResponsibility);
+      restoreChoiceField('ctx-org-size', context.orgSize);
+    }
+    if (isPlainObjectClient(saved.pairResponses)) {
+      pairResponses = saved.pairResponses;
+    }
+
+    if (!consent.takingPart) {
+      // Progress was saved before consent was actually completed (e.g. the
+      // tab closed while still on the consent screen). Nothing meaningful
+      // to resume into yet — just show consent with whatever was restored
+      // already reflected in its checkboxes.
+      showScreen('screen-consent');
+      return;
+    }
+
+    startedAt = new Date().toISOString();
+    renderPairs();
+
+    var resumeIndex = orderedStatements.findIndex(function (item) {
+      var pair = pairResponses[item.domain.key];
+      return !pair || !(item.stmt.field in pair);
+    });
+    if (resumeIndex === -1) resumeIndex = orderedStatements.length;
+
+    statementsAnswered = orderedStatements.reduce(function (count, item) {
+      var pair = pairResponses[item.domain.key];
+      return count + ((pair && (item.stmt.field in pair)) ? 1 : 0);
+    }, 0);
+
+    showScreen('screen-pairs');
+    showStatement(resumeIndex);
+  }
+
+  function restoreChoiceField(name, value) {
+    if (!value) return;
+    var input = document.querySelector('input[name="' + name + '"][value="' + CSS.escape(value) + '"]');
+    if (input) input.checked = true;
+  }
+
+  // ---- partial-save / resume ----
+  // Neither save path blocks the UI or shows a loading/error state to the
+  // respondent — this is a convenience feature. A failed save is logged
+  // quietly and otherwise ignored; the person's flow is never interrupted
+  // by it. Both are no-ops before consent has actually been agreed to
+  // (nothing meaningful to persist yet).
+  function buildSavePayload() {
+    return {
+      token: token,
+      consent: consent,
+      context: context,
+      pairResponses: pairResponses,
+      sectionReached: currentStatementIndex
+    };
+  }
+
+  // Fire-and-forget checkpoint save, called every time the count of
+  // actually-answered statements reaches a multiple of 6 (roughly once
+  // per screen-equivalent of the old paginated layout) — a safety net in
+  // case the browser closes in a way that skips the pagehide/unload save
+  // below entirely.
+  function scheduleCheckpointSave() {
+    if (!consent.takingPart) return;
+    if (statementsAnswered === 0 || statementsAnswered % 6 !== 0) return;
+    fetch('/api/research-save-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildSavePayload())
+    }).catch(function (err) { console.warn('Checkpoint save failed (non-fatal):', err); });
+  }
+
+  // sendBeacon requires a Blob with an explicit content type for the
+  // request to actually arrive as application/json server-side — a plain
+  // string body sends as text/plain, which api/research-save-progress.js
+  // would still parse correctly here (it JSON.parses the raw body
+  // regardless of header), but relying on that would be fragile if the
+  // parsing ever changed to trust the header. Using a Blob is the
+  // documented way to control the content type sendBeacon sends.
+  function saveProgressOnHide() {
+    if (!consent.takingPart) return;
+    if (!navigator.sendBeacon) return;
+    var blob = new Blob([JSON.stringify(buildSavePayload())], { type: 'application/json' });
+    try {
+      navigator.sendBeacon('/api/research-save-progress', blob);
+    } catch (err) {
+      console.warn('sendBeacon save failed (non-fatal):', err);
+    }
+  }
+
+  // pagehide fires reliably across desktop and mobile browsers (including
+  // iOS Safari's back/forward-cache navigations, where beforeunload is not
+  // reliable); visibilitychange->hidden is a second trigger since a tab
+  // can be backgrounded without ever being torn down.
+  window.addEventListener('pagehide', saveProgressOnHide);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') saveProgressOnHide();
+  });
 
   // ---- email capture (for invitees with no email on file) ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
@@ -912,6 +1044,15 @@ window.__TG_TOKEN__ = (function () {
       row.appendChild(helpToggle);
       row.appendChild(help);
 
+      // If this statement was already answered in a restored savedState,
+      // reflect that in the button state now, so it's visibly there if
+      // the respondent navigates back to it — not just present in the
+      // underlying pairResponses object.
+      var existingValue = pairResponses[domainKey] && pairResponses[domainKey][field];
+      if (existingValue !== undefined) {
+        applyPressedState(scaleGrid, [skipBtn, naBtn], existingValue);
+      }
+
       list.appendChild(row);
     });
     showStatement(0);
@@ -939,12 +1080,12 @@ window.__TG_TOKEN__ = (function () {
     window.scrollTo(0, 0);
   }
 
-  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls) {
-    var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
-    if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
-    pairResponses[domainKey][field] = value;
-    if (!wasAnswered) statementsAnswered++;
-
+  // Pure DOM update, no state mutation — shared between a live click
+  // (setResponse, below) and pre-filling a restored answer's button state
+  // when the pairs screen is (re)built from savedState, so a resumed
+  // answer is genuinely visible if the respondent navigates back to it,
+  // not just present in the underlying pairResponses data.
+  function applyPressedState(scaleGridEl, alternativeBtnEls, value) {
     var scaleButtons = scaleGridEl.querySelectorAll('.scale-btn');
     scaleButtons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
     alternativeBtnEls.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
@@ -957,6 +1098,16 @@ window.__TG_TOKEN__ = (function () {
       var pressed = Array.prototype.find.call(scaleButtons, function (b) { return b.textContent === String(value); });
       if (pressed) pressed.setAttribute('aria-pressed', 'true');
     }
+  }
+
+  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls) {
+    var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
+    if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
+    pairResponses[domainKey][field] = value;
+    if (!wasAnswered) statementsAnswered++;
+
+    applyPressedState(scaleGridEl, alternativeBtnEls, value);
+    scheduleCheckpointSave();
 
     var nextStatementIndex = currentStatementIndex + 1;
     window.clearTimeout(autoAdvanceTimer);
