@@ -22,6 +22,7 @@ const expectedEvents = [
   "Research: Comparison Requested",
   "Research: Submission Failed",
   "Research: Comparison Failed",
+  "Research: Explanation Opened",
 ];
 
 check("loads Plausible on the research page",
@@ -34,6 +35,9 @@ for (const eventName of expectedEvents) {
 
 check("fires resumed only after restored participation consent is confirmed",
   /function resumeFromSavedState\(saved\) \{[\s\S]*if \(!consent\.takingPart\) \{[\s\S]*return;[\s\S]*trackResearchEvent\('Research: Resumed'\);[\s\S]*showScreen\('screen-pairs'\)/.test(html));
+
+check("fires explanation opened only when an explanation is being revealed",
+  /var opening = help\.hidden;[\s\S]*if \(opening\) trackResearchEvent\('Research: Explanation Opened'\);[\s\S]*help\.hidden = !opening;/.test(html));
 
 check("tracks quarter milestones from actual newly answered statements",
   /if \(!wasAnswered\) \{[\s\S]*statementsAnswered\+\+[\s\S]*statementsAnswered === 6[\s\S]*statementsAnswered === 12[\s\S]*statementsAnswered === 18[\s\S]*statementsAnswered === TOTAL_STATEMENTS/.test(html));

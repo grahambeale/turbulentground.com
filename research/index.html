@@ -1014,6 +1014,7 @@ window.plausible = window.plausible || function () {
 
       helpToggle.addEventListener('click', function () {
         var opening = help.hidden;
+        if (opening) trackResearchEvent('Research: Explanation Opened');
         help.hidden = !opening;
         helpToggle.setAttribute('aria-expanded', String(opening));
         helpLabel.textContent = opening ? 'Hide explanation' : 'What do you mean?';
