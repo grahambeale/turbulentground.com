@@ -20,6 +20,8 @@ const expectedEvents = [
   "Research: Questions Completed",
   "Research: Submitted",
   "Research: Comparison Requested",
+  "Research: Submission Failed",
+  "Research: Comparison Failed",
 ];
 
 check("loads Plausible on the research page",
@@ -40,12 +42,20 @@ const submitSuccess = html.indexOf("trackResearchEvent('Research: Submitted')", 
 const submitFailure = html.indexOf(".catch(function", submitFetch);
 check("fires submission only after the submission request succeeds",
   submitFetch !== -1 && submitSuccess > submitFetch && submitSuccess < submitFailure);
+const submissionFailure = html.indexOf("trackResearchEvent('Research: Submission Failed')", submitFailure);
+check("fires submission failed only from the failure path",
+  submissionFailure > submitFailure);
+check("does not classify invalid or already-used invites as service failures",
+  /res\.status === 409[\s\S]*trackSubmissionFailure = false;[\s\S]*res\.status === 403[\s\S]*trackSubmissionFailure = false;/.test(html));
 
 const comparisonFetch = html.indexOf("fetch('/api/research-results-email'");
 const comparisonSuccess = html.indexOf("trackResearchEvent('Research: Comparison Requested')", comparisonFetch);
 const comparisonFailure = html.indexOf(".catch(function", comparisonFetch);
 check("fires comparison requested only after the email request succeeds",
   comparisonFetch !== -1 && comparisonSuccess > comparisonFetch && comparisonSuccess < comparisonFailure);
+const comparisonFailed = html.indexOf("trackResearchEvent('Research: Comparison Failed')", comparisonFailure);
+check("fires comparison failed only from the failure path",
+  comparisonFailed > comparisonFailure);
 check("does not track local journey previews",
   /if \(localJourneyPreview \|\| researchEventsSent\[name\]\) return;/.test(html));
 check("sends only a fixed event name with no custom properties",

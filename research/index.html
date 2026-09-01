@@ -1235,6 +1235,7 @@ window.plausible = window.plausible || function () {
   // ---- submit ----
   document.getElementById('submit-btn').addEventListener('click', function () {
     var btn = this;
+    var trackSubmissionFailure = true;
     btn.disabled = true;
     btn.textContent = 'Submitting…';
     var errorEl = document.getElementById('submit-error');
@@ -1263,10 +1264,12 @@ window.plausible = window.plausible || function () {
       body: JSON.stringify(payload)
     }).then(function (res) {
       if (res.status === 409) {
+        trackSubmissionFailure = false;
         errorEl.textContent = 'This invite has already been used. Your response was already recorded.';
         throw new Error('already submitted');
       }
       if (res.status === 403) {
+        trackSubmissionFailure = false;
         errorEl.textContent = "This invite link isn't recognised.";
         throw new Error('invalid token');
       }
@@ -1277,6 +1280,7 @@ window.plausible = window.plausible || function () {
       showScreen('screen-done');
       prepareResultsEmail();
     }).catch(function () {
+      if (trackSubmissionFailure) trackResearchEvent('Research: Submission Failed');
       errorEl.classList.add('visible');
       btn.disabled = false;
       btn.textContent = 'Submit';
@@ -1329,6 +1333,7 @@ window.plausible = window.plausible || function () {
       button.hidden = true;
       input.hidden = true;
     }).catch(function (error) {
+      trackResearchEvent('Research: Comparison Failed');
       status.textContent = error.message;
       status.hidden = false;
       button.disabled = false;
