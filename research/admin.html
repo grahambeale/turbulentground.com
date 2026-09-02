@@ -266,20 +266,20 @@
     'know-well': function (name, link, context) {
       var contextClause = context ? ' given ' + context : '';
       return "Hi " + name + ", I'm running a small research study on how AI is actually changing people's work day to day, and I'd really value your experience" + contextClause + ".\n\n" +
-        "It takes about 10 to 12 minutes, it's confidential unless you choose otherwise, and you'll get a personal summary of your own answers straight after.\n\n" +
+        "It takes about 10 to 12 minutes, it's confidential unless you choose otherwise, and you'll get a personal comparison showing how your answers sit against everyone else's, something most organisations never actually show their own people, straight after.\n\n" +
         link + "\n\n" +
         "No pressure if now's not a good time, just let me know.";
     },
     'linkedin': function (name, link) {
       return "Hi " + name + ", we haven't spoken much before, but I'm doing some research into how AI is changing day to day work in product teams, and your experience would genuinely add something useful.\n\n" +
-        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal summary of your own answers at the end.\n\n" +
+        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal comparison showing how your answers sit against everyone else's, something most organisations never actually show their own people, at the end.\n\n" +
         link + "\n\n" +
         "Totally understand if it's not the right time, thank you either way.";
     },
     'referred': function (name, link, context, referrer) {
       var who = referrer || 'A mutual contact';
       return "Hi " + name + ", " + who + " mentioned you might be a good person to talk to for a study I'm running on how AI is changing people's work.\n\n" +
-        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal summary of your own answers straight after.\n\n" +
+        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal comparison showing how your answers sit against everyone else's, something most organisations never actually show their own people, straight after.\n\n" +
         link + "\n\n" +
         "Thank you for even reading this far, no pressure either way.";
     }
