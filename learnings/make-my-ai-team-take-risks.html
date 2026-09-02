@@ -5,67 +5,423 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I'm Going to Make My AI Team Take Risks. I Don't Know If It Can. · Turbulent Ground</title>
 <link rel="canonical" href="https://turbulentground.com/learnings/make-my-ai-team-take-risks">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.","description":"Seventeen sprints in, my AI product team has never taken a risk or removed anything. Both failures trace back to one evidence-first rule.","image":"https://turbulentground.com/learnings//learnings/images/make-my-ai-team-take-risks.png","author":{"@type":"Person","name":"Graham Beale"},"publisher":{"@type":"Organization","name":"Turbulent Ground"},"mainEntityOfPage":"https://turbulentground.com/learnings/make-my-ai-team-take-risks"}</script>
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta name="description" content="Seventeen sprints in, my AI product team has never taken a risk or removed anything. Both failures trace back to one evidence-first rule.">
 <meta property="og:title" content="I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.">
 <meta property="og:description" content="What happens when an evidence-first AI product team is explicitly given permission to gamble?">
 <meta property="og:image" content="https://turbulentground.com/learnings/images/make-my-ai-team-take-risks.png">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://turbulentground.com/learnings/make-my-ai-team-take-risks">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.","description":"Seventeen sprints in, my AI product team has never taken a risk or removed anything. Both failures trace back to one evidence-first rule.","image":"https://turbulentground.com/learnings/images/make-my-ai-team-take-risks.png","datePublished":"2026-08-26","author":{"@type":"Person","name":"Graham Beale"},"publisher":{"@type":"Organization","name":"Turbulent Ground"},"mainEntityOfPage":"https://turbulentground.com/learnings/make-my-ai-team-take-risks"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#131110;--dark:#0e0b08;--warm:#1c1915;--surface:#26211c;--orange:#e8763a;--ink:#e8dcc8;--mid:#c8b89a;--muted:#9e8e7c}html{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7}body{min-height:100vh}.nav{height:72px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,240,232,.22)}.brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.18em;color:#f5f0e8;text-decoration:none}.links{display:flex;gap:24px;align-items:center}.links a{color:var(--muted);text-decoration:none}.links a:hover{color:var(--orange)}.cta{background:#b84215!important;color:#fff!important;padding:9px 20px;border-radius:40px}.hero{width:100%;max-height:620px;object-fit:cover;display:block}@media(max-width:640px){.hero{max-height:220px}}.cold-open{background:var(--surface);border-left:3px solid var(--orange);border-radius:6px;padding:16px 20px;font-size:14px;color:var(--mid);margin-bottom:32px}.cold-open strong{color:var(--ink)}.cold-open a{color:var(--orange);text-decoration:underline;text-underline-offset:2px}.cta-hook{background:var(--warm);border:1px solid var(--surface);border-radius:10px;padding:22px 24px;margin:40px 0}.cta-hook-q{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ink);margin-bottom:8px;font-style:italic}.cta-hook-a{color:var(--mid);font-size:15px;margin-bottom:0}.cta-hook-a a{color:var(--orange);font-weight:500}.page{max-width:680px;margin:0 auto;padding:80px 24px 120px}.eyebrow{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:16px}h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,6vw,52px);font-weight:300;line-height:1.12;margin-bottom:20px}.byline{display:flex;gap:12px;color:var(--muted);font-size:13px;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--surface)}.byline strong{color:var(--mid);font-size:14px}.disclosure{background:var(--warm);border:1px solid var(--surface);border-radius:8px;padding:14px 18px;font-size:13px;color:var(--muted);margin-bottom:40px}.disclosure strong{color:var(--mid)}article p{color:var(--mid);margin-bottom:22px;font-size:16px;line-height:1.8}article h2{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;margin:48px 0 20px}article strong{color:var(--ink);font-weight:500}footer{background:var(--dark);border-top:1px solid var(--surface);padding:32px 24px;text-align:center;color:var(--muted);font-size:12px}footer a{color:var(--muted)}@media(max-width:720px){.nav{padding:0 24px}.links a:not(.cta){display:none}.page{padding-top:56px}}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  body { min-height: 100vh; }
+/* NAV_CSS_START */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  min-height:72px; padding:12px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  min-height:52px; padding:8px 48px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-logo-text { display:flex; flex-direction:column; gap:3px; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+/* Hover-highlight only applies when the logo is actually a link — the
+   selector requires an <a>. A page can configure logoHref: null in
+   scripts/build-nav.mjs to render a non-clickable <div class="nav-logo">
+   instead (nothing currently does), and that never needs --orange-lt
+   defined, since this rule simply never matches it. */
+a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+/* Strapline: optional second line under the wordmark, configured per
+   page. Small and muted enough not to compete with the wordmark, but
+   sized and coloured for real readability (13px / --ink-mid, not
+   --muted) — a first pass at 11px/--muted technically passed contrast
+   but was still too small to read comfortably. Collapses along with
+   the logo mark on scroll, same shrink behaviour. */
+.nav-strapline {
+  font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:0.01em; line-height:1.4;
+  /* Falls back to the literal colour rather than relying on --ink-mid
+     alone — not every page defines it (about.html and care-capital.html
+     use --sand/--cream/--dim instead), and this partial is shared across
+     all of them, so it can't assume any one page's variable naming. */
+  color:var(--ink-mid, #c8b89a); white-space:nowrap; overflow:hidden;
+  max-height:20px; opacity:1;
+  transition:max-height 0.3s ease, opacity 0.2s ease;
+}
+.nav.scrolled .nav-strapline { max-height:0; opacity:0; }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:14px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange-lt); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
+.mobile-menu a.active { color:var(--orange-lt); }
+.mobile-menu a:hover { color:var(--orange-lt); }
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
+}
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
+  .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  @media (max-width: 640px) {
+    .hero-image { max-height: 220px; }
+  }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open strong { color: var(--ink); }
+  .cold-open a { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
+  .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
+  .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
+  .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
+  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: 13px; }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article a { color: var(--orange-lt); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  article strong { color: var(--ink); font-weight: 500; }
+  article em { color: var(--muted); font-style: italic; }
+  article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
+  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--ink-mid); }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+  .footer-copy a { color: var(--muted); }
+/* FEEDBACK_CSS_START */
+.feedback-tab-wrap {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 150;
+}
+.feedback-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 132px;
+  padding: 12px 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.25);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab:hover,
+.feedback-tab:focus-visible {
+  color: var(--orange-lt);
+  background: var(--bg-warm);
+}
+.feedback-tab:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 2px;
+  border-radius: 10px 0 0 10px;
+}
+.feedback-tab-icon { flex-shrink: 0; opacity: 0.85; }
+.feedback-tab-close {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.feedback-tab-close:hover { color: var(--orange-lt); background: var(--bg-warm); }
+.feedback-tab-close:focus-visible {
+  outline: 3px solid #ffb37a;
+  outline-offset: 1px;
+}
+.feedback-tab-wrap.dismissed { display: none; }
+
+/* Icon-only on narrow viewports — stays right-center so it never overlaps
+   the diagnostic page's full-width fixed bottom survey bar. */
+@media (max-width: 560px) {
+  .feedback-tab {
+    max-width: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 22px 0 0 22px;
+  }
+  .feedback-tab-label { display: none; }
+}
+/* FEEDBACK_CSS_END */
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 </head>
 <body>
-<nav class="nav"><a class="brand" href="/">Turbulent Ground</a><div class="links"><a href="/">Home</a><a href="/learnings">Learnings</a><a class="cta" href="/diagnostic">Take the diagnostic &rarr;</a></div></nav>
+
+<!-- NAV_START -->
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <div class="nav-logo-text">
+      <span class="nav-wordmark">TURBULENT GROUND</span>
+      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/learnings" class="nav-link">Learnings</a>
+    <div class="nav-btn-wrap"><a href="/diagnostic" class="nav-btn">Take the diagnostic &rarr;</a></div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/">Home</a>
+  <a href="/learnings">Learnings</a>
+  <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+</div>
+<!-- NAV_END -->
 <main>
-<img class="hero" src="/learnings/images/make-my-ai-team-take-risks.png" alt="Illustration for I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.">
-<div class="page">
+<img src="/learnings/images/make-my-ai-team-take-risks.png" alt="Illustration for I'm Going to Make My AI Team Take Risks. I Don't Know If It Can." class="hero-image">
+
+<div class="page-wrap">
   <p class="eyebrow">The Experiment</p>
   <h1>I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.</h1>
-  <div class="byline"><strong>Graham Beale</strong><span>&middot; Sprints 1&ndash;17</span></div>
-  <div class="disclosure"><strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.</div>
-  <article>
-    <p>Seventeen sprints and my AI product team has never taken a risk. Not one. Not a speculative bet, not an unproven idea, not a single thing it couldn't justify with evidence before starting.</p>
-    <div class="cold-open">
-      <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
-    </div>
-    <p>It has also never removed anything. Not a page, not a sentence, not a claim.</p>
-    <p>I'm about to give it explicit permission to gamble, and I genuinely don't know whether that produces anything resembling judgement, or just randomness with better paperwork.</p>
-    <p>Both of those, the caution and the question, are my fault, and they have the same cause.</p>
-    <p>The team operates under a governing constraint that sounds unarguable. A proposal needs a stated user problem and evidence behind it before it can go forward. No speculative work, no vanity projects, no building things because they seem interesting.</p>
-    <p>I wrote that rule. I'd defend it in most contexts. And I now think it's quietly responsible for almost everything that's gone wrong.</p>
-    <h2>Why the rule fails</h2>
-    <p>A stretch goal has no evidence. That's what makes it a stretch. You can't prove a leap before you take it, so a system that demands proof before acting will never take one.</p>
-    <p>Deletion has it worse. "Remove this paragraph" has no user problem behind it that any metric will demonstrate. Addition is always defensible, because you can point at the thing you added and describe who it helps. Subtraction can't be argued for on the same terms.</p>
-    <p>At one point two parallel sessions independently added copy saying the same thing in different words, and the site now carries three different descriptions of the same promise, all live, all trying to say one thing.</p>
-    <p>The Design agent spotted two of the three contradicting each other. It logged the tension and moved on, correctly identifying that resolving it needed judgement it had no mandate to exercise.</p>
-    <p>That's the rule working exactly as written.</p>
-    <h2>What a human would do here</h2>
-    <p>Any product person worth hiring takes bets they can't justify. They cut things that technically work because the whole reads better without them. They act on taste, on pattern recognition, on a hunch, and they accept that some of it will be wrong.</p>
-    <p>None of that survives an evidence-first rule. What's left is the fraction of good product work that happens to be provable in advance, which turns out to be the small, safe, incremental fraction.</p>
-    <p>So the question I'm actually testing next is whether you can put that back deliberately. Whether an agent given explicit permission to gamble will produce anything resembling judgement, or whether it will just produce randomness with better paperwork. Taste might be the thing that doesn't transfer. I don't know yet.</p>
-    <h2>The three rules I'd need to write</h2>
-    <p><strong>Permission to remove.</strong> An explicit carve-out saying the team may propose removing something without a stated user problem, on the grounds that coherence is itself a user problem even when no metric can show it. This is the one I'm most confident about and least comfortable with, because it means handing an autonomous team permission to delete things. I haven't written it yet.</p>
-    <p><strong>One unevidenced bet per sprint.</strong> A mandated slot for something the team believes might work but cannot prove. Not optional, because anything optional under an evidence-first culture gets deferred. Required, and logged as a bet rather than a decision, so it's judged on what it taught rather than whether it worked. Writing this one means admitting the day-one rule has been shaping every outcome since, and not in the direction I intended. That's harder to write than it sounds.</p>
-    <p><strong>Kill criteria, defined in advance.</strong> This one is for me, not the team. I've just committed to daily sprints, a second provider and a new role, and I haven't written down what success looks like. Without that I'll be in the same position in three weeks, several thousand tokens down, unable to say whether the attempt failed or simply needed longer. Deciding afterwards what would have counted as working is not evaluation, it's storytelling. Writing it down first means accepting in advance that I might have to stop, and I've been running this long enough to have got attached to it continuing.</p>
-    <h2>The part that bothers me</h2>
-    <p>None of these three ideas came from the team. In seventeen sprints it has never proposed a change to its own rules. It has investigated symptoms with genuine care, dozens of times, and it has never once asked why the same shape of problem keeps recurring.</p>
-    <p>I spent four sprints looking at individual outputs without asking whether the instructions producing them were even the ones I'd written, and I only noticed because I went away for a week. The team's blind spot and mine turned out to be the same blind spot.</p>
-    <p>So I still don't know if it'll actually take the risk. But I know why neither of us thought to ask.</p>
+  <div class="byline-row">
+    <span class="byline-name">Graham Beale</span>
+    <span class="byline-meta">&middot; Sprints 1&ndash;17</span>
+  </div>
 
-    <div class="cta-hook">
-      <p class="cta-hook-q">Would your own team survive the same test?</p>
-      <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic" onclick="if(typeof plausible==='function') plausible('Diagnostic CTA Clicked')">Take the diagnostic &rarr;</a></p>
-    </div>
+  <div class="disclosure-note">
+    <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
+  </div>
+
+  <article>
+<p>Seventeen sprints and my AI product team has never taken a risk. Not one. Not a speculative bet, not an unproven idea, not a single thing it couldn&#39;t justify with evidence before starting.</p>
+<div class="cold-open">
+<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+</div><p>It has also never removed anything. Not a page, not a sentence, not a claim.</p>
+<p>I&#39;m about to give it explicit permission to gamble, and I genuinely don&#39;t know whether that produces anything resembling judgement, or just randomness with better paperwork.</p>
+<p>Both of those, the caution and the question, are my fault, and they have the same cause.</p>
+<p>The team operates under a governing constraint that sounds unarguable. A proposal needs a stated user problem and evidence behind it before it can go forward. No speculative work, no vanity projects, no building things because they seem interesting.</p>
+<p>I wrote that rule. I&#39;d defend it in most contexts. And I now think it&#39;s quietly responsible for almost everything that&#39;s gone wrong.</p>
+<h2>Why the rule fails</h2>
+<p>A stretch goal has no evidence. That&#39;s what makes it a stretch. You can&#39;t prove a leap before you take it, so a system that demands proof before acting will never take one.</p>
+<p>Deletion has it worse. &quot;Remove this paragraph&quot; has no user problem behind it that any metric will demonstrate. Addition is always defensible, because you can point at the thing you added and describe who it helps. Subtraction can&#39;t be argued for on the same terms.</p>
+<p>At one point two parallel sessions independently added copy saying the same thing in different words, and the site now carries three different descriptions of the same promise, all live, all trying to say one thing.</p>
+<p>The Design agent spotted two of the three contradicting each other. It logged the tension and moved on, correctly identifying that resolving it needed judgement it had no mandate to exercise.</p>
+<p>That&#39;s the rule working exactly as written.</p>
+<h2>What a human would do here</h2>
+<p>Any product person worth hiring takes bets they can&#39;t justify. They cut things that technically work because the whole reads better without them. They act on taste, on pattern recognition, on a hunch, and they accept that some of it will be wrong.</p>
+<p>None of that survives an evidence-first rule. What&#39;s left is the fraction of good product work that happens to be provable in advance, which turns out to be the small, safe, incremental fraction.</p>
+<p>So the question I&#39;m actually testing next is whether you can put that back deliberately. Whether an agent given explicit permission to gamble will produce anything resembling judgement, or whether it will just produce randomness with better paperwork. Taste might be the thing that doesn&#39;t transfer. I don&#39;t know yet.</p>
+<h2>The three rules I&#39;d need to write</h2>
+<p><strong>Permission to remove.</strong> An explicit carve-out saying the team may propose removing something without a stated user problem, on the grounds that coherence is itself a user problem even when no metric can show it. This is the one I&#39;m most confident about and least comfortable with, because it means handing an autonomous team permission to delete things. I haven&#39;t written it yet.</p>
+<p><strong>One unevidenced bet per sprint.</strong> A mandated slot for something the team believes might work but cannot prove. Not optional, because anything optional under an evidence-first culture gets deferred. Required, and logged as a bet rather than a decision, so it&#39;s judged on what it taught rather than whether it worked. Writing this one means admitting the day-one rule has been shaping every outcome since, and not in the direction I intended. That&#39;s harder to write than it sounds.</p>
+<p><strong>Kill criteria, defined in advance.</strong> This one is for me, not the team. I&#39;ve just committed to daily sprints, a second provider and a new role, and I haven&#39;t written down what success looks like. Without that I&#39;ll be in the same position in three weeks, several thousand tokens down, unable to say whether the attempt failed or simply needed longer. Deciding afterwards what would have counted as working is not evaluation, it&#39;s storytelling. Writing it down first means accepting in advance that I might have to stop, and I&#39;ve been running this long enough to have got attached to it continuing.</p>
+<h2>The part that bothers me</h2>
+<p>None of these three ideas came from the team. In seventeen sprints it has never proposed a change to its own rules. It has investigated symptoms with genuine care, dozens of times, and it has never once asked why the same shape of problem keeps recurring.</p>
+<p>I spent four sprints looking at individual outputs without asking whether the instructions producing them were even the ones I&#39;d written, and I only noticed because I went away for a week. The team&#39;s blind spot and mine turned out to be the same blind spot.</p>
+<p>So I still don&#39;t know if it&#39;ll actually take the risk. But I know why neither of us thought to ask.</p>
+
+  <div class="cta-hook">
+    <p class="cta-hook-q">Would your own team survive the same test?</p>
+    <p class="cta-hook-a">The two-minute diagnostic shows you where human judgement is genuinely load-bearing in your operating model, and where it isn't. <a href="/diagnostic">Take the diagnostic &rarr;</a></p>
+  </div>
   </article>
 </div>
+
 </main>
-<footer><p><a href="/learnings">All learnings</a> &middot; <a href="mailto:feedback@turbulentground.com">Send feedback</a></p><p>Originally built by <a href="https://beale.co.uk">Graham Beale</a>. AI product team from Sprint 1, a live experiment.</p></footer>
+<footer>
+  <div class="footer-links">
+    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
+    <a href="/diagnostic">Diagnostic</a>
+    <a href="/learnings">Learnings</a>
+    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+</footer>
+
+<!-- NAV_JS_START -->
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  if(!nav) return;
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  // Toggle/menu only exist when the page's nav config includes links —
+  // guarded rather than assumed, since a page configured with no links
+  // (see scripts/build-nav.mjs) has no hamburger or mobile menu to wire up.
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  if(toggle && menu){
+    function setMenu(open){
+      toggle.classList.toggle('open',open);
+      menu.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+      document.body.style.overflow=open?'hidden':'';
+    }
+    toggle.addEventListener('click',function(){
+      setMenu(!menu.classList.contains('open'));
+    });
+    menu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){ setMenu(false); });
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape') setMenu(false);
+    });
+  }
+  function normalize(p){
+    p=p.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/+$/,'');
+    return p===''?'/':p;
+  }
+  var current=normalize(window.location.pathname);
+  document.querySelectorAll('.nav-link, .mobile-menu a:not(.mobile-menu-btn)').forEach(function(a){
+    var href=normalize(a.getAttribute('href'));
+    if(href===current) a.classList.add('active');
+  });
+  document.querySelectorAll('a[href$="/diagnostic"], a[href$="diagnostic/index.html"]').forEach(function(a){
+    if(a.closest('footer')) return;
+    a.addEventListener('click',function(){
+      if(typeof plausible==='function') plausible('Diagnostic CTA Clicked');
+    });
+  });
+})();
+</script>
+<!-- NAV_JS_END -->
+
+<!-- FEEDBACK_START -->
+<div class="feedback-tab-wrap" id="feedback-tab-wrap">
+  <a href="mailto:feedback@turbulentground.com" class="feedback-tab" id="feedback-tab" aria-label="Spot something broken? Tell the team — opens an email to feedback@turbulentground.com">
+    <svg class="feedback-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+      <path d="m22 6-10 7L2 6"></path>
+    </svg>
+    <span class="feedback-tab-label">Spot something broken? Tell the team</span>
+  </a>
+  <button type="button" class="feedback-tab-close" id="feedback-tab-close" aria-label="Dismiss feedback prompt">&times;</button>
+</div>
+<!-- FEEDBACK_END -->
+
+<!-- FEEDBACK_JS_START -->
+<script>
+(function(){
+  var wrap = document.getElementById('feedback-tab-wrap');
+  var closeBtn = document.getElementById('feedback-tab-close');
+  if (!wrap || !closeBtn) return;
+  try {
+    if (localStorage.getItem('tg-feedback-dismissed') === '1') {
+      wrap.classList.add('dismissed');
+      return;
+    }
+  } catch (e) {}
+  closeBtn.addEventListener('click', function(){
+    wrap.classList.add('dismissed');
+    try { localStorage.setItem('tg-feedback-dismissed', '1'); } catch (e) {}
+  });
+})();
+</script>
+<!-- FEEDBACK_JS_END -->
+
 </body>
 </html>
