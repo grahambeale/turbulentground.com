@@ -51,6 +51,13 @@
   .invite-row input { color: var(--success); font-size: 0.88rem; }
   .invite-row button { border-radius: 8px; flex: 0 0 auto; }
   .copy-status { color: var(--success); font-size: 0.9rem; min-height: 1.5em; margin-top: 10px; }
+  .message-section { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 22px; }
+  .message-section h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 16px; }
+  select { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font: inherit; padding: 13px 14px; width: 100%; }
+  select:focus { border-color: var(--orange-light); }
+  textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink-mid); font: inherit; font-size: 0.92rem; padding: 13px 14px; resize: vertical; width: 100%; }
+  .message-copy-row { align-items: center; display: flex; gap: 10px; margin-top: 10px; }
+  .message-copy-row button { border-radius: 8px; flex: 0 0 auto; }
   .privacy-note { color: var(--muted); font-size: 0.86rem; margin-top: 28px; }
   @media (max-width: 520px) {
     main { margin-top: 24px; }
@@ -99,6 +106,34 @@
         <button id="copy-button" type="button">Copy link</button>
       </div>
       <p class="copy-status" id="copy-status"></p>
+
+      <div class="message-section">
+        <h3>Write a message to send</h3>
+        <div class="field">
+          <label for="message-template">Message template</label>
+          <select id="message-template">
+            <option value="know-well">Know them well</option>
+            <option value="linkedin">LinkedIn connection, not close</option>
+            <option value="referred">Referred by someone else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message-context">A little about what they do <span class="optional">(optional)</span></label>
+          <input id="message-context" type="text" autocomplete="off" maxlength="200" placeholder="e.g. their work leading a design team">
+        </div>
+        <div class="field" id="message-referrer-field" style="display:none;">
+          <label for="message-referrer">Who referred them <span class="optional">(optional)</span></label>
+          <input id="message-referrer" type="text" autocomplete="off" maxlength="200" placeholder="e.g. Sarah">
+        </div>
+        <div class="field">
+          <label for="message-output">Generated message</label>
+          <textarea id="message-output" rows="8" readonly aria-label="Generated message"></textarea>
+        </div>
+        <div class="message-copy-row">
+          <button id="copy-message-button" type="button">Copy message</button>
+          <p class="copy-status" id="message-copy-status" style="margin:0;"></p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -183,10 +218,17 @@
         ? 'This person can choose to receive occasional emails about the study.'
         : 'No email was saved, so study emails cannot be sent automatically.';
       result.classList.add('visible');
+      // The name field is cleared right after a successful create (below),
+      // so the message templates need their own copy of it — captured
+      // here, before the clear, rather than read live off the form.
+      lastInviteName = name;
+      lastInviteUrl = data.inviteUrl;
       document.getElementById('name').value = '';
       document.getElementById('email').value = '';
       inviteUrl.focus();
       inviteUrl.select();
+      updateReferrerVisibility();
+      generateMessage();
     }).catch(function (error) {
       message.textContent = error.message;
       message.classList.add('visible');
@@ -203,6 +245,73 @@
       inviteUrl.focus();
       inviteUrl.select();
       copyStatus.textContent = 'Select the link and copy it manually.';
+    });
+  });
+
+  // ---- message templates ----
+  // Pure client-side text generation from data already on the page (the
+  // name just submitted and the invite link just returned) — no API
+  // route, nothing sent anywhere. Regenerates live on every relevant
+  // input change; only the copy action needs its own button press.
+  var lastInviteName = '';
+  var lastInviteUrl = '';
+  var templateSelect = document.getElementById('message-template');
+  var contextInput = document.getElementById('message-context');
+  var referrerField = document.getElementById('message-referrer-field');
+  var referrerInput = document.getElementById('message-referrer');
+  var messageOutput = document.getElementById('message-output');
+  var messageCopyStatus = document.getElementById('message-copy-status');
+
+  var MESSAGE_TEMPLATES = {
+    'know-well': function (name, link, context) {
+      var contextClause = context ? ' given ' + context : '';
+      return "Hi " + name + ", I'm running a small research study on how AI is actually changing people's work day to day, and I'd really value your experience" + contextClause + ".\n\n" +
+        "It takes about 10 to 12 minutes, it's confidential unless you choose otherwise, and you'll get a personal summary of your own answers straight after.\n\n" +
+        link + "\n\n" +
+        "No pressure if now's not a good time, just let me know.";
+    },
+    'linkedin': function (name, link) {
+      return "Hi " + name + ", we haven't spoken much before, but I'm doing some research into how AI is changing day to day work in product teams, and your experience would genuinely add something useful.\n\n" +
+        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal summary of your own answers at the end.\n\n" +
+        link + "\n\n" +
+        "Totally understand if it's not the right time, thank you either way.";
+    },
+    'referred': function (name, link, context, referrer) {
+      var who = referrer || 'A mutual contact';
+      return "Hi " + name + ", " + who + " mentioned you might be a good person to talk to for a study I'm running on how AI is changing people's work.\n\n" +
+        "It's a short, confidential survey, about 10 to 12 minutes, and you'll get a personal summary of your own answers straight after.\n\n" +
+        link + "\n\n" +
+        "Thank you for even reading this far, no pressure either way.";
+    }
+  };
+
+  function updateReferrerVisibility() {
+    referrerField.style.display = (templateSelect.value === 'referred') ? '' : 'none';
+  }
+
+  function generateMessage() {
+    var build = MESSAGE_TEMPLATES[templateSelect.value] || MESSAGE_TEMPLATES['know-well'];
+    var name = lastInviteName || '';
+    var link = lastInviteUrl || '';
+    var context = contextInput.value.trim();
+    var referrer = referrerInput.value.trim();
+    messageOutput.value = build(name, link, context, referrer);
+  }
+
+  templateSelect.addEventListener('change', function () {
+    updateReferrerVisibility();
+    generateMessage();
+  });
+  contextInput.addEventListener('input', generateMessage);
+  referrerInput.addEventListener('input', generateMessage);
+
+  document.getElementById('copy-message-button').addEventListener('click', function () {
+    navigator.clipboard.writeText(messageOutput.value).then(function () {
+      messageCopyStatus.textContent = 'Copied.';
+    }).catch(function () {
+      messageOutput.focus();
+      messageOutput.select();
+      messageCopyStatus.textContent = 'Select the message and copy it manually.';
     });
   });
 
