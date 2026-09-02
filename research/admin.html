@@ -289,9 +289,22 @@
     referrerField.style.display = (templateSelect.value === 'referred') ? '' : 'none';
   }
 
+  // Same splitting logic as firstNameOf() in api/research-lookup.js,
+  // which already does this for the on-page consent greeting — reused
+  // here rather than reimplemented. Only affects the generated message
+  // text; lastInviteName (sent to Airtable via /api/research-invite)
+  // keeps the full name exactly as typed.
+  function firstNameOf(fullName) {
+    if (!fullName || typeof fullName !== 'string') return '';
+    var trimmed = fullName.trim();
+    if (!trimmed) return '';
+    var parts = trimmed.split(/\s+/);
+    return parts.length > 1 ? parts[0] : trimmed;
+  }
+
   function generateMessage() {
     var build = MESSAGE_TEMPLATES[templateSelect.value] || MESSAGE_TEMPLATES['know-well'];
-    var name = lastInviteName || '';
+    var name = firstNameOf(lastInviteName);
     var link = lastInviteUrl || '';
     var context = contextInput.value.trim();
     var referrer = referrerInput.value.trim();
