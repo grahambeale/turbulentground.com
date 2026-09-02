@@ -4,9 +4,9 @@
 
 ## Who is responsible for your data
 
-This is a personal research project run by me, **Mr Graham Beale**. I publish the project under the name **Turbulent Ground**, but Turbulent Ground is not a company or a separate legal entity.
+This is a personal research project run by me, **Graham Beale**. I publish the project under the name **Turbulent Ground**, but Turbulent Ground is not a company or a separate legal entity.
 
-I am the data controller for this research. That means I am legally responsible for deciding how and why your personal information is used.
+I'm Graham Beale, and I'm the data controller for this research, the person legally responsible for how your information is collected and used.
 
 ICO registration reference: **ZC232927**. You can check the public register at [ico.org.uk/register](https://ico.org.uk/register).
 

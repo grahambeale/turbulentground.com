@@ -22,8 +22,37 @@
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.65; }
   body { min-height: 100vh; }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 3px; }
-  header { padding: 24px; text-align: center; }
-  header a { color: var(--ink-mid); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.14em; text-decoration: none; }
+  /* Stripped-down variant of the shared site nav (partials/nav.css): same
+     visual banner (logo mark, wordmark, scroll-shrink), but with the
+     Home/Learnings/diagnostic links and the logo's link to "/" removed.
+     This is a private admin tool inside /research/, not a page anyone
+     should be navigating away from into the main site by accident, so
+     the logo is plain text, not a link (see the matching HTML below —
+     a <div>, not an <a>). */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 72px; padding: 0 48px;
+    display: flex; align-items: center;
+    background: transparent;
+    border-bottom: 1px solid rgba(245,240,232,0.5);
+    -webkit-mask-image: linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+    mask-image: linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav.scrolled { height: 52px; background: rgba(19,17,16,0.96); backdrop-filter: blur(20px); }
+  .nav-logo { display: flex; align-items: center; gap: 14px; }
+  .nav-logo-mark { flex-shrink: 0; width: 40px; overflow: hidden; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+  .nav.scrolled .nav-logo-mark { width: 0; opacity: 0; }
+  .nav-wordmark {
+    font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.18em; line-height: 1;
+    color: #f5f0e8; text-transform: uppercase; white-space: nowrap;
+    transition: font-size 0.3s ease;
+  }
+  .nav.scrolled .nav-wordmark { font-size: 18px; }
+  .research-strapline {
+    margin: 100px 0 20px; padding: 0 24px; text-align: center;
+    color: var(--muted); font-size: 0.85rem; letter-spacing: 0.02em;
+  }
   main { width: min(100% - 40px, 620px); margin: 48px auto 100px; }
   .eyebrow { color: var(--orange-light); font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.15em; margin-bottom: 12px; text-transform: uppercase; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(38px, 8vw, 58px); font-weight: 300; line-height: 1.08; margin-bottom: 18px; }
@@ -66,7 +95,24 @@
 </style>
 </head>
 <body>
-<header><a href="/">Turbulent Ground</a></header>
+<nav class="nav" id="research-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <span class="nav-wordmark">TURBULENT GROUND</span>
+  </div>
+</nav>
+<p class="research-strapline">Helping teams navigate the AI shift, together.</p>
 <main>
   <p class="eyebrow">Private research admin</p>
   <h1>Create an invite</h1>
@@ -360,6 +406,19 @@
       previewButton.disabled = false;
       previewButton.textContent = 'Send results preview';
     });
+  });
+})();
+</script>
+<script>
+// Scroll-shrink behaviour only — the same effect as the shared site nav
+// (partials/nav.js), but there's no hamburger/mobile menu or link
+// highlighting to wire up on this stripped-down banner, so this is
+// deliberately smaller than the shared script rather than reusing it.
+(function () {
+  var nav = document.getElementById('research-nav');
+  if (!nav) return;
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
   });
 })();
 </script>
