@@ -41,7 +41,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
    the logo mark on scroll, same shrink behaviour. */
 .nav-strapline {
   font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:0.01em; line-height:1.4;
-  color:var(--ink-mid); white-space:nowrap; overflow:hidden;
+  /* Falls back to the literal colour rather than relying on --ink-mid
+     alone — not every page defines it (about.html and care-capital.html
+     use --sand/--cream/--dim instead), and this partial is shared across
+     all of them, so it can't assume any one page's variable naming. */
+  color:var(--ink-mid, #c8b89a); white-space:nowrap; overflow:hidden;
   max-height:20px; opacity:1;
   transition:max-height 0.3s ease, opacity 0.2s ease;
 }

@@ -35,12 +35,18 @@ import path from 'node:path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
+// The strapline is site-wide — every page gets it, in the shared logo
+// lockup, not just research pages. Kept as one constant rather than
+// repeated in both configs below so it can't drift between them.
+const STRAPLINE = 'Helping teams navigate the AI shift, together.';
+
 // Default config: the full main-site nav, exactly as it's always looked —
-// Home, Learnings, the diagnostic CTA, a clickable logo, no strapline.
-// Every file in TARGET_FILES gets this unless it has its own entry below.
+// Home, Learnings, the diagnostic CTA, a clickable logo — plus the
+// site-wide strapline. Every file in TARGET_FILES gets this unless it
+// has its own entry below.
 const DEFAULT_NAV_CONFIG = {
   logoHref: '/',
-  strapline: '',
+  strapline: STRAPLINE,
   links: [
     { href: '/', label: 'Home' },
     { href: '/learnings', label: 'Learnings' },
@@ -54,10 +60,11 @@ const DEFAULT_NAV_CONFIG = {
 // non-clickable here too, on the reasoning that even a same-page link
 // mid-survey would trigger a full reload; overridden — the logo should
 // behave normally, only the surrounding nav links are stripped.) The
-// strapline lives here instead of the main site, for now.
+// links are what's bespoke to the main site here, not the strapline —
+// every page gets the same strapline.
 const RESEARCH_NAV_CONFIG = {
   logoHref: '/',
-  strapline: 'Helping teams navigate the AI shift, together.',
+  strapline: STRAPLINE,
   links: [],
   cta: null,
 };
