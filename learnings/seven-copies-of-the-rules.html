@@ -132,7 +132,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 }
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
-  .hero-image { width: 100%; max-height: 620px; object-fit: cover; display: block; }
+  .hero-image { width: 100%; max-height: 620px; object-fit: cover; object-position: center; display: block; }
   @media (max-width: 640px) {
     .hero-image { max-height: 220px; }
   }
@@ -241,6 +241,34 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 /* FEEDBACK_CSS_END */
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
+<script>
+// Client-side error telemetry, added Sprint 7 (2026-07-19), originally
+// only on zero-humans-in-the-loop.html — made site-wide across every
+// learnings article per Graham's decision on 2026-09-02, rather than
+// staying a one-off. Without this, a JS crash (e.g. a form handler
+// throwing before its request is sent) is invisible to analytics and
+// looks identical to "nobody tried" — which is exactly what let the
+// diagnostic submission bug go undetected for four sprints. This
+// reports uncaught errors as a Plausible event so they show up as real
+// data in the weekly sprint review. See decision-log.md row 15.
+(function(){
+  function reportJsError(message, source){
+    try{
+      if (typeof plausible !== 'function') return;
+      // Skip the generic cross-origin "Script error." placeholder browsers
+      // emit for errors thrown by third-party scripts (extensions, ad
+      // blockers, etc.) — no useful information, just noise.
+      if (!message || message === 'Script error.') return;
+      plausible('JS Error', { props: { message: String(message).slice(0,120), page: location.pathname, source: source || '' } });
+    } catch(err) { /* error reporting must never itself throw */ }
+  }
+  window.addEventListener('error', function(e){ reportJsError(e.message, 'onerror'); });
+  window.addEventListener('unhandledrejection', function(e){
+    var msg = (e.reason && e.reason.message) ? e.reason.message : String(e.reason);
+    reportJsError(msg, 'unhandledrejection');
+  });
+})();
+</script>
 </head>
 <body>
 

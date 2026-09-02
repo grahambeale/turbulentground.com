@@ -96,6 +96,7 @@ function render(fields, bodyHtml) {
     .replaceAll('{{OG_DESCRIPTION}}', htmlAttrEscape(fields.ogDescription))
     .replaceAll('{{OG_IMAGE}}', htmlAttrEscape(fields.ogImage))
     .replaceAll('{{HERO_IMAGE}}', htmlAttrEscape(fields.heroImage))
+    .replaceAll('{{HERO_IMAGE_POSITION}}', fields.heroImagePosition || 'center')
     .replaceAll('{{HERO_ALT}}', htmlAttrEscape(fields.heroAlt))
     .replaceAll('{{EYEBROW}}', fields.eyebrow)
     .replaceAll('{{H1}}', fields.h1)

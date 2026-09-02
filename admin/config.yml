@@ -35,4 +35,5 @@ collections:
       - { label: "Social share image", name: "ogImage", widget: "string", default: "og-image.png", hint: "Filename only, relative to learnings/ — usually og-image.png." }
       - { label: "Hero image", name: "heroImage", widget: "string", hint: "Path relative to learnings/, e.g. images/eleven-sprints-in.png." }
       - { label: "Hero image alt text", name: "heroAlt", widget: "text" }
+      - { label: "Hero image position", name: "heroImagePosition", widget: "select", required: false, options: ["center", "top", "bottom"], default: "center", hint: "Only change this if the hero image looks cropped wrong — e.g. \"top\" if the important part of the image sits near the top." }
       - { label: "Body", name: "body", widget: "markdown", hint: "The article itself. Write normally — paragraphs, **bold**, _italic_, [links](https://example.com). A raw <div class=\"cold-open\">...</div> block is fine if you need one of the callout boxes; everything else just wants plain prose." }
