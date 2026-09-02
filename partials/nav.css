@@ -1,6 +1,6 @@
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
-  height:72px; padding:0 48px;
+  min-height:72px; padding:12px 48px;
   display:flex; align-items:center; justify-content:space-between;
   background:transparent;
   border-bottom:1px solid rgba(245,240,232,0.5);
@@ -9,7 +9,7 @@
   transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 .nav.scrolled {
-  height:52px;
+  min-height:52px; padding:8px 48px;
   background:rgba(19,17,16,0.96);
   backdrop-filter:blur(20px);
 }
@@ -19,6 +19,7 @@
 }
 .nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
 .nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-logo-text { display:flex; flex-direction:column; gap:3px; }
 .nav-wordmark {
   font-family:'Bebas Neue',sans-serif;
   font-size:20px; letter-spacing:0.18em; line-height:1;
@@ -26,7 +27,25 @@
   transition:font-size 0.3s ease, color 0.2s ease;
 }
 .nav.scrolled .nav-wordmark { font-size:18px; }
-.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+/* Hover-highlight only applies when the logo is actually a link — the
+   selector requires an <a>. A page can configure logoHref: null in
+   scripts/build-nav.mjs to render a non-clickable <div class="nav-logo">
+   instead (nothing currently does), and that never needs --orange-lt
+   defined, since this rule simply never matches it. */
+a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+/* Strapline: optional second line under the wordmark, configured per
+   page. Small and muted enough not to compete with the wordmark, but
+   sized and coloured for real readability (13px / --ink-mid, not
+   --muted) — a first pass at 11px/--muted technically passed contrast
+   but was still too small to read comfortably. Collapses along with
+   the logo mark on scroll, same shrink behaviour. */
+.nav-strapline {
+  font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:0.01em; line-height:1.4;
+  color:var(--ink-mid); white-space:nowrap; overflow:hidden;
+  max-height:20px; opacity:1;
+  transition:max-height 0.3s ease, opacity 0.2s ease;
+}
+.nav.scrolled .nav-strapline { max-height:0; opacity:0; }
 .nav-links { display:flex; align-items:center; gap:24px; }
 .nav-link {
   font-size:14px; font-weight:400; color:var(--muted);

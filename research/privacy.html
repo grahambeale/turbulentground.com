@@ -15,54 +15,117 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #131110; --bg-warm: #1c1915; --surface: #26211c;
-    --orange: #d9571c; --orange-light: #e8763a;
+    --orange: #d9571c; --orange-light: #e8763a; --orange-lt: #e8763a;
     --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
     --border: rgba(232,220,200,0.12); --warning-bg: #2b1d16;
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.75; }
   body { min-height: 100vh; padding-top: 92px; }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 3px; }
-  /* Stripped-down variant of the shared site nav (partials/nav.css): same
-     visual banner (logo mark, wordmark, scroll-shrink), but with the
-     Home/Learnings/diagnostic links and the logo's link to "/" removed.
-     Nothing here should let someone navigate away from /research/ by
-     accident, so the logo is plain text, not a link (see the matching
-     HTML below — a <div>, not an <a>).
+  /* NAV_CSS_START */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  min-height:72px; padding:12px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  min-height:52px; padding:8px 48px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-logo-text { display:flex; flex-direction:column; gap:3px; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+/* Hover-highlight only applies when the logo is actually a link — the
+   selector requires an <a>. A page can configure logoHref: null in
+   scripts/build-nav.mjs to render a non-clickable <div class="nav-logo">
+   instead (nothing currently does), and that never needs --orange-lt
+   defined, since this rule simply never matches it. */
+a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+/* Strapline: optional second line under the wordmark, configured per
+   page. Small and muted enough not to compete with the wordmark, but
+   sized and coloured for real readability (13px / --ink-mid, not
+   --muted) — a first pass at 11px/--muted technically passed contrast
+   but was still too small to read comfortably. Collapses along with
+   the logo mark on scroll, same shrink behaviour. */
+.nav-strapline {
+  font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:0.01em; line-height:1.4;
+  color:var(--ink-mid); white-space:nowrap; overflow:hidden;
+  max-height:20px; opacity:1;
+  transition:max-height 0.3s ease, opacity 0.2s ease;
+}
+.nav.scrolled .nav-strapline { max-height:0; opacity:0; }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:14px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange-lt); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
 
-     The strapline lives inside the logo lockup, stacked under the
-     wordmark, rather than as a separate line below the bar — small and
-     muted enough not to compete with the wordmark, but close enough to
-     read as part of the same brand mark. That's a deliberate one-line
-     taller than the main site's fixed 72px nav (min-height here, not a
-     fixed height) to fit the second line without cramping either one. */
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    min-height: 72px; padding: 12px 48px;
-    display: flex; align-items: center;
-    background: transparent;
-    border-bottom: 1px solid rgba(245,240,232,0.5);
-    -webkit-mask-image: linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
-    mask-image: linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
-    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-  }
-  .nav.scrolled { min-height: 52px; padding: 8px 48px; background: rgba(19,17,16,0.96); backdrop-filter: blur(20px); }
-  .nav-logo { display: flex; align-items: center; gap: 14px; }
-  .nav-logo-mark { flex-shrink: 0; width: 40px; overflow: hidden; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
-  .nav.scrolled .nav-logo-mark { width: 0; opacity: 0; }
-  .nav-logo-text { display: flex; flex-direction: column; gap: 3px; }
-  .nav-wordmark {
-    font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.18em; line-height: 1;
-    color: #f5f0e8; text-transform: uppercase; white-space: nowrap;
-    transition: font-size 0.3s ease;
-  }
-  .nav.scrolled .nav-wordmark { font-size: 18px; }
-  .nav-strapline {
-    font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0.01em; line-height: 1.4;
-    color: var(--ink-mid); white-space: nowrap; overflow: hidden;
-    max-height: 20px; opacity: 1;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
-  }
-  .nav.scrolled .nav-strapline { max-height: 0; opacity: 0; }
+/* Hamburger + mobile menu */
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
+.mobile-menu a.active { color:var(--orange-lt); }
+.mobile-menu a:hover { color:var(--orange-lt); }
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
+}
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
   main { margin: 46px auto 110px; width: min(100% - 40px, 760px); }
   .eyebrow { color: var(--orange-light); font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.15em; margin-bottom: 12px; text-transform: uppercase; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 8vw, 62px); font-weight: 300; line-height: 1.05; margin-bottom: 22px; }
@@ -88,8 +151,9 @@
 </style>
 </head>
 <body>
-<nav class="nav" id="research-nav">
-  <div class="nav-logo">
+<!-- NAV_START -->
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">
     <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
         <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
         <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
@@ -106,8 +170,10 @@
       <span class="nav-wordmark">TURBULENT GROUND</span>
       <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
     </div>
-  </div>
+  </a>
+  
 </nav>
+<!-- NAV_END -->
 <main>
   <p class="eyebrow">Graham Beale's AI shift research</p>
   <h1>Privacy notice</h1>
@@ -204,18 +270,53 @@
 
   <p class="updated"><strong>Last updated:</strong> 2 September 2026</p>
 </main>
+<!-- NAV_JS_START -->
 <script>
-// Scroll-shrink behaviour only — the same effect as the shared site nav
-// (partials/nav.js), but there's no hamburger/mobile menu or link
-// highlighting to wire up on this stripped-down banner, so this is
-// deliberately smaller than the shared script rather than reusing it.
-(function () {
-  var nav = document.getElementById('research-nav');
-  if (!nav) return;
-  window.addEventListener('scroll', function () {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
+(function(){
+  var nav=document.getElementById('main-nav');
+  if(!nav) return;
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>50);
+  });
+  // Toggle/menu only exist when the page's nav config includes links —
+  // guarded rather than assumed, since a page configured with no links
+  // (see scripts/build-nav.mjs) has no hamburger or mobile menu to wire up.
+  var toggle=document.getElementById('nav-toggle');
+  var menu=document.getElementById('mobile-menu');
+  if(toggle && menu){
+    function setMenu(open){
+      toggle.classList.toggle('open',open);
+      menu.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+      document.body.style.overflow=open?'hidden':'';
+    }
+    toggle.addEventListener('click',function(){
+      setMenu(!menu.classList.contains('open'));
+    });
+    menu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){ setMenu(false); });
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape') setMenu(false);
+    });
+  }
+  function normalize(p){
+    p=p.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/+$/,'');
+    return p===''?'/':p;
+  }
+  var current=normalize(window.location.pathname);
+  document.querySelectorAll('.nav-link, .mobile-menu a:not(.mobile-menu-btn)').forEach(function(a){
+    var href=normalize(a.getAttribute('href'));
+    if(href===current) a.classList.add('active');
+  });
+  document.querySelectorAll('a[href$="/diagnostic"], a[href$="diagnostic/index.html"]').forEach(function(a){
+    if(a.closest('footer')) return;
+    a.addEventListener('click',function(){
+      if(typeof plausible==='function') plausible('Diagnostic CTA Clicked');
+    });
   });
 })();
 </script>
+<!-- NAV_JS_END -->
 </body>
 </html>
