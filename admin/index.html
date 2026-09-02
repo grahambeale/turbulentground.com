@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow">
+  <title>Edit learnings articles — Turbulent Ground</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <!-- Forces Decap's relative fetch of config.yml (and its own asset
+       requests) to resolve against /admin/ regardless of whether the
+       page was reached as "/admin" or "/admin/" — vercel.json's
+       cleanUrls means the no-trailing-slash form is what people
+       actually type/link, and without this <base> tag the browser
+       treats "admin" as a filename, not a directory, so "config.yml"
+       resolves to the site root instead of /admin/config.yml (a real
+       404 caught by testing this locally, not a hypothetical). -->
+  <base href="/admin/">
+</head>
+<body>
+  <!-- Decap CMS (formerly Netlify CMS) — a git-backed editor for
+       content/learnings/*.md. Sign-in uses GitHub OAuth via
+       api/decap-auth.js + api/decap-callback.js (this site isn't on
+       Netlify, so it needs its own small OAuth handshake instead of
+       Netlify Identity's built-in one — see those two files' comments
+       for what has to be set up in GitHub for this to work). Saving an
+       entry here commits straight to the repo on `main`; the next
+       Vercel deploy picks it up and regenerates the article via
+       scripts/build-learnings.mjs. -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+</body>
+</html>

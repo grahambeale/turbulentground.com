@@ -1,0 +1,38 @@
+backend:
+  name: github
+  repo: grahambeale/turbulentground.com
+  branch: main
+  base_url: https://www.turbulentground.com
+  auth_endpoint: api/decap-auth
+
+# Images referenced by an article live in learnings/images/ already —
+# point Decap's media picker straight at that folder rather than
+# inventing a separate upload location.
+media_folder: "learnings/images"
+public_folder: "images"
+
+publish_mode: simple
+
+collections:
+  - name: "learnings"
+    label: "Learnings articles"
+    label_singular: "Article"
+    folder: "content/learnings"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}}"
+    fields:
+      - { label: "Title (browser tab)", name: "title", widget: "string", hint: "Shown in the browser tab and search results, before \" · Turbulent Ground\"." }
+      - { label: "Headline (on the page)", name: "h1", widget: "string", hint: "The big headline at the top of the article. HTML entities like &mdash; or &rsquo; are fine here." }
+      - { label: "Eyebrow label", name: "eyebrow", widget: "string", default: "The Experiment", hint: "Small label above the headline." }
+      - { label: "Byline meta", name: "bylineMeta", widget: "string", hint: "e.g. \"Sprint 11\" or \"Sprints 2–5\"." }
+      - { label: "URL slug", name: "slug", widget: "string", hint: "Must match the filename Decap gives this entry — leave alone unless you know why you're changing it." }
+      - { label: "Meta description", name: "description", widget: "text", hint: "Used for search results and the article's structured data." }
+      - { label: "Social share title", name: "ogTitle", widget: "string", hint: "Shown when this article is shared on LinkedIn/Twitter/etc. Can be the same as the title." }
+      - { label: "Social share description", name: "ogDescription", widget: "text" }
+      - { label: "Social share image", name: "ogImage", widget: "string", default: "og-image.png", hint: "Filename only, relative to learnings/ — usually og-image.png." }
+      - { label: "Hero image", name: "heroImage", widget: "string", hint: "Path relative to learnings/, e.g. images/eleven-sprints-in.png." }
+      - { label: "Hero image alt text", name: "heroAlt", widget: "text" }
+      - { label: "Body", name: "body", widget: "markdown", hint: "The article itself. Write normally — paragraphs, **bold**, _italic_, [links](https://example.com). A raw <div class=\"cold-open\">...</div> block is fine if you need one of the callout boxes; everything else just wants plain prose." }
