@@ -54,7 +54,7 @@ window.plausible = window.plausible || function () {
     --border: rgba(232,220,200,0.08);
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
-  body { min-height: 100vh; }
+  body { min-height: 100vh; padding-top: 92px; }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
   /* Stripped-down variant of the shared site nav (partials/nav.css): same
@@ -62,10 +62,17 @@ window.plausible = window.plausible || function () {
      Home/Learnings/diagnostic links and the logo's link to "/" removed.
      Nothing here should let someone navigate away from /research/
      mid-survey, so the logo is plain text, not a link (see the matching
-     HTML below — a <div>, not an <a>). */
+     HTML below — a <div>, not an <a>).
+
+     The strapline lives inside the logo lockup, stacked under the
+     wordmark, rather than as a separate line below the bar — small and
+     muted enough not to compete with the wordmark, but close enough to
+     read as part of the same brand mark. That's a deliberate one-line
+     taller than the main site's fixed 72px nav (min-height here, not a
+     fixed height) to fit the second line without cramping either one. */
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    height: 72px; padding: 0 48px;
+    min-height: 72px; padding: 12px 48px;
     display: flex; align-items: center;
     background: transparent;
     border-bottom: 1px solid rgba(245,240,232,0.5);
@@ -73,20 +80,24 @@ window.plausible = window.plausible || function () {
     mask-image: linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
     transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
   }
-  .nav.scrolled { height: 52px; background: rgba(19,17,16,0.96); backdrop-filter: blur(20px); }
+  .nav.scrolled { min-height: 52px; padding: 8px 48px; background: rgba(19,17,16,0.96); backdrop-filter: blur(20px); }
   .nav-logo { display: flex; align-items: center; gap: 14px; }
   .nav-logo-mark { flex-shrink: 0; width: 40px; overflow: hidden; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
   .nav.scrolled .nav-logo-mark { width: 0; opacity: 0; }
+  .nav-logo-text { display: flex; flex-direction: column; gap: 3px; }
   .nav-wordmark {
     font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.18em; line-height: 1;
     color: #f5f0e8; text-transform: uppercase; white-space: nowrap;
     transition: font-size 0.3s ease;
   }
   .nav.scrolled .nav-wordmark { font-size: 18px; }
-  .research-strapline {
-    margin: 100px 0 20px; padding: 0 24px; text-align: center;
-    color: var(--muted); font-size: 0.85rem; letter-spacing: 0.02em;
+  .nav-strapline {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0.01em; line-height: 1.4;
+    color: var(--ink-mid); white-space: nowrap; overflow: hidden;
+    max-height: 20px; opacity: 1;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
   }
+  .nav.scrolled .nav-strapline { max-height: 0; opacity: 0; }
 
   main { max-width: 680px; margin: 0 auto; padding: 0 24px 160px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
@@ -398,7 +409,7 @@ window.plausible = window.plausible || function () {
 
 <nav class="nav" id="research-nav">
   <div class="nav-logo">
-    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
         <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
         <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
         <g clip-path="url(#nc)">
@@ -410,10 +421,12 @@ window.plausible = window.plausible || function () {
         </g>
         <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
       </svg></div>
-    <span class="nav-wordmark">TURBULENT GROUND</span>
+    <div class="nav-logo-text">
+      <span class="nav-wordmark">TURBULENT GROUND</span>
+      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+    </div>
   </div>
 </nav>
-<p class="research-strapline">Helping teams navigate the AI shift, together.</p>
 
 <main>
 
