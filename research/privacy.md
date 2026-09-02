@@ -1,10 +1,12 @@
-# Privacy notice: Turbulent Ground Research
+# Privacy notice: Graham Beale's AI shift research
 
 ---
 
 ## Who is responsible for your data
 
-**Mr Graham Beale, trading as Turbulent Ground**, is the data controller for this research. That means I am legally responsible for deciding how and why your personal information is used.
+This is a personal research project run by me, **Mr Graham Beale**. I publish the project under the name **Turbulent Ground**, but Turbulent Ground is not a company or a separate legal entity.
+
+I am the data controller for this research. That means I am legally responsible for deciding how and why your personal information is used.
 
 ICO registration reference: **ZC232927**. You can check the public register at [ico.org.uk/register](https://ico.org.uk/register).
 
@@ -106,4 +108,4 @@ Email me at [graham@turbulentground.com](mailto:graham@turbulentground.com). If 
 
 ---
 
-**Last updated:** 29 August 2026
+**Last updated:** 2 September 2026
