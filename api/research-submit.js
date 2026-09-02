@@ -10,13 +10,22 @@
 // convention (functions must live under top-level /api/), not scope creep.
 // Also standalone from api/research-lookup.js,
 // api/research-capture-email.js, and api/research-save-progress.js — the
-// Identity lookup below is deliberately duplicated rather than shared,
-// same reasoning. The one exception is validatePairResponses(), factored
-// into api/_research-lib.mjs and imported here and by
-// api/research-save-progress.js, since duplicating it a third time (this
-// file, save-progress, and any future route) was judged not worth the
-// standalone principle for a pure, stateless validation function with no
-// Airtable calls in it.
+// Identity lookup below, and validatePairResponses(), are both
+// deliberately duplicated rather than shared.
+//
+// validatePairResponses() briefly lived in a shared api/_research-lib.mjs
+// imported by this file and api/research-save-progress.js (commit
+// d3251fb). That import crashed in production with a raw
+// FUNCTION_INVOCATION_FAILED on every POST to either route — Vercel's
+// production build didn't resolve the cross-file import the way local
+// `vercel dev` did, even though the file wasn't itself routable (the
+// underscore-prefix convention only guarantees no *route* is generated
+// for it, not that it's resolvable as an import target at runtime). That
+// silently broke every partial save and final submission until caught.
+// Inlined back here, duplicated, matching every other route in this
+// build — the standalone convention exists precisely so a change in one
+// route's code can't silently break another, and this incident is the
+// proof of why.
 //
 // Env var required: AIRTABLE_RESEARCH_TOKEN — a personal access token with
 // data.records:write scoped to base app7dKDinTjxczEfD. Deliberately
@@ -74,7 +83,32 @@ const IDENTITY_FIELD = {
 // option if it doesn't already exist.
 const INVITE_STATUS_COMPLETED = "Completed";
 
-import { isPlainObject, DOMAIN_KEYS, validatePairResponses } from "./_research-lib.mjs";
+const DOMAIN_KEYS = ["d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12"];
+const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip", "not_applicable"]);
+
+function isPlainObject(v) {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
+// Accepts partial objects — a domain key or a contribution/conditions key
+// within it may simply be absent (unanswered so far). That's valid for
+// both a partial save and a final submission; the completion floor is
+// what distinguishes "enough answered" from "not enough", not this
+// function.
+function validatePairResponses(pairResponses) {
+  if (!isPlainObject(pairResponses)) return "pairResponses must be an object";
+  for (const [key, pair] of Object.entries(pairResponses)) {
+    if (!DOMAIN_KEYS.includes(key)) return `unknown domain key: ${key}`;
+    if (!isPlainObject(pair)) return `domain ${key} must be an object`;
+    for (const stmt of ["contribution", "conditions"]) {
+      if (!(stmt in pair)) continue; // a statement key may be omitted, not every domain need have both
+      if (!VALID_VALUES.has(pair[stmt])) {
+        return `domain ${key}.${stmt} must be 1-5, "skip", or "not_applicable", got ${JSON.stringify(pair[stmt])}`;
+      }
+    }
+  }
+  return null;
+}
 
 // Re-derives pairsAnswered / meetsCompletionFloor server-side rather than
 // trusting the client-computed values, since the client is untrusted input.

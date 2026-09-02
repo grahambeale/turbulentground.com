@@ -6,10 +6,20 @@
 // api/research-capture-email.js: this file lives outside /research/
 // because Vercel only recognises serverless functions under top-level
 // /api/. Standalone — shares no code with api/submit.js or api/verify.js
-// (Phase 2's diagnostic routes), or with the other research/* routes,
-// except validatePairResponses(), factored into api/_research-lib.mjs
-// specifically because it was called out to be shared rather than
-// duplicated a third time (see api/research-submit.js's header comment).
+// (Phase 2's diagnostic routes), or with the other research/* routes.
+//
+// validatePairResponses() briefly lived in a shared api/_research-lib.mjs
+// imported by this file and api/research-submit.js (commit d3251fb).
+// That import crashed in production with a raw FUNCTION_INVOCATION_FAILED
+// on every POST to either route — Vercel's production build didn't
+// resolve the cross-file import the way local `vercel dev` did, even
+// though the file wasn't itself routable (the underscore-prefix
+// convention only guarantees no *route* is generated for it, not that
+// it's resolvable as an import target at runtime). That silently broke
+// every partial save and final submission until caught. Inlined back
+// here, duplicated, matching every other route in this build — the
+// standalone convention exists precisely so a change in one route's code
+// can't silently break another, and this incident is the proof of why.
 //
 // This endpoint is called often (on page hide/unload via
 // navigator.sendBeacon, and as a periodic safety-net save while someone
@@ -35,7 +45,32 @@
 //
 // Env var: AIRTABLE_RESEARCH_TOKEN (same as the other research/* routes).
 
-import { isPlainObject, validatePairResponses } from "./_research-lib.mjs";
+const DOMAIN_KEYS = ["d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12"];
+const VALID_VALUES = new Set([1, 2, 3, 4, 5, "skip", "not_applicable"]);
+
+function isPlainObject(v) {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
+// Accepts partial objects — a domain key or a contribution/conditions key
+// within it may simply be absent (unanswered so far). That's valid for
+// both a partial save and a final submission; the completion floor is
+// what distinguishes "enough answered" from "not enough", not this
+// function.
+function validatePairResponses(pairResponses) {
+  if (!isPlainObject(pairResponses)) return "pairResponses must be an object";
+  for (const [key, pair] of Object.entries(pairResponses)) {
+    if (!DOMAIN_KEYS.includes(key)) return `unknown domain key: ${key}`;
+    if (!isPlainObject(pair)) return `domain ${key} must be an object`;
+    for (const stmt of ["contribution", "conditions"]) {
+      if (!(stmt in pair)) continue; // a statement key may be omitted, not every domain need have both
+      if (!VALID_VALUES.has(pair[stmt])) {
+        return `domain ${key}.${stmt} must be 1-5, "skip", or "not_applicable", got ${JSON.stringify(pair[stmt])}`;
+      }
+    }
+  }
+  return null;
+}
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
