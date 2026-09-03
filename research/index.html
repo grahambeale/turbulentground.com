@@ -403,29 +403,50 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 
   .loading-wrap { text-align: center; padding: 90px 0; color: var(--muted); }
 
-  /* ── Consent-screen greeting: the warmest moment on the page ──────
-     TODO (flagged, not building now): this screen is a strong candidate
-     for a short, personal video introduction from Graham once that's
-     ready to produce — replacing or sitting above the text greeting
-     below. Leaving this note here as the marker for that future task. */
+  /* ── Consent-screen greeting ──────────────────────────────────── */
   .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
 
-  /* Intro/outro videos: source footage is portrait (720x1280), so a
-     plain max-width doesn't stop it from dominating the screen the way
-     it would for a landscape video — cap the width fairly tight to keep
-     the resulting height reasonable, especially on mobile where every
-     line matters before the Continue button. */
-  .research-video-wrap { margin: 20px 0 22px; }
-  .research-video { display: block; width: 100%; max-width: 240px; margin: 0 auto; border-radius: 12px; background: #000; }
-  .transcript-toggle { max-width: 240px; margin: 10px auto 0; }
-  /* Portrait video adds real scroll height on a narrow viewport (measured:
-     ~495px at 240px wide on a 375px-wide screen) — this consent screen's
-     Continue button already sits below the fold from the existing three
-     paragraphs and checkboxes alone, so cutting the video down further on
-     narrow screens actually matters here, not just a nicety. */
-  @media (max-width: 480px) {
-    .research-video, .transcript-toggle { max-width: 180px; }
+  /* Greeting + video thumbnail sit side by side — the thumbnail must not
+     push the greeting down, so this is a row, not a stack. Wraps under
+     the greeting on narrow screens rather than forcing a cramped row,
+     which still satisfies "not pushing it down" since the greeting text
+     itself never moves. */
+  .greeting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+  .greeting-row .greeting { margin-bottom: 0; flex: 1 1 auto; min-width: 180px; }
+
+  /* Video thumbnail: a small round avatar-sized button, not a player.
+     Second version of this feature — the first pass embedded full
+     inline <video> players, which was too heavy on the page; this
+     replaces that with a thumbnail that opens the shared popup below. */
+  .video-thumb { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .video-thumb-btn {
+    position: relative; width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--orange-lt); background: #000; cursor: pointer; padding: 0;
   }
+  .video-thumb-btn img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.2s ease; }
+  .video-thumb-btn:hover img, .video-thumb-btn:focus-visible img { opacity: 1; }
+  .video-thumb-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.22); pointer-events: none;
+  }
+  .video-thumb-label { color: var(--muted); font-size: 0.7rem; text-align: center; max-width: 76px; line-height: 1.3; }
+
+  /* Shared popup, reused for both intro and outro — the JS swaps the
+     <source> src and poster per-thumbnail rather than building two
+     separate modals. */
+  .video-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .video-modal[hidden] { display: none; }
+  .video-modal-backdrop { position: absolute; inset: 0; background: rgba(10,8,6,0.88); }
+  .video-modal-panel { position: relative; z-index: 1; width: 100%; max-width: min(90vw, 360px); }
+  .video-modal-panel video { display: block; width: 100%; max-height: 80vh; border-radius: 10px; background: #000; }
+  .video-modal-close {
+    position: absolute; top: -42px; right: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; font-size: 22px;
+    line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .video-modal-close:hover, .video-modal-close:focus-visible { background: var(--orange); border-color: var(--orange); }
+
+  .transcript-toggle { max-width: 320px; margin: 10px 0 0; }
   .transcript-toggle summary {
     cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none;
     display: flex; align-items: center; gap: 6px; user-select: none;
@@ -441,6 +462,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     margin-top: 10px; color: var(--ink-mid); font-size: 0.9rem; line-height: 1.7;
     white-space: pre-line;
   }
+  /* Thank-you screen: video sits below the results-email form, not
+     above it — deliberate reordering, not just a smaller thumbnail. */
+  .done-video-block { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--surface); }
 
   .consent-thanks {
     margin-top: 28px; padding: 18px 20px; border-left: 3px solid var(--orange);
@@ -484,6 +508,21 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .done-wrap h1 { margin-bottom: 20px; }
   .done-wrap .done-message { color: var(--ink-mid); font-size: 1.05rem; max-width: 480px; margin: 0 auto; text-align: left; }
   .done-wrap .done-message p { margin-bottom: 16px; }
+  /* The results-email form is the primary interactive element on this
+     screen and needs to be reachable without scrolling past it first —
+     measured on a 375px mobile viewport: the form's input was sitting
+     8px below the fold with the desktop spacing, so this isn't just a
+     nicety, it's the difference between fitting and not. */
+  @media (max-width: 480px) {
+    .done-wrap { padding-top: 20px; }
+    .done-check { width: 44px; height: 44px; margin-bottom: 10px; }
+    .done-check svg { width: 22px; height: 22px; }
+    .done-wrap h1 { margin-bottom: 8px; font-size: 28px; }
+    .done-wrap .done-message p { margin-bottom: 8px; }
+    .results-email { margin-top: 12px; padding: 14px; }
+    .results-email h2 { font-size: 1.25rem; margin-bottom: 4px; }
+    .results-email p { margin-bottom: 10px; font-size: 0.88rem; }
+  }
   .results-email {
     max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
     background: var(--bg-warm); border: 1px solid var(--border); border-radius: 10px;
@@ -559,13 +598,20 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
          "TurbulentGround Research" eyebrow here was just a smaller
          repeat of it, so it's gone. The greeting below is the page's
          real opening line now. -->
-    <p class="greeting" id="consent-greeting"></p>
+    <div class="greeting-row">
+      <p class="greeting" id="consent-greeting"></p>
+      <div class="video-thumb">
+        <button type="button" class="video-thumb-btn" id="intro-video-btn" aria-haspopup="dialog" aria-label="Play: a message from Graham">
+          <img src="/research/media/intro-poster.jpg" alt="" aria-hidden="true">
+          <span class="video-thumb-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+          </span>
+        </button>
+        <span class="video-thumb-label">A message from Graham</span>
+      </div>
+    </div>
 
     <div class="research-video-wrap">
-      <video class="research-video" controls preload="metadata" playsinline poster="/research/media/intro-poster.jpg">
-        <source src="/research/media/research-intro.mp4" type="video/mp4">
-        Your browser doesn't support embedded video. <a href="/research/media/research-intro.mp4">Download the video</a> instead.
-      </video>
       <details class="transcript-toggle">
         <summary>Read the transcript</summary>
         <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
@@ -719,11 +765,32 @@ So thank you for being a part of it.</div>
       </div>
       <h1>Thank you.</h1>
 
-      <div class="research-video-wrap">
-        <video class="research-video" controls preload="metadata" playsinline poster="/research/media/outro-poster.jpg">
-          <source src="/research/media/research-outro.mp4" type="video/mp4">
-          Your browser doesn't support embedded video. <a href="/research/media/research-outro.mp4">Download the video</a> instead.
-        </video>
+      <div class="done-message">
+        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your response has joined the study's dataset.</p>
+      </div>
+      <form class="results-email" id="results-email-form">
+        <h2>Email my benchmark comparison</h2>
+        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
+        <div class="results-email-row">
+          <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
+        </div>
+        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
+      </form>
+
+      <!-- Deliberately below the results-email form, not above it — that
+           form is the primary interactive element on this screen and
+           must be visible without scrolling past anything else first. -->
+      <div class="done-video-block">
+        <div class="video-thumb">
+          <button type="button" class="video-thumb-btn" id="outro-video-btn" aria-haspopup="dialog" aria-label="Play: a message from Graham">
+            <img src="/research/media/outro-poster.jpg" alt="" aria-hidden="true">
+            <span class="video-thumb-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+            </span>
+          </button>
+          <span class="video-thumb-label">A message from Graham</span>
+        </div>
         <details class="transcript-toggle">
           <summary>Read the transcript</summary>
           <div class="transcript-body">I genuinely appreciate you taking the time to complete this survey.
@@ -741,23 +808,80 @@ So whether you remain involved or this is your only contribution, your experienc
 Thank you for being a part of it.</div>
         </details>
       </div>
-
-      <div class="done-message">
-        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your response has joined the study's dataset.</p>
-      </div>
-      <form class="results-email" id="results-email-form">
-        <h2>Email my benchmark comparison</h2>
-        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
-        <div class="results-email-row">
-          <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
-        </div>
-        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
-      </form>
     </div>
   </section>
 
 </main>
+
+<!-- Shared video popup — one instance, reused for both the intro and
+     outro thumbnails. JS swaps the <source>/poster per click. -->
+<div class="video-modal" id="video-modal" hidden>
+  <div class="video-modal-backdrop" id="video-modal-backdrop"></div>
+  <div class="video-modal-panel" role="dialog" aria-modal="true" aria-label="Video message from Graham">
+    <button type="button" class="video-modal-close" id="video-modal-close" aria-label="Close video">&times;</button>
+    <video id="video-modal-player" controls playsinline></video>
+  </div>
+</div>
+
+<script>
+// Video thumbnail popup — small, self-contained, deliberately separate
+// from the main survey IIFE below since it has nothing to do with
+// consent/pairs/submission state. One shared modal, reused for both
+// thumbnails; the JS just swaps src/poster per click.
+(function () {
+  "use strict";
+  var modal = document.getElementById('video-modal');
+  var backdrop = document.getElementById('video-modal-backdrop');
+  var closeBtn = document.getElementById('video-modal-close');
+  var player = document.getElementById('video-modal-player');
+  var lastTrigger = null;
+
+  var SOURCES = {
+    intro: { src: '/research/media/research-intro.mp4', poster: '/research/media/intro-poster.jpg' },
+    outro: { src: '/research/media/research-outro.mp4', poster: '/research/media/outro-poster.jpg' }
+  };
+
+  function openVideo(which, triggerEl) {
+    var source = SOURCES[which];
+    if (!source) return;
+    lastTrigger = triggerEl;
+    player.setAttribute('poster', source.poster);
+    player.src = source.src;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    // A genuine click gesture just happened, so autoplay-with-sound is
+    // allowed here — unlike the page-load case, which browsers block
+    // (and which would feel intrusive here regardless).
+    player.play().catch(function () {
+      // If the browser still refuses for some reason, the video's own
+      // visible controls let the person press play manually — no need
+      // to surface an error for this.
+    });
+    closeBtn.focus();
+  }
+
+  function closeVideo() {
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    if (lastTrigger) lastTrigger.focus();
+    lastTrigger = null;
+  }
+
+  closeBtn.addEventListener('click', closeVideo);
+  backdrop.addEventListener('click', closeVideo);
+  document.addEventListener('keydown', function (e) {
+    if (!modal.hidden && e.key === 'Escape') closeVideo();
+  });
+
+  var introBtn = document.getElementById('intro-video-btn');
+  var outroBtn = document.getElementById('outro-video-btn');
+  if (introBtn) introBtn.addEventListener('click', function () { openVideo('intro', introBtn); });
+  if (outroBtn) outroBtn.addEventListener('click', function () { openVideo('outro', outroBtn); });
+})();
+</script>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
   <button class="survey-back" id="back-btn" type="button" hidden><span class="back-icon" aria-hidden="true">←</span>Back</button>
