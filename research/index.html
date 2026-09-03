@@ -410,6 +410,38 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
      below. Leaving this note here as the marker for that future task. */
   .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
 
+  /* Intro/outro videos: source footage is portrait (720x1280), so a
+     plain max-width doesn't stop it from dominating the screen the way
+     it would for a landscape video — cap the width fairly tight to keep
+     the resulting height reasonable, especially on mobile where every
+     line matters before the Continue button. */
+  .research-video-wrap { margin: 20px 0 22px; }
+  .research-video { display: block; width: 100%; max-width: 240px; margin: 0 auto; border-radius: 12px; background: #000; }
+  .transcript-toggle { max-width: 240px; margin: 10px auto 0; }
+  /* Portrait video adds real scroll height on a narrow viewport (measured:
+     ~495px at 240px wide on a 375px-wide screen) — this consent screen's
+     Continue button already sits below the fold from the existing three
+     paragraphs and checkboxes alone, so cutting the video down further on
+     narrow screens actually matters here, not just a nicety. */
+  @media (max-width: 480px) {
+    .research-video, .transcript-toggle { max-width: 180px; }
+  }
+  .transcript-toggle summary {
+    cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none;
+    display: flex; align-items: center; gap: 6px; user-select: none;
+  }
+  .transcript-toggle summary::-webkit-details-marker { display: none; }
+  .transcript-toggle summary:hover { color: var(--orange-lt); }
+  .transcript-toggle summary::before {
+    content: '\25B8'; display: inline-block; font-size: 0.8em;
+    transition: transform 0.2s ease;
+  }
+  .transcript-toggle[open] summary::before { transform: rotate(90deg); }
+  .transcript-body {
+    margin-top: 10px; color: var(--ink-mid); font-size: 0.9rem; line-height: 1.7;
+    white-space: pre-line;
+  }
+
   .consent-thanks {
     margin-top: 28px; padding: 18px 20px; border-left: 3px solid var(--orange);
     background: var(--bg-warm); animation: thanks-in 0.25s ease both;
@@ -528,6 +560,32 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
          repeat of it, so it's gone. The greeting below is the page's
          real opening line now. -->
     <p class="greeting" id="consent-greeting"></p>
+
+    <div class="research-video-wrap">
+      <video class="research-video" controls preload="metadata" playsinline poster="/research/media/intro-poster.jpg">
+        <source src="/research/media/research-intro.mp4" type="video/mp4">
+        Your browser doesn't support embedded video. <a href="/research/media/research-intro.mp4">Download the video</a> instead.
+      </video>
+      <details class="transcript-toggle">
+        <summary>Read the transcript</summary>
+        <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
+
+Over the past few years, I've seen hundreds of AI prototypes created that go nowhere. They don't become part of how an organisation actually works.
+
+Now, I don't think that's simply a technology problem.
+
+And Bill Gates, in his recent essay on the turbulent AI era, put it plainly. AI can improve people's lives and work, but that won't happen automatically. Product teams and their wider organisations still have real blind spots about how to get there.
+
+My aim is to help understand those blind spots and build a community of people experiencing the shift firsthand, so we can learn from each other's experience.
+
+At the end, you'll get something you don't often see, a personal comparison of how your own answers sit alongside everyone else's, something most organisations are unable to show their own employees.
+
+I write regularly about what I find, and I may explore some experiences more deeply, but always asking you first. Individual responses will remain private, unless you separately agree to be named, and there are no right answers here. This isn't a test and I'm interested in your real experience.
+
+So thank you for being a part of it.</div>
+      </details>
+    </div>
+
     <h1>Before you start</h1>
     <p class="intro">
       This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
@@ -660,6 +718,30 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
         <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
       </div>
       <h1>Thank you.</h1>
+
+      <div class="research-video-wrap">
+        <video class="research-video" controls preload="metadata" playsinline poster="/research/media/outro-poster.jpg">
+          <source src="/research/media/research-outro.mp4" type="video/mp4">
+          Your browser doesn't support embedded video. <a href="/research/media/research-outro.mp4">Download the video</a> instead.
+        </video>
+        <details class="transcript-toggle">
+          <summary>Read the transcript</summary>
+          <div class="transcript-body">I genuinely appreciate you taking the time to complete this survey.
+
+You've shared something that is difficult to capture by looking at the technology alone, what the AI shift actually feels like for people experiencing it at work.
+
+Your response will help me understand where AI is supporting better work, where it is creating new pressures, and where product teams and organisations may have blind spots.
+
+I'll combine your answers to those of other participants to identify patterns and practical recommendations. I'll share what I learn openly, while keeping individual responses private unless someone separately agrees to be identified.
+
+If you've chosen to receive my study emails, I'll keep you updated and offer opportunities to contribute to the research as it develops, and you can unsubscribe at any point.
+
+So whether you remain involved or this is your only contribution, your experience matters, and it will help shape what comes next.
+
+Thank you for being a part of it.</div>
+        </details>
+      </div>
+
       <div class="done-message">
         <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your response has joined the study's dataset.</p>
       </div>
