@@ -406,30 +406,44 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   /* ── Consent-screen greeting ──────────────────────────────────── */
   .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
 
-  /* Greeting + video thumbnail sit side by side — the thumbnail must not
-     push the greeting down, so this is a row, not a stack. Wraps under
-     the greeting on narrow screens rather than forcing a cramped row,
-     which still satisfies "not pushing it down" since the greeting text
-     itself never moves. */
-  .greeting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
-  .greeting-row .greeting { margin-bottom: 0; flex: 1 1 auto; min-width: 180px; }
-
-  /* Video thumbnail: a small round avatar-sized button, not a player.
-     Second version of this feature — the first pass embedded full
-     inline <video> players, which was too heavy on the page; this
-     replaces that with a thumbnail that opens the shared popup below. */
+  /* Video thumbnail: a small round avatar next to a text label, both part
+     of one button — Second version of this feature — the first pass
+     embedded full inline <video> players, which was too heavy on the
+     page; this replaces that with a thumbnail that opens the shared
+     popup below. The label used to be a separate, unclickable <span>
+     next to the button; folding it into the button gives it a larger hit
+     target and means its accessible name comes from the visible text
+     instead of a separate aria-label the sighted label duplicated. */
   .video-thumb { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
   .video-thumb-btn {
-    position: relative; width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
-    border: 2px solid var(--orange-lt); background: #000; cursor: pointer; padding: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    background: none; border: none; padding: 0; cursor: pointer; font: inherit; text-align: center;
   }
-  .video-thumb-btn img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.2s ease; }
-  .video-thumb-btn:hover img, .video-thumb-btn:focus-visible img { opacity: 1; }
+  .video-thumb-avatar {
+    position: relative; width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--orange-lt); background: #000; flex-shrink: 0;
+  }
+  .video-thumb-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.2s ease; }
+  .video-thumb-btn:hover .video-thumb-avatar img, .video-thumb-btn:focus-visible .video-thumb-avatar img { opacity: 1; }
   .video-thumb-play {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.22); pointer-events: none;
   }
-  .video-thumb-label { color: var(--muted); font-size: 0.7rem; text-align: center; max-width: 76px; line-height: 1.3; }
+  /* --ink-mid, not --muted — --muted reads too faint at this size for a
+     label that's now part of the clickable control, not just a caption. */
+  .video-thumb-label { color: var(--ink-mid); font-size: 0.8rem; text-align: center; max-width: 76px; line-height: 1.3; transition: color 0.15s ease; }
+  .video-thumb-btn:hover .video-thumb-label, .video-thumb-btn:focus-visible .video-thumb-label { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Intro screen: thumbnail sits under the "Before you start" headline,
+     row layout (avatar beside label) matching the outro thumbnail on the
+     thank-you screen, transcript link directly under it — same row
+     pattern as .done-video-block, but left-aligned since this screen's
+     content isn't centered the way the thank-you screen is. */
+  .intro-video-block { margin: 4px 0 28px; }
+  .intro-video-block .video-thumb { align-items: flex-start; }
+  .intro-video-block .video-thumb-btn { flex-direction: row; gap: 10px; }
+  .intro-video-block .video-thumb-label { text-align: left; max-width: none; }
+  .intro-video-block .transcript-toggle { margin: 10px 0 0; }
 
   /* Shared popup, reused for both intro and outro — the JS swaps the
      <source> src and poster per-thumbnail rather than building two
@@ -464,7 +478,25 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   /* Thank-you screen: video sits below the results-email form, not
      above it — deliberate reordering, not just a smaller thumbnail. */
-  .done-video-block { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--surface); }
+  /* Between the short "Your response has been saved." line and the
+     results-email form now, not below the form as a separate section —
+     lighter spacing than before, no top border needed since it isn't
+     separating from a big block of content above it any more, just a
+     one-line message. */
+  .done-video-block { margin: 4px 0 24px; }
+  /* Row layout instead of the default stacked button — the round
+     thumbnail sitting directly under the round checkmark read as a visual
+     echo of it, and putting the label beside rather than below the
+     thumbnail also trims the vertical space this block takes up. */
+  .done-video-block .video-thumb-btn { flex-direction: row; gap: 10px; }
+  .done-video-block .video-thumb-label { text-align: left; max-width: none; }
+  /* .transcript-toggle's own max-width (320px) left it flush against the
+     left edge of the full-width .done-video-block, out of step with the
+     centered checkmark/heading/thumbnail above it — auto margins plus a
+     centered summary line bring it in line with everything else on this
+     screen. */
+  .done-video-block .transcript-toggle { margin: 8px auto 0; }
+  .done-video-block .transcript-toggle summary { justify-content: center; }
 
   .consent-thanks {
     margin-top: 28px; padding: 18px 20px; border-left: 3px solid var(--orange);
@@ -505,9 +537,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .done-check { animation: none; }
     .done-check svg path { animation: none; stroke-dashoffset: 0; }
   }
-  .done-wrap h1 { margin-bottom: 20px; }
-  .done-wrap .done-message { color: var(--ink-mid); font-size: 1.05rem; max-width: 480px; margin: 0 auto; text-align: left; }
-  .done-wrap .done-message p { margin-bottom: 16px; }
+  .done-wrap h1 { margin: 0 auto 20px; max-width: 480px; }
   /* The results-email form is the primary interactive element on this
      screen and needs to be reachable without scrolling past it first —
      measured on a 375px mobile viewport: the form's input was sitting
@@ -518,10 +548,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .done-check { width: 44px; height: 44px; margin-bottom: 10px; }
     .done-check svg { width: 22px; height: 22px; }
     .done-wrap h1 { margin-bottom: 8px; font-size: 28px; }
-    .done-wrap .done-message p { margin-bottom: 8px; }
-    .results-email { margin-top: 12px; padding: 14px; }
-    .results-email h2 { font-size: 1.25rem; margin-bottom: 4px; }
-    .results-email p { margin-bottom: 10px; font-size: 0.88rem; }
+    .done-video-block { margin: 0 0 6px; }
+    .video-thumb-avatar { width: 44px; height: 44px; }
+    .video-thumb-label { font-size: 0.65rem; }
+    .transcript-toggle { margin-top: 2px; }
+    .transcript-toggle summary { font-size: 0.8rem; }
   }
   .results-email {
     max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
@@ -535,6 +566,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     border-radius: 8px; padding: 12px 14px; color: var(--ink); font: inherit; font-size: 1rem;
   }
   .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
+  .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 12px 0 0; }
+  /* This block has to come after the base .results-email rules above (not
+     be folded into the earlier 480px block) — a media-query rule doesn't
+     out-rank a same-specificity rule that appears later in the file, so an
+     override placed before the base rule was silently losing to it. */
+  @media (max-width: 480px) {
+    .results-email { margin-top: 0; padding: 14px; }
+    .results-email h2 { font-size: 1.25rem; margin-bottom: 4px; }
+    .results-email p { margin-bottom: 10px; font-size: 0.88rem; }
+  }
   @media (max-width: 560px) {
     .results-email-row { flex-direction: column; }
     .results-email-row .btn { width: 100%; }
@@ -598,20 +639,27 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
          "TurbulentGround Research" eyebrow here was just a smaller
          repeat of it, so it's gone. The greeting below is the page's
          real opening line now. -->
-    <div class="greeting-row">
-      <p class="greeting" id="consent-greeting"></p>
-      <div class="video-thumb">
-        <button type="button" class="video-thumb-btn" id="intro-video-btn" aria-haspopup="dialog" aria-label="Play: a message from Graham">
-          <img src="/research/media/intro-poster.jpg" alt="" aria-hidden="true">
-          <span class="video-thumb-play" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
-          </span>
-        </button>
-        <span class="video-thumb-label">A message from Graham</span>
-      </div>
-    </div>
+    <p class="greeting" id="consent-greeting"></p>
 
-    <div class="research-video-wrap">
+    <h1>Before you start</h1>
+
+    <!-- Was top-right of the greeting row, thumbnail over label — sat
+         awkwardly right-aligned against the left-aligned page content.
+         Moved under the headline, row layout matching the outro
+         thumbnail on the thank-you screen, transcript CTA directly
+         beneath it. -->
+    <div class="intro-video-block">
+      <div class="video-thumb">
+        <button type="button" class="video-thumb-btn" id="intro-video-btn" aria-haspopup="dialog">
+          <span class="video-thumb-avatar">
+            <img src="/research/media/intro-poster.jpg" alt="" aria-hidden="true">
+            <span class="video-thumb-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+            </span>
+          </span>
+          <span class="video-thumb-label">A message from Graham</span>
+        </button>
+      </div>
       <details class="transcript-toggle">
         <summary>Read the transcript</summary>
         <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
@@ -631,8 +679,6 @@ I write regularly about what I find, and I may explore some experiences more dee
 So thank you for being a part of it.</div>
       </details>
     </div>
-
-    <h1>Before you start</h1>
     <p class="intro">
       This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
     </p>
@@ -763,33 +809,23 @@ So thank you for being a part of it.</div>
       <div class="done-check" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
       </div>
-      <h1>Thank you.</h1>
+      <h1>Thank you — your response has been saved.</h1>
 
-      <div class="done-message">
-        <p>I genuinely appreciate you taking the time for this. It isn't a short survey, and I know that. Your response has joined the study's dataset.</p>
-      </div>
-      <form class="results-email" id="results-email-form">
-        <h2>Email my benchmark comparison</h2>
-        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
-        <div class="results-email-row">
-          <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
-        </div>
-        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
-      </form>
-
-      <!-- Deliberately below the results-email form, not above it — that
-           form is the primary interactive element on this screen and
-           must be visible without scrolling past anything else first. -->
+      <!-- The video now carries the sentiment the removed paragraph used
+           to (the previous longer "I genuinely appreciate you..." text),
+           so it sits right here, immediately below that short line —
+           not duplicated in text and not left orphaned somewhere else. -->
       <div class="done-video-block">
         <div class="video-thumb">
-          <button type="button" class="video-thumb-btn" id="outro-video-btn" aria-haspopup="dialog" aria-label="Play: a message from Graham">
-            <img src="/research/media/outro-poster.jpg" alt="" aria-hidden="true">
-            <span class="video-thumb-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+          <button type="button" class="video-thumb-btn" id="outro-video-btn" aria-haspopup="dialog">
+            <span class="video-thumb-avatar">
+              <img src="/research/media/outro-poster.jpg" alt="" aria-hidden="true">
+              <span class="video-thumb-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+              </span>
             </span>
+            <span class="video-thumb-label">Watch Graham's message</span>
           </button>
-          <span class="video-thumb-label">A message from Graham</span>
         </div>
         <details class="transcript-toggle">
           <summary>Read the transcript</summary>
@@ -808,6 +844,17 @@ So whether you remain involved or this is your only contribution, your experienc
 Thank you for being a part of it.</div>
         </details>
       </div>
+
+      <form class="results-email" id="results-email-form">
+        <h2>Email my benchmark comparison</h2>
+        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately.</p>
+        <div class="results-email-row">
+          <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
+        </div>
+        <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
+        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
+      </form>
     </div>
   </section>
 
