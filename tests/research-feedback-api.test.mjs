@@ -51,6 +51,12 @@ try {
   );
   assert.equal(authorisedManual.statusCode, 201);
 
+  const authorisedMessage = await run(
+    { source: "iMessage or WhatsApp", feedback: "Message feedback" },
+    { authorization: "Bearer test-admin-key" }
+  );
+  assert.equal(authorisedMessage.statusCode, 201);
+
   const widerSiteFeedback = await run({
     source: "Website feedback tab",
     feedback: "Feedback about the wider site",
