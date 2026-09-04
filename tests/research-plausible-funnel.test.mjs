@@ -23,6 +23,10 @@ const expectedEvents = [
   "Research: Submission Failed",
   "Research: Comparison Failed",
   "Research: Explanation Opened",
+  "Research: Intro Video Played",
+  "Research: Intro Video Completed",
+  "Research: Outro Video Played",
+  "Research: Outro Video Completed",
 ];
 
 check("loads Plausible on the research page",
@@ -64,5 +68,9 @@ check("does not track local journey previews",
   /if \(localJourneyPreview \|\| researchEventsSent\[name\]\) return;/.test(html));
 check("sends only a fixed event name with no custom properties",
   /window\.plausible\(name\);/.test(html) && !/window\.plausible\(name,/.test(html));
+check("tracks video plays from the media player's real play event",
+  /player\.addEventListener\('play',[\s\S]*Research: Intro Video Played[\s\S]*Research: Outro Video Played/.test(html));
+check("tracks video completions only from the media player's ended event",
+  /player\.addEventListener\('ended',[\s\S]*Research: Intro Video Completed[\s\S]*Research: Outro Video Completed/.test(html));
 
 console.log("\nALL CHECKS PASSED");

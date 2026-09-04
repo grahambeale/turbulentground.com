@@ -882,6 +882,7 @@ Thank you for being a part of it.</div>
   var closeBtn = document.getElementById('video-modal-close');
   var player = document.getElementById('video-modal-player');
   var lastTrigger = null;
+  var currentVideo = null;
 
   var SOURCES = {
     intro: { src: '/research/media/research-intro.mp4', poster: '/research/media/intro-poster.jpg' },
@@ -891,6 +892,7 @@ Thank you for being a part of it.</div>
   function openVideo(which, triggerEl) {
     var source = SOURCES[which];
     if (!source) return;
+    currentVideo = which;
     lastTrigger = triggerEl;
     player.setAttribute('poster', source.poster);
     player.src = source.src;
@@ -911,6 +913,7 @@ Thank you for being a part of it.</div>
     player.pause();
     player.removeAttribute('src');
     player.load();
+    currentVideo = null;
     modal.hidden = true;
     document.body.style.overflow = '';
     if (lastTrigger) lastTrigger.focus();
@@ -927,6 +930,22 @@ Thank you for being a part of it.</div>
   var outroBtn = document.getElementById('outro-video-btn');
   if (introBtn) introBtn.addEventListener('click', function () { openVideo('intro', introBtn); });
   if (outroBtn) outroBtn.addEventListener('click', function () { openVideo('outro', outroBtn); });
+  player.addEventListener('play', function () {
+    if (!currentVideo || typeof window.trackResearchEvent !== 'function') return;
+    if (currentVideo === 'intro') {
+      window.trackResearchEvent('Research: Intro Video Played');
+    } else {
+      window.trackResearchEvent('Research: Outro Video Played');
+    }
+  });
+  player.addEventListener('ended', function () {
+    if (!currentVideo || typeof window.trackResearchEvent !== 'function') return;
+    if (currentVideo === 'intro') {
+      window.trackResearchEvent('Research: Intro Video Completed');
+    } else {
+      window.trackResearchEvent('Research: Outro Video Completed');
+    }
+  });
 })();
 </script>
 
@@ -1029,6 +1048,7 @@ Thank you for being a part of it.</div>
     researchEventsSent[name] = true;
     window.plausible(name);
   }
+  window.trackResearchEvent = trackResearchEvent;
 
   // ---- screen switching ----
   function showScreen(id) {
