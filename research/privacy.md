@@ -35,6 +35,7 @@ I may have your name and email because I know you through my professional networ
 | Your name, email address, unique invitation token, invitation date and participation status | To select and invite participants, control access, prevent duplicate responses and administer the study | Legitimate interests |
 | Your email address and email preferences | To send your requested comparison and, if you choose, occasional follow-up questions and findings | Consent |
 | Optional feedback you give when unsubscribing from study emails | To understand why people leave and improve study communications | Legitimate interests |
+| Feedback you choose to give about the research study or participant experience, and any contact details you provide with it | To improve the research design, questions, communications and participant experience, and to respond where appropriate | Legitimate interests |
 | Your answers to the 24 statements | To conduct the research, create your comparison and calculate anonymised, aggregated study benchmarks and findings | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
 | Anything you write in the optional comment | To identify common themes and experiences that the fixed statements may not capture | Consent |

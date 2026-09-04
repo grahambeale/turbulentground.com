@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node scripts/build-learnings.mjs && node scripts/build-nav.mjs && node scripts/build-feedback.mjs",
-    "test": "node tests/diagnostic-flow.test.js && node tests/submit-api.test.mjs",
+    "test": "node tests/diagnostic-flow.test.js && node tests/submit-api.test.mjs && node tests/research-feedback-api.test.mjs",
     "test:smoke": "playwright test"
   }
 }

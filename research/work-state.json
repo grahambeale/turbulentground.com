@@ -1,0 +1,10 @@
+{
+  "_comment": "On-demand research-project session lease. This is independent of _experiment/sprint-state.json. See research/agent-workflow.md.",
+  "active_run": null,
+  "runner": null,
+  "work_item": null,
+  "phase": null,
+  "started_at": null,
+  "lease_expires": null,
+  "last_checkpoint": null
+}

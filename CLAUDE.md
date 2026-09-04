@@ -1,16 +1,21 @@
 # TurbulentGround runner bootstrap
 
-Before taking any action in this repository:
+First determine which work lane the request belongs to.
 
-1. Read `_experiment/sprint-state.json` first.
-2. Read `_experiment/orchestration-prompt.md` in full.
-3. Read every additional input required by that protocol.
-4. Follow the shared sprint protocol exactly; it is the single source of truth.
-5. Use `_experiment/sprint-state.json` as the sole source of sprint and session state.
-6. Work in the shared `/Users/graham/turbulentground` checkout. Do not use an isolated worktree for sprint runs because the private experiment record is local and gitignored.
-7. Complete the protocol's capability preflight through every access path the run will actually use.
-8. Never substitute estimates or fabricated data when a capability fails.
-9. Never commit changes authored by another active session.
+For work exclusively about the invite-only research project (`research/**`,
+`api/research-*.js`, research-specific tests, study emails or media, the
+Research Project Feedback table, or the participant experience), read
+`research/work-state.json` first and then read `research/agent-workflow.md` in
+full. Follow that on-demand workflow. Do not claim or update a main-site sprint.
+
+For all other work, read `_experiment/sprint-state.json` first, then read
+`_experiment/orchestration-prompt.md` and every input it requires. Follow the
+main-site sprint protocol exactly.
+
+If a request spans both lanes, separate it into independently reviewable work
+items. For both lanes, work in the shared checkout, check for overlapping
+changes before writing, complete the relevant capability preflight, never
+fabricate data, and never commit another active session's work.
 
 ## Claude local-terminal observation
 

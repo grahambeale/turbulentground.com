@@ -278,7 +278,51 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     </form>
   </section>
 
-  <p class="privacy-note">Unless you choose to remember it, the access key stays in this browser tab only. Invite details are sent directly to the protected research service.</p>
+  <section class="panel" aria-labelledby="feedback-heading" style="margin-top:24px;">
+    <h2 id="feedback-heading" style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;margin-bottom:8px;">Add research feedback</h2>
+    <p class="result-note">Paste feedback about the invite-only research study from LinkedIn, email, a participant conversation or a testing session. This is not for feedback about the wider Turbulent Ground site. The original wording is kept intact for an agent to review.</p>
+    <form id="feedback-admin-form">
+      <div class="field">
+        <label for="feedback-source">Where did it come from?</label>
+        <select id="feedback-source" required>
+          <option value="LinkedIn">LinkedIn feedback about the study</option>
+          <option value="Email">Email feedback about the study</option>
+          <option value="Conversation or interview">Research conversation or interview</option>
+          <option value="Testing session">Research testing session</option>
+          <option value="Manual note">Manual research note</option>
+          <option value="Research study">Participant feedback during the study</option>
+          <option value="Results page">Research results page</option>
+          <option value="Unsubscribe">Study email unsubscribe</option>
+          <option value="Agent observation">Agent research observation</option>
+          <option value="Analytics observation">Research analytics observation</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="feedback-original">Feedback about the research</label>
+        <textarea id="feedback-original" rows="7" maxlength="5000" required></textarea>
+      </div>
+      <div class="field">
+        <label for="feedback-source-detail">Source detail <span class="optional">(optional)</span></label>
+        <input id="feedback-source-detail" type="text" maxlength="300" placeholder="e.g. Close beta participant">
+      </div>
+      <div class="field">
+        <label for="feedback-stage">Page or part of the journey <span class="optional">(optional)</span></label>
+        <input id="feedback-stage" type="text" maxlength="200" placeholder="e.g. Invite, consent, questions, results or email">
+      </div>
+      <div class="field">
+        <label for="feedback-url">Page URL <span class="optional">(optional)</span></label>
+        <input id="feedback-url" type="url" maxlength="2000">
+      </div>
+      <div class="field">
+        <label for="feedback-contact">Contact email <span class="optional">(optional)</span></label>
+        <input id="feedback-contact" type="email" maxlength="320">
+      </div>
+      <button id="feedback-admin-button" type="submit">Save research feedback</button>
+      <p class="message" id="feedback-admin-message" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <p class="privacy-note">Unless you choose to remember it, the access key stays in this browser tab only. Invite details and research-project feedback are sent directly to the protected research service.</p>
 </main>
 <script>
 (function () {
@@ -487,6 +531,48 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     }).finally(function () {
       previewButton.disabled = false;
       previewButton.textContent = 'Send results preview';
+    });
+  });
+
+  var feedbackAdminForm = document.getElementById('feedback-admin-form');
+  var feedbackAdminButton = document.getElementById('feedback-admin-button');
+  var feedbackAdminMessage = document.getElementById('feedback-admin-message');
+  feedbackAdminForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var key = accessKey.value;
+    feedbackAdminButton.disabled = true;
+    feedbackAdminButton.textContent = 'Saving…';
+    feedbackAdminMessage.classList.remove('visible');
+    fetch('/api/research-feedback', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        source: document.getElementById('feedback-source').value,
+        feedback: document.getElementById('feedback-original').value,
+        sourceDetail: document.getElementById('feedback-source-detail').value,
+        pageOrStage: document.getElementById('feedback-stage').value,
+        pageUrl: document.getElementById('feedback-url').value,
+        email: document.getElementById('feedback-contact').value
+      })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not save the feedback');
+        return data;
+      });
+    }).then(function (data) {
+      feedbackAdminForm.reset();
+      document.getElementById('feedback-source').value = 'LinkedIn';
+      feedbackAdminMessage.textContent = 'Saved as ' + data.feedbackId + '.';
+      feedbackAdminMessage.classList.add('visible');
+    }).catch(function (error) {
+      feedbackAdminMessage.textContent = error.message;
+      feedbackAdminMessage.classList.add('visible');
+    }).finally(function () {
+      feedbackAdminButton.disabled = false;
+      feedbackAdminButton.textContent = 'Save research feedback';
     });
   });
 })();
