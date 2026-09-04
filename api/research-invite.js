@@ -8,6 +8,7 @@
 // Identity data and never reads or writes the Responses table.
 
 import { randomUUID, timingSafeEqual } from "node:crypto";
+import saveResearchFeedback from "../lib/research-feedback.js";
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -48,6 +49,17 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  let data;
+  try {
+    data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } catch {
+    return res.status(400).json({ error: "Invalid JSON" });
+  }
+
+  if (data?.action === "feedback") {
+    return saveResearchFeedback(req, res, data);
+  }
+
   const adminKey = process.env.RESEARCH_ADMIN_KEY;
   if (!adminKey) {
     console.error("Missing RESEARCH_ADMIN_KEY");
@@ -55,13 +67,6 @@ export default async function handler(req, res) {
   }
   if (!authorised(req, adminKey)) {
     return res.status(401).json({ error: "Incorrect access key" });
-  }
-
-  let data;
-  try {
-    data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-  } catch {
-    return res.status(400).json({ error: "Invalid JSON" });
   }
 
   const name = typeof data?.name === "string" ? data.name.trim() : "";

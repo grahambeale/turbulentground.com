@@ -543,13 +543,14 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     feedbackAdminButton.disabled = true;
     feedbackAdminButton.textContent = 'Saving…';
     feedbackAdminMessage.classList.remove('visible');
-    fetch('/api/research-feedback', {
+    fetch('/api/research-invite', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + key,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        action: 'feedback',
         source: document.getElementById('feedback-source').value,
         feedback: document.getElementById('feedback-original').value,
         sourceDetail: document.getElementById('feedback-source-detail').value,

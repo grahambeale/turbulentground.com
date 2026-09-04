@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import handler from "../api/research-feedback.js";
+import handler from "../api/research-invite.js";
 
 function response() {
   return {
@@ -14,7 +14,7 @@ function response() {
 
 async function run(body, headers = {}) {
   const res = response();
-  await handler({ method: "POST", body, headers }, res);
+  await handler({ method: "POST", body: { action: "feedback", ...body }, headers }, res);
   return res;
 }
 
