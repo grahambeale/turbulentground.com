@@ -266,6 +266,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     --station-space: 92px; display: flex; align-items: flex-end; width: max-content;
     height: 74px; padding: 0 24px 7px; position: relative; transition: transform 0.35s ease;
   }
+  .journey-route.moving-forward {
+    animation: journey-route-forward 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .journey-route.moving-back {
+    animation: journey-route-back 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
   .journey-route::after {
     content: ''; position: absolute;
     left: calc(24px + (var(--station-space) / 2));
@@ -322,6 +328,14 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     42% { opacity: 1; }
     100% { transform: rotate(var(--angle)) translateX(var(--distance)) scale(0); opacity: 0; }
   }
+  @keyframes journey-route-forward {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-1 * var(--station-space))); }
+  }
+  @keyframes journey-route-back {
+    from { transform: translateX(0); }
+    to { transform: translateX(var(--station-space)); }
+  }
 
   .pair-item { padding: 36px 0; border-bottom: 1px solid var(--border); }
   .pair-item[hidden] { display: none; }
@@ -335,6 +349,63 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   .scale-btn:hover { border-color: var(--orange-lt); color: var(--ink); }
   .scale-btn[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+  /* The selected response settles first, then the current question leaves
+     across the viewport as the next one arrives. */
+  .likert-transitions .scale-btn,
+  .likert-transitions .scale-skip {
+    transition: transform 0.16s cubic-bezier(.2,.8,.2,1), border-radius 0.16s ease,
+      background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  }
+  .likert-transitions .response-control-pressed {
+    transform: scale(0.92);
+    border-radius: 12px;
+  }
+  html.likert-transitions,
+  html.likert-transitions body {
+    overflow-x: hidden;
+  }
+  .likert-transitions #pairs-list.is-transitioning {
+    display: grid;
+    overflow: visible;
+    overflow-anchor: none;
+  }
+  .likert-transitions #pairs-list.is-transitioning .pair-item {
+    grid-area: 1 / 1;
+    width: 100%;
+    pointer-events: none;
+  }
+  .likert-transitions .pair-item.question-leaving {
+    animation: likert-question-out 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .likert-transitions .pair-item.question-entering {
+    animation: likert-question-in 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
+  .likert-transitions .pair-item.question-leaving-back {
+    animation: likert-question-out-back 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .likert-transitions .pair-item.question-entering-back {
+    animation: likert-question-in-back 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
+  @keyframes likert-question-out {
+    0% { opacity: 1; transform: translateX(0); }
+    72% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(calc(-100vw - 100%)); }
+  }
+  @keyframes likert-question-in {
+    0% { opacity: 0; transform: translateX(calc(100vw + 100%)); }
+    28% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes likert-question-out-back {
+    0% { opacity: 1; transform: translateX(0); }
+    72% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(calc(100vw + 100%)); }
+  }
+  @keyframes likert-question-in-back {
+    0% { opacity: 0; transform: translateX(calc(-100vw - 100%)); }
+    28% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0); }
+  }
   .scale-labels { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--muted); margin-bottom: 18px; }
   .scale-skip {
     display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 24px;
@@ -392,7 +463,13 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   @media (prefers-reduced-motion: reduce) {
     .journey-route, .journey-theme, .journey-node { transition: none; }
     .journey-station.current .journey-node, .journey-station.departing .journey-node,
-    .journey-fragment { animation: none; }
+    .journey-fragment, .journey-route.moving-forward, .journey-route.moving-back { animation: none; }
+    .likert-transitions .scale-btn, .likert-transitions .scale-skip { transition: none; }
+    .likert-transitions .response-control-pressed { transform: none; }
+    .likert-transitions .pair-item.question-leaving,
+    .likert-transitions .pair-item.question-entering,
+    .likert-transitions .pair-item.question-leaving-back,
+    .likert-transitions .pair-item.question-entering-back { animation: none; }
   }
 
   .screen { display: none; }
@@ -1039,12 +1116,18 @@ Thank you for being a part of it.</div>
   var currentStatementIndex = 0;
   var autoAdvanceTimer = null;
   var journeyAnimationTimer = null;
+  var likertTransitionTimer = null;
+  var isLikertTransitioning = false;
+  var previewMode = new URLSearchParams(window.location.search).get('preview');
   var localJourneyPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
     new URLSearchParams(window.location.search).get('preview') === 'journey';
+  var localTransitionPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+    previewMode === 'transition';
+  document.documentElement.classList.add('likert-transitions');
   var researchEventsSent = {};
 
   function trackResearchEvent(name) {
-    if (localJourneyPreview || researchEventsSent[name]) return;
+    if (localJourneyPreview || localTransitionPreview || researchEventsSent[name]) return;
     researchEventsSent[name] = true;
     window.plausible(name);
   }
@@ -1065,7 +1148,7 @@ Thank you for being a part of it.</div>
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  if (localJourneyPreview) {
+  if (localJourneyPreview || localTransitionPreview) {
     renderPairs();
     showScreen('screen-pairs');
   } else {
@@ -1452,7 +1535,7 @@ Thank you for being a part of it.</div>
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Rate ' + value + ' out of 5');
           btn.addEventListener('click', function () {
-            setResponse(domainKey, field, value, scaleGrid, [skipBtn, naBtn]);
+            setResponse(domainKey, field, value, scaleGrid, [skipBtn, naBtn], btn);
           });
           scaleGrid.appendChild(btn);
         })(v);
@@ -1473,7 +1556,7 @@ Thank you for being a part of it.</div>
       naBtn.textContent = 'Not applicable';
       naBtn.setAttribute('aria-pressed', 'false');
       naBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'not_applicable', scaleGrid, [skipBtn, naBtn]);
+        setResponse(domainKey, field, 'not_applicable', scaleGrid, [skipBtn, naBtn], naBtn);
       });
       alternatives.appendChild(naBtn);
 
@@ -1483,7 +1566,7 @@ Thank you for being a part of it.</div>
       skipBtn.textContent = 'Prefer not to say';
       skipBtn.setAttribute('aria-pressed', 'false');
       skipBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'skip', scaleGrid, [skipBtn, naBtn]);
+        setResponse(domainKey, field, 'skip', scaleGrid, [skipBtn, naBtn], skipBtn);
       });
       alternatives.appendChild(skipBtn);
       row.appendChild(alternatives);
@@ -1504,10 +1587,18 @@ Thank you for being a part of it.</div>
     showStatement(0);
   }
 
-  function showStatement(index) {
+  function showStatement(index, preserveScrollPosition) {
+    var scrollYBeforeUpdate = window.scrollY;
+    window.clearTimeout(likertTransitionTimer);
+    isLikertTransitioning = false;
+    var list = document.getElementById('pairs-list');
+    list.classList.remove('is-transitioning');
     currentStatementIndex = Math.max(0, Math.min(index, TOTAL_STATEMENTS));
     var rows = document.querySelectorAll('.pair-item');
-    rows.forEach(function (row, rowIndex) { row.hidden = rowIndex !== currentStatementIndex; });
+    rows.forEach(function (row, rowIndex) {
+      row.classList.remove('question-leaving', 'question-entering', 'question-leaving-back', 'question-entering-back');
+      row.hidden = rowIndex !== currentStatementIndex;
+    });
 
     var atEnd = currentStatementIndex >= TOTAL_STATEMENTS;
     document.getElementById('pairs-list').hidden = atEnd;
@@ -1523,7 +1614,7 @@ Thank you for being a part of it.</div>
       rows[currentStatementIndex].setAttribute('tabindex', '-1');
       rows[currentStatementIndex].focus({ preventScroll: true });
     }
-    window.scrollTo(0, 0);
+    window.scrollTo(0, preserveScrollPosition ? scrollYBeforeUpdate : 0);
   }
 
   // Pure DOM update, no state mutation — shared between a live click
@@ -1546,7 +1637,8 @@ Thank you for being a part of it.</div>
     }
   }
 
-  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls) {
+  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls, selectedControlEl) {
+    if (isLikertTransitioning) return;
     var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
     if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
     pairResponses[domainKey][field] = value;
@@ -1564,9 +1656,42 @@ Thank you for being a part of it.</div>
     var nextStatementIndex = currentStatementIndex + 1;
     window.clearTimeout(autoAdvanceTimer);
     updateRemainingCount(nextStatementIndex);
-    animateStationDeparture();
-    var delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 540;
-    autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex); }, delay);
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      runLikertTransition(nextStatementIndex, selectedControlEl, 'forward');
+    } else {
+      var delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 540;
+      autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex, true); }, delay);
+    }
+  }
+
+  function runLikertTransition(nextStatementIndex, selectedControlEl, direction) {
+    isLikertTransitioning = true;
+    if (selectedControlEl) selectedControlEl.classList.add('response-control-pressed');
+    var settleDelay = selectedControlEl ? 160 : 0;
+
+    autoAdvanceTimer = window.setTimeout(function () {
+      var list = document.getElementById('pairs-list');
+      var rows = list.querySelectorAll('.pair-item');
+      var outgoing = rows[currentStatementIndex];
+      var incoming = rows[nextStatementIndex];
+
+      if (!outgoing || !incoming) {
+        showStatement(nextStatementIndex, true);
+        return;
+      }
+
+      if (selectedControlEl) selectedControlEl.classList.remove('response-control-pressed');
+      list.classList.add('is-transitioning');
+      incoming.hidden = false;
+      if (direction === 'forward') animateStationDeparture();
+      animateJourneyRoute(direction);
+      outgoing.classList.add(direction === 'back' ? 'question-leaving-back' : 'question-leaving');
+      incoming.classList.add(direction === 'back' ? 'question-entering-back' : 'question-entering');
+
+      likertTransitionTimer = window.setTimeout(function () {
+        showStatement(nextStatementIndex, true);
+      }, 580);
+    }, settleDelay);
   }
 
   function computeCompletion() {
@@ -1584,6 +1709,7 @@ Thank you for being a part of it.</div>
     var n = Math.min(currentStatementIndex, TOTAL_STATEMENTS);
     updateRemainingCount(n);
     var route = document.getElementById('journey-route');
+    route.classList.remove('moving-forward', 'moving-back');
     route.innerHTML = '';
     orderedStatements.slice(n).forEach(function (item, offset) {
       var station = document.createElement('div');
@@ -1635,6 +1761,14 @@ Thank you for being a part of it.</div>
     window.clearTimeout(journeyAnimationTimer);
     journeyAnimationTimer = window.setTimeout(function () { burst.remove(); }, 560);
   }
+
+  function animateJourneyRoute(direction) {
+    var route = document.getElementById('journey-route');
+    route.classList.remove('moving-forward', 'moving-back');
+    // Force a fresh animation when someone moves rapidly forward, then back.
+    void route.offsetWidth;
+    route.classList.add(direction === 'back' ? 'moving-back' : 'moving-forward');
+  }
   updateProgress();
 
   var surveyGuidance = document.getElementById('survey-guidance');
@@ -1644,11 +1778,17 @@ Thank you for being a part of it.</div>
 
   document.getElementById('back-btn').addEventListener('click', function () {
     window.clearTimeout(autoAdvanceTimer);
+    if (isLikertTransitioning) return;
     if (currentStatementIndex === 0) {
       showScreen('screen-context');
       return;
     }
-    showStatement(currentStatementIndex - 1);
+    var previousStatementIndex = currentStatementIndex - 1;
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      runLikertTransition(previousStatementIndex, null, 'back');
+    } else {
+      showStatement(previousStatementIndex, true);
+    }
   });
 
   // ---- submit ----

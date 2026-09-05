@@ -64,8 +64,8 @@ check("fires comparison requested only after the email request succeeds",
 const comparisonFailed = html.indexOf("trackResearchEvent('Research: Comparison Failed')", comparisonFailure);
 check("fires comparison failed only from the failure path",
   comparisonFailed > comparisonFailure);
-check("does not track local journey previews",
-  /if \(localJourneyPreview \|\| researchEventsSent\[name\]\) return;/.test(html));
+check("does not track local research previews",
+  /if \(localJourneyPreview \|\| localTransitionPreview \|\| researchEventsSent\[name\]\) return;/.test(html));
 check("sends only a fixed event name with no custom properties",
   /window\.plausible\(name\);/.test(html) && !/window\.plausible\(name,/.test(html));
 check("tracks video plays from the media player's real play event",
