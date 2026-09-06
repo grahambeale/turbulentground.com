@@ -17,10 +17,14 @@
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
+const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
 
 const FIELD = {
   token: "fld6danERot7gjOqb",
   email: "fldePJtCCYwLsmNjp",
+  responseToken: "flduL4PmBEfH9rLpz",
+  consentStudyEmails: "flduWhkQo6u5O3nIp",
+  consentQuoteByName: "fldDMxw9XFHCUItsx",
 };
 
 // Light sanity check only, not full RFC 5322 validation — just enough to
@@ -50,11 +54,17 @@ export default async function handler(req, res) {
 
   const token = typeof data.token === "string" ? data.token.trim() : "";
   const email = typeof data.email === "string" ? data.email.trim() : "";
+  const hasPreferences = typeof data.studyEmails === "boolean" || typeof data.quoteByName === "boolean";
+  const studyEmails = data.studyEmails === true;
+  const quoteByName = data.quoteByName === true;
 
   if (!token) {
     return res.status(400).json({ error: "Missing token" });
   }
-  if (!looksLikeEmail(email)) {
+  if (!hasPreferences && !looksLikeEmail(email)) {
+    return res.status(400).json({ error: "That doesn't look like a valid email address" });
+  }
+  if (email && !looksLikeEmail(email)) {
     return res.status(400).json({ error: "That doesn't look like a valid email address" });
   }
 
@@ -90,22 +100,46 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: "Invalid token" });
   }
 
+  if (studyEmails && !email && !record.fields?.[FIELD.email]) {
+    return res.status(400).json({ error: "Please add an email address for study emails" });
+  }
+
   try {
-    const patchRes = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${record.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${airtableToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fields: { [FIELD.email]: email } }),
-      }
-    );
-    if (!patchRes.ok) {
-      const err = await patchRes.text();
-      console.error("Airtable email write failed:", err);
-      return res.status(502).json({ error: "Could not save email" });
+    if (email) {
+      const patchRes = await fetch(
+        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${record.id}`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${airtableToken}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ fields: { [FIELD.email]: email } }),
+        }
+      );
+      if (!patchRes.ok) throw new Error(`Airtable email write failed: ${await patchRes.text()}`);
+    }
+
+    if (hasPreferences) {
+      const responseFormula = `{${FIELD.responseToken}}="${token.replace(/"/g, '\\"')}"`;
+      const responseLookup = await fetch(
+        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}` +
+        `?filterByFormula=${encodeURIComponent(responseFormula)}&maxRecords=1&returnFieldsByFieldId=true`,
+        { headers: { Authorization: `Bearer ${airtableToken}` } }
+      );
+      if (!responseLookup.ok) throw new Error(`Airtable response lookup failed: ${await responseLookup.text()}`);
+      const responseData = await responseLookup.json();
+      const responseRecord = responseData.records && responseData.records[0];
+      if (!responseRecord) return res.status(403).json({ error: "This completed response could not be found" });
+      const preferencePatch = await fetch(
+        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}/${responseRecord.id}`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${airtableToken}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ fields: {
+            [FIELD.consentStudyEmails]: studyEmails,
+            [FIELD.consentQuoteByName]: quoteByName,
+          } }),
+        }
+      );
+      if (!preferencePatch.ok) throw new Error(`Airtable preference write failed: ${await preferencePatch.text()}`);
     }
   } catch (err) {
     console.error("Airtable patch fetch error:", err);
