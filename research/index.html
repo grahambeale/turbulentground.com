@@ -931,6 +931,10 @@ Thank you for being a part of it.</div>
           <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
           <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
         </div>
+        <div class="check-row">
+          <input type="checkbox" id="results-study-emails">
+          <label for="results-study-emails">Also send me occasional study emails with findings, follow-up questions and opportunities to contribute. No more than once every 30 days. I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label>
+        </div>
         <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
         <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
       </form>
@@ -1846,7 +1850,9 @@ Thank you for being a part of it.</div>
   function prepareResultsEmail() {
     var input = document.getElementById('results-email-input');
     var copy = document.getElementById('results-email-copy');
+    var resultsStudyEmails = document.getElementById('results-study-emails');
     quoteNameCheckbox.checked = consent.quoteByName;
+    resultsStudyEmails.checked = consent.contactStudyEmails;
     if (emailCaptured && emailCaptureInput.value) input.value = emailCaptureInput.value;
     if (hasEmailOnFile) {
       input.hidden = true;
@@ -1862,6 +1868,7 @@ Thank you for being a part of it.</div>
     event.preventDefault();
     var button = document.getElementById('results-email-button');
     var input = document.getElementById('results-email-input');
+    var resultsStudyEmails = document.getElementById('results-study-emails');
     var status = document.getElementById('results-email-status');
     var email = input.hidden ? '' : input.value.trim();
 
@@ -1874,10 +1881,27 @@ Thank you for being a part of it.</div>
     button.disabled = true;
     button.textContent = 'Sending...';
     status.hidden = true;
-    fetch('/api/research-results-email', {
+    fetch('/api/research-capture-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: token, email: email || undefined })
+      body: JSON.stringify({
+        token: token,
+        email: email || undefined,
+        studyEmails: resultsStudyEmails.checked,
+        quoteByName: consent.quoteByName
+      })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not save your email preference');
+      });
+    }).then(function () {
+      consent.contactStudyEmails = resultsStudyEmails.checked;
+      studyEmailsCheckbox.checked = consent.contactStudyEmails;
+      return fetch('/api/research-results-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, email: email || undefined })
+      });
     }).then(function (response) {
       return response.json().then(function (data) {
         if (!response.ok) throw new Error(data.error || 'Could not send your summary');
