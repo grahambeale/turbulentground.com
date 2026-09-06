@@ -785,6 +785,14 @@ So thank you for being a part of it.</div>
         <label for="consent-taking-part">I agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label>
       </div>
       <p class="error-msg" id="consent-error">Taking part is required to continue.</p>
+      <div class="check-row">
+        <input type="checkbox" id="consent-study-emails">
+        <label for="consent-study-emails">Send me occasional study emails with findings, follow-up questions and opportunities to contribute. You will email me no more than once every 30 days, and I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label>
+      </div>
+      <div class="email-capture" id="email-capture" hidden>
+        <label for="email-capture-input">Email address</label>
+        <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
+      </div>
       <div style="margin-top:28px;">
         <button type="submit" class="btn" id="consent-continue" disabled>Continue</button>
       </div>
@@ -928,21 +936,13 @@ Thank you for being a part of it.</div>
       </form>
 
       <form class="results-email stay-involved" id="stay-involved-form">
-        <h2>Stay involved <span class="optional-tag">(optional)</span></h2>
-        <p>These choices are separate from taking part. Leave both unticked if this is your only contribution.</p>
-        <div class="check-row">
-          <input type="checkbox" id="consent-study-emails">
-          <label for="consent-study-emails">Send me occasional study emails with findings, follow-up questions and opportunities to contribute. You will email me no more than once every 30 days, and I can unsubscribe at any time.</label>
-        </div>
-        <div class="email-capture" id="email-capture" hidden>
-          <label for="email-capture-input">Email address</label>
-          <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
-        </div>
+        <h2>Being quoted <span class="optional-tag">(optional)</span></h2>
+        <p>This is separate from taking part and from receiving study emails.</p>
         <div class="check-row">
           <input type="checkbox" id="consent-quote-name">
           <label for="consent-quote-name">I am open to being quoted by name. You will ask me separately about the specific quote before using it.</label>
         </div>
-        <button class="btn" id="stay-involved-button" type="submit">Save my choices</button>
+        <button class="btn" id="stay-involved-button" type="submit">Save my choice</button>
         <p class="results-email-status" id="stay-involved-status" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
@@ -1220,6 +1220,8 @@ Thank you for being a part of it.</div>
       consent.quoteAnonymously = saved.consent.quoteAnonymously === true;
       consent.quoteByName = saved.consent.quoteByName === true;
       document.getElementById('consent-taking-part').checked = consent.takingPart;
+      document.getElementById('consent-study-emails').checked = consent.contactStudyEmails;
+      document.getElementById('email-capture').hidden = !(consent.contactStudyEmails && !hasEmailOnFile);
     }
     if (isPlainObjectClient(saved.context)) {
       context.role = saved.context.role || '';
@@ -1332,7 +1334,7 @@ Thank you for being a part of it.</div>
     if (document.visibilityState === 'hidden') saveProgressOnHide();
   });
 
-  // ---- optional contact choices, shown only after submission ----
+  // ---- optional contact choices ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
   var quoteNameCheckbox = document.getElementById('consent-quote-name');
   var emailCaptureWrap = document.getElementById('email-capture');
@@ -1373,23 +1375,70 @@ Thank you for being a part of it.</div>
 
   document.getElementById('consent-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var takingPart = document.getElementById('consent-taking-part').checked;
+    var takingPart = takingPartCheckbox.checked;
+    var wantsEmails = studyEmailsCheckbox.checked;
+    var email = emailCaptureInput.value.trim();
     var errorEl = document.getElementById('consent-error');
     if (!takingPart) {
+      errorEl.textContent = 'Taking part is required to continue.';
       errorEl.classList.add('visible');
+      return;
+    }
+    if (wantsEmails && !hasEmailOnFile && !emailCaptured && !looksLikeEmailClientSide(email)) {
+      errorEl.textContent = 'Please add a valid email address for study emails.';
+      errorEl.classList.add('visible');
+      emailCaptureWrap.hidden = false;
+      emailCaptureInput.focus();
       return;
     }
     errorEl.classList.remove('visible');
     consent.takingPart = true;
-    consent.contactStudyEmails = false;
+    consent.contactStudyEmails = wantsEmails;
     consent.quoteAnonymously = true;
     consent.quoteByName = false;
 
     // "Started At" is set here: the consent screen has just been completed.
-    startedAt = new Date().toISOString();
+    if (!startedAt) startedAt = new Date().toISOString();
 
-    trackResearchEvent('Research: Consent Completed');
-    showScreen('screen-context');
+    consentContinue.disabled = true;
+    consentContinue.textContent = 'Saving...';
+
+    var emailSave = Promise.resolve();
+    if (wantsEmails && !hasEmailOnFile && !emailCaptured) {
+      emailSave = fetch('/api/research-capture-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, email: email })
+      }).then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) throw new Error(data.error || 'Could not save your email address');
+        });
+      }).then(function () {
+        emailCaptured = true;
+      });
+    }
+
+    emailSave.then(function () {
+      return fetch('/api/research-save-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildSavePayload())
+      });
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not save your choices');
+      });
+    }).then(function () {
+      trackResearchEvent('Research: Consent Completed');
+      showScreen('screen-context');
+      consentContinue.textContent = 'Continue';
+      updateConsentAcknowledgement();
+    }).catch(function (error) {
+      errorEl.textContent = error.message + '. Please try again.';
+      errorEl.classList.add('visible');
+      consentContinue.textContent = 'Continue';
+      updateConsentAcknowledgement();
+    });
   });
 
   // ---- screen 2: context ----
@@ -1797,9 +1846,7 @@ Thank you for being a part of it.</div>
   function prepareResultsEmail() {
     var input = document.getElementById('results-email-input');
     var copy = document.getElementById('results-email-copy');
-    studyEmailsCheckbox.checked = consent.contactStudyEmails;
     quoteNameCheckbox.checked = consent.quoteByName;
-    emailCaptureWrap.hidden = !(studyEmailsCheckbox.checked && !hasEmailOnFile && !emailCaptured);
     if (emailCaptured && emailCaptureInput.value) input.value = emailCaptureInput.value;
     if (hasEmailOnFile) {
       input.hidden = true;
@@ -1860,15 +1907,7 @@ Thank you for being a part of it.</div>
     event.preventDefault();
     var button = document.getElementById('stay-involved-button');
     var status = document.getElementById('stay-involved-status');
-    var wantsEmails = studyEmailsCheckbox.checked;
-    var email = emailCaptureInput.value.trim();
-    if (wantsEmails && !hasEmailOnFile && !emailCaptured && !looksLikeEmailClientSide(email)) {
-      status.textContent = 'Please add a valid email address for study emails.';
-      status.hidden = false;
-      emailCaptureWrap.hidden = false;
-      emailCaptureInput.focus();
-      return;
-    }
+    var wantsEmails = consent.contactStudyEmails;
     button.disabled = true;
     button.textContent = 'Saving...';
     status.hidden = true;
@@ -1879,7 +1918,7 @@ Thank you for being a part of it.</div>
         token: token,
         studyEmails: wantsEmails,
         quoteByName: quoteNameCheckbox.checked,
-        email: wantsEmails && !hasEmailOnFile && !emailCaptured ? email : undefined
+        email: undefined
       })
     }).then(function (response) {
       return response.json().then(function (data) {
@@ -1888,15 +1927,14 @@ Thank you for being a part of it.</div>
     }).then(function () {
       consent.contactStudyEmails = wantsEmails;
       consent.quoteByName = quoteNameCheckbox.checked;
-      if (email) emailCaptured = true;
-      status.textContent = 'Your choices have been saved.';
+      status.textContent = 'Your choice has been saved.';
       status.hidden = false;
-      button.textContent = 'Choices saved';
+      button.textContent = 'Choice saved';
     }).catch(function (error) {
       status.textContent = error.message;
       status.hidden = false;
       button.disabled = false;
-      button.textContent = 'Save my choices';
+      button.textContent = 'Save my choice';
     });
   });
 

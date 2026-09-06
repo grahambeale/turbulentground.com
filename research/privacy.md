@@ -50,7 +50,7 @@ Please do **not** include information about your physical or mental health, alle
 
 ## Consent, and what each part means
 
-Before the survey, taking part and allowing your responses to contribute to anonymised, aggregated findings are presented as one required agreement because creating those findings is the purpose of the study. After your response is submitted, a separate “Stay involved” panel offers the optional choices about study emails and being quoted by name. Neither is selected in advance or required to complete the study.
+Before the survey, taking part and allowing your responses to contribute to anonymised, aggregated findings are presented as one required agreement because creating those findings is the purpose of the study. A separate, optional checkbox on the same screen lets you choose whether to receive occasional study emails. It is not selected in advance and is not required to complete the study. After your response is submitted, you can separately say whether you are open to being quoted by name.
 
 1. **Taking part.** Answering the survey and allowing your responses to be analysed and contribute to anonymised, aggregated research findings and benchmarks.
 2. **Receiving occasional study emails.** These may include findings, follow-up questions and opportunities to contribute to the research community. I will email no more than once every 30 days. You can unsubscribe at any time and still take part now.
