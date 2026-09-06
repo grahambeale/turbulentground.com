@@ -83,7 +83,7 @@ Question B is currently stored in the “conditions” lens, but its wording pri
 
 #### Question A
 
-> When AI saves me time, I can use it to improve my work.
+> When AI saves me time, I can use that time to improve my work.
 
 **Why it is asked**  
 AI productivity gains can be used to improve quality or absorbed into higher output expectations. This asks whether the working environment leaves room for quality improvement.
