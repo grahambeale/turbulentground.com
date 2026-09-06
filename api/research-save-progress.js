@@ -88,7 +88,10 @@ const FIELD = {
   discipline: "fldAHP8vHMM5R3od0",
   teamResponsibility: "fldP3feAS0fMX9w5N",
   orgSize: "fldNrxY2Jm8OOcBFm",
+  instrumentVersion: "fldHJ4KNzMbpzdob6",
 };
+
+const INSTRUMENT_VERSION = "phase3-v2-2026-09-06";
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
@@ -191,6 +194,7 @@ export default async function handler(req, res) {
     [FIELD.consentQuoteAnon]: consent.quoteAnonymously === true,
     [FIELD.consentQuoteName]: consent.quoteByName === true,
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),
+    [FIELD.instrumentVersion]: INSTRUMENT_VERSION,
   };
   if (typeof context.role === "string" && context.role) fields[FIELD.role] = context.role;
   if (typeof context.discipline === "string" && context.discipline) fields[FIELD.discipline] = context.discipline;

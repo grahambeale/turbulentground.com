@@ -186,29 +186,33 @@ Low monitoring is not automatically positive. Appropriate oversight may be neces
 
 #### Question A
 
-> I have opportunities at work to build skills AI cannot replace.
+> I have opportunities at work to build skills that will remain useful as AI changes my work.
 
 **Why it is asked**  
 Organisations may benefit from current AI productivity without investing in employees’ longer-term development.
 
 **What the data may indicate**  
-A higher response may indicate access to meaningful development opportunities. A lower response may indicate that AI is covering capability gaps while opportunities for human learning narrow.
+A higher response may indicate access to development opportunities the participant expects to remain useful as their work changes. A lower response may indicate that AI is covering capability gaps while opportunities for continued learning narrow.
 
 #### Question B
 
-> I actively develop skills AI cannot replace.
+> I actively develop skills that will remain useful as AI changes my work.
 
 **Why it is asked**  
 Opportunity and action are not the same. This asks whether the participant reports taking responsibility for continued development.
 
 **What the data may indicate**  
-It may indicate active learning, adaptation and investment in capabilities the participant believes will remain valuable.
+It may indicate active learning, adaptation and investment in capabilities the participant expects to remain useful as work changes.
 
 **Why it is distinct**  
 Question A measures perceived opportunity supplied by work. Question B measures reported personal action. Their difference may show whether development is blocked by the environment or available but not taken up.
 
 **Interpretation caution**  
-“Skills AI cannot replace” is subjective and may change over time. Responses indicate beliefs and behaviour, not an objective forecast of which skills are replaceable.
+“Skills that will remain useful” still involves personal expectation, but it does not require participants to claim that any skill is permanently AI-proof. Responses indicate present opportunity and behaviour, not an objective forecast of future labour-market value.
+
+**Instrument version note**
+
+The Learning wording above begins with `phase3-v2-2026-09-06`. Earlier stored responses are labelled `phase3-v1`. Analyse or compare the versions explicitly rather than silently treating these two wordings as identical.
 
 ### 7. Trust
 
@@ -575,4 +579,3 @@ The survey is best used to locate tensions. Follow-up work can then ask how and 
 - why some prototypes become embedded while others go nowhere;
 - how leaders and individual contributors perceive the same organisational conditions differently; and
 - which organisational practices allow AI adoption without sacrificing judgement, learning, relationships or sustainable pace.
-

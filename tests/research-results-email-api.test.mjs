@@ -1,4 +1,4 @@
-import handler from "../api/research-results-email.js";
+import handler, { buildEmailHtml } from "../api/research-results-email.js";
 
 function check(label, condition, detail = "") {
   if (!condition) throw new Error(`FAIL  ${label}${detail ? `: ${detail}` : ""}`);
@@ -38,6 +38,14 @@ try {
           d2: { contribution: 2, conditions: 5 },
           d3: { contribution: 5, conditions: 2 },
           d4: { contribution: 5, conditions: 3 },
+          d5: { contribution: 4, conditions: 3 },
+          d6: { contribution: 4, conditions: 3 },
+          d7: { contribution: 4, conditions: 3 },
+          d8: { contribution: 4, conditions: 3 },
+          d9: { contribution: 4, conditions: 3 },
+          d10: { contribution: 4, conditions: 3 },
+          d11: { contribution: 4, conditions: 3 },
+          d12: { contribution: 4, conditions: 3 },
         }),
       } }] }) };
     }
@@ -76,6 +84,7 @@ try {
   check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
   check("leads with an immediate personal summary", sendBody.html.indexOf("Your response at a glance") < sendBody.html.indexOf("Your emerging benchmark comparison"));
   check("shows the participant's most positive personal responses", /What you report bringing[\s\S]*Working relationships[\s\S]*Speaking directly with colleagues/.test(sendBody.html));
+  check("adds a qualified one-line personal headline", /Your answers suggest that [\s\S]* is a notable part of how you approach AI at work/.test(sendBody.html));
   check("shows what the environment supports", /What your environment enables[\s\S]*Time and workload[\s\S]*Being able to use AI-saved time/.test(sendBody.html));
   check("shows less-supported surrounding conditions", /Less supported in your answers[\s\S]*Working relationships/.test(sendBody.html));
   check("shows the largest paired tensions", /Where the tension sits[\s\S]*Working relationships[\s\S]*own action higher than the condition around you \(5 compared with 2\)/.test(sendBody.html));
@@ -109,6 +118,20 @@ try {
   check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 14|14 eligible/i.test(secondSendBody.html));
   check("withholds highlights when the benchmark is unavailable", !/Benchmark highlights/.test(secondSendBody.html));
   check("still provides personal value before a benchmark exists", /Your response at a glance/.test(secondSendBody.html) && /Questions worth discussing/.test(secondSendBody.html));
+
+  const sparseHtml = buildEmailHtml("", {
+    d1: { contribution: 5, conditions: 3 },
+    d2: { contribution: "not_applicable", conditions: 3 },
+  }, { domains: null }, "sparse-token");
+  check("uses an insufficient-data headline for sparse answers", /do not yet provide enough personal-practice responses for a clear headline/.test(sparseHtml));
+
+  const midpointPairs = Object.fromEntries(Array.from({ length: 12 }, (_, index) => [
+    `d${index + 1}`,
+    { contribution: 3, conditions: 3 },
+  ]));
+  const midpointHtml = buildEmailHtml("", midpointPairs, { domains: null }, "midpoint-token");
+  check("uses a neutral headline for midpoint-heavy answers", /mixed or still-developing picture rather than one dominant personal practice/.test(midpointHtml));
+  check("does not turn Not applicable into a score", !/Your answers suggest that not applicable/.test(sparseHtml));
   console.log("\nALL CHECKS PASSED");
 } finally {
   global.fetch = oldFetch;

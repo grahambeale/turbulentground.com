@@ -62,8 +62,8 @@ const DOMAIN_INSIGHT = {
     prompt: "What would make it easier to discuss AI use openly while keeping appropriate oversight?",
   },
   d6: {
-    contribution: "Actively developing skills that AI cannot replace",
-    conditions: "Having opportunities at work to build skills that AI cannot replace",
+    contribution: "Actively developing skills that will remain useful as AI changes your work",
+    conditions: "Having opportunities at work to build skills that will remain useful as AI changes your work",
     prompt: "Which skills do you need more opportunity to develop at work?",
   },
   d7: {
@@ -304,10 +304,12 @@ function reflectionList(keys) {
 
 function personalSummary(pairs) {
   const insight = personalInsights(pairs);
+  const headline = personalHeadline(pairs);
   return `<h2 style="margin:28px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your response at a glance</h2>
     <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This reflects how you answered today. It is not a score, diagnosis or judgement of your ability.</p>
     <div style="margin-top:18px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
       <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What you report bringing</h3>
+      <p style="margin:0 0 14px;color:#ef7b45;font-family:Georgia,serif;font-size:18px;line-height:1.45;">${escapeHtml(headline)}</p>
       ${responseList(insight.contribution, "You did not strongly agree with any personal-practice statement. The detailed responses below preserve the full picture.")}
     </div>
     <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
@@ -326,6 +328,24 @@ function personalSummary(pairs) {
       <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Questions worth discussing</h3>
       ${reflectionList(insight.questionKeys)}
     </div>`;
+}
+
+function personalHeadline(pairs) {
+  const answered = rankedResponses(pairs, "contribution");
+  if (answered.length < 6) {
+    return "Your answers do not yet provide enough personal-practice responses for a clear headline.";
+  }
+
+  const strongest = answered
+    .filter(item => item.value >= 4)
+    .sort((a, b) => b.value - a.value || a.order - b.order)[0];
+
+  if (!strongest) {
+    return "Your answers suggest a mixed or still-developing picture rather than one dominant personal practice.";
+  }
+
+  const pattern = strongest.text.charAt(0).toLowerCase() + strongest.text.slice(1);
+  return `Your answers suggest that ${pattern} is a notable part of how you approach AI at work.`;
 }
 
 function scalePosition(value) {

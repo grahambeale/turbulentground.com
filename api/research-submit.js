@@ -70,7 +70,10 @@ const FIELD = {
   orgSize: "fldNrxY2Jm8OOcBFm",
   pairsAnswered: "fldybjxPuIHJ7wx6k",
   meetsCompletionFloor: "fldc1EMbDAHAO99Av",
+  instrumentVersion: "fldHJ4KNzMbpzdob6",
 };
+
+const INSTRUMENT_VERSION = "phase3-v2-2026-09-06";
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
@@ -219,6 +222,7 @@ export default async function handler(req, res) {
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),
     [FIELD.pairsAnswered]: pairsAnswered,
     [FIELD.meetsCompletionFloor]: meetsCompletionFloor,
+    [FIELD.instrumentVersion]: INSTRUMENT_VERSION,
   };
 
   if (typeof data.startedAt === "string" && data.startedAt) {
