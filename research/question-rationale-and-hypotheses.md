@@ -65,7 +65,7 @@ It does not show whether the participant’s judgement is actually correct, whet
 
 #### Question B
 
-> I can recognise when an AI suggestion is wrong.
+> I can recognise when AI output is wrong.
 
 **Why it is asked**  
 Independent judgement is only protective when a person believes they can identify inaccurate, unsuitable or misleading output.
@@ -93,7 +93,7 @@ A higher response may indicate that saved time is available for refinement, chec
 
 #### Question B
 
-> I keep some of the time AI saves me free from new tasks.
+> I can use some of the time AI saves me for myself, rather than taking on more work.
 
 **Why it is asked**  
 This asks whether the participant personally protects any of the capacity created by AI.
@@ -108,7 +108,7 @@ Question A asks whether the environment permits saved time to support quality. Q
 
 #### Question A
 
-> I talk to colleagues directly instead of relying on AI summaries.
+> I talk to colleagues directly instead of relying on AI summaries of their work.
 
 **Why it is asked**  
 AI can make information easier to consume while reducing direct contact with the people whose work or experience is being summarised.
@@ -118,7 +118,7 @@ A higher response may indicate an active effort to preserve direct communication
 
 #### Question B
 
-> My colleagues speak with me instead of relying on AI summaries.
+> My colleagues speak with me directly instead of relying on AI summaries of my work.
 
 **Why it is asked**  
 Working relationships are reciprocal. A person can seek direct contact while still feeling that others understand them mainly through generated summaries.
@@ -133,7 +133,7 @@ Question A measures the participant’s reported behaviour towards colleagues. Q
 
 #### Question A
 
-> My organisation allows enough time to check AI-assisted work.
+> My organisation allows enough time to check the quality of AI-assisted work.
 
 **Why it is asked**  
 Responsible AI use depends on whether deadlines and expectations allow output to be checked and improved.
@@ -143,7 +143,7 @@ A higher response may indicate that quality assurance is supported in practice. 
 
 #### Question B
 
-> I check AI-assisted work as carefully as work I do without AI.
+> I check AI-assisted work as carefully as my other work.
 
 **Why it is asked**  
 Available time does not guarantee careful checking. This asks about the participant’s own reported standard of care.
@@ -168,19 +168,19 @@ A higher response may indicate comfort describing when and how AI contributes to
 
 #### Question B
 
-> I can use AI without close day-to-day monitoring.
+> My organisation trusts me to decide when to rely on AI output.
 
 **Why it is asked**  
-This examines how much freedom the participant experiences in routine AI use.
+This examines whether the organisation trusts the participant to exercise judgement about when AI output is appropriate to use.
 
 **What the data may indicate**  
-It may indicate discretion, surveillance or the degree of managerial control surrounding AI-assisted work.
+It may indicate discretion, organisational trust or the degree of managerial control surrounding AI-assisted work.
 
 **Why it is distinct**  
-Question A concerns explainability and openness. Question B concerns freedom from close monitoring. A person may be transparent but closely monitored, or have little monitoring while still feeling unable to speak openly about their use.
+Question A concerns explainability and openness. Question B concerns trusted judgement. A person may be transparent about AI use without feeling trusted to decide when its output is reliable, or feel trusted while still being uncomfortable discussing how they use it.
 
 **Interpretation caution**  
-Low monitoring is not automatically positive. Appropriate oversight may be necessary in high-risk work. The response should be interpreted alongside trust, policy clarity and the nature of the participant’s role.
+High trust is not automatically evidence of safe practice. Appropriate oversight may be necessary in high-risk work. The response should be interpreted alongside policy clarity, accountability and the nature of the participant’s role.
 
 ### 6. Learning
 
@@ -268,7 +268,7 @@ Question A measures recognition given to others. Question B measures recognition
 
 #### Question A
 
-> As AI changes my tasks, I seek out meaningful work.
+> As AI changes my tasks, I look for new ways to make my work meaningful.
 
 **Why it is asked**  
 When routine tasks change or disappear, individuals may need to actively reconnect their role with work that matters to them.
@@ -343,7 +343,7 @@ Question A concerns clarity supplied by the organisation. Question B concerns in
 
 #### Question A
 
-> I feel secure in my role as AI changes work.
+> I feel secure in my role as AI changes my work.
 
 **Why it is asked**  
 AI adoption may affect people’s sense of longer-term role stability even before any formal job change occurs.
