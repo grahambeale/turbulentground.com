@@ -101,8 +101,9 @@ For unapproved feedback, write:
 - methodological, privacy and accessibility implications;
 - a proportionate test plan.
 
-Set the record to `Awaiting approval` and ask Graham to approve, amend, defer
-or reject it. Stop there.
+Set the record to `Awaiting approval`, set `Next action` to a plain-language
+request for Graham to review the proposal, record `Last agent run` and `Last
+updated by`, and ask Graham to approve, amend, defer or reject it. Stop there.
 
 ### 3. Preflight
 
@@ -124,6 +125,13 @@ participant data out of source files, fixtures, logs, commits and prompts.
 Maintain WCAG 2.2 AA, plain language, research validity and the commitments in
 `privacy.html` and `privacy.md`.
 
+Implementation approval is not release approval. Unless Graham's direct
+request explicitly authorises an immediate release, implement an Airtable item
+on a dedicated `codex/` branch, push that branch to create a Vercel preview,
+and record the commit, preview URL and verification evidence. Set `Release
+decision` to `Awaiting approval`, set `Status` to `Awaiting release approval`,
+and set `Next action` to ask Graham to review the preview. Stop there.
+
 ### 5. Verify
 
 Run proportionate regression, accessibility and methodological checks. For
@@ -133,8 +141,16 @@ Do not claim production success from a local preview.
 
 ### 6. Record and release
 
-Update the Airtable record with what changed, test evidence, commit and live URL
-where applicable. Status meanings are:
+Only release an Airtable item when `Release decision` is `Approved`, or when a
+direct request from Graham explicitly authorises the release. Merge or apply
+the reviewed commit to `main`, push it, wait for the production deployment and
+verify the real participant journey. A successful local test or preview is not
+production verification.
+
+Update the Airtable record with what changed, test evidence, `Last agent run`,
+`Last updated by`, `Next action`, `Blocker`, commit, preview URL and live URL
+where applicable. Keep `Blocker` blank while work can proceed. Status meanings
+are:
 
 - `New`: captured, not yet assessed;
 - `Under review`: evidence is being examined;
@@ -142,9 +158,17 @@ where applicable. Status meanings are:
 - `Awaiting approval`: proposal ready, no implementation authorised;
 - `Approved`: implementation authorised;
 - `In progress`: an agent has claimed the approved work;
+- `Awaiting release approval`: implementation and preview are ready for Graham;
+- `Releasing`: the approved version is being released and verified;
 - `Shipped`: committed, pushed, deployed and verified live;
-- `Deferred`, `Rejected`, `Duplicate`: closed without implementation for the
-  stated reason.
+- `Changes requested`: Graham has requested another implementation pass;
+- `Blocked`: work cannot continue; `Blocker` explains why;
+- `Release failed`: the approved release or production verification failed;
+- `Deferred`, `Rejected`, `Duplicate`: closed without implementation for the stated reason.
+
+`Graham's decision` controls whether the proposed solution may be implemented.
+`Release decision` separately controls whether the reviewed implementation may
+reach production. Never infer one approval from the other.
 
 A run may correctly finish after review, proposal, local implementation or a
 blocked verification. There is no requirement to deploy something merely to
