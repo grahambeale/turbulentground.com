@@ -644,6 +644,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
   .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 12px 0 0; }
+  .stay-involved { margin-top: 18px; }
+  .stay-involved .check-row { margin: 16px 0; padding: 0; border: 0; }
+  .stay-involved .check-row label { font-size: 0.92rem; line-height: 1.55; }
+  .stay-involved .email-capture { margin: 10px 0 18px 42px; }
+  .stay-involved .email-capture[hidden] { display: none; }
+  .stay-involved .email-capture label { display: block; margin-bottom: 7px; font-size: 0.88rem; }
   /* This block has to come after the base .results-email rules above (not
      be folded into the earlier 480px block) — a media-query rule doesn't
      out-rank a same-specificity rule that appears later in the file, so an
@@ -659,6 +665,20 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .choice-grid { grid-template-columns: 1fr; }
     .footer-bar { gap: 14px; padding: 12px 18px; }
   }
+
+  /* Restrained route treatment approved after comparative local review. */
+  .restrained-research .journey-route::after { opacity: 0.34; }
+  .restrained-research .journey-theme { color: var(--muted); opacity: 0.72; }
+  .restrained-research .journey-station.current .journey-theme { color: var(--ink-mid); opacity: 1; }
+  .restrained-research .journey-node { width: 14px; height: 14px; border-width: 2px; opacity: 0.72; }
+  .restrained-research .journey-station.current .journey-node {
+    border-color: var(--orange-lt); box-shadow: 0 0 0 3px var(--bg); animation: none; opacity: 1;
+  }
+  .restrained-research .journey-station.departing .journey-node { animation: station-settle 0.48s ease forwards; }
+  .restrained-research .journey-station.departing .journey-theme { opacity: 0.35; transform: translateX(-50%); }
+  .restrained-research .research-reassurance { display: block; }
+  .research-reassurance { display: none; margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; }
+  @keyframes station-settle { to { transform: scale(0.72); opacity: 0.28; } }
 </style>
 </head>
 <body>
@@ -773,20 +793,6 @@ So thank you for being a part of it.</div>
         <input type="checkbox" id="consent-taking-part" required>
         <label for="consent-taking-part">I agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label>
       </div>
-      <div class="check-row">
-        <input type="checkbox" id="consent-study-emails">
-        <label for="consent-study-emails">I'm happy to receive occasional emails about this study, including findings, follow-up questions and opportunities to contribute to the research community. You'll email me no more than once every 30 days, and I can unsubscribe at any time.</label>
-      </div>
-      <div class="email-capture" id="email-capture" style="display:none;">
-        <p>I don't have your email. Add it if you'd like to receive occasional emails about this study.</p>
-        <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
-        <p class="email-status" id="email-capture-status"></p>
-      </div>
-      <div class="check-row">
-        <input type="checkbox" id="consent-quote-name">
-        <label for="consent-quote-name">I'm open to being quoted by name (I'll always be asked separately, about the specific quote, before this happens).</label>
-      </div>
-
       <div class="consent-thanks" id="consent-thanks" role="status" aria-live="polite" hidden>
         <p class="consent-thanks-title" id="consent-thanks-title">You will be a one-off participant in this study.</p>
       </div>
@@ -860,6 +866,7 @@ So thank you for being a part of it.</div>
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
     <button class="guidance-btn" id="guidance-btn" type="button"><span class="context-icon" aria-hidden="true">i</span>How this works</button>
+    <p class="research-reassurance">There are no right answers. Choose what best reflects your experience.</p>
 
     <dialog class="survey-guidance" id="survey-guidance" aria-labelledby="survey-guidance-title">
       <h2 id="survey-guidance-title">How this works</h2>
@@ -931,6 +938,25 @@ Thank you for being a part of it.</div>
         </div>
         <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
         <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
+      </form>
+
+      <form class="results-email stay-involved" id="stay-involved-form">
+        <h2>Stay involved <span class="optional-tag">(optional)</span></h2>
+        <p>These choices are separate from taking part. Leave both unticked if this is your only contribution.</p>
+        <div class="check-row">
+          <input type="checkbox" id="consent-study-emails">
+          <label for="consent-study-emails">Send me occasional study emails with findings, follow-up questions and opportunities to contribute. You will email me no more than once every 30 days, and I can unsubscribe at any time.</label>
+        </div>
+        <div class="email-capture" id="email-capture" hidden>
+          <label for="email-capture-input">Email address</label>
+          <input type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="consent-quote-name">
+          <label for="consent-quote-name">I am open to being quoted by name. You will ask me separately about the specific quote before using it.</label>
+        </div>
+        <button class="btn" id="stay-involved-button" type="submit">Save my choices</button>
+        <p class="results-email-status" id="stay-involved-status" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
   </section>
@@ -1123,11 +1149,14 @@ Thank you for being a part of it.</div>
     new URLSearchParams(window.location.search).get('preview') === 'journey';
   var localTransitionPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
     previewMode === 'transition';
+  var localRestrainedPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+    previewMode === 'restrained';
   document.documentElement.classList.add('likert-transitions');
+  document.documentElement.classList.add('restrained-research');
   var researchEventsSent = {};
 
   function trackResearchEvent(name) {
-    if (localJourneyPreview || localTransitionPreview || researchEventsSent[name]) return;
+    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || researchEventsSent[name]) return;
     researchEventsSent[name] = true;
     window.plausible(name);
   }
@@ -1148,7 +1177,7 @@ Thank you for being a part of it.</div>
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  if (localJourneyPreview || localTransitionPreview) {
+  if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
     renderPairs();
     showScreen('screen-pairs');
   } else {
@@ -1204,8 +1233,6 @@ Thank you for being a part of it.</div>
       consent.quoteAnonymously = saved.consent.quoteAnonymously === true;
       consent.quoteByName = saved.consent.quoteByName === true;
       document.getElementById('consent-taking-part').checked = consent.takingPart;
-      document.getElementById('consent-study-emails').checked = consent.contactStudyEmails;
-      document.getElementById('consent-quote-name').checked = consent.quoteByName;
     }
     if (isPlainObjectClient(saved.context)) {
       context.role = saved.context.role || '';
@@ -1318,11 +1345,11 @@ Thank you for being a part of it.</div>
     if (document.visibilityState === 'hidden') saveProgressOnHide();
   });
 
-  // ---- email capture (for invitees with no email on file) ----
+  // ---- optional contact choices, shown only after submission ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
+  var quoteNameCheckbox = document.getElementById('consent-quote-name');
   var emailCaptureWrap = document.getElementById('email-capture');
   var emailCaptureInput = document.getElementById('email-capture-input');
-  var emailCaptureStatus = document.getElementById('email-capture-status');
 
   function looksLikeEmailClientSide(value) {
     if (typeof value !== 'string') return false;
@@ -1336,62 +1363,18 @@ Thank you for being a part of it.</div>
   }
 
   studyEmailsCheckbox.addEventListener('change', function () {
-    if (this.checked && !hasEmailOnFile) {
-      emailCaptureWrap.style.display = 'block';
-      if (!emailCaptured) {
-        // Follow-up consent is not valid until its contact address has
-        // actually been captured. Keep the field visible, but do not leave
-        // the checkbox claiming consent that cannot yet be acted on.
-        this.checked = false;
-        emailCaptureInput.focus();
-      }
-    } else {
-      emailCaptureWrap.style.display = 'none';
-    }
+    emailCaptureWrap.hidden = !(this.checked && !hasEmailOnFile && !emailCaptured);
+    if (!emailCaptureWrap.hidden) emailCaptureInput.focus();
   });
 
-  // Captured on blur, not batched into final submission: if someone
-  // abandons the survey after consenting but before finishing, the email
-  // they've already agreed to be contacted on should still be saved.
-  // Return from an autocomplete selection must not implicitly submit the
-  // parent consent form before the remaining choices have been reviewed.
   emailCaptureInput.addEventListener('keydown', function (event) {
     if (event.key !== 'Enter') return;
     event.preventDefault();
     emailCaptureInput.blur();
   });
 
-  emailCaptureInput.addEventListener('blur', function () {
-    var value = emailCaptureInput.value;
-    if (!looksLikeEmailClientSide(value)) {
-      emailCaptured = false;
-      return;
-    }
-    emailCaptureStatus.textContent = 'Saving…';
-    emailCaptureStatus.className = 'email-status saved';
-    fetch('/api/research-capture-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: token, email: value.trim() })
-    }).then(function (res) {
-      if (!res.ok) throw new Error('capture failed');
-      return res.json();
-    }).then(function () {
-      emailCaptured = true;
-      studyEmailsCheckbox.checked = true;
-      updateConsentAcknowledgement();
-      emailCaptureStatus.textContent = 'Saved.';
-      emailCaptureStatus.className = 'email-status saved';
-    }).catch(function () {
-      emailCaptured = false;
-      emailCaptureStatus.textContent = 'Could not save that email. Please check it and try again.';
-      emailCaptureStatus.className = 'email-status error';
-    });
-  });
-
   // ---- screen 1: consent ----
   var takingPartCheckbox = document.getElementById('consent-taking-part');
-  var quoteNameCheckbox = document.getElementById('consent-quote-name');
   var consentThanks = document.getElementById('consent-thanks');
   var consentThanksTitle = document.getElementById('consent-thanks-title');
   var consentContinue = document.getElementById('consent-continue');
@@ -1402,23 +1385,10 @@ Thank you for being a part of it.</div>
     consentThanks.hidden = !takingPart;
     if (!takingPart) return;
 
-    var stayingInvolved = studyEmailsCheckbox.checked;
-    var supportingFindings = quoteNameCheckbox.checked;
-
-    if (stayingInvolved && supportingFindings) {
-      consentThanksTitle.textContent = 'You will be part of this research community.';
-    } else if (stayingInvolved) {
-      consentThanksTitle.textContent = 'You will be an engaged participant in this study.';
-    } else if (supportingFindings) {
-      consentThanksTitle.textContent = "You will be a participant who supports this study's findings.";
-    } else {
-      consentThanksTitle.textContent = 'You will be a one-off participant in this study.';
-    }
+    consentThanksTitle.textContent = 'You will be a participant in this study.';
   }
 
-  [takingPartCheckbox, studyEmailsCheckbox, quoteNameCheckbox].forEach(function (checkbox) {
-    checkbox.addEventListener('change', updateConsentAcknowledgement);
-  });
+  takingPartCheckbox.addEventListener('change', updateConsentAcknowledgement);
 
   document.getElementById('consent-form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -1430,12 +1400,9 @@ Thank you for being a part of it.</div>
     }
     errorEl.classList.remove('visible');
     consent.takingPart = true;
-    // Checking the study-emails box with no email on file only becomes consent
-    // after the address has been captured successfully.
-    var studyEmailsChecked = document.getElementById('consent-study-emails').checked;
-    consent.contactStudyEmails = studyEmailsChecked && (hasEmailOnFile || emailCaptured);
+    consent.contactStudyEmails = false;
     consent.quoteAnonymously = true;
-    consent.quoteByName = document.getElementById('consent-quote-name').checked;
+    consent.quoteByName = false;
 
     // "Started At" is set here: the consent screen has just been completed.
     startedAt = new Date().toISOString();
@@ -1744,7 +1711,7 @@ Thank you for being a part of it.</div>
     var station = document.querySelector('.journey-station.current');
     if (!station) return;
     station.classList.add('departing');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (document.documentElement.classList.contains('restrained-research') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var burst = document.createElement('span');
     burst.className = 'journey-burst';
     burst.setAttribute('aria-hidden', 'true');
@@ -1849,6 +1816,9 @@ Thank you for being a part of it.</div>
   function prepareResultsEmail() {
     var input = document.getElementById('results-email-input');
     var copy = document.getElementById('results-email-copy');
+    studyEmailsCheckbox.checked = consent.contactStudyEmails;
+    quoteNameCheckbox.checked = consent.quoteByName;
+    emailCaptureWrap.hidden = !(studyEmailsCheckbox.checked && !hasEmailOnFile && !emailCaptured);
     if (emailCaptured && emailCaptureInput.value) input.value = emailCaptureInput.value;
     if (hasEmailOnFile) {
       input.hidden = true;
@@ -1887,6 +1857,11 @@ Thank you for being a part of it.</div>
       });
     }).then(function () {
       trackResearchEvent('Research: Comparison Requested');
+      if (email) {
+        emailCaptured = true;
+        emailCaptureInput.value = email;
+        emailCaptureWrap.hidden = true;
+      }
       status.textContent = 'Sent. Check your inbox.';
       status.hidden = false;
       button.hidden = true;
@@ -1897,6 +1872,50 @@ Thank you for being a part of it.</div>
       status.hidden = false;
       button.disabled = false;
       button.textContent = 'Email my comparison';
+    });
+  });
+
+  document.getElementById('stay-involved-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var button = document.getElementById('stay-involved-button');
+    var status = document.getElementById('stay-involved-status');
+    var wantsEmails = studyEmailsCheckbox.checked;
+    var email = emailCaptureInput.value.trim();
+    if (wantsEmails && !hasEmailOnFile && !emailCaptured && !looksLikeEmailClientSide(email)) {
+      status.textContent = 'Please add a valid email address for study emails.';
+      status.hidden = false;
+      emailCaptureWrap.hidden = false;
+      emailCaptureInput.focus();
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Saving...';
+    status.hidden = true;
+    fetch('/api/research-participation-preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: token,
+        studyEmails: wantsEmails,
+        quoteByName: quoteNameCheckbox.checked,
+        email: wantsEmails && !hasEmailOnFile && !emailCaptured ? email : undefined
+      })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Could not save your choices');
+      });
+    }).then(function () {
+      consent.contactStudyEmails = wantsEmails;
+      consent.quoteByName = quoteNameCheckbox.checked;
+      if (email) emailCaptured = true;
+      status.textContent = 'Your choices have been saved.';
+      status.hidden = false;
+      button.textContent = 'Choices saved';
+    }).catch(function (error) {
+      status.textContent = error.message;
+      status.hidden = false;
+      button.disabled = false;
+      button.textContent = 'Save my choices';
     });
   });
 

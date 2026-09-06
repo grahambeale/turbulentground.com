@@ -14,7 +14,7 @@ check("enables the approved transition in the participant experience",
   /if \(!window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches\)/.test(html));
 check("retains a local transition preview without analytics",
   /localTransitionPreview[\s\S]*?previewMode === 'transition'/.test(html) &&
-  /localJourneyPreview \|\| localTransitionPreview \|\| researchEventsSent/.test(html));
+  /localJourneyPreview \|\| localTransitionPreview \|\| localRestrainedPreview \|\| researchEventsSent/.test(html));
 check("gives the selected control a short press state",
   /response-control-pressed/.test(html) && /scale\(0\.92\)/.test(html));
 check("moves the old question left and the new question in from the right",
