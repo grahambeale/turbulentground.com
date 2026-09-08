@@ -306,22 +306,22 @@ function personalSummary(pairs) {
   const insight = personalInsights(pairs);
   const headline = personalHeadline(pairs);
   return `<h2 style="margin:28px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your response at a glance</h2>
-    <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This reflects how you answered today. It is not a score, diagnosis or judgement of your ability.</p>
+    <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This describes your self-reported answers to this survey today. It does not establish your behaviour, capability or the cause of any pattern, and it is not a score, diagnosis or judgement of your ability.</p>
     <div style="margin-top:18px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
-      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What you report bringing</h3>
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What you reported about your own practice</h3>
       <p style="margin:0 0 14px;color:#ef7b45;font-family:Georgia,serif;font-size:18px;line-height:1.45;">${escapeHtml(headline)}</p>
       ${responseList(insight.contribution, "You did not strongly agree with any personal-practice statement. The detailed responses below preserve the full picture.")}
     </div>
     <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
-      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What your environment enables</h3>
-      <p style="margin:0 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">More supported in your answers</p>
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">What you reported about your working environment</h3>
+      <p style="margin:0 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Higher-rated conditions in your answers</p>
       ${responseList(insight.enabled, "No surrounding-condition statement received an agreement response of 4 or 5.")}
-      <p style="margin:16px 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Less supported in your answers</p>
+      <p style="margin:16px 0 8px;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Lower-rated conditions in your answers</p>
       ${responseList(insight.constrained, "No surrounding-condition statement received a disagreement response of 1 or 2.")}
     </div>
     <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
-      <h3 style="margin:0 0 8px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Where the tension sits</h3>
-      <p style="margin:0 0 12px;color:#9e8e7c;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;">These are the largest gaps between what you report doing and what you experience around you. A gap is a prompt for reflection, not proof of its cause.</p>
+      <h3 style="margin:0 0 8px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Differences within your paired answers</h3>
+      <p style="margin:0 0 12px;color:#9e8e7c;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;">These are the largest numerical gaps between your answers about your own practice and your immediate working environment. A gap is a prompt for reflection, not evidence of its cause or of your organisation as a whole.</p>
       ${tensionList(insight.tensions)}
     </div>
     <div style="margin-top:12px;padding:18px;background:#231c17;border-left:3px solid #e55b20;">
@@ -333,19 +333,22 @@ function personalSummary(pairs) {
 function personalHeadline(pairs) {
   const answered = rankedResponses(pairs, "contribution");
   if (answered.length < 6) {
-    return "Your answers do not yet provide enough personal-practice responses for a clear headline.";
+    return "You answered fewer than six personal-practice statements, so no headline theme is shown.";
   }
 
-  const strongest = answered
-    .filter(item => item.value >= 4)
-    .sort((a, b) => b.value - a.value || a.order - b.order)[0];
+  const highestValue = Math.max(...answered.map(item => item.value));
+  const highestRated = answered.filter(item => item.value === highestValue);
 
-  if (!strongest) {
-    return "Your answers suggest a mixed or still-developing picture rather than one dominant personal practice.";
+  if (highestValue < 4) {
+    return "None of your personal-practice responses was rated 4 or 5 today.";
   }
 
-  const pattern = strongest.text.charAt(0).toLowerCase() + strongest.text.slice(1);
-  return `Your answers suggest that ${pattern} is a notable part of how you approach AI at work.`;
+  const first = highestRated.sort((a, b) => a.order - b.order)[0];
+  const pattern = first.text.charAt(0).toLowerCase() + first.text.slice(1);
+  const subject = highestRated.length > 1
+    ? "One of your highest-rated personal-practice themes"
+    : "Your highest-rated personal-practice theme";
+  return `${subject} today was ${first.label}: ${pattern}.`;
 }
 
 function scalePosition(value) {
