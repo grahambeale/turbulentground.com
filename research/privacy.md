@@ -24,7 +24,7 @@ I may have your name and email because I know you through my professional networ
 
 - Optionally describe your role, professional discipline, product responsibility and organisation size
 - Answer 24 statements about your own contribution and the conditions around you
-- Optionally add a comment in your own words
+- Optionally add context to selected answers and a comment in your own words
 - Optionally receive an emailed comparison of your answers with the current study benchmark
 - Optionally receive occasional study emails, no more than once every 30 days
 
@@ -38,11 +38,11 @@ I may have your name and email because I know you through my professional networ
 | Feedback you choose to give about the research study or participant experience, and any contact details you provide with it | To improve the research design, questions, communications and participant experience, and to respond where appropriate | Legitimate interests |
 | Your answers to the 24 statements | To conduct the research, create your comparison and calculate anonymised, aggregated study benchmarks and findings | Consent |
 | Your optional role, professional discipline, team responsibility and organisation size | To understand whether different kinds of work experience the AI shift differently | Consent |
-| Anything you write in the optional comment | To identify common themes and experiences that the fixed statements may not capture | Consent |
+| Anything you write as optional context for an answer or in the final comment | To understand what sits behind an answer and identify experiences that the fixed statements may not capture | Consent |
 | When you started and completed, how many paired themes you answered, and whether your response meets the benchmark inclusion threshold | To administer the study, calculate the benchmark fairly and understand whether the survey is asking too much | Consent and legitimate interests |
 | Basic website and server information, such as page visits, request times, device or browser information and security logs | To operate, secure and improve the website | Legitimate interests |
 
-You do not have to take part. The context questions and open comment are optional, and each statement also offers “Prefer not to say” and “Not applicable”.
+You do not have to take part. The profile questions, answer context and open comment are optional, and each statement also offers “Prefer not to say” and “Not applicable”.
 
 Where I rely on legitimate interests, those interests are selecting and administering a small invite-only study, keeping the survey secure, preventing duplicate submissions and maintaining a reliable website. I limit this processing to what is reasonably necessary and give you the right to object below.
 

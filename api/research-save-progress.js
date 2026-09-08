@@ -67,6 +67,11 @@ function validatePairResponses(pairResponses) {
       if (!VALID_VALUES.has(pair[stmt])) {
         return `domain ${key}.${stmt} must be 1-5, "skip", or "not_applicable", got ${JSON.stringify(pair[stmt])}`;
       }
+      const contextKey = `${stmt}_context`;
+      if (contextKey in pair &&
+          (typeof pair[contextKey] !== "string" || pair[contextKey].length > 1000)) {
+        return `domain ${key}.${contextKey} must be a string of at most 1000 characters`;
+      }
     }
   }
   return null;
@@ -91,7 +96,7 @@ const FIELD = {
   instrumentVersion: "fldHJ4KNzMbpzdob6",
 };
 
-const INSTRUMENT_VERSION = "phase3-v2-2026-09-06";
+const INSTRUMENT_VERSION = "phase3-v3-2026-09-08";
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",

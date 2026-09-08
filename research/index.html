@@ -416,6 +416,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .scale-skip[aria-pressed="true"] { border-style: solid; border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
   .scale-skip[aria-pressed="true"]::before { background: var(--muted); }
   .response-alternatives { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+  .statement-context { margin: 20px auto 4px; max-width: 720px; }
+  .statement-context[hidden] { display: none; }
+  .statement-context label { display: block; color: var(--ink); font-size: 1rem; margin-bottom: 8px; }
+  .statement-context textarea { min-height: 92px; width: 100%; resize: vertical; }
+  .statement-context-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .statement-context-continue { background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--ink); cursor: pointer; padding: 10px 18px; }
   @media (max-width: 480px) {
     .scale-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .scale-btn { font-size: 1.2rem; border-radius: 12px; }
@@ -1121,7 +1127,7 @@ Thank you for being a part of it.</div>
       s2: { text: "I am preparing for ways AI could change my role.", help: "This asks whether you are taking steps to adapt to possible changes in your role.", field: 'contribution' } }
   ];
 
-  // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable' }
+  // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable', contribution_context?: string, conditions_context?: string }
   // Keys are only ever added once a statement is actually answered/skipped
   // by the respondent — never pre-populated, per the "omit unshown domains"
   // rule (moot in this build since all twelve always render, but kept
@@ -1536,7 +1542,7 @@ Thank you for being a part of it.</div>
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Rate ' + value + ' out of 5');
           btn.addEventListener('click', function () {
-            setResponse(domainKey, field, value, scaleGrid, [skipBtn, naBtn], btn);
+            setResponse(domainKey, field, value, scaleGrid, [skipBtn, naBtn], btn, row);
           });
           scaleGrid.appendChild(btn);
         })(v);
@@ -1557,7 +1563,7 @@ Thank you for being a part of it.</div>
       naBtn.textContent = 'Not applicable';
       naBtn.setAttribute('aria-pressed', 'false');
       naBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'not_applicable', scaleGrid, [skipBtn, naBtn], naBtn);
+        setResponse(domainKey, field, 'not_applicable', scaleGrid, [skipBtn, naBtn], naBtn, row);
       });
       alternatives.appendChild(naBtn);
 
@@ -1567,10 +1573,47 @@ Thank you for being a part of it.</div>
       skipBtn.textContent = 'Prefer not to say';
       skipBtn.setAttribute('aria-pressed', 'false');
       skipBtn.addEventListener('click', function () {
-        setResponse(domainKey, field, 'skip', scaleGrid, [skipBtn, naBtn], skipBtn);
+        setResponse(domainKey, field, 'skip', scaleGrid, [skipBtn, naBtn], skipBtn, row);
       });
       alternatives.appendChild(skipBtn);
       row.appendChild(alternatives);
+
+      if (domainKey === 'd3' || domainKey === 'd5') {
+        var contextWrap = document.createElement('div');
+        contextWrap.className = 'statement-context';
+        contextWrap.hidden = !(pairResponses[domainKey] && (field in pairResponses[domainKey]));
+        var contextLabel = document.createElement('label');
+        contextLabel.textContent = 'Add context to your answer (optional)';
+        var contextInput = document.createElement('textarea');
+        contextInput.maxLength = 1000;
+        contextInput.placeholder = 'A short example or explanation';
+        contextInput.value = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
+        contextLabel.htmlFor = 'statement-context-' + index;
+        contextInput.id = 'statement-context-' + index;
+        contextInput.addEventListener('input', function () {
+          if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
+          pairResponses[domainKey][field + '_context'] = contextInput.value;
+        });
+        var contextActions = document.createElement('div');
+        contextActions.className = 'statement-context-actions';
+        var contextContinue = document.createElement('button');
+        contextContinue.type = 'button';
+        contextContinue.className = 'statement-context-continue';
+        contextContinue.textContent = 'Continue';
+        contextContinue.addEventListener('click', function () {
+          scheduleCheckpointSave();
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            showStatement(currentStatementIndex + 1, true);
+          } else {
+            runLikertTransition(currentStatementIndex + 1, null, 'forward');
+          }
+        });
+        contextActions.appendChild(contextContinue);
+        contextWrap.appendChild(contextLabel);
+        contextWrap.appendChild(contextInput);
+        contextWrap.appendChild(contextActions);
+        row.appendChild(contextWrap);
+      }
       row.appendChild(helpToggle);
       row.appendChild(help);
 
@@ -1638,7 +1681,7 @@ Thank you for being a part of it.</div>
     }
   }
 
-  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls, selectedControlEl) {
+  function setResponse(domainKey, field, value, scaleGridEl, alternativeBtnEls, selectedControlEl, rowEl) {
     if (isLikertTransitioning) return;
     var wasAnswered = !!(pairResponses[domainKey] && (field in pairResponses[domainKey]));
     if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
@@ -1653,6 +1696,14 @@ Thank you for being a part of it.</div>
 
     applyPressedState(scaleGridEl, alternativeBtnEls, value);
     scheduleCheckpointSave();
+
+    var contextWrap = rowEl && rowEl.querySelector('.statement-context');
+    if (contextWrap) {
+      window.clearTimeout(autoAdvanceTimer);
+      contextWrap.hidden = false;
+      contextWrap.querySelector('textarea').focus({ preventScroll: true });
+      return;
+    }
 
     var nextStatementIndex = currentStatementIndex + 1;
     window.clearTimeout(autoAdvanceTimer);
