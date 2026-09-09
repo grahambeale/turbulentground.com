@@ -1141,11 +1141,14 @@ Thank you for being a part of it.</div>
   var localTransitionPreview = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
     previewMode === 'transition';
   // No hostname restriction here, unlike the other two preview modes —
-  // restrained-preview links are shared via Codex's research workflow
-  // wrapped inside a Vercel deployment that already requires login or a
-  // temporary share token to load at all, so this query param needs no
-  // additional gate of its own on top of that.
-  var localRestrainedPreview = previewMode === 'restrained';
+  // restrained-preview links are shared via Codex's research workflow.
+  // Instead, a shared key (same trust model as participant invite
+  // tokens elsewhere in this codebase: not cryptographically defended,
+  // just unguessable in practice) gates it, since ?preview=restrained
+  // alone is guessable by anyone who reads this source.
+  var RESTRAINED_PREVIEW_KEY = '71890dda2c5d486b8925d282ba29d62bafd59568';
+  var localRestrainedPreview = previewMode === 'restrained' &&
+    new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   document.documentElement.classList.add('likert-transitions');
   document.documentElement.classList.add('restrained-research');
   var researchEventsSent = {};
