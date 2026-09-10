@@ -83,13 +83,14 @@ try {
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
   check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
   check("leads with an immediate personal summary", sendBody.html.indexOf("Your response at a glance") < sendBody.html.indexOf("Your emerging benchmark comparison"));
-  check("shows the participant's most positive personal responses", /What you report bringing[\s\S]*Working relationships[\s\S]*Speaking directly with colleagues/.test(sendBody.html));
-  check("adds a qualified one-line personal headline", /Your answers suggest that [\s\S]* is a notable part of how you approach AI at work/.test(sendBody.html));
-  check("shows what the environment supports", /What your environment enables[\s\S]*Time and workload[\s\S]*Being able to use AI-saved time/.test(sendBody.html));
-  check("shows less-supported surrounding conditions", /Less supported in your answers[\s\S]*Working relationships/.test(sendBody.html));
-  check("shows the largest paired tensions", /Where the tension sits[\s\S]*Working relationships[\s\S]*own action higher than the condition around you \(5 compared with 2\)/.test(sendBody.html));
+  check("shows the participant's most positive personal responses", /What you reported about your own practice[\s\S]*Working relationships[\s\S]*Speaking directly with colleagues/.test(sendBody.html));
+  check("adds an observational one-line personal headline", /One of your highest-rated personal-practice themes today was [\s\S]*: [\s\S]*\./.test(sendBody.html));
+  check("shows reported working-environment conditions", /What you reported about your working environment[\s\S]*Time and workload[\s\S]*Being able to use AI-saved time/.test(sendBody.html));
+  check("shows lower-rated surrounding conditions", /Lower-rated conditions in your answers[\s\S]*Working relationships/.test(sendBody.html));
+  check("shows the largest paired differences", /Differences within your paired answers[\s\S]*Working relationships[\s\S]*own action higher than the condition around you \(5 compared with 2\)/.test(sendBody.html));
   check("provides tailored discussion questions", /Questions worth discussing[\s\S]*Where could direct conversation protect context/.test(sendBody.html));
-  check("does not present the personal summary as a diagnosis", /not a score, diagnosis or judgement of your ability/i.test(sendBody.html));
+  check("does not present the personal summary as a diagnosis", /does not establish your behaviour, capability or the cause of any pattern[\s\S]*not a score, diagnosis or judgement of your ability/i.test(sendBody.html));
+  check("does not treat paired differences as organisation-wide evidence", /not evidence of its cause or of your organisation as a whole/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
   check("includes the current study benchmark", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
   check("warns that the early benchmark may fluctuate", /likely to fluctuate frequently during the early phase/i.test(sendBody.html));
@@ -123,14 +124,14 @@ try {
     d1: { contribution: 5, conditions: 3 },
     d2: { contribution: "not_applicable", conditions: 3 },
   }, { domains: null }, "sparse-token");
-  check("uses an insufficient-data headline for sparse answers", /do not yet provide enough personal-practice responses for a clear headline/.test(sparseHtml));
+  check("uses an insufficient-data headline for sparse answers", /answered fewer than six personal-practice statements, so no headline theme is shown/.test(sparseHtml));
 
   const midpointPairs = Object.fromEntries(Array.from({ length: 12 }, (_, index) => [
     `d${index + 1}`,
     { contribution: 3, conditions: 3 },
   ]));
   const midpointHtml = buildEmailHtml("", midpointPairs, { domains: null }, "midpoint-token");
-  check("uses a neutral headline for midpoint-heavy answers", /mixed or still-developing picture rather than one dominant personal practice/.test(midpointHtml));
+  check("uses an observational headline for midpoint-heavy answers", /None of your personal-practice responses was rated 4 or 5 today/.test(midpointHtml));
   check("does not turn Not applicable into a score", !/Your answers suggest that not applicable/.test(sparseHtml));
   console.log("\nALL CHECKS PASSED");
 } finally {
