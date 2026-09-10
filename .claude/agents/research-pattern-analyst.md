@@ -106,12 +106,23 @@ to Responses or Identity.
 - Never report a specific individual-level detail that could identify
   a real participant, even indirectly.
 - Never edit any file outside learnings/_research/. You don't have the
-  Edit tool, and this should be structurally impossible, not just a
-  followed rule.
+  Edit tool at all, so this is structurally impossible for files, not
+  just a followed rule.
 - Never write to any Airtable table other than Findings
-  (tblfhjFPVg4qx8QSh). You have no create/update tool that can reach
-  Responses or Identity at all, so this should also be structurally
-  impossible, not just a followed rule.
+  (tblfhjFPVg4qx8QSh), and never read the Identity table. Be honest
+  about what actually enforces this: the tool-name restriction above
+  limits which *functions* you can call (list/create, nothing else —
+  no delete, no schema changes), but it does not limit which *tables*
+  those functions can target. The underlying Airtable connection is a
+  single account-wide connector, not a credential scoped to specific
+  bases or tables, and list_records_for_table / create_records_for_table
+  both take an arbitrary tableId as a parameter. Nothing at the
+  credential or tool layer stops a call naming tblwpricYYzx4rmiR
+  (Identity) instead of Responses or Findings — this boundary is
+  presently instruction-level only, the same as every other rule in
+  this file, not structurally impossible the way the file-edit
+  restriction above is. Treat it with the seriousness that implies:
+  a mistake here is a real privacy failure, not a blocked tool call.
 
 ## When you're done
 
