@@ -11,8 +11,10 @@ assert.match(html, /field \+ '_context'/, 'context must be stored against the ex
 assert.match(html, /Add context to your answer \(optional\)/, 'context must be clearly optional');
 assert.match(html, /statement-context textarea::placeholder[^{]*\{[^}]*font-style: italic/s, 'the context prompt must read visually as a prompt');
 assert.match(html, /statement-context-continue[\s\S]*background: #b84215/, 'continue must be a visually prominent orange action');
-assert.match(html, /contextActions\.appendChild\(contextBack\);\s*contextActions\.appendChild\(contextContinue\);/, 'context actions must place Back opposite Continue');
-assert.match(html, /contextBottom > visibleBottom[\s\S]*window\.scrollBy/, 'revealed context actions must be brought above the fixed footer');
+assert.match(html, /class="statement-navigation"[\s\S]*id="back-btn"[\s\S]*id="question-continue"/, 'Back and Continue must share a stable navigation row in the main question content');
+assert.doesNotMatch(html, /<div class="footer-bar"[^>]*>[\s\S]*?id="back-btn"/, 'Back must not sit inside the progress footer');
+assert.match(html, /contextWrap\.hidden = false;[\s\S]*getElementById\('question-continue'\)\.hidden = false/, 'answering must reveal Continue without moving Back to another container');
+assert.match(html, /contextBottom > visibleBottom[\s\S]*window\.scrollBy/, 'revealed context and its stable navigation row must be brought above the fixed footer');
 assert.doesNotMatch(html, /id="guidance-btn"|id="survey-guidance"|There are no right answers/, 'redundant guidance must be removed');
 assert.match(html, /p\.appendChild\(helpToggle\);\s*row\.appendChild\(p\);[\s\S]*row\.appendChild\(help\);[\s\S]*row\.appendChild\(scaleGrid\);/, 'explanation link and text must sit between the question and scale');
 assert.match(html, /prefers-reduced-motion: reduce/, 'context continuation must respect reduced motion');

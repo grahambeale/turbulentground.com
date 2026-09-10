@@ -411,8 +411,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .statement-context label { display: block; color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 6px; }
   .statement-context textarea { min-height: 74px; width: 100%; resize: vertical; }
   .statement-context textarea::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
-  .statement-context-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-  .statement-context-back { margin-left: 0; }
+  .statement-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
   .statement-context-continue {
     background: #b84215; border: 1px solid #b84215; border-radius: 999px; color: #fff;
     cursor: pointer; font: inherit; font-weight: 500; padding: 13px 28px;
@@ -442,7 +441,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
     justify-content: center; align-items: center; gap: 24px; backdrop-filter: blur(20px); z-index: 50;
   }
-  .footer-bar.final-step { justify-content: space-between; }
+  .footer-bar.final-step { justify-content: flex-end; }
   .footer-actions { display: flex; align-items: center; gap: 12px; }
   .footer-actions [hidden] { display: none; }
   .survey-back {
@@ -457,7 +456,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 
   @media (max-width: 760px) {
     .footer-bar { gap: 10px; padding: 10px 12px; }
-    .survey-back { align-self: flex-end; margin-bottom: 8px; font-size: 0.82rem; }
+    .survey-back { font-size: 0.82rem; }
     .journey-route { --station-space: 78px; height: 66px; }
     .journey-theme { width: 76px; font-size: 0.68rem; }
     .journey-remaining { justify-content: flex-start; padding-left: 24px; }
@@ -874,6 +873,11 @@ So thank you for being a part of it.</div>
       </div>
     </fieldset>
 
+    <div class="statement-navigation">
+      <button class="survey-back" id="back-btn" type="button"><span class="back-icon" aria-hidden="true">←</span>Back</button>
+      <button class="statement-context-continue" id="question-continue" type="button" hidden>Continue</button>
+    </div>
+
     <p class="error-msg" id="submit-error">Something went wrong submitting your response. Please try again.</p>
   </section>
 
@@ -1039,7 +1043,6 @@ Thank you for being a part of it.</div>
 </script>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
-  <button class="survey-back" id="back-btn" type="button" hidden><span class="back-icon" aria-hidden="true">←</span>Back</button>
   <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Survey journey" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="24 questions left">
     <div class="journey-viewport" id="journey-viewport">
       <div class="journey-route" id="journey-route"></div>
@@ -1591,32 +1594,8 @@ Thank you for being a part of it.</div>
         if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
         pairResponses[domainKey][field + '_context'] = contextInput.value;
       });
-      var contextActions = document.createElement('div');
-      contextActions.className = 'statement-context-actions';
-      var contextBack = document.createElement('button');
-      contextBack.type = 'button';
-      contextBack.className = 'survey-back statement-context-back';
-      contextBack.innerHTML = '<span class="back-icon" aria-hidden="true">←</span>Back';
-      contextBack.addEventListener('click', function () {
-        document.getElementById('back-btn').click();
-      });
-      var contextContinue = document.createElement('button');
-      contextContinue.type = 'button';
-      contextContinue.className = 'statement-context-continue';
-      contextContinue.textContent = 'Continue';
-      contextContinue.addEventListener('click', function () {
-        scheduleCheckpointSave();
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          showStatement(currentStatementIndex + 1, true);
-        } else {
-          runLikertTransition(currentStatementIndex + 1, null, 'forward');
-        }
-      });
-      contextActions.appendChild(contextBack);
-      contextActions.appendChild(contextContinue);
       contextWrap.appendChild(contextLabel);
       contextWrap.appendChild(contextInput);
-      contextWrap.appendChild(contextActions);
       row.appendChild(contextWrap);
 
       // If this statement was already answered in a restored savedState,
@@ -1650,7 +1629,9 @@ Thank you for being a part of it.</div>
     document.getElementById('pairs-list').hidden = atEnd;
     document.getElementById('open-comment-fieldset').hidden = !atEnd;
     document.getElementById('submit-btn').hidden = !atEnd;
-    document.getElementById('back-btn').hidden = false;
+    var currentRow = !atEnd && rows[currentStatementIndex];
+    var currentContext = currentRow && currentRow.querySelector('.statement-context');
+    document.getElementById('question-continue').hidden = atEnd || !currentContext || currentContext.hidden;
     document.getElementById('journey-progress').hidden = atEnd;
     document.getElementById('footer-bar').classList.toggle('final-step', atEnd);
     updateProgress();
@@ -1702,12 +1683,12 @@ Thank you for being a part of it.</div>
     if (contextWrap) {
       window.clearTimeout(autoAdvanceTimer);
       contextWrap.hidden = false;
-      document.getElementById('back-btn').hidden = true;
+      document.getElementById('question-continue').hidden = false;
       contextWrap.querySelector('textarea').focus({ preventScroll: true });
       window.requestAnimationFrame(function () {
         var footerHeight = document.getElementById('footer-bar').getBoundingClientRect().height;
         var visibleBottom = window.innerHeight - footerHeight - 16;
-        var contextBottom = contextWrap.getBoundingClientRect().bottom;
+        var contextBottom = document.getElementById('back-btn').getBoundingClientRect().bottom;
         if (contextBottom > visibleBottom) {
           window.scrollBy({
             top: contextBottom - visibleBottom,
@@ -1848,6 +1829,15 @@ Thank you for being a part of it.</div>
       runLikertTransition(previousStatementIndex, null, 'back');
     } else {
       showStatement(previousStatementIndex, true);
+    }
+  });
+
+  document.getElementById('question-continue').addEventListener('click', function () {
+    scheduleCheckpointSave();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      showStatement(currentStatementIndex + 1, true);
+    } else {
+      runLikertTransition(currentStatementIndex + 1, null, 'forward');
     }
   });
 
