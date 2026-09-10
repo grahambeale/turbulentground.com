@@ -229,26 +229,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   #open-comment:hover { border-color: rgba(232,220,200,0.42); }
   #open-comment:focus { border-color: var(--orange-lt); }
 
-  .guidance-btn, .statement-help-toggle {
+  .statement-help-toggle {
     display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent;
     color: var(--muted); font: inherit; font-size: 0.82rem; cursor: pointer; padding: 4px 0;
   }
-  .guidance-btn:hover, .statement-help-toggle:hover { color: var(--ink-mid); }
+  .statement-help-toggle:hover { color: var(--ink-mid); }
   .context-icon {
     display: inline-grid; flex: 0 0 17px; place-items: center; width: 17px; height: 17px;
     border: 1px solid currentColor; border-radius: 50%; font-size: 0.7rem; line-height: 1;
   }
-  .guidance-btn { margin: -8px 0 26px; }
-  .guidance-btn[hidden] { display: none; }
-  .survey-guidance {
-    position: fixed; inset: 0; margin: auto; height: fit-content; max-height: calc(100dvh - 32px);
-    width: min(520px, calc(100% - 32px)); padding: 28px; border: 1px solid rgba(232,220,200,0.2);
-    border-radius: 12px; background: var(--bg-warm); color: var(--ink-mid); overflow-y: auto;
-  }
-  .survey-guidance::backdrop { background: rgba(14,11,8,0.78); backdrop-filter: blur(4px); }
-  .survey-guidance h2 { font-family: 'Cormorant Garamond', serif; color: var(--ink); font-size: 1.8rem; font-weight: 400; margin-bottom: 12px; }
-  .survey-guidance p { margin-bottom: 20px; }
-  .statement-help-toggle { display: inline-flex; margin: 20px 0 0; }
+  .statement-help-toggle { display: inline-flex; margin: 0 0 0 8px; vertical-align: middle; }
   .statement-help {
     margin: 12px 0 0; padding: 14px 16px; border-left: 2px solid var(--orange);
     background: var(--bg-warm); color: var(--ink-mid); font-size: 0.95rem; font-style: italic; line-height: 1.55;
@@ -337,13 +327,13 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     to { transform: translateX(var(--station-space)); }
   }
 
-  .pair-item { padding: 36px 0; border-bottom: 1px solid var(--border); }
+  .pair-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
   .pair-item[hidden] { display: none; }
   .pair-item:focus-visible { outline: none; }
-  .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.5; margin-bottom: 22px; }
-  .scale-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+  .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.45; margin-bottom: 12px; }
+  .scale-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
   .scale-btn {
-    aspect-ratio: 1 / 1; width: 100%; border-radius: 16px; border: 1px solid var(--border);
+    min-height: 84px; width: 100%; border-radius: 16px; border: 1px solid var(--border);
     background: var(--bg-warm); color: var(--ink-mid); font-size: 1.6rem; font-weight: 500; cursor: pointer;
     transition: all 0.15s;
   }
@@ -406,7 +396,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     28% { opacity: 1; }
     100% { opacity: 1; transform: translateX(0); }
   }
-  .scale-labels { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--muted); margin-bottom: 18px; }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--muted); margin-bottom: 12px; }
   .scale-skip {
     display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 24px;
     border: 1px dashed var(--border); background: transparent; color: var(--muted);
@@ -416,15 +406,22 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .scale-skip[aria-pressed="true"] { border-style: solid; border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
   .scale-skip[aria-pressed="true"]::before { background: var(--muted); }
   .response-alternatives { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
-  .statement-context { margin: 20px auto 4px; max-width: 720px; }
+  .statement-context { margin: 12px auto 0; max-width: 720px; }
   .statement-context[hidden] { display: none; }
-  .statement-context label { display: block; color: var(--ink); font-size: 1rem; margin-bottom: 8px; }
-  .statement-context textarea { min-height: 92px; width: 100%; resize: vertical; }
-  .statement-context-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
-  .statement-context-continue { background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--ink); cursor: pointer; padding: 10px 18px; }
+  .statement-context label { display: block; color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 6px; }
+  .statement-context textarea { min-height: 74px; width: 100%; resize: vertical; }
+  .statement-context textarea::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
+  .statement-context-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .statement-context-back { margin-left: 0; }
+  .statement-context-continue {
+    background: #b84215; border: 1px solid #b84215; border-radius: 999px; color: #fff;
+    cursor: pointer; font: inherit; font-weight: 500; padding: 13px 28px;
+  }
+  .statement-context-continue:hover { background: var(--orange-hover); border-color: var(--orange-hover); }
+  .statement-context-continue:focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; }
   @media (max-width: 480px) {
     .scale-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
-    .scale-btn { font-size: 1.2rem; border-radius: 12px; }
+    .scale-btn { min-height: 68px; font-size: 1.2rem; border-radius: 12px; }
   }
 
   .btn {
@@ -866,14 +863,6 @@ So thank you for being a part of it.</div>
   <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
-    <button class="guidance-btn" id="guidance-btn" type="button"><span class="context-icon" aria-hidden="true">i</span>How this works</button>
-    <p class="research-reassurance">There are no right answers. Choose what best reflects your experience.</p>
-
-    <dialog class="survey-guidance" id="survey-guidance" aria-labelledby="survey-guidance-title">
-      <h2 id="survey-guidance-title">How this works</h2>
-      <p>You'll see one statement at a time. Choose how much you agree, from 1 (strongly disagree) to 5 (strongly agree). Your answer moves you to the next statement, and you can go back. Choose "Not applicable" when the statement does not fit your role or working situation. Use "Prefer not to say" when it does fit, but you do not want to answer.</p>
-      <form method="dialog"><button class="btn" type="submit">Got it</button></form>
-    </dialog>
 
     <div id="pairs-list"></div>
 
@@ -1503,8 +1492,7 @@ Thank you for being a part of it.</div>
       row.setAttribute('data-statement-index', String(index));
 
       var p = document.createElement('p');
-      p.textContent = item.stmt.text;
-      row.appendChild(p);
+      p.appendChild(document.createTextNode(item.stmt.text + ' '));
 
       var helpId = 'statement-help-' + index;
       var helpToggle = document.createElement('button');
@@ -1520,6 +1508,8 @@ Thank you for being a part of it.</div>
       helpToggle.appendChild(helpLabel);
       helpToggle.setAttribute('aria-expanded', 'false');
       helpToggle.setAttribute('aria-controls', helpId);
+      p.appendChild(helpToggle);
+      row.appendChild(p);
 
       var help = document.createElement('p');
       help.id = helpId;
@@ -1534,6 +1524,7 @@ Thank you for being a part of it.</div>
         helpToggle.setAttribute('aria-expanded', String(opening));
         helpLabel.textContent = opening ? 'Hide explanation' : 'What do you mean?';
       });
+      row.appendChild(help);
 
       var scaleGrid = document.createElement('div');
       scaleGrid.className = 'scale-grid';
@@ -1585,44 +1576,48 @@ Thank you for being a part of it.</div>
       alternatives.appendChild(skipBtn);
       row.appendChild(alternatives);
 
-      if (domainKey === 'd3' || domainKey === 'd5') {
-        var contextWrap = document.createElement('div');
-        contextWrap.className = 'statement-context';
-        contextWrap.hidden = !(pairResponses[domainKey] && (field in pairResponses[domainKey]));
-        var contextLabel = document.createElement('label');
-        contextLabel.textContent = 'Add context to your answer (optional)';
-        var contextInput = document.createElement('textarea');
-        contextInput.maxLength = 1000;
-        contextInput.placeholder = 'A short example or explanation';
-        contextInput.value = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
-        contextLabel.htmlFor = 'statement-context-' + index;
-        contextInput.id = 'statement-context-' + index;
-        contextInput.addEventListener('input', function () {
-          if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
-          pairResponses[domainKey][field + '_context'] = contextInput.value;
-        });
-        var contextActions = document.createElement('div');
-        contextActions.className = 'statement-context-actions';
-        var contextContinue = document.createElement('button');
-        contextContinue.type = 'button';
-        contextContinue.className = 'statement-context-continue';
-        contextContinue.textContent = 'Continue';
-        contextContinue.addEventListener('click', function () {
-          scheduleCheckpointSave();
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            showStatement(currentStatementIndex + 1, true);
-          } else {
-            runLikertTransition(currentStatementIndex + 1, null, 'forward');
-          }
-        });
-        contextActions.appendChild(contextContinue);
-        contextWrap.appendChild(contextLabel);
-        contextWrap.appendChild(contextInput);
-        contextWrap.appendChild(contextActions);
-        row.appendChild(contextWrap);
-      }
-      row.appendChild(helpToggle);
-      row.appendChild(help);
+      var contextWrap = document.createElement('div');
+      contextWrap.className = 'statement-context';
+      contextWrap.hidden = !(pairResponses[domainKey] && (field in pairResponses[domainKey]));
+      var contextLabel = document.createElement('label');
+      contextLabel.textContent = 'Add context to your answer (optional)';
+      var contextInput = document.createElement('textarea');
+      contextInput.maxLength = 1000;
+      contextInput.placeholder = 'A short example or explanation';
+      contextInput.value = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
+      contextLabel.htmlFor = 'statement-context-' + index;
+      contextInput.id = 'statement-context-' + index;
+      contextInput.addEventListener('input', function () {
+        if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
+        pairResponses[domainKey][field + '_context'] = contextInput.value;
+      });
+      var contextActions = document.createElement('div');
+      contextActions.className = 'statement-context-actions';
+      var contextBack = document.createElement('button');
+      contextBack.type = 'button';
+      contextBack.className = 'survey-back statement-context-back';
+      contextBack.innerHTML = '<span class="back-icon" aria-hidden="true">←</span>Back';
+      contextBack.addEventListener('click', function () {
+        document.getElementById('back-btn').click();
+      });
+      var contextContinue = document.createElement('button');
+      contextContinue.type = 'button';
+      contextContinue.className = 'statement-context-continue';
+      contextContinue.textContent = 'Continue';
+      contextContinue.addEventListener('click', function () {
+        scheduleCheckpointSave();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          showStatement(currentStatementIndex + 1, true);
+        } else {
+          runLikertTransition(currentStatementIndex + 1, null, 'forward');
+        }
+      });
+      contextActions.appendChild(contextBack);
+      contextActions.appendChild(contextContinue);
+      contextWrap.appendChild(contextLabel);
+      contextWrap.appendChild(contextInput);
+      contextWrap.appendChild(contextActions);
+      row.appendChild(contextWrap);
 
       // If this statement was already answered in a restored savedState,
       // reflect that in the button state now, so it's visibly there if
@@ -1656,7 +1651,6 @@ Thank you for being a part of it.</div>
     document.getElementById('open-comment-fieldset').hidden = !atEnd;
     document.getElementById('submit-btn').hidden = !atEnd;
     document.getElementById('back-btn').hidden = false;
-    document.getElementById('guidance-btn').hidden = atEnd;
     document.getElementById('journey-progress').hidden = atEnd;
     document.getElementById('footer-bar').classList.toggle('final-step', atEnd);
     updateProgress();
@@ -1708,7 +1702,19 @@ Thank you for being a part of it.</div>
     if (contextWrap) {
       window.clearTimeout(autoAdvanceTimer);
       contextWrap.hidden = false;
+      document.getElementById('back-btn').hidden = true;
       contextWrap.querySelector('textarea').focus({ preventScroll: true });
+      window.requestAnimationFrame(function () {
+        var footerHeight = document.getElementById('footer-bar').getBoundingClientRect().height;
+        var visibleBottom = window.innerHeight - footerHeight - 16;
+        var contextBottom = contextWrap.getBoundingClientRect().bottom;
+        if (contextBottom > visibleBottom) {
+          window.scrollBy({
+            top: contextBottom - visibleBottom,
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+          });
+        }
+      });
       return;
     }
 
@@ -1829,11 +1835,6 @@ Thank you for being a part of it.</div>
     route.classList.add(direction === 'back' ? 'moving-back' : 'moving-forward');
   }
   updateProgress();
-
-  var surveyGuidance = document.getElementById('survey-guidance');
-  document.getElementById('guidance-btn').addEventListener('click', function () {
-    surveyGuidance.showModal();
-  });
 
   document.getElementById('back-btn').addEventListener('click', function () {
     window.clearTimeout(autoAdvanceTimer);
