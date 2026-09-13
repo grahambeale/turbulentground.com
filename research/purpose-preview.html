@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>TurbulentGround Research</title>
+
+
+
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,circle,close,code,domain,flare,group,groups,manage_accounts,more_horiz,palette,person,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
+<style>
+  /* ── Typography scale ──────────────────────────────────────────────
+     Bumped up from the original build after a real walkthrough flagged
+     the whole page as too small to read comfortably. Base moved
+     15px -> 18px (site pages elsewhere on turbulentground.com mostly
+     leave the root at the browser default of 16px and set body copy
+     around 15-16px; diagnostic/index.html's own question text — the
+     closest equivalent to the pair statements here — is 16px. 18px base
+     with the statement/scale sizes below is deliberately a step above
+     that baseline, not just a marginal nudge, since this is a slow,
+     considered form, not a scannable marketing page. */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+    --border: rgba(232,220,200,0.08);
+  }
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
+  body { min-height: 100vh; padding-top: 92px; }
+  :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
+
+  /* NAV_CSS_START */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  min-height:72px; padding:12px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid rgba(245,240,232,0.5);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 50%,rgba(0,0,0,0.5) 100%);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav.scrolled {
+  min-height:52px; padding:8px 48px;
+  background:rgba(19,17,16,0.96);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; flex-shrink:0;
+}
+.nav-logo-mark { flex-shrink:0; width:40px; overflow:hidden; transition:width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-logo-mark { width:0; opacity:0; }
+.nav-logo-text { display:flex; flex-direction:column; gap:3px; }
+.nav-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px; letter-spacing:0.18em; line-height:1;
+  color:#f5f0e8; text-transform:uppercase; white-space:nowrap;
+  transition:font-size 0.3s ease, color 0.2s ease;
+}
+.nav.scrolled .nav-wordmark { font-size:18px; }
+/* Hover-highlight only applies when the logo is actually a link — the
+   selector requires an <a>. A page can configure logoHref: null in
+   scripts/build-nav.mjs to render a non-clickable <div class="nav-logo">
+   instead (nothing currently does), and that never needs --orange-lt
+   defined, since this rule simply never matches it. */
+a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
+/* Strapline: optional second line under the wordmark, configured per
+   page. Small and muted enough not to compete with the wordmark, but
+   sized and coloured for real readability (13px / --ink-mid, not
+   --muted) — a first pass at 11px/--muted technically passed contrast
+   but was still too small to read comfortably. Collapses along with
+   the logo mark on scroll, same shrink behaviour. */
+.nav-strapline {
+  font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:0.01em; line-height:1.4;
+  /* Falls back to the literal colour rather than relying on --ink-mid
+     alone — not every page defines it (about.html and care-capital.html
+     use --sand/--cream/--dim instead), and this partial is shared across
+     all of them, so it can't assume any one page's variable naming. */
+  color:var(--ink-mid, #c8b89a); white-space:nowrap; overflow:hidden;
+  max-height:20px; opacity:1;
+  transition:max-height 0.3s ease, opacity 0.2s ease;
+}
+.nav.scrolled .nav-strapline { max-height:0; opacity:0; }
+.nav-links { display:flex; align-items:center; gap:24px; }
+.nav-link {
+  font-size:14px; font-weight:400; color:var(--muted);
+  text-decoration:none; letter-spacing:0.05em; white-space:nowrap;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:#f5f0e8; }
+.nav-link.active { color:var(--orange-lt); font-weight:500; }
+.nav-btn-wrap { overflow:hidden; max-width:200px; opacity:1; transition:max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.nav.scrolled .nav-btn-wrap { max-width:0; opacity:0; pointer-events:none; }
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-size:14px; font-weight:500; color:#fff; background:#b84215;
+  text-decoration:none; padding:9px 20px; border-radius:40px;
+  transition:all 0.22s;
+}
+.nav-btn:hover { background:var(--orange-hover); transform:translateY(-1px); }
+
+/* Hamburger + mobile menu */
+.nav-toggle {
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; padding:10px; margin-right:-10px;
+  background:none; border:0; cursor:pointer; z-index:210;
+}
+.nav-toggle span {
+  display:block; height:2px; width:24px; background:#f5f0e8; border-radius:2px;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity:0; }
+.nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; inset:0; z-index:199;
+  background:rgba(14,11,8,0.985);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  gap:2px; padding:100px 36px 40px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity:1; visibility:visible; transform:none; }
+.mobile-menu a {
+  font-family:'DM Sans',sans-serif; font-size:20px; font-weight:400; letter-spacing:0.05em;
+  color:var(--ink); text-decoration:none; padding:12px 0;
+  line-height:1.2; transition:color 0.2s ease;
+}
+.mobile-menu a.active { color:var(--orange-lt); }
+.mobile-menu a:hover { color:var(--orange-lt); }
+.mobile-menu .mobile-menu-btn {
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
+  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
+  margin-top:28px;
+}
+@media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
+/* NAV_CSS_END */
+
+  main { max-width: 680px; margin: 0 auto; padding: 0 24px 160px; }
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4.5vw, 42px); font-weight: 300; color: var(--ink); line-height: 1.25; margin-bottom: 18px; }
+  .intro { color: var(--ink-mid); font-size: 1rem; margin-bottom: 36px; }
+  .privacy-link { color: var(--orange-lt); }
+
+  fieldset { border: 0; margin-bottom: 44px; }
+  legend { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--ink); margin-bottom: 18px; }
+
+  .check-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .check-row input[type=checkbox] { width: 22px; height: 22px; flex-shrink: 0; margin-top: 3px; accent-color: var(--orange); }
+  .check-row label { color: var(--ink-mid); font-size: 1rem; line-height: 1.6; }
+  .check-row .required-tag { color: var(--orange-lt); font-size: 0.78rem; margin-left: 6px; }
+
+  .field { margin-bottom: 26px; }
+  .field label { display: block; color: var(--ink-mid); font-size: 1rem; margin-bottom: 8px; }
+  .field .optional-tag { color: var(--muted); font-weight: 400; font-size: 0.85em; }
+  .choice-field { margin-bottom: 32px; }
+  .choice-field legend {
+    width: 100%; font-family: 'Cormorant Garamond', serif; color: var(--ink);
+    font-size: 1.32rem; font-weight: 600; line-height: 1.25; margin-bottom: 15px;
+  }
+  .choice-field .optional-tag {
+    font-family: 'DM Sans', sans-serif; color: var(--muted); font-weight: 400; font-size: 0.64em;
+  }
+  .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .choice-option { position: relative; }
+  .choice-option input {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .choice-option label {
+    display: flex; align-items: center; gap: 12px; min-height: 62px; height: 100%; padding: 13px 16px;
+    border: 1px solid rgba(232,220,200,0.18); border-radius: 10px;
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 0.9rem; font-weight: 400;
+    line-height: 1.35; cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  .choice-icon {
+    flex: 0 0 auto; color: var(--muted); font-size: 24px; font-variation-settings: 'FILL' 0;
+    transition: color 0.15s, font-variation-settings 0.15s;
+  }
+  .choice-option label:hover { border-color: var(--orange-lt); color: var(--ink); }
+  .choice-option input:checked + label {
+    border-color: var(--orange); background: rgba(217,87,28,0.18); color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--orange);
+  }
+  .choice-option input:checked + label .choice-icon {
+    color: var(--orange-lt); font-variation-settings: 'FILL' 1;
+  }
+  .choice-option input:focus-visible + label { outline: 3px solid #ffb37a; outline-offset: 2px; }
+  select, textarea {
+    width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 8px; padding: 13px 14px; color: var(--ink); font-family: inherit;
+    font-size: 1rem;
+  }
+  textarea { resize: vertical; min-height: 100px; }
+  #open-comment {
+    min-height: 190px; padding: 18px; background: var(--surface);
+    border-color: rgba(232,220,200,0.28); font-size: 1.1rem; line-height: 1.6;
+  }
+  #open-comment:hover { border-color: rgba(232,220,200,0.42); }
+  #open-comment:focus { border-color: var(--orange-lt); }
+
+  .statement-help-toggle {
+    display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent;
+    color: var(--muted); font: inherit; font-size: 0.82rem; cursor: pointer; padding: 4px 0;
+  }
+  .statement-help-toggle:hover { color: var(--ink-mid); }
+  .context-icon {
+    display: inline-grid; flex: 0 0 17px; place-items: center; width: 17px; height: 17px;
+    border: 1px solid currentColor; border-radius: 50%; font-size: 0.7rem; line-height: 1;
+  }
+  .statement-help-toggle { display: inline-flex; margin: 0 0 0 8px; vertical-align: middle; }
+  .statement-help {
+    margin: 12px 0 0; padding: 14px 16px; border-left: 2px solid var(--orange);
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 0.95rem; font-style: italic; line-height: 1.55;
+  }
+  .statement-help[hidden] { display: none; }
+
+  /* ── Pair statements: the primary interaction on the whole page ──── */
+  .journey-progress { min-width: 0; flex: 1; max-width: 1180px; position: relative; padding-top: 2px; }
+  .journey-viewport {
+    overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 0 4px 2px;
+    mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+  }
+  .journey-viewport::-webkit-scrollbar { display: none; }
+  .journey-route {
+    --station-space: 92px; display: flex; align-items: flex-end; width: max-content;
+    height: 74px; padding: 0 24px 7px; position: relative; transition: transform 0.35s ease;
+  }
+  .journey-route.moving-forward {
+    animation: journey-route-forward 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .journey-route.moving-back {
+    animation: journey-route-back 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
+  .journey-route::after {
+    content: ''; position: absolute;
+    left: calc(24px + (var(--station-space) / 2));
+    right: calc(24px + (var(--station-space) / 2));
+    bottom: 15px;
+    height: 2px; background: var(--ink-mid); opacity: 0.78;
+  }
+  .journey-station {
+    width: var(--station-space); flex: 0 0 var(--station-space); height: 66px;
+    position: relative; display: flex; justify-content: center; align-items: flex-end;
+  }
+  .journey-theme {
+    position: absolute; left: 50%; top: 0; width: 90px; transform: translateX(-50%);
+    color: var(--ink-mid); font-family: 'Cormorant Garamond', serif; font-size: 0.76rem;
+    line-height: 1.05; text-align: center; transition: color 0.2s ease, transform 0.25s ease;
+  }
+  .journey-node {
+    position: relative; z-index: 2; width: 17px; height: 17px; border: 3px solid var(--ink-mid);
+    border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 2px var(--bg);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, opacity 0.22s ease;
+  }
+  .journey-station.current .journey-theme { color: var(--orange-lt); transform: translateX(-50%) translateY(-2px); }
+  .journey-station.current .journey-node {
+    border-color: var(--orange-lt); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange);
+    transform: scale(1.08); animation: station-pulse 1.8s ease-in-out infinite;
+  }
+  .journey-station.departing .journey-node { animation: station-explode 0.52s cubic-bezier(.2,.75,.25,1) forwards; }
+  .journey-station.departing .journey-theme { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  .journey-burst { position: absolute; z-index: 4; left: 50%; bottom: 6px; width: 1px; height: 1px; pointer-events: none; }
+  .journey-fragment {
+    position: absolute; left: -8px; top: -8px; color: var(--orange-lt); font-size: 16px;
+    animation: station-fragment 0.52s cubic-bezier(.15,.7,.35,1) forwards;
+  }
+  .journey-remaining {
+    display: flex; justify-content: center; align-items: baseline; gap: 7px; min-height: 28px;
+    color: var(--muted); font-size: 0.78rem; letter-spacing: 0.02em;
+  }
+  .journey-remaining strong {
+    color: var(--ink); font-family: 'Cormorant Garamond', serif; font-size: 1.22rem;
+    font-weight: 400; line-height: 1;
+  }
+  .journey-progress[hidden] { display: none; }
+  @keyframes station-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange); }
+    50% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 8px rgba(217,87,28,0.25); }
+  }
+  @keyframes station-explode {
+    0% { transform: scale(1.08); opacity: 1; }
+    52% { transform: scale(2.35); opacity: 0.9; box-shadow: 0 0 18px 5px rgba(232,118,58,0.6); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  @keyframes station-fragment {
+    0% { transform: rotate(var(--angle)) translateX(0) scale(0.7); opacity: 1; }
+    42% { opacity: 1; }
+    100% { transform: rotate(var(--angle)) translateX(var(--distance)) scale(0); opacity: 0; }
+  }
+  @keyframes journey-route-forward {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-1 * var(--station-space))); }
+  }
+  @keyframes journey-route-back {
+    from { transform: translateX(0); }
+    to { transform: translateX(var(--station-space)); }
+  }
+
+  .pair-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .pair-item[hidden] { display: none; }
+  .pair-item:focus-visible { outline: none; }
+  .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.45; margin-bottom: 12px; }
+  .scale-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
+  .scale-btn {
+    min-height: 84px; width: 100%; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--bg-warm); color: var(--ink-mid); font-size: 1.6rem; font-weight: 500; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .scale-btn:hover { border-color: var(--orange-lt); color: var(--ink); }
+  .scale-btn[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+  /* The selected response settles first, then the current question leaves
+     across the viewport as the next one arrives. */
+  .likert-transitions .scale-btn,
+  .likert-transitions .scale-skip {
+    transition: transform 0.16s cubic-bezier(.2,.8,.2,1), border-radius 0.16s ease,
+      background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  }
+  .likert-transitions .response-control-pressed {
+    transform: scale(0.92);
+    border-radius: 12px;
+  }
+  html.likert-transitions,
+  html.likert-transitions body {
+    overflow-x: hidden;
+  }
+  .likert-transitions #pairs-list.is-transitioning {
+    display: grid;
+    overflow: visible;
+    overflow-anchor: none;
+  }
+  .likert-transitions #pairs-list.is-transitioning .pair-item {
+    grid-area: 1 / 1;
+    width: 100%;
+    pointer-events: none;
+  }
+  .likert-transitions .pair-item.question-leaving {
+    animation: likert-question-out 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .likert-transitions .pair-item.question-entering {
+    animation: likert-question-in 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
+  .likert-transitions .pair-item.question-leaving-back {
+    animation: likert-question-out-back 0.58s cubic-bezier(.55,.05,.3,1) both;
+  }
+  .likert-transitions .pair-item.question-entering-back {
+    animation: likert-question-in-back 0.58s cubic-bezier(.2,.75,.2,1) both;
+  }
+  @keyframes likert-question-out {
+    0% { opacity: 1; transform: translateX(0); }
+    72% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(calc(-100vw - 100%)); }
+  }
+  @keyframes likert-question-in {
+    0% { opacity: 0; transform: translateX(calc(100vw + 100%)); }
+    28% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes likert-question-out-back {
+    0% { opacity: 1; transform: translateX(0); }
+    72% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(calc(100vw + 100%)); }
+  }
+  @keyframes likert-question-in-back {
+    0% { opacity: 0; transform: translateX(calc(-100vw - 100%)); }
+    28% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--muted); margin-bottom: 12px; }
+  .scale-skip {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 24px;
+    border: 1px dashed var(--border); background: transparent; color: var(--muted);
+    font-size: 0.92rem; cursor: pointer;
+  }
+  .scale-skip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); display: inline-block; }
+  .scale-skip[aria-pressed="true"] { border-style: solid; border-color: var(--muted); color: var(--ink-mid); background: var(--surface); }
+  .scale-skip[aria-pressed="true"]::before { background: var(--muted); }
+  .response-alternatives { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+  .statement-context { margin: 12px auto 0; max-width: 720px; }
+  .statement-context[hidden] { display: none; }
+  .statement-context label { display: block; color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 6px; }
+  .statement-context textarea { min-height: 74px; width: 100%; resize: vertical; }
+  .statement-context textarea::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
+  .statement-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .statement-context-continue {
+    background: #b84215; border: 1px solid #b84215; border-radius: 999px; color: #fff;
+    cursor: pointer; font: inherit; font-weight: 500; padding: 13px 28px;
+  }
+  .statement-context-continue:hover { background: var(--orange-hover); border-color: var(--orange-hover); }
+  .statement-context-continue:focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; }
+  @media (max-width: 480px) {
+    .scale-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .scale-btn { min-height: 68px; font-size: 1.2rem; border-radius: 12px; }
+  }
+
+  .btn {
+    /* #b84215 (not --orange) at rest, matching the sitewide CTA convention
+       fixed in Sprint 11 — white-on-var(--orange) measures 3.93:1 with axe,
+       below the 4.5:1 AA threshold for normal-weight text. #b84215 measures
+       5.86:1. */
+    display: inline-flex; align-items: center; gap: 8px; background: #b84215;
+    color: #fff; border: none; border-radius: 40px; padding: 15px 30px;
+    font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit;
+  }
+  .btn:hover { background: var(--orange-hover); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink-mid); }
+
+  .footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; background: rgba(19,17,16,0.96);
+    border-top: 1px solid var(--border); padding: 16px 24px; display: flex;
+    justify-content: center; align-items: center; gap: 24px; backdrop-filter: blur(20px); z-index: 50;
+  }
+  .footer-bar.final-step { justify-content: flex-end; }
+  .footer-actions { display: flex; align-items: center; gap: 12px; }
+  .footer-actions [hidden] { display: none; }
+  .survey-back {
+    display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent;
+    color: var(--ink-mid); font: inherit; font-size: 0.92rem; cursor: pointer;
+    padding: 8px 4px;
+  }
+  .back-icon { font-size: 1.15rem; line-height: 1; }
+  .survey-back:hover { color: var(--ink); }
+  .survey-back[hidden] { display: none; }
+  .context-actions { display: flex; align-items: center; gap: 18px; margin-top: 28px; }
+
+  @media (max-width: 760px) {
+    .footer-bar { gap: 10px; padding: 10px 12px; }
+    .survey-back { font-size: 0.82rem; }
+    .journey-route { --station-space: 78px; height: 66px; }
+    .journey-theme { width: 76px; font-size: 0.68rem; }
+    .journey-remaining { justify-content: flex-start; padding-left: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey-route, .journey-theme, .journey-node { transition: none; }
+    .journey-station.current .journey-node, .journey-station.departing .journey-node,
+    .journey-fragment, .journey-route.moving-forward, .journey-route.moving-back { animation: none; }
+    .likert-transitions .scale-btn, .likert-transitions .scale-skip { transition: none; }
+    .likert-transitions .response-control-pressed { transform: none; }
+    .likert-transitions .pair-item.question-leaving,
+    .likert-transitions .pair-item.question-entering,
+    .likert-transitions .pair-item.question-leaving-back,
+    .likert-transitions .pair-item.question-entering-back { animation: none; }
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .error-msg { color: var(--orange-lt); font-size: 0.92rem; margin-top: 10px; display: none; }
+  .error-msg.visible { display: block; }
+
+  .loading-wrap { text-align: center; padding: 90px 0; color: var(--muted); }
+
+  /* ── Consent-screen greeting ──────────────────────────────────── */
+  .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
+
+  /* Video thumbnail: a small round avatar next to a text label, both part
+     of one button — Second version of this feature — the first pass
+     embedded full inline <video> players, which was too heavy on the
+     page; this replaces that with a thumbnail that opens the shared
+     popup below. The label used to be a separate, unclickable <span>
+     next to the button; folding it into the button gives it a larger hit
+     target and means its accessible name comes from the visible text
+     instead of a separate aria-label the sighted label duplicated. */
+  .video-thumb { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .video-thumb-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    background: none; border: none; padding: 0; cursor: pointer; font: inherit; text-align: center;
+  }
+  .video-thumb-avatar {
+    position: relative; width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--orange-lt); background: #000; flex-shrink: 0;
+  }
+  .video-thumb-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.2s ease; }
+  .video-thumb-btn:hover .video-thumb-avatar img, .video-thumb-btn:focus-visible .video-thumb-avatar img { opacity: 1; }
+  .video-thumb-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.22); pointer-events: none;
+  }
+  /* --ink-mid, not --muted — --muted reads too faint at this size for a
+     label that's now part of the clickable control, not just a caption. */
+  .video-thumb-label { color: var(--ink-mid); font-size: 0.8rem; text-align: center; max-width: 76px; line-height: 1.3; transition: color 0.15s ease; }
+  .video-thumb-btn:hover .video-thumb-label, .video-thumb-btn:focus-visible .video-thumb-label { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Intro screen: thumbnail sits under the "Before you start" headline,
+     row layout (avatar beside label) matching the outro thumbnail on the
+     thank-you screen, transcript link directly under it — same row
+     pattern as .done-video-block, but left-aligned since this screen's
+     content isn't centered the way the thank-you screen is. */
+  .intro-video-block { margin: 4px 0 28px; }
+  .intro-video-block .video-thumb { align-items: flex-start; }
+  .intro-video-block .video-thumb-btn { flex-direction: row; gap: 10px; }
+  .intro-video-block .video-thumb-label { text-align: left; max-width: none; }
+  .intro-video-block .transcript-toggle { margin: 10px 0 0; }
+
+  /* Shared popup, reused for both intro and outro — the JS swaps the
+     <source> src and poster per-thumbnail rather than building two
+     separate modals. */
+  .video-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .video-modal[hidden] { display: none; }
+  .video-modal-backdrop { position: absolute; inset: 0; background: rgba(10,8,6,0.88); }
+  .video-modal-panel { position: relative; z-index: 1; width: 100%; max-width: min(90vw, 360px); }
+  .video-modal-panel video { display: block; width: 100%; max-height: 80vh; border-radius: 10px; background: #000; }
+  .video-modal-close {
+    position: absolute; top: -42px; right: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; font-size: 22px;
+    line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .video-modal-close:hover, .video-modal-close:focus-visible { background: var(--orange); border-color: var(--orange); }
+
+  .transcript-toggle { max-width: 320px; margin: 10px 0 0; }
+  .transcript-toggle summary {
+    cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none;
+    display: flex; align-items: center; gap: 6px; user-select: none;
+  }
+  .transcript-toggle summary::-webkit-details-marker { display: none; }
+  .transcript-toggle summary:hover { color: var(--orange-lt); }
+  .transcript-toggle summary::before {
+    content: '\25B8'; display: inline-block; font-size: 0.8em;
+    transition: transform 0.2s ease;
+  }
+  .transcript-toggle[open] summary::before { transform: rotate(90deg); }
+  .transcript-body {
+    margin-top: 10px; color: var(--ink-mid); font-size: 0.9rem; line-height: 1.7;
+    white-space: pre-line;
+  }
+  /* Thank-you screen: video sits below the results-email form, not
+     above it — deliberate reordering, not just a smaller thumbnail. */
+  /* Between the short "Your response has been saved." line and the
+     results-email form now, not below the form as a separate section —
+     lighter spacing than before, no top border needed since it isn't
+     separating from a big block of content above it any more, just a
+     one-line message. */
+  .done-video-block { margin: 4px 0 24px; }
+  /* Row layout instead of the default stacked button — the round
+     thumbnail sitting directly under the round checkmark read as a visual
+     echo of it, and putting the label beside rather than below the
+     thumbnail also trims the vertical space this block takes up. */
+  .done-video-block .video-thumb-btn { flex-direction: row; gap: 10px; }
+  .done-video-block .video-thumb-label { text-align: left; max-width: none; }
+  /* .transcript-toggle's own max-width (320px) left it flush against the
+     left edge of the full-width .done-video-block, out of step with the
+     centered checkmark/heading/thumbnail above it — auto margins plus a
+     centered summary line bring it in line with everything else on this
+     screen. */
+  .done-video-block .transcript-toggle { margin: 8px auto 0; }
+  .done-video-block .transcript-toggle summary { justify-content: center; }
+
+  .email-capture { margin: -6px 0 16px 36px; }
+  .email-capture input[type=email] {
+    width: 100%; background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; color: var(--ink); font-family: inherit;
+    font-size: 1rem; margin-top: 10px;
+  }
+  .email-capture p { color: var(--muted); font-size: 0.88rem; }
+  .email-capture .email-status { font-size: 0.85rem; margin-top: 8px; display: none; }
+  .email-capture .email-status.saved { display: block; color: var(--orange-lt); }
+  .email-capture .email-status.error { display: block; color: var(--orange-lt); }
+
+  /* ── Thank-you screen ─────────────────────────────────────────────── */
+  .done-wrap { text-align: center; padding: 90px 0 40px; }
+  .done-check {
+    width: 76px; height: 76px; margin: 0 auto 32px; border-radius: 50%;
+    border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center;
+    animation: done-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .done-check svg { width: 36px; height: 36px; }
+  .done-check svg path {
+    stroke: var(--orange-lt); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 40; stroke-dashoffset: 40;
+    animation: done-draw 0.45s 0.35s ease forwards;
+  }
+  @keyframes done-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes done-draw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .done-check { animation: none; }
+    .done-check svg path { animation: none; stroke-dashoffset: 0; }
+  }
+  .done-wrap h1 { margin: 0 auto 20px; max-width: 480px; }
+  /* The results-email form is the primary interactive element on this
+     screen and needs to be reachable without scrolling past it first —
+     measured on a 375px mobile viewport: the form's input was sitting
+     8px below the fold with the desktop spacing, so this isn't just a
+     nicety, it's the difference between fitting and not. */
+  @media (max-width: 480px) {
+    .done-wrap { padding-top: 20px; }
+    .done-check { width: 44px; height: 44px; margin-bottom: 10px; }
+    .done-check svg { width: 22px; height: 22px; }
+    .done-wrap h1 { margin-bottom: 8px; font-size: 28px; }
+    .done-video-block { margin: 0 0 6px; }
+    .video-thumb-avatar { width: 44px; height: 44px; }
+    .video-thumb-label { font-size: 0.65rem; }
+    .transcript-toggle { margin-top: 2px; }
+    .transcript-toggle summary { font-size: 0.8rem; }
+  }
+  .results-email {
+    max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
+    background: var(--bg-warm); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .results-email h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 400; margin-bottom: 8px; }
+  .results-email p { color: var(--ink-mid); font-size: 0.95rem; margin-bottom: 16px; }
+  .results-email-row { display: flex; align-items: stretch; gap: 10px; }
+  .results-email input[type=email] {
+    min-width: 0; flex: 1; background: var(--surface); border: 1px solid rgba(232,220,200,0.28);
+    border-radius: 8px; padding: 12px 14px; color: var(--ink); font: inherit; font-size: 1rem;
+  }
+  .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
+  .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 12px 0 0; }
+  .stay-involved { margin-top: 18px; }
+  .stay-involved .check-row { margin: 16px 0; padding: 0; border: 0; }
+  .stay-involved .check-row label { font-size: 0.92rem; line-height: 1.55; }
+  .stay-involved .email-capture { margin: 10px 0 18px 42px; }
+  .stay-involved .email-capture[hidden] { display: none; }
+  .stay-involved .email-capture label { display: block; margin-bottom: 7px; font-size: 0.88rem; }
+  /* This block has to come after the base .results-email rules above (not
+     be folded into the earlier 480px block) — a media-query rule doesn't
+     out-rank a same-specificity rule that appears later in the file, so an
+     override placed before the base rule was silently losing to it. */
+  @media (max-width: 480px) {
+    .results-email { margin-top: 0; padding: 14px; }
+    .results-email h2 { font-size: 1.25rem; margin-bottom: 4px; }
+    .results-email p { margin-bottom: 10px; font-size: 0.88rem; }
+  }
+  @media (max-width: 560px) {
+    .results-email-row { flex-direction: column; }
+    .results-email-row .btn { width: 100%; }
+    .choice-grid { grid-template-columns: 1fr; }
+    .footer-bar { gap: 14px; padding: 12px 18px; }
+  }
+
+  /* Restrained route treatment approved after comparative local review. */
+  .restrained-research .journey-route::after { opacity: 0.34; }
+  .restrained-research .journey-theme { color: var(--muted); opacity: 0.72; }
+  .restrained-research .journey-station.current .journey-theme { color: var(--ink-mid); opacity: 1; }
+  .restrained-research .journey-node { width: 14px; height: 14px; border-width: 2px; opacity: 0.72; }
+  .restrained-research .journey-station.current .journey-node {
+    border-color: var(--orange-lt); box-shadow: 0 0 0 3px var(--bg); animation: none; opacity: 1;
+  }
+  .restrained-research .journey-station.departing .journey-node { animation: station-settle 0.48s ease forwards; }
+  .restrained-research .journey-station.departing .journey-theme { opacity: 0.35; transform: translateX(-50%); }
+  .restrained-research .research-reassurance { display: block; }
+  .research-reassurance { display: none; margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; }
+  @keyframes station-settle { to { transform: scale(0.72); opacity: 0.28; } }
+  #pair-position { font-size: 1.1rem; color: var(--ink-mid); margin: 1rem 0; }
+  #pairs-list .pair-item { margin-bottom: 2rem; }
+  .journey-viewport { display: none; }
+  #screen-pairs .journey-progress { width: 100%; max-width: none; margin: 24px 0; padding: 0; }
+  #screen-pairs .journey-remaining { justify-content: space-between; padding: 0; margin: 10px 0 0; color: var(--ink); font-size: .95rem; }
+  .paired-progress-track { height: 12px; width: 100%; background: #51463b; border-radius: 8px; overflow: hidden; }
+  .paired-progress-fill { height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: #e55b20; transition: transform 360ms ease-out; }
+  @media (prefers-reduced-motion: reduce) { .paired-progress-fill { transition: none; } }
+  .statement-context-continue:disabled { opacity: .45; cursor: default; }
+</style>
+</head>
+<body><aside style="margin:80px auto 0;max-width:640px;padding:12px 24px;color:#e8dcc8;font:14px Arial;">Opening-screen copy preview. Controls are disabled; no responses or emails are sent.</aside>
+
+<!-- NAV_START -->
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="40" height="40" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+        <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
+        <clipPath id="nc"><circle cx="26" cy="26" r="26"/></clipPath>
+        <g clip-path="url(#nc)">
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
+          <path d="M0 12.48 L0 19.55 L8 15.44 L16 8.73 L24 6.26 L32 17.36 L40 17.53 L48 10.47" stroke="#5a2e14" stroke-width="1.6" fill="none"/>
+          <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#a3491e" stroke-width="2.4" fill="none"/>
+          <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
+          <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90" stroke="#e06830" stroke-width="3.6" fill="none"/>
+        </g>
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
+      </svg></div>
+    <div class="nav-logo-text">
+      <span class="nav-wordmark">TURBULENT GROUND</span>
+      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+    </div>
+  </a>
+
+</nav>
+<!-- NAV_END -->
+
+<main>
+
+  <!-- ============ SCREEN 0: LOADING ============ -->
+  <section class="screen active" id="screen-loading">
+    <div class="loading-wrap"><p>Checking your invite…</p></div>
+  </section>
+
+  <!-- ============ SCREEN 0b: INVALID TOKEN ============ -->
+  <section class="screen" id="screen-invalid">
+    <div class="loading-wrap">
+      <h1>This link isn't valid.</h1>
+      <p>Please check the link you were sent, or contact Graham directly if you think this is a mistake.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 0c: ALREADY COMPLETED ============ -->
+  <section class="screen" id="screen-completed">
+    <div class="loading-wrap">
+      <h1>You've already completed this.</h1>
+      <p>Thank you again for taking part.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 1: CONSENT ============ -->
+  <section class="screen active" id="screen-consent">
+    <!-- The masthead above already says "Turbulent Ground" — the old
+         "TurbulentGround Research" eyebrow here was just a smaller
+         repeat of it, so it's gone. The greeting below is the page's
+         real opening line now. -->
+    <p class="greeting" id="consent-greeting"></p>
+
+    <h1>Before you start</h1>
+
+    <!-- Was top-right of the greeting row, thumbnail over label — sat
+         awkwardly right-aligned against the left-aligned page content.
+         Moved under the headline, row layout matching the outro
+         thumbnail on the thank-you screen, transcript CTA directly
+         beneath it. -->
+    <div class="intro-video-block">
+      <div class="video-thumb">
+        <button disabled type="button" class="video-thumb-btn" id="intro-video-btn" aria-haspopup="dialog">
+          <span class="video-thumb-avatar">
+            <img src="/research/media/intro-poster.jpg" alt="" aria-hidden="true">
+            <span class="video-thumb-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+            </span>
+          </span>
+          <span class="video-thumb-label">A message from Graham</span>
+        </button>
+      </div>
+      <details class="transcript-toggle">
+        <summary>Read the transcript</summary>
+        <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
+
+Over the past few years, I've seen hundreds of AI prototypes created that go nowhere. They don't become part of how an organisation actually works.
+
+Now, I don't think that's simply a technology problem.
+
+And Bill Gates, in his recent essay on the turbulent AI era, put it plainly. AI can improve people's lives and work, but that won't happen automatically. Product teams and their wider organisations still have real blind spots about how to get there.
+
+My aim is to help understand those blind spots and build a community of people experiencing the shift firsthand, so we can learn from each other's experience.
+
+At the end, you'll receive a personal summary of your answers. When enough eligible responses are available, it will also show how your answers compare with the current study benchmark.
+
+I write regularly about what I find, and I may explore some experiences more deeply, but always asking you first. Individual responses will remain private, unless you separately agree to be named, and there are no right answers here. This isn't a test and I'm interested in your real experience.
+
+So thank you for being a part of it.</div>
+      </details>
+    </div>
+    <p class="intro">
+      This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
+    </p>
+    <p class="intro">
+      This study explores how AI is changing work in product teams, and the personal practices and workplace conditions that help people use it with judgement, agency and care. It is a short account of your experience, rather than an AI maturity assessment. Your answers will help identify patterns and questions for further research.
+    </p>
+    <p class="intro">
+      You can read what I collect and why in the
+      <a class="privacy-link" href="/research/privacy" target="_blank" rel="noopener">privacy notice</a>.
+      Please read it before continuing.
+    </p>
+
+    <div>
+      <div class="check-row">
+        <input disabled type="checkbox" id="consent-taking-part" required>
+        <label for="consent-taking-part">I agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label>
+      </div>
+      <p class="error-msg" id="consent-error">Taking part is required to continue.</p>
+      <div class="check-row">
+        <input disabled type="checkbox" id="consent-study-emails">
+        <label for="consent-study-emails">Send me occasional study emails with findings, follow-up questions and opportunities to contribute. You will email me no more than once every 30 days, and I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label>
+      </div>
+      <div class="email-capture" id="email-capture" hidden>
+        <label for="email-capture-input">Email address</label>
+        <input disabled type="email" id="email-capture-input" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div style="margin-top:28px;">
+        <button disabled type="submit" class="btn" id="consent-continue" disabled>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: CONTEXT ============ -->
+  <section class="screen" id="screen-context">
+    <h1>A little about you</h1>
+
+    <div>
+      <fieldset class="choice-field">
+        <legend>What best describes your current role? <span class="optional-tag">(optional)</span></legend>
+        <div class="choice-grid">
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-ic" value="Individual contributor"><label for="ctx-role-ic"><span class="material-symbols-outlined choice-icon" aria-hidden="true">person</span>Individual contributor</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-manager" value="Team lead or manager"><label for="ctx-role-manager"><span class="material-symbols-outlined choice-icon" aria-hidden="true">manage_accounts</span>Team lead or manager</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-head" value="Head of function or above"><label for="ctx-role-head"><span class="material-symbols-outlined choice-icon" aria-hidden="true">account_tree</span>Head of function or above</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-founder" value="Founder or C-suite"><label for="ctx-role-founder"><span class="material-symbols-outlined choice-icon" aria-hidden="true">apartment</span>Founder or C-suite</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-other" value="Other"><label for="ctx-role-other"><span class="material-symbols-outlined choice-icon" aria-hidden="true">more_horiz</span>Other</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-role" id="ctx-role-pnts" value="Prefer not to say"><label for="ctx-role-pnts"><span class="material-symbols-outlined choice-icon" aria-hidden="true">visibility_off</span>Prefer not to say</label></div>
+        </div>
+      </fieldset>
+      <fieldset class="choice-field">
+        <legend>Which discipline best describes your work? <span class="optional-tag">(optional)</span></legend>
+        <div class="choice-grid">
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-product" value="Product management"><label for="ctx-discipline-product"><span class="material-symbols-outlined choice-icon" aria-hidden="true">view_kanban</span>Product management</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-design" value="Design"><label for="ctx-discipline-design"><span class="material-symbols-outlined choice-icon" aria-hidden="true">palette</span>Design</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-engineering" value="Engineering"><label for="ctx-discipline-engineering"><span class="material-symbols-outlined choice-icon" aria-hidden="true">code</span>Engineering</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-research" value="Research"><label for="ctx-discipline-research"><span class="material-symbols-outlined choice-icon" aria-hidden="true">search</span>Research</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-delivery" value="Delivery or programme management"><label for="ctx-discipline-delivery"><span class="material-symbols-outlined choice-icon" aria-hidden="true">calendar_month</span>Delivery or programme management</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-data" value="Data or analytics"><label for="ctx-discipline-data"><span class="material-symbols-outlined choice-icon" aria-hidden="true">analytics</span>Data or analytics</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-growth" value="Growth or marketing"><label for="ctx-discipline-growth"><span class="material-symbols-outlined choice-icon" aria-hidden="true">trending_up</span>Growth or marketing</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-operations" value="Operations"><label for="ctx-discipline-operations"><span class="material-symbols-outlined choice-icon" aria-hidden="true">settings</span>Operations</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-other" value="Other product discipline"><label for="ctx-discipline-other"><span class="material-symbols-outlined choice-icon" aria-hidden="true">category</span>Other product discipline</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-nonproduct" value="I don't work in product"><label for="ctx-discipline-nonproduct"><span class="material-symbols-outlined choice-icon" aria-hidden="true">work_off</span>I don't work in product</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-discipline" id="ctx-discipline-pnts" value="Prefer not to say"><label for="ctx-discipline-pnts"><span class="material-symbols-outlined choice-icon" aria-hidden="true">visibility_off</span>Prefer not to say</label></div>
+        </div>
+      </fieldset>
+      <fieldset class="choice-field">
+        <legend>Are you responsible for how a team builds or ships product? <span class="optional-tag">(optional)</span></legend>
+        <div class="choice-grid">
+          <div class="choice-option"><input disabled type="radio" name="ctx-responsibility" id="ctx-responsibility-yes" value="Yes"><label for="ctx-responsibility-yes"><span class="material-symbols-outlined choice-icon" aria-hidden="true">check_circle</span>Yes</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-responsibility" id="ctx-responsibility-no" value="No"><label for="ctx-responsibility-no"><span class="material-symbols-outlined choice-icon" aria-hidden="true">close</span>No</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-responsibility" id="ctx-responsibility-pnts" value="Prefer not to say"><label for="ctx-responsibility-pnts"><span class="material-symbols-outlined choice-icon" aria-hidden="true">visibility_off</span>Prefer not to say</label></div>
+        </div>
+      </fieldset>
+      <fieldset class="choice-field">
+        <legend>Roughly how many people work in your organisation? <span class="optional-tag">(optional)</span></legend>
+        <div class="choice-grid">
+          <div class="choice-option"><input disabled type="radio" name="ctx-org-size" id="ctx-org-size-1" value="1–10"><label for="ctx-org-size-1"><span class="material-symbols-outlined choice-icon" aria-hidden="true">person</span>1–10</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-org-size" id="ctx-org-size-11" value="11–50"><label for="ctx-org-size-11"><span class="material-symbols-outlined choice-icon" aria-hidden="true">group</span>11–50</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-org-size" id="ctx-org-size-51" value="51–500"><label for="ctx-org-size-51"><span class="material-symbols-outlined choice-icon" aria-hidden="true">groups</span>51–500</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-org-size" id="ctx-org-size-500" value="500+"><label for="ctx-org-size-500"><span class="material-symbols-outlined choice-icon" aria-hidden="true">domain</span>500+</label></div>
+          <div class="choice-option"><input disabled type="radio" name="ctx-org-size" id="ctx-org-size-pnts" value="Prefer not to say"><label for="ctx-org-size-pnts"><span class="material-symbols-outlined choice-icon" aria-hidden="true">visibility_off</span>Prefer not to say</label></div>
+        </div>
+      </fieldset>
+
+      <div class="context-actions">
+        <button disabled class="survey-back" id="context-back" type="button"><span class="back-icon" aria-hidden="true">←</span>Back</button>
+        <button disabled type="submit" class="btn">Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: PAIRED STATEMENTS + COMMENT ============ -->
+  <section class="screen" id="screen-pairs">
+    <h1>Your experience of the AI shift</h1>
+
+    <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Statements answered" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="0 of 24 statements answered; 24 unanswered">
+      <div class="paired-progress-track" aria-hidden="true"><div class="paired-progress-fill" id="paired-progress-fill"></div></div>
+      <div class="journey-remaining" aria-live="polite"><span><strong id="statements-answered">0</strong> of 24 answered</span><span><strong id="questions-left">24</strong> <span id="questions-left-copy">statements unanswered</span></span></div>
+    </div>
+    <h2 id="pair-position" aria-live="polite"></h2>
+    <div id="pairs-list"></div>
+
+    <fieldset id="open-comment-fieldset" hidden>
+      <legend>Anything else?</legend>
+      <div class="field">
+        <label for="open-comment">Is there anything else you'd like to tell me about how AI is affecting your work? <span class="optional-tag">(optional)</span></label>
+        <textarea disabled id="open-comment" maxlength="5000"></textarea>
+      </div>
+    </fieldset>
+
+    <div class="statement-navigation">
+      <button disabled class="survey-back" id="back-btn" type="button"><span class="back-icon" aria-hidden="true">←</span>Back</button>
+      <button disabled class="statement-context-continue" id="question-continue" type="button" hidden>Continue</button>
+    </div>
+
+    <p class="error-msg" id="submit-error">Something went wrong submitting your response. Please try again.</p>
+  </section>
+
+  <!-- ============ SCREEN 4: DONE ============ -->
+  <section class="screen" id="screen-done">
+    <div class="done-wrap">
+      <div class="done-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
+      </div>
+      <h1>Thank you — your response has been saved.</h1>
+
+      <!-- The video now carries the sentiment the removed paragraph used
+           to (the previous longer "I genuinely appreciate you..." text),
+           so it sits right here, immediately below that short line —
+           not duplicated in text and not left orphaned somewhere else. -->
+      <div class="done-video-block">
+        <div class="video-thumb">
+          <button disabled type="button" class="video-thumb-btn" id="outro-video-btn" aria-haspopup="dialog">
+            <span class="video-thumb-avatar">
+              <img src="/research/media/outro-poster.jpg" alt="" aria-hidden="true">
+              <span class="video-thumb-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+              </span>
+            </span>
+            <span class="video-thumb-label">Watch Graham's message</span>
+          </button>
+        </div>
+        <details class="transcript-toggle">
+          <summary>Read the transcript</summary>
+          <div class="transcript-body">I genuinely appreciate you taking the time to complete this survey.
+
+You've shared something that is difficult to capture by looking at the technology alone, what the AI shift actually feels like for people experiencing it at work.
+
+Your response will help me understand where AI is supporting better work, where it is creating new pressures, and where product teams and organisations may have blind spots.
+
+I'll combine your answers to those of other participants to identify patterns and practical recommendations. I'll share what I learn openly, while keeping individual responses private unless someone separately agrees to be identified.
+
+If you've chosen to receive my study emails, I'll keep you updated and offer opportunities to contribute to the research as it develops, and you can unsubscribe at any point.
+
+So whether you remain involved or this is your only contribution, your experience matters, and it will help shape what comes next.
+
+Thank you for being a part of it.</div>
+        </details>
+      </div>
+
+      <div>
+        <h2>Email my benchmark comparison</h2>
+        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately.</p>
+        <div class="results-email-row">
+          <input disabled type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+          <button disabled class="btn" id="results-email-button" type="submit">Email my comparison</button>
+        </div>
+        <div class="check-row">
+          <input disabled type="checkbox" id="results-study-emails">
+          <label for="results-study-emails">Also send me occasional study emails with findings, follow-up questions and opportunities to contribute. No more than once every 30 days. I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label>
+        </div>
+        <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
+        <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div>
+        <h2>Being quoted <span class="optional-tag">(optional)</span></h2>
+        <p>This is separate from taking part and from receiving study emails.</p>
+        <div class="check-row">
+          <input disabled type="checkbox" id="consent-quote-name">
+          <label for="consent-quote-name">I am open to being quoted by name. You will ask me separately about the specific quote before using it.</label>
+        </div>
+        <button disabled class="btn" id="stay-involved-button" type="submit">Save my choice</button>
+        <p class="results-email-status" id="stay-involved-status" role="status" aria-live="polite" hidden></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Shared video popup — one instance, reused for both the intro and
+     outro thumbnails. JS swaps the <source>/poster per click. -->
+<div class="video-modal" id="video-modal" hidden>
+  <div class="video-modal-backdrop" id="video-modal-backdrop"></div>
+  <div class="video-modal-panel" role="dialog" aria-modal="true" aria-label="Video message from Graham">
+    <button disabled type="button" class="video-modal-close" id="video-modal-close" aria-label="Close video">&times;</button>
+    <video id="video-modal-player" controls playsinline></video>
+  </div>
+</div>
+
+
+
+<div class="footer-bar" id="footer-bar" style="display:none;">
+  <div class="footer-actions">
+    <button disabled class="btn" id="submit-btn" type="button" hidden>Submit</button>
+  </div>
+</div>
+
+
+
+<!-- NAV_JS_START -->
+
+<!-- NAV_JS_END -->
+
+</body>
+</html>
