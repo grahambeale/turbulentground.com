@@ -548,6 +548,7 @@ export default async function handler(req, res) {
     },
     body: JSON.stringify({
       from: resendFrom,
+      reply_to: "feedback@turbulentground.com",
       to: [email],
       subject: "Your AI shift response summary",
       html: buildEmailHtml(name, pairs, benchmark, token, instrumentVersion),
