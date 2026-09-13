@@ -8,6 +8,7 @@
 
 import { timingSafeEqual } from "node:crypto";
 import { buildEmailHtml } from "./research-results-email.js";
+import { INSTRUMENTS, LEGACY_VERSION } from './_research-instruments.js';
 
 function authorised(req, expectedKey) {
   if (!expectedKey) return false;
@@ -39,10 +40,10 @@ const SAMPLE_PAIRS = {
 };
 
 const SAMPLE_BENCHMARK = {
-  cohortSize: 5,
+  cohortSize: 15,
   domains: Object.fromEntries(Object.keys(SAMPLE_PAIRS).map(key => [key, {
-    contribution: { mean: 3, n: 5 },
-    conditions: { mean: 3, n: 5 },
+    contribution: { mean: 3, n: 15 },
+    conditions: { mean: 3, n: 15 },
   }])),
 };
 
@@ -59,13 +60,15 @@ export default async function handler(req, res) {
   catch { return res.status(400).json({ error: "Invalid JSON" }); }
   const email = typeof data?.email === "string" ? data.email.trim() : "";
   if (!looksLikeEmail(email)) return res.status(400).json({ error: "Enter a valid email address" });
+  const version = data?.instrumentVersion ?? LEGACY_VERSION;
+  if (!INSTRUMENTS[version]) return res.status(400).json({ error: "Unknown questionnaire version" });
 
   const resendKey = process.env.RESEND_API_KEY;
   const resendFrom = process.env.RESEND_FROM;
   if (!resendKey || !resendFrom) return res.status(500).json({ error: "Email is not configured" });
 
   const previewNote = `<p style="padding:10px 12px;background:#3a241a;color:#ef7b45;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Test preview using fictional responses. No participant record was created or changed.</p>`;
-  const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only")
+  const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only", version)
     .replace("Your AI shift response summary</h1>", `Your AI shift response summary</h1>${previewNote}`)
     .replace(/<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison[\s\S]*?<\/p>/, "");
 

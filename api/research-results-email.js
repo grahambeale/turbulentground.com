@@ -2,10 +2,12 @@
 // body: { token, email? }
 //
 // Sends a completed participant a factual summary of their own paired
-// responses. Once five completed responses exist, it also shows the current
-// invited-cohort mean for each statement, labelled as an early benchmark. It
-// also compares the participant and cohort averages within
-// each of the two lenses. It never collapses the lenses into one overall score.
+// responses using their recorded question version. Benchmarks use only that
+// version's eligible completed responses, with at least fifteen numeric answers
+// per displayed statement. The revised instrument is statement-specific;
+// historical summaries retain their original interpretation and exact wording.
+
+import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION } from './_research-instruments.js';
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -60,7 +62,7 @@ const DOMAIN_INSIGHT = {
   },
   d5: {
     contribution: "Being comfortable explaining how you use AI at work",
-    conditions: "Being able to use AI without close day-to-day monitoring",
+    conditions: "Having organisational trust to decide when to rely on AI output",
     prompt: "What would make it easier to discuss AI use openly while keeping appropriate oversight?",
   },
   d6: {
@@ -168,8 +170,8 @@ function computeBenchmark(allPairs) {
   for (const [key] of DOMAINS) {
     domains[key] = {};
     for (const field of ["contribution", "conditions"]) {
-      const values = allPairs.map(pairs => pairs?.[key]?.[field]).filter(value => typeof value === "number");
-      domains[key][field] = values.length
+      const values = allPairs.map(pairs => pairs?.[key]?.[field]).filter(value => Number.isInteger(value) && value >= 1 && value <= 5);
+      domains[key][field] = values.length >= BENCHMARK_MIN_COHORT
         ? { mean: values.reduce((sum, value) => sum + value, 0) / values.length, n: values.length }
         : null;
     }
@@ -386,7 +388,42 @@ function lensCard(label, summary) {
   </td>`;
 }
 
-export function buildEmailHtml(name, pairs, benchmark, token) {
+function buildPairedEmailHtml(name, pairs, benchmark, token) {
+  const textStyle = 'font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;';
+  const sections = INSTRUMENTS[PAIRED_VERSION].map(domain => {
+    const rows = domain.statements.map(statement => {
+      const value = pairs?.[domain.key]?.[statement.field];
+      // The compatible cohort and each displayed statement must meet the floor.
+      const candidate = benchmark.domains?.[domain.key]?.[statement.field];
+      const entry = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && candidate?.n >= BENCHMARK_MIN_COHORT ? candidate : null;
+      return `<div style="padding:16px 0;border-bottom:1px solid #3a332d;">
+        <p style="${textStyle}margin:0 0 8px;">${escapeHtml(statement.text)}</p>
+        <p style="${textStyle}margin:0;"><strong>Your answer: ${displayValue(value)}</strong></p>
+        <p style="font-family:Arial,sans-serif;font-size:13px;color:#9e8e7c;">${entry ? benchmarkValue(entry) : 'No compatible study benchmark yet'}</p>
+        ${comparisonBar(value, entry)}
+      </div>`;
+    }).join('');
+    return `<section><h2 style="margin:28px 0 4px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">${escapeHtml(domain.name)}</h2>${rows}</section>`;
+  }).join('');
+  const hasBenchmark = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && Object.values(benchmark.domains || {}).some(d => Object.values(d).some(e => e?.n >= BENCHMARK_MIN_COHORT));
+  return `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift response summary</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
+    <main style="max-width:680px;margin:0 auto;padding:32px 20px;">
+      <p style="${textStyle}">${name ? 'Hello ' + escapeHtml(name) + ',' : 'Hello,'}</p>
+      <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
+      <p style="${textStyle}">These are your answers to the questionnaire you completed. Each statement is shown separately: pairs explore different aspects of work and are not combined into a contribution, conditions or overall score.</p>
+      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${PAIRED_VERSION}. Results preserve that version's exact questions and meanings.</p>
+      <p style="${textStyle}">${hasBenchmark ? 'The current study benchmark uses eligible completed responses to these same questions. It is a descriptive comparison with the invited sample, not a workforce norm. The benchmark is likely to fluctuate frequently during the early phase of this research.' : 'A compatible comparison benchmark is not available yet. Your summary shows your own answers only.'}</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">The scale runs from 1, strongly disagree, to 5, strongly agree. Not applicable and Prefer not to say remain separate choices. Higher or lower agreement is not automatically better or worse. These self-reported answers do not establish ability, organisational quality or causes.</p>
+      ${sections}
+      <p style="${textStyle}">Consider which answers you would like to explore further, and what context might help explain them.</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
+    </main></body></html>`;
+}
+
+export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion = LEGACY_VERSION) {
+  if (!INSTRUMENTS[instrumentVersion]) throw new Error('Unknown questionnaire version');
+  if (instrumentVersion === PAIRED_VERSION) return buildPairedEmailHtml(name, pairs, benchmark, token);
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
     const domainBenchmark = benchmark.domains && benchmark.domains[key];
@@ -394,8 +431,8 @@ export function buildEmailHtml(name, pairs, benchmark, token) {
     const conditionsBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.conditions);
     return `<tr>
       <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#e8dcc8;font-family:Arial,sans-serif;font-size:14px;">${escapeHtml(label)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}${comparisonBar(pair.contribution, domainBenchmark?.contribution)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;">${displayValue(pair.conditions)}${conditionsBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${conditionsBenchmark}</span>` : ""}${comparisonBar(pair.conditions, domainBenchmark?.conditions)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;"><p>${escapeHtml(INSTRUMENTS[instrumentVersion].find(d => d.key === key).statements.find(s => s.field === 'contribution').text)}</p>${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}${comparisonBar(pair.contribution, domainBenchmark?.contribution)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;"><p>${escapeHtml(INSTRUMENTS[instrumentVersion].find(d => d.key === key).statements.find(s => s.field === 'conditions').text)}</p>${displayValue(pair.conditions)}${conditionsBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${conditionsBenchmark}</span>` : ""}${comparisonBar(pair.conditions, domainBenchmark?.conditions)}</td>
     </tr>`;
   }).join("");
 
@@ -427,6 +464,7 @@ export function buildEmailHtml(name, pairs, benchmark, token) {
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
+      <p style="color:#9e8e7c;font-family:Arial,sans-serif;font-size:12px;">Questionnaire version: ${escapeHtml(instrumentVersion)}. Comparisons use this question version only.</p>
       <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
       ${participantSummary}
       ${benchmarkSection}
@@ -483,9 +521,8 @@ export default async function handler(req, res) {
   }
 
   const instrumentVersion = responseRecord.fields[RESPONSE_FIELD.instrumentVersion];
-  // Revised question results require an agreed statement-specific presentation.
-  // Do not send the historical two-lens interpretation for materially changed items.
-  if (instrumentVersion !== "phase3-v3-2026-09-08") {
+  // Missing/unknown versions cannot be inferred from the current questionnaire.
+  if (!INSTRUMENTS[instrumentVersion]) {
     return res.status(409).json({ error: "Results for this questionnaire version are not ready. Your saved answers are preserved." });
   }
   try { allPairs = await listResponsePairs(airtableToken, instrumentVersion); }
@@ -513,7 +550,7 @@ export default async function handler(req, res) {
       from: resendFrom,
       to: [email],
       subject: "Your AI shift response summary",
-      html: buildEmailHtml(name, pairs, benchmark, token),
+      html: buildEmailHtml(name, pairs, benchmark, token, instrumentVersion),
     }),
   });
   if (!emailResponse.ok) {
