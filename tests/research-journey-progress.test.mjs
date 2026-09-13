@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-const html = fs.readFileSync(new URL("../research/index.html", import.meta.url), "utf8");
+const html = fs.readFileSync(new URL("../research/legacy-v3.html", import.meta.url), "utf8");
 
 function check(label, condition) {
   if (!condition) throw new Error(`FAIL  ${label}`);
@@ -20,7 +20,7 @@ check("ends the route line at the final visible station",
   /right: calc\(24px \+ \(var\(--station-space\) \/ 2\)\)/.test(html));
 check("removes the journey line from the final free-text screen",
   /getElementById\('journey-progress'\)\.hidden = atEnd/.test(html) &&
-  /\.footer-bar\.final-step \{ justify-content: space-between; \}/.test(html));
+  /\.footer-bar\.final-step \{ justify-content: flex-end; \}/.test(html));
 check("animates the current station before moving forward", /animateStationDeparture\(\)/.test(html));
 check("uses icon-library fragments for the burst", /material-symbols-outlined journey-fragment/.test(html));
 check("respects reduced-motion preferences", /prefers-reduced-motion: reduce/.test(html));

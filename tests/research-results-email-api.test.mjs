@@ -33,6 +33,7 @@ try {
     }
     if (String(url).includes("tblL9mf8VfAmbhuG7?") && String(url).includes("filterByFormula")) {
       return { ok: true, json: async () => ({ records: [{ id: "recResponse", fields: {
+        fldHJ4KNzMbpzdob6: "phase3-v3-2026-09-08",
         fldvxb2mrIYVKLGVM: JSON.stringify({
           d1: { contribution: 4, conditions: 2 },
           d2: { contribution: 2, conditions: 5 },
@@ -60,6 +61,8 @@ try {
             d4: { contribution: 3, conditions: 3 },
           }),
           fldc1EMbDAHAO99Av: true,
+          fldHJ4KNzMbpzdob6: "phase3-v3-2026-09-08",
+          fld8sYjswX21vvVXz: "2026-09-08T00:00:00Z",
         },
       })) }) };
     }

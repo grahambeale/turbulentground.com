@@ -21,6 +21,8 @@ const IDENTITY_FIELD = {
 };
 
 const RESPONSE_FIELD = {
+  instrumentVersion: "fldHJ4KNzMbpzdob6",
+  completedAt: "fld8sYjswX21vvVXz",
   token: "flduL4PmBEfH9rLpz",
   pairResponsesJson: "fldvxb2mrIYVKLGVM",
   meetsCompletionFloor: "fldc1EMbDAHAO99Av",
@@ -126,13 +128,15 @@ async function findRecord(tableId, token, tokenFieldId, airtableToken) {
   return data.records && data.records[0];
 }
 
-async function listResponsePairs(airtableToken) {
+async function listResponsePairs(airtableToken, instrumentVersion) {
   const allPairs = [];
   let offset = "";
   do {
     const params = new URLSearchParams({ pageSize: "100", returnFieldsByFieldId: "true" });
     params.append("fields[]", RESPONSE_FIELD.pairResponsesJson);
     params.append("fields[]", RESPONSE_FIELD.meetsCompletionFloor);
+    params.append("fields[]", RESPONSE_FIELD.instrumentVersion);
+    params.append("fields[]", RESPONSE_FIELD.completedAt);
     if (offset) params.set("offset", offset);
     const response = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}?${params}`,
@@ -141,7 +145,9 @@ async function listResponsePairs(airtableToken) {
     if (!response.ok) throw new Error(`Airtable cohort lookup failed: ${await response.text()}`);
     const data = await response.json();
     for (const record of data.records || []) {
-      if (record.fields[RESPONSE_FIELD.meetsCompletionFloor] !== true) continue;
+      if (record.fields[RESPONSE_FIELD.meetsCompletionFloor] !== true ||
+          record.fields[RESPONSE_FIELD.instrumentVersion] !== instrumentVersion ||
+          !record.fields[RESPONSE_FIELD.completedAt]) continue;
       try { allPairs.push(JSON.parse(record.fields[RESPONSE_FIELD.pairResponsesJson] || "{}")); }
       catch { /* Exclude unreadable records from the benchmark. */ }
     }
@@ -460,10 +466,9 @@ export default async function handler(req, res) {
   let responseRecord;
   let allPairs;
   try {
-    [identity, responseRecord, allPairs] = await Promise.all([
+    [identity, responseRecord] = await Promise.all([
       findRecord(IDENTITY_TABLE_ID, token, IDENTITY_FIELD.token, airtableToken),
       findRecord(RESPONSES_TABLE_ID, token, RESPONSE_FIELD.token, airtableToken),
-      listResponsePairs(airtableToken),
     ]);
   } catch (error) {
     console.error(error.message);
@@ -476,6 +481,15 @@ export default async function handler(req, res) {
   if (identity.fields[IDENTITY_FIELD.resultsSentAt]) {
     return res.status(409).json({ error: "Your results have already been sent" });
   }
+
+  const instrumentVersion = responseRecord.fields[RESPONSE_FIELD.instrumentVersion];
+  // Revised question results require an agreed statement-specific presentation.
+  // Do not send the historical two-lens interpretation for materially changed items.
+  if (instrumentVersion !== "phase3-v3-2026-09-08") {
+    return res.status(409).json({ error: "Results for this questionnaire version are not ready. Your saved answers are preserved." });
+  }
+  try { allPairs = await listResponsePairs(airtableToken, instrumentVersion); }
+  catch { return res.status(502).json({ error: "Could not prepare your results" }); }
 
   const suppliedEmail = typeof data?.email === "string" ? data.email.trim() : "";
   const storedEmail = identity.fields[IDENTITY_FIELD.email];

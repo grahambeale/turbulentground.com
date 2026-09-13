@@ -96,7 +96,10 @@ const FIELD = {
   instrumentVersion: "fldHJ4KNzMbpzdob6",
 };
 
-const INSTRUMENT_VERSION = "phase3-v3-2026-09-08";
+// Legacy clients omit version; their answers retain the legacy instrument.
+const LEGACY_VERSION = "phase3-v3-2026-09-08";
+const INSTRUMENT_VERSION = "phase3-v4-2026-09-13-paired";
+const SUPPORTED_VERSIONS = new Set([LEGACY_VERSION, INSTRUMENT_VERSION]);
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
@@ -169,6 +172,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: pairError });
   }
 
+  const requestedVersion = data.instrumentVersion === undefined ? LEGACY_VERSION : data.instrumentVersion;
+  if (!SUPPORTED_VERSIONS.has(requestedVersion)) {
+    return res.status(400).json({ error: "Unsupported questionnaire version. Please reopen your invite." });
+  }
   const airtableToken = process.env.AIRTABLE_RESEARCH_TOKEN;
   if (!airtableToken) {
     console.error("Missing AIRTABLE_RESEARCH_TOKEN");
@@ -199,7 +206,7 @@ export default async function handler(req, res) {
     [FIELD.consentQuoteAnon]: consent.quoteAnonymously === true,
     [FIELD.consentQuoteName]: consent.quoteByName === true,
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),
-    [FIELD.instrumentVersion]: INSTRUMENT_VERSION,
+    [FIELD.instrumentVersion]: requestedVersion,
   };
   if (typeof context.role === "string" && context.role) fields[FIELD.role] = context.role;
   if (typeof context.discipline === "string" && context.discipline) fields[FIELD.discipline] = context.discipline;
@@ -210,6 +217,9 @@ export default async function handler(req, res) {
 
   try {
     const existingResponse = await findResponseRecord(token, airtableToken);
+    if (existingResponse && existingResponse.fields[FIELD.instrumentVersion] !== requestedVersion) {
+      return res.status(409).json({ error: "Your saved answers use a different questionnaire version. Reopen your invite before continuing." });
+    }
 
     if (existingResponse) {
       // Update in place. Started At is deliberately NOT included here — it

@@ -73,7 +73,10 @@ const FIELD = {
   instrumentVersion: "fldHJ4KNzMbpzdob6",
 };
 
-const INSTRUMENT_VERSION = "phase3-v3-2026-09-08";
+// Legacy clients omit version; their answers retain the legacy instrument.
+const LEGACY_VERSION = "phase3-v3-2026-09-08";
+const INSTRUMENT_VERSION = "phase3-v4-2026-09-13-paired";
+const SUPPORTED_VERSIONS = new Set([LEGACY_VERSION, INSTRUMENT_VERSION]);
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
@@ -195,6 +198,10 @@ export default async function handler(req, res) {
 
   const { pairsAnswered, meetsCompletionFloor } = computeCompletion(pairResponses);
 
+  const requestedVersion = data.instrumentVersion === undefined ? LEGACY_VERSION : data.instrumentVersion;
+  if (!SUPPORTED_VERSIONS.has(requestedVersion)) {
+    return res.status(400).json({ error: "Unsupported questionnaire version. Please reopen your invite." });
+  }
   const airtableToken = process.env.AIRTABLE_RESEARCH_TOKEN;
   if (!airtableToken) {
     console.error("Missing AIRTABLE_RESEARCH_TOKEN");
@@ -218,6 +225,12 @@ export default async function handler(req, res) {
     return res.status(409).json({ error: "This invite has already been used." });
   }
 
+  let existingResponse;
+  try { existingResponse = await findResponseRecord(token, airtableToken); }
+  catch { return res.status(502).json({ error: "Could not check your saved questionnaire." }); }
+  if (existingResponse && existingResponse.fields[FIELD.instrumentVersion] !== requestedVersion) {
+    return res.status(409).json({ error: "Your saved answers use a different questionnaire version. Reopen your invite before continuing." });
+  }
   const fields = {
     [FIELD.token]: token,
     [FIELD.consentTakingPart]: consent.takingPart === true,
@@ -227,7 +240,7 @@ export default async function handler(req, res) {
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),
     [FIELD.pairsAnswered]: pairsAnswered,
     [FIELD.meetsCompletionFloor]: meetsCompletionFloor,
-    [FIELD.instrumentVersion]: INSTRUMENT_VERSION,
+    [FIELD.instrumentVersion]: requestedVersion,
   };
 
   if (typeof data.startedAt === "string" && data.startedAt) {
@@ -281,7 +294,7 @@ export default async function handler(req, res) {
     // Update-in-place if a partial save already created a Responses row
     // for this token, so completing a survey after a partial save leaves
     // exactly one record, not two. See findResponseRecord() above.
-    const existingResponse = await findResponseRecord(token, airtableToken);
+    // existingResponse was version-checked before any identity mutation.
     const writeUrl = existingResponse
       ? `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}/${existingResponse.id}`
       : `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}`;

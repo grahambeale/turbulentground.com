@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-const html = fs.readFileSync(new URL("../research/index.html", import.meta.url), "utf8");
+const html = fs.readFileSync(new URL("../research/legacy-v3.html", import.meta.url), "utf8");
 
 function check(label, condition) {
   if (!condition) throw new Error(`FAIL  ${label}`);

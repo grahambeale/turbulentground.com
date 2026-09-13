@@ -672,12 +672,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .restrained-research .research-reassurance { display: block; }
   .research-reassurance { display: none; margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; }
   @keyframes station-settle { to { transform: scale(0.72); opacity: 0.28; } }
-  #pair-position { font-size: 1.1rem; color: var(--ink-mid); margin: 1rem 0; }
-  #pairs-list .pair-item { margin-bottom: 2rem; }
-  .journey-viewport { display: none; }
-  .paired-progress-track { height: 4px; width: 100%; background: var(--ink-mid); }
-  .paired-progress-fill { height: 100%; width: 0; background: #b84215; }
-  .statement-context-continue:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
 <body>
@@ -702,7 +696,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
       <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
     </div>
   </a>
-  
+
 </nav>
 <!-- NAV_END -->
 
@@ -869,7 +863,6 @@ So thank you for being a part of it.</div>
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
 
-    <h2 id="pair-position" aria-live="polite"></h2>
     <div id="pairs-list"></div>
 
     <fieldset id="open-comment-fieldset" hidden>
@@ -1051,7 +1044,6 @@ Thank you for being a part of it.</div>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
   <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Survey journey" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="24 questions left">
-    <div class="paired-progress-track" aria-hidden="true"><div class="paired-progress-fill" id="paired-progress-fill"></div></div>
     <div class="journey-viewport" id="journey-viewport">
       <div class="journey-route" id="journey-route"></div>
     </div>
@@ -1088,178 +1080,44 @@ Thank you for being a part of it.</div>
   // "always statement 1" rule — it varies by domain (compare domains 2,
   // 4, 6, 10, 11, 12 against 1, 3, 5, 7, 8, 9). Confirm it's correct
   // before trusting it for any tension analysis built on this data.
-  // v4 approved statements; field names are storage identifiers.
   var DOMAINS = [
-  {
-    "key": "d1",
-    "name": "Judgement",
-    "s1": {
-      "text": "When AI and I disagree, I rely on my own judgement.",
-      "help": "This asks what you report doing when your judgement differs from AI. It does not test whether your judgement is correct.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "I can recognise when AI output is wrong.",
-      "help": "This asks how confident you feel about recognising wrong AI output. It does not test your accuracy.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d2",
-    "name": "Time and workload",
-    "s1": {
-      "text": "When AI saves me time, I use that time to improve my work.",
-      "help": "This asks whether you actually use time saved by AI to improve your work, rather than whether you are allowed to.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "When AI saves me time, I keep some of that time free from work.",
-      "help": "This asks whether you actually keep some saved time free from work. Both uses of saved time can coexist.",
-      "field": "contribution"
-    }
-  },
-  {
-    "key": "d3",
-    "name": "Working relationships",
-    "s1": {
-      "text": "I speak directly with colleagues about their work, even when AI summaries are available.",
-      "help": "This asks whether you speak directly with colleagues about their work when summaries are also available. It does not ask you to reject summaries.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "My colleagues speak directly with me about my work, even when AI summaries are available.",
-      "help": "This asks whether colleagues speak directly with you about your work when summaries are also available.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d4",
-    "name": "Quality and care",
-    "s1": {
-      "text": "My organisation allows enough time to check the quality of my AI-assisted work.",
-      "help": "This asks whether you feel your organisation leaves enough time to check your AI-assisted work.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "I check AI-assisted work as carefully as work I do without AI.",
-      "help": "This asks how carefully you check AI-assisted work compared with work without AI. It does not establish that either is checked adequately.",
-      "field": "contribution"
-    }
-  },
-  {
-    "key": "d5",
-    "name": "Autonomy",
-    "s1": {
-      "text": "I can decide when to use AI in my work.",
-      "help": "This asks whether you have discretion over when to use AI in your work.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "My organisation gives me discretion over whether to rely on AI output.",
-      "help": "This asks whether your organisation gives you discretion over relying on AI output. Using AI and relying on its output can be different decisions.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d6",
-    "name": "Learning",
-    "s1": {
-      "text": "I have opportunities at work to develop skills that I expect to remain useful as AI changes my work.",
-      "help": "This asks whether work gives you opportunities to develop skills you expect to remain useful.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "I actively develop skills that I expect to remain useful as AI changes my work.",
-      "help": "This asks whether you actively develop those skills. Expected usefulness is your judgement, not a forecast.",
-      "field": "contribution"
-    }
-  },
-  {
-    "key": "d7",
-    "name": "Trust",
-    "s1": {
-      "text": "I trust my colleagues’ judgement when they use AI.",
-      "help": "This asks about the trust you give your colleagues' judgement when they use AI.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "My colleagues trust my judgement when I use AI.",
-      "help": "This asks about the trust you feel colleagues give your judgement when you use AI, rather than trust from the organisation generally.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d8",
-    "name": "Being seen",
-    "s1": {
-      "text": "I recognise the judgement my colleagues contribute to AI-assisted work.",
-      "help": "This asks whether you recognise the judgement colleagues add to AI-assisted work.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "My colleagues recognise the judgement I contribute to AI-assisted work.",
-      "help": "This asks whether you feel colleagues recognise the judgement you add to AI-assisted work.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d9",
-    "name": "Meaning",
-    "s1": {
-      "text": "As AI changes my tasks, I look for new ways to make my work meaningful.",
-      "help": "This asks whether you look for new ways to make work meaningful as tasks change.",
-      "field": "contribution"
-    },
-    "s2": {
-      "text": "The work I do alongside AI feels meaningful.",
-      "help": "This asks whether work alongside AI currently feels meaningful. Looking for meaning and experiencing it are different.",
-      "field": "conditions"
-    }
-  },
-  {
-    "key": "d10",
-    "name": "Pace",
-    "s1": {
-      "text": "The pace my organisation expects when I work with AI is sustainable.",
-      "help": "This asks whether the pace you feel your organisation expects is sustainable.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "I set a sustainable pace when I work with AI.",
-      "help": "This asks whether you report setting a sustainable personal pace. It does not establish that you are free to set that pace.",
-      "field": "contribution"
-    }
-  },
-  {
-    "key": "d11",
-    "name": "Guidance and influence",
-    "s1": {
-      "text": "My organisation clearly explains how AI should be used at work.",
-      "help": "This asks how clearly your organisation explains how AI should be used at work.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "I influence how my team uses AI.",
-      "help": "This asks whether you influence your team's use of AI. Guidance and influence are different concepts.",
-      "field": "contribution"
-    }
-  },
-  {
-    "key": "d12",
-    "name": "Job security",
-    "s1": {
-      "text": "I feel secure in my role as AI changes my work.",
-      "help": "This asks how secure you feel in your role as AI changes your work.",
-      "field": "conditions"
-    },
-    "s2": {
-      "text": "I am preparing for ways AI could change my role.",
-      "help": "This asks whether you prepare for changes to your role. Preparation can accompany confidence, concern or routine planning.",
-      "field": "contribution"
-    }
-  }
-];
-  var INSTRUMENT_VERSION = 'phase3-v4-2026-09-13-paired';
+    { key: 'd1',  name: 'Judgement',
+      s1: { text: "When AI and I disagree, I rely on my own judgement.", help: "This asks whether you defer to AI or rely on your own judgement when your conclusions differ.", field: 'contribution' },
+      s2: { text: "I can recognise when AI output is wrong.", help: "This asks whether you feel able to spot inaccurate or unsuitable AI output.", field: 'conditions' } },
+    { key: 'd2',  name: 'Time and workload',
+      s1: { text: "When AI saves me time, I can use that time to improve my work.", help: "This asks whether saved time can go into quality, rather than only increasing output.", field: 'conditions' },
+      s2: { text: "I can use some of the time AI saves me for myself, rather than taking on more work.", help: "This asks whether you can keep some of the time AI saves you for yourself instead of converting it into more work.", field: 'contribution' } },
+    { key: 'd3',  name: 'Working relationships',
+      s1: { text: "I talk to colleagues directly instead of relying on AI summaries of their work.", help: "This asks whether you speak with people themselves to understand their work.", field: 'contribution' },
+      s2: { text: "My colleagues speak with me directly instead of relying on AI summaries of my work.", help: "This asks whether colleagues speak with you directly to understand your work.", field: 'conditions' } },
+    { key: 'd4',  name: 'Skill and craft',
+      s1: { text: "My organisation allows enough time to check the quality of AI-assisted work.", help: "This asks whether deadlines and expectations leave time to review and improve AI output.", field: 'conditions' },
+      s2: { text: "I check AI-assisted work as carefully as my other work.", help: "This asks whether you apply the same quality checks whether or not AI was involved.", field: 'contribution' } },
+    { key: 'd5',  name: 'Autonomy',
+      s1: { text: "I'm comfortable explaining how I use AI at work.", help: "This asks whether you can openly account for when and how you use AI.", field: 'contribution' },
+      s2: { text: "My organisation trusts me to decide when to rely on AI output.", help: "This asks whether your organisation trusts you to judge when AI output is appropriate to use.", field: 'conditions' } },
+    { key: 'd6',  name: 'Learning',
+      s1: { text: "I have opportunities at work to build skills that will remain useful as AI changes my work.", help: "This asks whether your work gives you opportunities to develop skills that can remain useful as AI changes what you do.", field: 'conditions' },
+      s2: { text: "I actively develop skills that will remain useful as AI changes my work.", help: "This asks whether you personally invest in skills that can remain useful as your work changes alongside AI.", field: 'contribution' } },
+    { key: 'd7',  name: 'Trust',
+      s1: { text: "I trust my colleagues to decide when to rely on AI.", help: "This asks whether you give colleagues discretion over their use of AI.", field: 'contribution' },
+      s2: { text: "I'm trusted to decide when to rely on AI output.", help: "This asks whether others give you discretion over your use of AI.", field: 'conditions' } },
+    { key: 'd8',  name: 'Being seen',
+      s1: { text: "I give colleagues full credit when AI helps them work faster.", help: "This asks whether AI involvement changes how you recognise another person's contribution.", field: 'contribution' },
+      s2: { text: "I receive credit for the judgement I add to AI-assisted work.", help: "This asks whether others recognise the human judgement you add when AI is involved.", field: 'conditions' } },
+    { key: 'd9',  name: 'Meaning',
+      s1: { text: "As AI changes my tasks, I look for new ways to make my work meaningful.", help: "This asks whether you actively look for purpose as the content of your work changes.", field: 'contribution' },
+      s2: { text: "The work I do alongside AI feels meaningful.", help: "This asks whether your current work with AI feels connected to something that matters.", field: 'conditions' } },
+    { key: 'd10', name: 'Pace',
+      s1: { text: "The pace expected of me when using AI is sustainable.", help: "This asks whether external expectations remain manageable when AI makes faster work possible.", field: 'conditions' },
+      s2: { text: "I set a sustainable pace when I work with AI.", help: "This asks whether you personally maintain a pace you could keep up over time.", field: 'contribution' } },
+    { key: 'd11', name: 'AI in team decisions',
+      s1: { text: "My organisation clearly explains how AI should be used.", help: "This asks whether the organisation provides understandable guidance about appropriate AI use.", field: 'conditions' },
+      s2: { text: "I influence how my team uses AI.", help: "This asks whether you have a voice in your team's shared AI practices.", field: 'contribution' } },
+    { key: 'd12', name: 'Job security',
+      s1: { text: "I feel secure in my role as AI changes my work.", help: "This asks about your sense of longer-term role security as AI changes your work.", field: 'conditions' },
+      s2: { text: "I am preparing for ways AI could change my role.", help: "This asks whether you are taking steps to adapt to possible changes in your role.", field: 'contribution' } }
+  ];
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable', contribution_context?: string, conditions_context?: string }
   // Keys are only ever added once a statement is actually answered/skipped
@@ -1342,15 +1200,6 @@ Thank you for being a part of it.</div>
         greetingEl.textContent = name ? ('Hi ' + name + ', welcome.') : 'Welcome.';
 
         if (data.savedState && isPlainObjectClient(data.savedState)) {
-          if (data.savedState.instrumentVersion === 'phase3-v3-2026-09-08') {
-            window.location.replace('/research/legacy-v3.html?t=' + encodeURIComponent(token));
-            return;
-          }
-          if (data.savedState.instrumentVersion !== INSTRUMENT_VERSION) {
-            document.querySelector('#screen-invalid p').textContent = 'Your saved questionnaire uses a different version. Please contact Graham so your existing answers can be preserved.';
-            showScreen('screen-invalid');
-            return;
-          }
           resumeFromSavedState(data.savedState);
         } else {
           showScreen('screen-consent');
@@ -1412,7 +1261,7 @@ Thank you for being a part of it.</div>
     // not qualify.
     trackResearchEvent('Research: Resumed');
 
-    startedAt = saved.startedAt || new Date().toISOString();
+    startedAt = new Date().toISOString();
     renderPairs();
 
     var resumeIndex = orderedStatements.findIndex(function (item) {
@@ -1448,8 +1297,7 @@ Thank you for being a part of it.</div>
       consent: consent,
       context: context,
       pairResponses: pairResponses,
-      sectionReached: currentStatementIndex,
-      instrumentVersion: INSTRUMENT_VERSION
+      sectionReached: currentStatementIndex
     };
   }
 
@@ -1619,16 +1467,23 @@ Thank you for being a part of it.</div>
     showScreen('screen-pairs');
   });
 
-  // ---- v4 paired order approved by Graham on 13 September ----
+  // ---- screen 3: build the round-robin pair list ----
+  // Interleaving requirement: the two statements within a domain must not
+  // sit adjacent on screen. Round-robin layout below: every domain's FIRST
+  // statement across one pass (in domain order 1-12), then every domain's
+  // SECOND statement in a second pass (same domain order). This is a
+  // first-pass design choice, untested, and may need revision after the
+  // mechanics test — e.g. it means statement pairs from the same domain
+  // are exactly 12 items apart, which may or may not be far enough to stop
+  // a respondent connecting them, and a fully randomised order (rather
+  // than this fixed two-pass structure) hasn't been tried.
   function renderPairs() {
     var list = document.getElementById('pairs-list');
     list.innerHTML = '';
 
     var pass1 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s1 }; });
     var pass2 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s2 }; });
-    orderedStatements = DOMAINS.reduce(function (items, d) {
-      return items.concat([{ domain: d, stmt: d.s1 }, { domain: d, stmt: d.s2 }]);
-    }, []);
+    orderedStatements = pass1.concat(pass2);
 
     orderedStatements.forEach(function (item, index) {
       var domainKey = item.domain.key;
@@ -1763,11 +1618,11 @@ Thank you for being a part of it.</div>
     isLikertTransitioning = false;
     var list = document.getElementById('pairs-list');
     list.classList.remove('is-transitioning');
-    currentStatementIndex = Math.max(0, Math.min(Math.floor(index / 2) * 2, TOTAL_STATEMENTS));
+    currentStatementIndex = Math.max(0, Math.min(index, TOTAL_STATEMENTS));
     var rows = document.querySelectorAll('.pair-item');
     rows.forEach(function (row, rowIndex) {
       row.classList.remove('question-leaving', 'question-entering', 'question-leaving-back', 'question-entering-back');
-      row.hidden = rowIndex < currentStatementIndex || rowIndex >= currentStatementIndex + 2;
+      row.hidden = rowIndex !== currentStatementIndex;
     });
 
     var atEnd = currentStatementIndex >= TOTAL_STATEMENTS;
@@ -1776,9 +1631,7 @@ Thank you for being a part of it.</div>
     document.getElementById('submit-btn').hidden = !atEnd;
     var currentRow = !atEnd && rows[currentStatementIndex];
     var currentContext = currentRow && currentRow.querySelector('.statement-context');
-    document.getElementById('question-continue').hidden = atEnd;
-    refreshPairContinue();
-    document.getElementById('pair-position').textContent = atEnd ? 'All 24 statements answered — optional comment' : 'Pair ' + (currentStatementIndex / 2 + 1) + ' of 12 · ' + orderedStatements[currentStatementIndex].domain.name;
+    document.getElementById('question-continue').hidden = atEnd || !currentContext || currentContext.hidden;
     document.getElementById('journey-progress').hidden = atEnd;
     document.getElementById('footer-bar').classList.toggle('final-step', atEnd);
     updateProgress();
@@ -1825,8 +1678,6 @@ Thank you for being a part of it.</div>
 
     applyPressedState(scaleGridEl, alternativeBtnEls, value);
     scheduleCheckpointSave();
-    updateProgress();
-    refreshPairContinue();
 
     var contextWrap = rowEl && rowEl.querySelector('.statement-context');
     if (contextWrap) {
@@ -1834,9 +1685,59 @@ Thank you for being a part of it.</div>
       contextWrap.hidden = false;
       document.getElementById('question-continue').hidden = false;
       contextWrap.querySelector('textarea').focus({ preventScroll: true });
-      return; // Continue advances only after both individual answers are present.
+      window.requestAnimationFrame(function () {
+        var footerHeight = document.getElementById('footer-bar').getBoundingClientRect().height;
+        var visibleBottom = window.innerHeight - footerHeight - 16;
+        var contextBottom = document.getElementById('back-btn').getBoundingClientRect().bottom;
+        if (contextBottom > visibleBottom) {
+          window.scrollBy({
+            top: contextBottom - visibleBottom,
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+          });
+        }
+      });
+      return;
     }
 
+    var nextStatementIndex = currentStatementIndex + 1;
+    window.clearTimeout(autoAdvanceTimer);
+    updateRemainingCount(nextStatementIndex);
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      runLikertTransition(nextStatementIndex, selectedControlEl, 'forward');
+    } else {
+      var delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 540;
+      autoAdvanceTimer = window.setTimeout(function () { showStatement(nextStatementIndex, true); }, delay);
+    }
+  }
+
+  function runLikertTransition(nextStatementIndex, selectedControlEl, direction) {
+    isLikertTransitioning = true;
+    if (selectedControlEl) selectedControlEl.classList.add('response-control-pressed');
+    var settleDelay = selectedControlEl ? 160 : 0;
+
+    autoAdvanceTimer = window.setTimeout(function () {
+      var list = document.getElementById('pairs-list');
+      var rows = list.querySelectorAll('.pair-item');
+      var outgoing = rows[currentStatementIndex];
+      var incoming = rows[nextStatementIndex];
+
+      if (!outgoing || !incoming) {
+        showStatement(nextStatementIndex, true);
+        return;
+      }
+
+      if (selectedControlEl) selectedControlEl.classList.remove('response-control-pressed');
+      list.classList.add('is-transitioning');
+      incoming.hidden = false;
+      if (direction === 'forward') animateStationDeparture();
+      animateJourneyRoute(direction);
+      outgoing.classList.add(direction === 'back' ? 'question-leaving-back' : 'question-leaving');
+      incoming.classList.add(direction === 'back' ? 'question-entering-back' : 'question-entering');
+
+      likertTransitionTimer = window.setTimeout(function () {
+        showStatement(nextStatementIndex, true);
+      }, 580);
+    }, settleDelay);
   }
 
   function computeCompletion() {
@@ -1850,50 +1751,99 @@ Thank you for being a part of it.</div>
     return { pairsAnswered: pairsAnswered, meetsCompletionFloor: pairsAnswered >= 10 };
   }
 
-  function pairIsAnswered() {
-    return orderedStatements.slice(currentStatementIndex, currentStatementIndex + 2).every(function (item) {
-      var pair = pairResponses[item.domain.key];
-      return pair && Object.prototype.hasOwnProperty.call(pair, item.stmt.field);
-    });
-  }
-  function refreshPairContinue() {
-    document.getElementById('question-continue').disabled = !pairIsAnswered();
-  }
   function updateProgress() {
-    updateRemainingCount(statementsAnswered);
-    var fill = document.getElementById('paired-progress-fill');
-    if (fill) fill.style.width = Math.min(statementsAnswered, 24) / 24 * 100 + '%';
+    var n = Math.min(currentStatementIndex, TOTAL_STATEMENTS);
+    updateRemainingCount(n);
+    var route = document.getElementById('journey-route');
+    route.classList.remove('moving-forward', 'moving-back');
+    route.innerHTML = '';
+    orderedStatements.slice(n).forEach(function (item, offset) {
+      var station = document.createElement('div');
+      station.className = 'journey-station' + (offset === 0 ? ' current' : '');
+      station.setAttribute('data-question-index', String(n + offset));
+      var theme = document.createElement('span');
+      theme.className = 'journey-theme';
+      theme.textContent = item.domain.name;
+      var node = document.createElement('span');
+      node.className = 'journey-node';
+      node.setAttribute('aria-hidden', 'true');
+      station.appendChild(theme);
+      station.appendChild(node);
+      route.appendChild(station);
+    });
+    document.getElementById('journey-viewport').scrollLeft = 0;
   }
+
   function updateRemainingCount(answeredCount) {
     var n = Math.min(answeredCount, TOTAL_STATEMENTS);
     var questionsLeft = Math.max(TOTAL_STATEMENTS - n, 0);
     var progress = document.getElementById('journey-progress');
-    document.getElementById('questions-left').textContent = String(questionsLeft);
-    document.getElementById('questions-left-copy').textContent = questionsLeft === 1 ? 'statement unanswered' : 'statements unanswered';
+    var count = document.getElementById('questions-left');
+    var copy = document.getElementById('questions-left-copy');
+    count.textContent = questionsLeft ? String(questionsLeft) : 'All';
+    copy.textContent = questionsLeft === 1 ? 'question left' : (questionsLeft ? 'questions left' : 'questions answered');
     progress.setAttribute('aria-valuenow', String(n));
-    progress.setAttribute('aria-valuetext', n + ' of 24 statements answered; ' + questionsLeft + ' unanswered');
+    progress.setAttribute('aria-valuetext', questionsLeft ? questionsLeft + (questionsLeft === 1 ? ' question left' : ' questions left') : 'All questions answered');
   }
 
+  function animateStationDeparture() {
+    var station = document.querySelector('.journey-station.current');
+    if (!station) return;
+    station.classList.add('departing');
+    if (document.documentElement.classList.contains('restrained-research') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var burst = document.createElement('span');
+    burst.className = 'journey-burst';
+    burst.setAttribute('aria-hidden', 'true');
+    for (var i = 0; i < 12; i++) {
+      var fragment = document.createElement('span');
+      fragment.className = 'material-symbols-outlined journey-fragment';
+      fragment.textContent = i % 3 === 0 ? 'flare' : 'circle';
+      fragment.style.setProperty('--angle', (i * 30) + 'deg');
+      fragment.style.setProperty('--distance', (i % 2 === 0 ? 48 : 36) + 'px');
+      fragment.style.fontSize = (i % 3 === 0 ? 18 : 10) + 'px';
+      burst.appendChild(fragment);
+    }
+    station.appendChild(burst);
+    window.clearTimeout(journeyAnimationTimer);
+    journeyAnimationTimer = window.setTimeout(function () { burst.remove(); }, 560);
+  }
+
+  function animateJourneyRoute(direction) {
+    var route = document.getElementById('journey-route');
+    route.classList.remove('moving-forward', 'moving-back');
+    // Force a fresh animation when someone moves rapidly forward, then back.
+    void route.offsetWidth;
+    route.classList.add(direction === 'back' ? 'moving-back' : 'moving-forward');
+  }
   updateProgress();
 
   document.getElementById('back-btn').addEventListener('click', function () {
     window.clearTimeout(autoAdvanceTimer);
-    if (currentStatementIndex === 0) { showScreen('screen-context'); return; }
-    showStatement(currentStatementIndex - 2);
+    if (isLikertTransitioning) return;
+    if (currentStatementIndex === 0) {
+      showScreen('screen-context');
+      return;
+    }
+    var previousStatementIndex = currentStatementIndex - 1;
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      runLikertTransition(previousStatementIndex, null, 'back');
+    } else {
+      showStatement(previousStatementIndex, true);
+    }
   });
+
   document.getElementById('question-continue').addEventListener('click', function () {
-    if (!pairIsAnswered() || currentStatementIndex >= TOTAL_STATEMENTS) return;
     scheduleCheckpointSave();
-    showStatement(currentStatementIndex + 2);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      showStatement(currentStatementIndex + 1, true);
+    } else {
+      runLikertTransition(currentStatementIndex + 1, null, 'forward');
+    }
   });
 
   // ---- submit ----
   document.getElementById('submit-btn').addEventListener('click', function () {
     var btn = this;
-    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
-      showScreen('screen-done');
-      return; // Preview never submits responses or prepares results emails.
-    }
     var trackSubmissionFailure = true;
     btn.disabled = true;
     btn.textContent = 'Submitting…';
@@ -1905,7 +1855,6 @@ Thank you for being a part of it.</div>
 
     var payload = {
       token: token,
-      instrumentVersion: INSTRUMENT_VERSION,
       consent: consent,
       startedAt: startedAt,
       pairResponses: pairResponses,
