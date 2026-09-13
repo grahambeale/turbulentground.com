@@ -675,8 +675,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   #pair-position { font-size: 1.1rem; color: var(--ink-mid); margin: 1rem 0; }
   #pairs-list .pair-item { margin-bottom: 2rem; }
   .journey-viewport { display: none; }
-  .paired-progress-track { height: 4px; width: 100%; background: var(--ink-mid); }
-  .paired-progress-fill { height: 100%; width: 0; background: #b84215; }
+  #screen-pairs .journey-progress { width: 100%; max-width: none; margin: 24px 0; padding: 0; }
+  #screen-pairs .journey-remaining { justify-content: space-between; padding: 0; margin: 10px 0 0; color: var(--ink); font-size: .95rem; }
+  .paired-progress-track { height: 12px; width: 100%; background: #51463b; border-radius: 8px; overflow: hidden; }
+  .paired-progress-fill { height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: #e55b20; transition: transform 360ms ease-out; }
+  @media (prefers-reduced-motion: reduce) { .paired-progress-fill { transition: none; } }
   .statement-context-continue:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
@@ -869,6 +872,10 @@ So thank you for being a part of it.</div>
   <section class="screen" id="screen-pairs">
     <h1>Your experience of the AI shift</h1>
 
+    <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Statements answered" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="0 of 24 statements answered; 24 unanswered">
+      <div class="paired-progress-track" aria-hidden="true"><div class="paired-progress-fill" id="paired-progress-fill"></div></div>
+      <div class="journey-remaining" aria-live="polite"><span><strong id="statements-answered">0</strong> of 24 answered</span><span><strong id="questions-left">24</strong> <span id="questions-left-copy">statements unanswered</span></span></div>
+    </div>
     <h2 id="pair-position" aria-live="polite"></h2>
     <div id="pairs-list"></div>
 
@@ -1050,13 +1057,6 @@ Thank you for being a part of it.</div>
 </script>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
-  <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Survey journey" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="24 questions left">
-    <div class="paired-progress-track" aria-hidden="true"><div class="paired-progress-fill" id="paired-progress-fill"></div></div>
-    <div class="journey-viewport" id="journey-viewport">
-      <div class="journey-route" id="journey-route"></div>
-    </div>
-    <div class="journey-remaining" aria-live="polite"><strong id="questions-left">24</strong><span id="questions-left-copy">questions left</span></div>
-  </div>
   <div class="footer-actions">
     <button class="btn" id="submit-btn" type="button" hidden>Submit</button>
   </div>
@@ -1304,7 +1304,7 @@ Thank you for being a part of it.</div>
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(function (el) { el.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
-    document.getElementById('footer-bar').style.display = (id === 'screen-pairs') ? 'flex' : 'none';
+    document.getElementById('footer-bar').style.display = (id === 'screen-pairs' && currentStatementIndex >= TOTAL_STATEMENTS) ? 'flex' : 'none';
     if (id === 'screen-consent' || id === 'screen-context' || id === 'screen-pairs') {
       trackResearchEvent('Research: Invite Validated');
     }
@@ -1781,6 +1781,7 @@ Thank you for being a part of it.</div>
     document.getElementById('pair-position').textContent = atEnd ? 'All 24 statements answered — optional comment' : 'Pair ' + (currentStatementIndex / 2 + 1) + ' of 12 · ' + orderedStatements[currentStatementIndex].domain.name;
     document.getElementById('journey-progress').hidden = atEnd;
     document.getElementById('footer-bar').classList.toggle('final-step', atEnd);
+    document.getElementById('footer-bar').style.display = atEnd ? 'flex' : 'none';
     updateProgress();
 
     if (!atEnd && rows[currentStatementIndex]) {
@@ -1862,13 +1863,14 @@ Thank you for being a part of it.</div>
   function updateProgress() {
     updateRemainingCount(statementsAnswered);
     var fill = document.getElementById('paired-progress-fill');
-    if (fill) fill.style.width = Math.min(statementsAnswered, 24) / 24 * 100 + '%';
+    if (fill) fill.style.transform = 'scaleX(' + Math.min(statementsAnswered, TOTAL_STATEMENTS) / TOTAL_STATEMENTS + ')';
   }
   function updateRemainingCount(answeredCount) {
     var n = Math.min(answeredCount, TOTAL_STATEMENTS);
     var questionsLeft = Math.max(TOTAL_STATEMENTS - n, 0);
     var progress = document.getElementById('journey-progress');
     document.getElementById('questions-left').textContent = String(questionsLeft);
+    document.getElementById('statements-answered').textContent = String(n);
     document.getElementById('questions-left-copy').textContent = questionsLeft === 1 ? 'statement unanswered' : 'statements unanswered';
     progress.setAttribute('aria-valuenow', String(n));
     progress.setAttribute('aria-valuetext', n + ' of 24 statements answered; ' + questionsLeft + ' unanswered');
