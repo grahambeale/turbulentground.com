@@ -8,6 +8,7 @@
 // historical summaries retain their original interpretation and exact wording.
 
 import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION } from './_research-instruments.js';
+import { BENCHMARK_MIN_COHORT, computeStatementBenchmark, benchmarkProvenance } from './_research-benchmarks.js';
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -20,6 +21,7 @@ const IDENTITY_FIELD = {
   inviteStatus: "fldEhm06lLDvEeF6q",
   consentResults: "fldDQkh2LSSVjacTx",
   resultsSentAt: "fldcGbn19ft4z1OPe",
+  benchmarkProvenance: "fldmEbpMqwAWUWv7l",
 };
 
 const RESPONSE_FIELD = {
@@ -139,6 +141,7 @@ async function listResponsePairs(airtableToken, instrumentVersion) {
     params.append("fields[]", RESPONSE_FIELD.meetsCompletionFloor);
     params.append("fields[]", RESPONSE_FIELD.instrumentVersion);
     params.append("fields[]", RESPONSE_FIELD.completedAt);
+    params.append("fields[]", RESPONSE_FIELD.token);
     if (offset) params.set("offset", offset);
     const response = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${RESPONSES_TABLE_ID}?${params}`,
@@ -146,37 +149,10 @@ async function listResponsePairs(airtableToken, instrumentVersion) {
     );
     if (!response.ok) throw new Error(`Airtable cohort lookup failed: ${await response.text()}`);
     const data = await response.json();
-    for (const record of data.records || []) {
-      if (record.fields[RESPONSE_FIELD.meetsCompletionFloor] !== true ||
-          record.fields[RESPONSE_FIELD.instrumentVersion] !== instrumentVersion ||
-          !record.fields[RESPONSE_FIELD.completedAt]) continue;
-      try { allPairs.push(JSON.parse(record.fields[RESPONSE_FIELD.pairResponsesJson] || "{}")); }
-      catch { /* Exclude unreadable records from the benchmark. */ }
-    }
+    allPairs.push(...(data.records || []));
     offset = data.offset || "";
   } while (offset);
   return allPairs;
-}
-
-// Minimum eligible (Meets Completion Floor) responses before a benchmark
-// mean is considered meaningful enough to show. Raised from 5 to 15 —
-// 5 responses is too few for a mean to be statistically meaningful,
-// independent of anything else.
-const BENCHMARK_MIN_COHORT = 15;
-
-function computeBenchmark(allPairs) {
-  if (allPairs.length < BENCHMARK_MIN_COHORT) return { cohortSize: allPairs.length, domains: null };
-  const domains = {};
-  for (const [key] of DOMAINS) {
-    domains[key] = {};
-    for (const field of ["contribution", "conditions"]) {
-      const values = allPairs.map(pairs => pairs?.[key]?.[field]).filter(value => Number.isInteger(value) && value >= 1 && value <= 5);
-      domains[key][field] = values.length >= BENCHMARK_MIN_COHORT
-        ? { mean: values.reduce((sum, value) => sum + value, 0) / values.length, n: values.length }
-        : null;
-    }
-  }
-  return { cohortSize: allPairs.length, domains };
 }
 
 function benchmarkValue(entry) {
@@ -399,7 +375,7 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
       return `<div style="padding:16px 0;border-bottom:1px solid #3a332d;">
         <p style="${textStyle}margin:0 0 8px;">${escapeHtml(statement.text)}</p>
         <p style="${textStyle}margin:0;"><strong>Your answer: ${displayValue(value)}</strong></p>
-        <p style="font-family:Arial,sans-serif;font-size:13px;color:#9e8e7c;">${entry ? benchmarkValue(entry) : 'No compatible study benchmark yet'}</p>
+        <p style="font-family:Arial,sans-serif;font-size:13px;color:#9e8e7c;">${entry ? `Study comparison: ${entry.mean.toFixed(1)} / 5, based on ${entry.n} completed responses to comparable questions. This describes the invited research sample. Question version: ${escapeHtml(entry.versions?.join(', ') || PAIRED_VERSION)}.` : 'A comparison for this statement is still building. We need at least 15 eligible answers to comparable questions before showing it.'}</p>
         ${comparisonBar(value, entry)}
       </div>`;
     }).join('');
@@ -412,8 +388,9 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
       <p style="${textStyle}">These are your answers to the questionnaire you completed. Each statement is shown separately: pairs explore different aspects of work and are not combined into a contribution, conditions or overall score.</p>
       <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${PAIRED_VERSION}. Results preserve that version's exact questions and meanings.</p>
-      <p style="${textStyle}">${hasBenchmark ? 'The current study benchmark uses eligible completed responses to these same questions. It is a descriptive comparison with the invited sample, not a workforce norm. The benchmark is likely to fluctuate frequently during the early phase of this research.' : 'A compatible comparison benchmark is not available yet. Your summary shows your own answers only.'}</p>
+      <p style="${textStyle}">${hasBenchmark ? 'Available comparisons use completed responses to the same question version. They describe the invited sample and may fluctuate as responses arrive. They are not workforce norms.' : 'Your summary shows your own answers only while comparison groups build. Earlier survey versions are kept separate because question wording, explanatory text and presentation changed.'}</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">The scale runs from 1, strongly disagree, to 5, strongly agree. Not applicable and Prefer not to say remain separate choices. Higher or lower agreement is not automatically better or worse. These self-reported answers do not establish ability, organisational quality or causes.</p>
+      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Comparison policy: ${escapeHtml(benchmark.policyId || 'statement-benchmark-v1-2026-09-14')}. Comparisons are calculated separately for each statement.</p>
       ${sections}
       <p style="${textStyle}">Consider which answers you would like to explore further, and what context might help explain them.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
@@ -536,7 +513,8 @@ export default async function handler(req, res) {
   let pairs;
   try { pairs = JSON.parse(responseRecord.fields[RESPONSE_FIELD.pairResponsesJson] || "{}"); }
   catch { return res.status(502).json({ error: "Could not read your saved responses" }); }
-  const benchmark = computeBenchmark(allPairs);
+  const benchmark = computeStatementBenchmark(allPairs, instrumentVersion);
+  if (instrumentVersion === LEGACY_VERSION && benchmark.cohortSize < BENCHMARK_MIN_COHORT) benchmark.domains = null;
 
   const name = identity.fields[IDENTITY_FIELD.name] || "";
   const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -561,6 +539,7 @@ export default async function handler(req, res) {
   const patchFields = {
     [IDENTITY_FIELD.consentResults]: true,
     [IDENTITY_FIELD.resultsSentAt]: new Date().toISOString(),
+    [IDENTITY_FIELD.benchmarkProvenance]: JSON.stringify(benchmarkProvenance(benchmark)),
   };
   if (suppliedEmail) patchFields[IDENTITY_FIELD.email] = suppliedEmail;
 
