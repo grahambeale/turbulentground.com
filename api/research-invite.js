@@ -9,6 +9,7 @@
 
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import saveResearchFeedback from "../lib/research-feedback.js";
+import saveFeedbackSubmission from "../lib/research-feedback-submission.js";
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -54,6 +55,10 @@ export default async function handler(req, res) {
     data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
   } catch {
     return res.status(400).json({ error: "Invalid JSON" });
+  }
+
+  if (data?.action === "feedback-submission") {
+    return saveFeedbackSubmission(req, res, data);
   }
 
   if (data?.action === "feedback") {
