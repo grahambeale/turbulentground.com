@@ -1,0 +1,16 @@
+{
+  "rationaleVersions": {
+    "phase3-rationale-v1.0-2026-08-28": {
+      "document": "phase3-rationale-v1.0-2026-08-28.md",
+      "sha256": "496ce317323004d5e41205e4f6b86b73edf248130b8b1b9e62f25309c73e5205",
+      "status": "Published baseline"
+    }
+  },
+  "questionVersions": [
+    "phase3-v3-2026-09-08",
+    "phase3-v4-2026-09-13-paired"
+  ],
+  "unreleasedDraftsNotRecorded": [
+    "rationale 1.1"
+  ]
+}

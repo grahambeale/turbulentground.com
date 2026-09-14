@@ -7,12 +7,16 @@ const oldFetch=global.fetch,oldEnv={...process.env};
 process.env.AIRTABLE_RESEARCH_TOKEN='synthetic';process.env.RESEND_API_KEY='synthetic';process.env.RESEND_FROM='test@example.com';
 const pairResponses=Object.fromEntries(Array.from({length:12},(_,i)=>['d'+(i+1),{contribution:4,conditions:2,contribution_context:'Synthetic note'}]));
 const response=()=>({_status:200,status(s){this._status=s;return this;},setHeader(){},json(b){this.body=b;return this;}});
-async function request(handler,version,existingVersion,legacy=false){
-const calls=[];global.fetch=async(url,options={})=>{calls.push({url:String(url),options});let records=[];if(!options.method){if(String(url).includes('tblwpricYYzx4rmiR'))records=[{id:'identity',fields:{fldEhm06lLDvEeF6q:'Sent'}}];else if(existingVersion!==undefined)records=[{id:'response',fields:{fldHJ4KNzMbpzdob6:existingVersion}}];}return {ok:true,json:async()=>({records}),text:async()=>''};};
-const res=response();await handler({method:'POST',body:{token:'synthetic',consent:{takingPart:true},pairResponses,...(!legacy?{instrumentVersion:version}:{})}},res);return {res,writes:calls.filter(c=>c.options.method),calls};}
+async function request(handler,version,existingVersion,legacy=false,rationaleVersion,existingRationale){
+const calls=[];global.fetch=async(url,options={})=>{calls.push({url:String(url),options});let records=[];if(!options.method){if(String(url).includes('tblwpricYYzx4rmiR'))records=[{id:'identity',fields:{fldEhm06lLDvEeF6q:'Sent'}}];else if(existingVersion!==undefined)records=[{id:'response',fields:{fldHJ4KNzMbpzdob6:existingVersion,fldW2IulhhJHIdIjV:existingRationale}}];}return {ok:true,json:async()=>({records}),text:async()=>''};};
+const res=response();await handler({method:'POST',body:{token:'synthetic',consent:{takingPart:true},pairResponses,...(!legacy?{instrumentVersion:version}:{}),...(rationaleVersion!==undefined?{rationaleVersion}:{})}},res);return {res,writes:calls.filter(c=>c.options.method),calls};}
 try {
 for(const handler of [save,submit]){
 let r=await request(handler,v4,undefined);assert.equal(r.res._status,200);const write=r.writes.find(c=>c.url.includes('tblL9mf8VfAmbhuG7'));const body=JSON.parse(write.options.body);assert.equal((body.fields||body.records[0].fields).fldHJ4KNzMbpzdob6,v4);
+assert.equal((body.fields||body.records[0].fields).fldW2IulhhJHIdIjV,'phase3-rationale-v1.0-2026-08-28');
+r=await request(handler,v4,v4,false,'unreleased-rationale');assert.equal(r.res._status,400);assert.equal(r.writes.length,0);
+r=await request(handler,v4,v4,false,undefined,'different-saved-rationale');assert.equal(r.res._status,409);assert.equal(r.writes.length,0);
+r=await request(handler,v4,v4,false,'phase3-rationale-v1.0-2026-08-28','phase3-rationale-v1.0-2026-08-28');assert.equal(r.res._status,200);
 r=await request(handler,v4,v3);assert.equal(r.res._status,409);assert.equal(r.writes.length,0);
 r=await request(handler,v4,null);assert.equal(r.res._status,409);assert.equal(r.writes.length,0);
 r=await request(handler,'unsupported',undefined);assert.equal(r.res._status,400);assert.equal(r.calls.length,0);

@@ -1260,6 +1260,7 @@ Thank you for being a part of it.</div>
   }
 ];
   var INSTRUMENT_VERSION = 'phase3-v4-2026-09-13-paired';
+  var RATIONALE_VERSION = 'phase3-rationale-v1.0-2026-08-28';
 
   // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable', contribution_context?: string, conditions_context?: string }
   // Keys are only ever added once a statement is actually answered/skipped
@@ -1346,6 +1347,7 @@ Thank you for being a part of it.</div>
             window.location.replace('/research/legacy-v3.html?t=' + encodeURIComponent(token));
             return;
           }
+          if (data.savedState.rationaleVersion) RATIONALE_VERSION = data.savedState.rationaleVersion;
           if (data.savedState.instrumentVersion !== INSTRUMENT_VERSION) {
             document.querySelector('#screen-invalid p').textContent = 'Your saved questionnaire uses a different version. Please contact Graham so your existing answers can be preserved.';
             showScreen('screen-invalid');
@@ -1449,7 +1451,8 @@ Thank you for being a part of it.</div>
       context: context,
       pairResponses: pairResponses,
       sectionReached: currentStatementIndex,
-      instrumentVersion: INSTRUMENT_VERSION
+      instrumentVersion: INSTRUMENT_VERSION,
+      rationaleVersion: RATIONALE_VERSION
     };
   }
 
@@ -1908,6 +1911,7 @@ Thank you for being a part of it.</div>
     var payload = {
       token: token,
       instrumentVersion: INSTRUMENT_VERSION,
+      rationaleVersion: RATIONALE_VERSION,
       consent: consent,
       startedAt: startedAt,
       pairResponses: pairResponses,

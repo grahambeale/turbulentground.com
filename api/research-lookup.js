@@ -59,6 +59,7 @@ const INVITE_STATUS_COMPLETED = "Completed";
 
 const RESPONSE_FIELD = {
   instrumentVersion: "fldHJ4KNzMbpzdob6",
+  rationaleVersion: "fldW2IulhhJHIdIjV",
   startedAt: "fldsN6iDwlfMkxamH",
   token: "flduL4PmBEfH9rLpz",
   consentTakingPart: "fldMx0Ta5VNoKJJyU",
@@ -150,6 +151,7 @@ export default async function handler(req, res) {
       try { pairResponses = JSON.parse(f[RESPONSE_FIELD.pairResponsesJson] || "{}"); } catch { /* corrupt/missing, treat as empty */ }
       savedState = {
         instrumentVersion: f[RESPONSE_FIELD.instrumentVersion] || null,
+        rationaleVersion: f[RESPONSE_FIELD.rationaleVersion] || null,
         startedAt: f[RESPONSE_FIELD.startedAt] || null,
         consent: {
           takingPart: f[RESPONSE_FIELD.consentTakingPart] === true,

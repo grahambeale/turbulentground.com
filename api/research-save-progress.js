@@ -94,12 +94,15 @@ const FIELD = {
   teamResponsibility: "fldP3feAS0fMX9w5N",
   orgSize: "fldNrxY2Jm8OOcBFm",
   instrumentVersion: "fldHJ4KNzMbpzdob6",
+  rationaleVersion: "fldW2IulhhJHIdIjV",
 };
 
 // Legacy clients omit version; their answers retain the legacy instrument.
 const LEGACY_VERSION = "phase3-v3-2026-09-08";
 const INSTRUMENT_VERSION = "phase3-v4-2026-09-13-paired";
 const SUPPORTED_VERSIONS = new Set([LEGACY_VERSION, INSTRUMENT_VERSION]);
+// Published rationale baseline; approved unpublished drafts never stamp responses.
+const RATIONALE_VERSION = "phase3-rationale-v1.0-2026-08-28";
 
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
@@ -176,6 +179,10 @@ export default async function handler(req, res) {
   if (!SUPPORTED_VERSIONS.has(requestedVersion)) {
     return res.status(400).json({ error: "Unsupported questionnaire version. Please reopen your invite." });
   }
+  const requestedRationale = data.rationaleVersion === undefined ? RATIONALE_VERSION : data.rationaleVersion;
+  if (requestedRationale !== RATIONALE_VERSION) {
+    return res.status(400).json({ error: "Unsupported research rationale version. Please reopen your invite." });
+  }
   const airtableToken = process.env.AIRTABLE_RESEARCH_TOKEN;
   if (!airtableToken) {
     console.error("Missing AIRTABLE_RESEARCH_TOKEN");
@@ -207,6 +214,7 @@ export default async function handler(req, res) {
     [FIELD.consentQuoteName]: consent.quoteByName === true,
     [FIELD.pairResponsesJson]: JSON.stringify(pairResponses),
     [FIELD.instrumentVersion]: requestedVersion,
+    [FIELD.rationaleVersion]: requestedRationale,
   };
   if (typeof context.role === "string" && context.role) fields[FIELD.role] = context.role;
   if (typeof context.discipline === "string" && context.discipline) fields[FIELD.discipline] = context.discipline;
@@ -219,6 +227,9 @@ export default async function handler(req, res) {
     const existingResponse = await findResponseRecord(token, airtableToken);
     if (existingResponse && existingResponse.fields[FIELD.instrumentVersion] !== requestedVersion) {
       return res.status(409).json({ error: "Your saved answers use a different questionnaire version. Reopen your invite before continuing." });
+    }
+    if (existingResponse && existingResponse.fields[FIELD.rationaleVersion] && existingResponse.fields[FIELD.rationaleVersion] !== requestedRationale) {
+      return res.status(409).json({ error: "Your saved answers use a different research rationale version. Please contact Graham so they can be preserved." });
     }
 
     if (existingResponse) {
