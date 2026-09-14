@@ -12,7 +12,7 @@ b=computeStatementBenchmark(make(15),v4,'2026-09-14T12:00:00Z');assert.equal(b.d
 const fourteen=make(14),skip={fields:fields('skip',v4,{d1:{contribution:'skip',conditions:2}})};
 b=computeStatementBenchmark([...fourteen,skip],v4);assert.equal(b.domains.d1.contribution,null);assert.equal(b.domains.d1.conditions.n,15);
 const html=buildEmailHtml('',{d1:{contribution:3,conditions:4}},b,'synthetic-preview',v4);
-assert(html.includes('Study comparison: 2.0 / 5, based on 15'));assert(html.includes('still building'));assert(!html.includes('Above benchmark'));assert(!html.includes('benchmarkMean'));
+assert(html.includes('Benchmark: 2.0 / 5'));assert(html.includes('We do not have a benchmark for this score yet.'));assert(!html.includes('Above benchmark'));assert(!html.includes('benchmarkMean'));
 for(const value of ['not_applicable',0,6,3.5,'4',null]){
   b=computeStatementBenchmark([...fourteen,{fields:fields('invalid',v4,{d1:{contribution:value}})}],v4);
   assert.equal(b.domains.d1.contribution,null);

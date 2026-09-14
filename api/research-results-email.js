@@ -375,8 +375,8 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
       return `<div style="padding:16px 0;border-bottom:1px solid #3a332d;">
         <p style="${textStyle}margin:0 0 8px;">${escapeHtml(statement.text)}</p>
         <p style="${textStyle}margin:0;"><strong>Your answer: ${displayValue(value)}</strong></p>
-        <p style="font-family:Arial,sans-serif;font-size:13px;color:#9e8e7c;">${entry ? `Study comparison: ${entry.mean.toFixed(1)} / 5, based on ${entry.n} completed responses to comparable questions. This describes the invited research sample. Question version: ${escapeHtml(entry.versions?.join(', ') || PAIRED_VERSION)}.` : 'A comparison for this statement is still building. We need at least 15 eligible answers to comparable questions before showing it.'}</p>
         ${comparisonBar(value, entry)}
+        <p style="font-family:Arial,sans-serif;font-size:13px;color:#9e8e7c;margin:8px 0 0;">${entry ? `Benchmark: ${entry.mean.toFixed(1)} / 5` : 'We do not have a benchmark for this score yet.'}</p>
       </div>`;
     }).join('');
     return `<section><h2 style="margin:28px 0 4px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">${escapeHtml(domain.name)}</h2>${rows}</section>`;
@@ -390,7 +390,7 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
       <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${PAIRED_VERSION}. Results preserve that version's exact questions and meanings.</p>
       <p style="${textStyle}">${hasBenchmark ? 'Available comparisons use completed responses to the same question version. They describe the invited sample and may fluctuate as responses arrive. They are not workforce norms.' : 'Your summary shows your own answers only while comparison groups build. Earlier survey versions are kept separate because question wording, explanatory text and presentation changed.'}</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">The scale runs from 1, strongly disagree, to 5, strongly agree. Not applicable and Prefer not to say remain separate choices. Higher or lower agreement is not automatically better or worse. These self-reported answers do not establish ability, organisational quality or causes.</p>
-      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Comparison policy: ${escapeHtml(benchmark.policyId || 'statement-benchmark-v1-2026-09-14')}. Comparisons are calculated separately for each statement.</p>
+      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Comparisons are calculated separately for each statement from at least 15 eligible answers to the same question version.</p>
       ${sections}
       <p style="${textStyle}">Consider which answers you would like to explore further, and what context might help explain them.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
