@@ -1,0 +1,10 @@
+{
+  "revision": 1,
+  "status": "Awaiting Graham review",
+  "files": {
+    "evidence-snapshot.md": "f514fb551803b9b874a6ab7d7325a89a3ab7d3b7ec1e59ec7f69c16b172bf625",
+    "proposal.md": "7d3f0571d5a08832fb84954334f7568d1895e7d7d23f09461b975170960bfa8e",
+    "specs/clarify-study-purpose/spec.md": "cb6dbd6baac8f0ea3e419659d29163eae9e224d0513ad6a6a0fa5487f52b6fee",
+    "review.md": "fcc9e9401fc004d4fd439554538676e18083adb5b5ed2191a11a22c391fe4e07"
+  }
+}

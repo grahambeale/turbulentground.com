@@ -1,0 +1,7 @@
+# Progress review amendment — 13 September 2026
+
+Graham's live Review notes request the prominent top progress placement from the initial unstyled prototype and smoother animation. Graham's decision is Approved with changes; Release decision is Changes requested. Source is FB-20260911-TEVOGK and main task handoff. Original Review notes remain unchanged in Airtable.
+
+Implemented on 3343293bda0415786f02a8281958e3a0b4d92e7f: progress placed above pair heading, 12px orange fill, clearer answered/unanswered counts, 360ms transform animation, immediate reduced-motion update, and no empty bottom progress band. Back stays below question content. Final optional comment hides scored-question progress and exposes Submit. Answer counts remain based on actual independent answers when navigating Back.
+
+Verification: complete synthetic browser journey, all 24 exact statements, individual context, partial resume, v3 redirect, unknown-version protection and final comment passed. A focused browser test observed intermediate animation values increasing smoothly and settling at the correct answer fraction, unchanged scroll position and track width when context opened, forward/back counts, 320px reflow and zero-duration reduced motion. Version-specific results/API guards, answer context and analytics regressions passed. No real responses or emails sent. Production unchanged; new exact-commit release review required.

@@ -1,0 +1,10 @@
+{
+  "revision": 1,
+  "status": "Decided in Airtable (see review.md current-state note); manifest refreshed 15 September 2026 to match a documentation-only current-state addition to review.md. Recorded decision unchanged.",
+  "files": {
+    "evidence-snapshot.md": "92d4b7a932cd653ee2ba7c24f53074613984e997c3adf4a82b73ec010f057da5",
+    "proposal.md": "ea308d45916618e2875f6902dee9974284ff0037535828c05fed7a35a17c8005",
+    "specs/investigate-ai-accountability/spec.md": "cf2496cd0a29abb1074386b2d6fdcee6cec0424aa539670615746b7cb30b83be",
+    "review.md": "7b2548bb31951e2bf30fdfd27e6ec27e9fcfdb35254259f4fc8c1cf26a6a8a0b"
+  }
+}

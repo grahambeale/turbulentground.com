@@ -1,0 +1,10 @@
+{
+  "revision": 1,
+  "feedback_id": "FB-20260914-BENCH",
+  "airtable_record_id": "recyaIgIRHGPyDqlc",
+  "decision": "Approved",
+  "source": "Authenticated live Airtable read plus direct Graham message approved",
+  "packet_sha256": "7255e4f0bbb78a8f007c87850a7948a7cda86accffabd72a3fc99aa8d7a7c214",
+  "review_notes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "Audit and preview; no cross-version equivalence inferred; release requires exact new commit approval"
+}

@@ -1,0 +1,19 @@
+{
+  "type": "sanitisation-amendment-approval",
+  "amendment": "sanitisation-amendment.md",
+  "supersedes_revision_scope": false,
+  "decision": "Approved",
+  "source": "Direct Graham message in this task",
+  "instruction": "I approve the sanitisation amendment to automate-product-feedback dated 15 September 2026: the reworded Gmail-account wording in evidence-snapshot.md, proposal.md, specs/automate-product-feedback/spec.md and review.md, and the fallback-identifier change in gmail-intake.mjs. This does not change the policy, scope or requirements I approved in revision 2.",
+  "observed_at": "2026-09-15",
+  "files": {
+    "evidence-snapshot.md": "25286a794ea41a78fc2899c11d900a0b32e4ce1e945eff9d49c3b95887e15ded",
+    "proposal.md": "5c40c5a831af1d5236dfd10e793c558a4e4f62d518ad6fe5b956769213399f93",
+    "specs/automate-product-feedback/spec.md": "6ae0a8547030189d253ee4209f732b18f044d73c72c0877e4f8371232e32d87a",
+    "review.md": "3ea0fbe42450433dcc59c054e1845a175247d93d4302bd90607b9474fb6e0f7b"
+  },
+  "code_files": {
+    "agent-preview/gmail-intake.mjs": "f1e711bc57797c53882c4299e6e86732e0a7c244aa9903c217d95437f21d5f7e"
+  },
+  "note": "This record approves only the sanitisation amendment described in sanitisation-amendment.md (wording correction and fallback-identifier change). It does not reopen, replace or reinterpret the original revision-2 policy approval preserved unchanged in approved-revision-2.json. productionApproved remains false; no release, Gmail activation or send behaviour is authorised by this record."
+}

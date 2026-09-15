@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "approver": "Graham Beale",
+  "approved_at": "2026-09-12T23:02:58Z",
+  "decision_quote": "Approved",
+  "decision_source": "Authenticated Airtable connector read of recXsGlAyZTEvogkV; timestamp records verification, not unknown edit time. Graham explicitly authorised direct connector verification in this task.",
+  "review_answers": "Other metaphors allowed; compare minimal copy and structural options; consider paired statements on one screen; Graham comprehension review sufficient.",
+  "revision": 2,
+  "packet_sha256": "308221ecb0ce3923c95efe0f34c9cd86660618e3f528b2e7a551d426c238c5ec",
+  "airtable_review_notes_sha256": "e1574d0d9df6ac1562f138d81fa5d660da54008146b1f03a6d0d901763dee31b"
+}

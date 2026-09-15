@@ -1,0 +1,14 @@
+{
+  "revision": 1,
+  "decision": "Approved",
+  "source": "Direct Graham user message in this task",
+  "observedAt": "2026-09-13T21:15:06.080687+00:00",
+  "instruction": "I approve automate-product-feedback revision 1, including the private Feedback submissions table. Proceed with a preview only\u2014not production.",
+  "files": {
+    "evidence-snapshot.md": "55fe26ba90292c8155b28a99185091c4dcf7cb8467120a42f44d2e812528abe0",
+    "proposal.md": "d481c70ed0d27d3c3a3bcdbaf6677eebe3c4d480c861462a76fbe66e2c7d2926",
+    "specs/automate-product-feedback/spec.md": "86e1f9381bc93aeb840ef5f5cd02bebf55b371b73474d4e4af001667ec9f73eb",
+    "review.md": "058027d44747f0cfdcb70a64cd81834ae495bddd101b3f8cdc91ebb9992703cb"
+  },
+  "productionApproved": false
+}

@@ -1,0 +1,52 @@
+name: research-spec-first
+version: 1
+description: Evidence-led product specification with Graham approval before design
+
+artifacts:
+  - id: evidence
+    generates: evidence-snapshot.md
+    description: Evidence and current-state snapshot
+    template: evidence.md
+    instruction: Preserve provenance, uncertainty, contrary evidence and current implementation facts.
+    requires: []
+  - id: proposal
+    generates: proposal.md
+    description: Problem and desired outcome
+    template: proposal.md
+    instruction: Separate evidence from interpretation and do not select a design.
+    requires: [evidence]
+  - id: specs
+    generates: "specs/**/*.md"
+    description: Observable product requirements
+    template: specs.md
+    instruction: Define requirements, constraints, assumptions, unknowns, non-goals and acceptance criteria.
+    requires: [proposal]
+  - id: review
+    generates: review.md
+    description: Graham's specification review packet
+    template: review.md
+    instruction: Present the exact decisions Graham must approve or redirect before design.
+    requires: [specs]
+  - id: approval
+    generates: approval.json
+    description: Explicit human approval record
+    template: approval.md
+    instruction: Never generate approval speculatively. Transcribe only Graham's explicit decision on the current packet.
+    requires: [review]
+  - id: design
+    generates: design.md
+    description: Post-approval design options and rationale
+    template: design.md
+    instruction: Run check-gate.py first. Stop unless G1 passes and the decision source is verified.
+    requires: [approval]
+  - id: tasks
+    generates: tasks.md
+    description: Post-design implementation checklist
+    template: tasks.md
+    instruction: Preserve the separate implementation and release gates in research/agent-workflow.md.
+    requires: [design]
+
+apply:
+  requires: [approval, tasks]
+  tracks: tasks.md
+  instruction: Run check-gate.py, verify Graham's decision source, then follow the research implementation and release workflow.

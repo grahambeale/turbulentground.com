@@ -1,0 +1,11 @@
+# Receiving and retention design — 13 September 2026
+
+Graham says feedback@turbulentground.com is hosted in iCloud. Receiving is not yet tested. Apple documents automatic forwarding for custom-domain addresses: https://support.apple.com/en-gb/guide/icloud/mm6b1a3960/icloud
+
+Proposed integration: keep the participant-facing address in iCloud and use a rule limited to that recipient to forward to a dedicated authenticated inbound receiver. Do not forward Graham's entire inbox. The receiving provider, forwarding destination, webhook verification and receipt sender must be configured and tested before activation. No mailbox configuration or forwarding has been changed.
+
+Graham proposes deleting original feedback after six months while retaining a synthesised problem. Use six calendar months from receipt as the proposed expiry (with month-end handling), not six months from a later triage or update. Before expiry, store a reviewed synthesis with identifying details removed; synthesis alone is not anonymisation. Remove names, employers, roles/context combinations, contact details, identifying quotations, attachments and source metadata that could identify someone. Retain the issue ID, general stage/version, problem, uncertainty and resolution where safe; mark original evidence expired so future agents cannot claim it is still auditable.
+
+Deletion covers original message and contact fields, exact excerpts in child tickets, quoted text embedded in agent assessments/proposals/review notes or checkpoints, copied attachments and provider/inbox copies under the agreed policy. Never simply blank the source while retaining verbatim child excerpts. Define provider retention, Airtable history/trash/backups and exported copies explicitly; application field clearing cannot promise erasure of all service history. Keep source IDs only where they cannot be used to reconnect to a person; otherwise replace with a non-identifying provenance marker.
+
+This retention design changes the original preserve-source gate after expiry and needs inclusion in a revised production specification and participant-facing notice. No automatic deletion or live ingestion is enabled yet. Do not delete existing research answers or apply this policy retrospectively to unrelated study records.

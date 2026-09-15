@@ -1,0 +1,16 @@
+{
+  "revision": 2,
+  "source": "Direct Graham message approve those after listing revision 2 outstanding",
+  "observedDate": "2026-09-14",
+  "decision": "Approved",
+  "scope": "Gmail-scoped intake and six-month source-retention implementation/preview; production and participant sends remain separate",
+  "files": {
+    "evidence-snapshot.md": "59751c4b94bb940631088725c14d7f47642b8f2a3468f8b2bae92f3e74f484f1",
+    "proposal.md": "8272b04fadec066c503344a781219ae33d9f9630e99c739fb0722f54249ebc8f",
+    "specs/automate-product-feedback/spec.md": "9789c4c7ec8f8350f744b1e59f54291c10149c7ff94d9d9417474d37cdd7a68c",
+    "review.md": "431d84203733d4e0c59ac591c0ab77ca481d705e4305e73f514a7b94d28187d1"
+  },
+  "deliveryVerified": false,
+  "emailActivated": false,
+  "retentionExecutionEnabled": false
+}

@@ -1,0 +1,11 @@
+{
+  "revision": 2,
+  "feedback_id": "FB-20260911-TEVOGK",
+  "airtable_record_id": "recXsGlAyZTEvogkV",
+  "files": {
+    "evidence-snapshot.md": "aa3cf7bb6240ce2c1153303db6daac1ee4c179e01e101cc385a98a9c1cc32f7d",
+    "proposal.md": "b28570cb69e660da27562aa0f57ddc3ce18d3c0278a6aad86a3f7d2e32dd6eda",
+    "specs/survey-journey-orientation/spec.md": "929b42521e2bf0cf2377696b9fd734defe62f124204210f62835f3e56fab97fa",
+    "review.md": "21dbfdc117448f15f42c79807d3235b92ebda61767506ac4c33f7bb411e78601"
+  }
+}

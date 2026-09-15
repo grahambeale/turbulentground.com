@@ -1,0 +1,1 @@
+Released approved purpose changes after direct Graham approve those, 14 September 2026. Applied reviewed changes onto current production; exact final commit 5db38fe254dafb663470eab0a01846aac3d678c9, deployment dpl_HmS8KnjYrv9nLJgJw8htCeTvbcLC READY. Canonical live purpose paragraph verified, paired question copy preserved, consent regression passed.

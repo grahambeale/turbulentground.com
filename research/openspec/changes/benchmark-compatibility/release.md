@@ -1,0 +1,3 @@
+# Production release — 14 September 2026
+
+Graham directly instructed “release and commit” after reviewing the amended preview. Released exact reviewed commit 917f80a7dbf461dd239d7883a96df44e6547cf38 to main. Deployment dpl_9ctWhZThv3VxqCExiFimhWZXAGGX READY at that SHA. Production synthetic preview verified desktop/mobile all three states, below-bar labels and no page errors/overflow. Production results-email route returned expected HTTP 400 Missing token; full email send/provenance calculation verified with synthetic mocks beforehand. No real emails sent for verification. Airtable FB-20260914-BENCH marked Shipped, Release Approved. Current benchmark availability still depends on 15 eligible numeric observations per statement; no cross-version pooling enabled.

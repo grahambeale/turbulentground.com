@@ -1,0 +1,82 @@
+# Preserve useful benchmarking across question revisions — revision 1
+
+Feedback: FB-20260914-BENCH. State: specification awaiting Graham's decision.
+
+## Evidence
+
+Graham reports that benchmarking is unavailable and requested a compatibility review. Released commit 5f2521a uses exact question-version matching, completed responses meeting the completion floor, and at least 15 numeric responses per displayed statement. The current paired results omit comparisons below that floor. Metadata inspection on 14 September 2026 found 15 eligible completions across 16 records: V1 6, V2 6, V3 2 (plus 1 incomplete record), V4 1. These are metadata counts, not numeric statement counts or deduplicated participant counts.
+
+The worksheet compares all 24 statements. Eight have exactly identical V3/V4 text. Final V2 wording matches frozen V3 wording, but V2 itself changed through commits 6b9e193, fe881ba and 62a4086. V1 wording is a snapshot at fc8b36b, not contemporaneous response-level evidence. Archived question text alone cannot prove which presentation a respondent saw.
+
+## Interpretation
+
+Question-version separation protects against silently combining different questions. It also discards potentially reusable statement-level evidence. Similar wording, a shared domain name, a shared storage field or a reconstructed rationale label does not establish equivalence. Exact wording is only a candidate: help text, scale, order, presentation and within-version edits can affect interpretation. See the Census Bureau questionnaire guidelines: https://www2.census.gov/adrm/CBSM/rsm2007-42.pdf . This is a project judgement requiring review, not empirical validation.
+
+## Desired outcome
+
+Give participants a useful, transparent descriptive comparison wherever adequate compatible evidence exists, and explain clearly where it does not.
+
+## Requirements
+
+1. Introduce a separately versioned, explicitly approved compatibility policy keyed by question version, domain and storage field. Default to separate groups. Do not enable the draft compatibility.json as runtime configuration.
+2. Initially consider only exact-text candidates. Review the complete scale, help, question order and presentation history before enabling a candidate. Historical versions with unresolved within-version meaning changes remain excluded for the affected statement. Unknown versions fail closed.
+3. Changed statements remain V4-only unless a later reviewed study supports equivalence. No approximate text matching or AI-generated equivalence at runtime.
+4. Keep the existing minimum of 15 eligible numeric observations per statement. Count only completed, completion-floor-qualified records; exclude skips, not-applicable values, invalid values and incomplete responses. Deduplicate repeated records using approved privacy-safe linkage without exporting identities. Count recomputed eligible observations, not total records.
+5. Calculate and display comparisons independently per statement. Show the contributing count and included question versions only when a benchmark is available. Treat the mean as a descriptive invited-sample comparison; it is not a workforce norm or a validated population estimate.
+6. Keep the participant's own answers and exact completed-question wording visible. Explain that some revised statements are building a new comparison group. Where evidence is unavailable, show a reason instead of a numeric comparison or implied deficit in the participant.
+7. Do not average heterogeneous statement cohorts into an overall benchmark, lens difference or ranking. Any future composite comparison needs its own approved definition. This revision authorises statement comparisons only.
+8. Store the compatibility-policy identifier and computation timestamp with newly generated results metadata, so results can be reproduced with the matching rule. Do not alter response question/rationale labels or original scores.
+9. Historical emails remain unchanged. This scope does not send replacement emails or participant invitations. Any later refresh or recontact requires explicit scope and consent checks.
+
+## Exact proposed results wording
+
+Available: "Study comparison: {mean} / 5, based on {n} completed responses to comparable questions. This describes the invited research sample."
+
+Insufficient evidence: "A comparison for this statement is still building. We need at least 15 eligible answers to comparable questions before showing it."
+
+Changed question: "This statement changed in the updated survey. Earlier answers are kept separate while its comparison group builds."
+
+## Constraints
+
+No threshold reduction, no question or scoring changes, no contacts/answers in repository artifacts, no individual-level cohort disclosures in participant results, and no broad historic pooling based on reconstructed rationale metadata. Preserve consent, save-and-return, privacy commitments and accessibility. Fifteen is the existing project display rule, not a universal guarantee of statistical validity. Any policy change requires its own reviewed revision.
+
+## Assumptions
+
+Some unchanged statements may be reusable after context review. The current completion count is an upper bound: numeric completeness and deduplication can reduce it. An approved compatibility map may improve future availability without restoring every benchmark immediately.
+
+## Unknowns
+
+Which V1/V2 wording variants were actually delivered? Did within-version deployment, explanation or order changes affect each candidate? Are completed records unique people? How many numeric eligible observations exist per approved statement? No answer payloads or identities were inspected in this specification run. Aggregate statement availability is a post-approval analysis, not a claim in this draft.
+
+## Non-goals
+
+Pooling changed constructs, lowering the threshold, external reference norms, overall scoring, automatic approval, live implementation, releasing a preview, or sending participant messages.
+
+## Acceptance criteria
+
+- Graham approves the exact packet and statement mapping before design or implementation.
+- Every enabled cross-version group has a reviewed provenance/context rationale and an immutable policy identifier; unresolved entries remain separate.
+- Synthetic boundary tests demonstrate 14 versus 15 observations, statement-level skips, incomplete/invalid/unknown versions, changed-item isolation, duplicate exclusion, partial comparisons, and exact historical wording preservation.
+- Full affected results-email generation is tested with synthetic data; no real email is sent for verification.
+- Metadata counts are reconciled, followed by authorised aggregate availability analysis without copying participant answers into artifacts.
+- A preview shows available and unavailable comparison states and their explanations. Graham separately approves release of the reviewed commit.
+
+## Graham's review gate
+
+Read Proposed solution in the Airtable ticket. Enter amendments in Review notes. Approve **benchmark compatibility revision 1** only if you accept the conservative statement-level policy, the unchanged 15-observation floor and the exclusion of uncertain/changed statements. Otherwise redirect, defer, merge or reject. Material amendments create a new revision for review. Approval proceeds to the scoped audit and preview; production release remains a separate decision. Upstream DEFER/MERGE preserves original evidence and never activates work automatically.
+
+## ADDED Requirements
+
+### Requirement: Explicit compatibility approval
+The system SHALL keep cross-version pooling disabled until Graham approves the exact compatibility packet.
+
+#### Scenario: A candidate has not been approved
+- **WHEN** identical text is detected across question versions
+- **THEN** it remains a review candidate and no participant benchmark changes.
+
+### Requirement: Statement-level eligibility
+The system SHALL show each comparison only when its approved compatible group meets the existing 15-numeric-observation floor.
+
+#### Scenario: One statement lacks adequate compatible evidence
+- **WHEN** other statements have enough eligible observations
+- **THEN** only the eligible statements receive numeric comparisons and the remaining statements explain their unavailable state.

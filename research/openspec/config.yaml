@@ -1,0 +1,28 @@
+schema: research-spec-first
+
+context: |
+  Turbulent Ground invite-only research project.
+  Airtable Research Project Feedback is the evidence and approval queue.
+  Keep participant data and verbatim free text out of repository artifacts.
+  Graham decides whether a specification advances to design or returns to the queue.
+  ACT permits specification drafting only. It does not authorise a prototype.
+  research/agent-workflow.md controls later implementation and release.
+
+rules:
+  evidence:
+    - Preserve Airtable record IDs, provenance, status and uncertainty without copying participant free text.
+  proposal:
+    - Separate the observed problem from interpretation and proposed solution.
+  specs:
+    - State desired outcome, requirements, constraints, assumptions, unknowns, non-goals and acceptance criteria.
+  review:
+    - Ask Graham to approve, redirect, defer, merge or reject the exact packet.
+  approval:
+    - Never generate approval. Transcribe only an explicit Graham decision with source and packet digest.
+  design:
+    - Run check-gate.py and verify the human decision source before any design or prototype work.
+
+operations:
+  apply:
+    guidance:
+      - Run check-gate.py first and follow research/agent-workflow.md implementation and release gates.
