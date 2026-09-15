@@ -1,0 +1,14 @@
+{
+  "revision": 1,
+  "feedback_id": "FB-20260914-BENCH",
+  "schema": "research-spec-first",
+  "approval_state": "Pending",
+  "packet_sha256": "7255e4f0bbb78a8f007c87850a7948a7cda86accffabd72a3fc99aa8d7a7c214",
+  "files": {
+    "spec.md": "2bb1e0638f427b1a527d85fef448b2d541849a6fc03519c645d03aa126705d7a",
+    "compatibility.md": "d4676786e9c0ff1cbda58175db1fa5587a43668adcdf74212a8d8c91120fe24b",
+    "compatibility.json": "bede84314a9a93a16aa8cdb5fc3ffc6ee4eb2ca4f86c05d16ef3284bcaa8826e",
+    "evidence-snapshot.json": "f80883a2e089d0449bb2f43c61f7238d3ef02dc7b6af2df8ad04e7e2691c09fe"
+  },
+  "airtable_record_id": "recyaIgIRHGPyDqlc"
+}

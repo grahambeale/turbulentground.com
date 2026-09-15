@@ -1,0 +1,5 @@
+# Approved audit and implementation preview
+
+Commit 0d0c7515acc311b766034a8f262653c63f10d60b, branch codex/benchmark-compatibility. No cross-version group passed the context audit; all remain disabled. Changes explain the benchmark gap, deduplicate completions, preserve the statement threshold and add newly generated results provenance. Private Identity field Results Benchmark Provenance (fldmEbpMqwAWUWv7l) created; historical records untouched. No participant email sent. Release awaits the exact new preview commit decision, separately from specification approval.
+
+Calculation, partial comparison, threshold boundary, duplicate/unknown-version exclusion, results-email mock send/audit persistence and save/consent/context regressions passed. Desktop/mobile browser verified all synthetic states with no page errors or horizontal overflow. Synthetic static preview built with the real results renderer; final hosted desktop/mobile verification passed for all three scenarios. Deployment dpl_8d665cmgShnAjNYt3vRU67jUNGhz READY.

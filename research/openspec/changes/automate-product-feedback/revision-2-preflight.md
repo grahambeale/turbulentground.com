@@ -1,0 +1,3 @@
+# Approved revision 2 preflight — 14 September 2026
+
+Direct Graham approval recorded separately in approved-revision-2.json; historical revision 1 preserved. Connected Gmail account confirmed. Scoped recipient search returned zero messages; mirrored delivery and header preservation are unverified. Synthetic normalisation and six-month retention planner tests pass. Planner performs no writes/deletion and requires reviewed non-identifying synthesis plus confirmed provider-copy/history policy before a plan can be release-reviewed. Gmail intake, acknowledgements and deletion remain disabled. Next required evidence: a test reply addressed to feedback@turbulentground.com visible in connected Gmail. No email sent or deleted by this run.

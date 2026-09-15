@@ -1,0 +1,222 @@
+{
+  "revision": 1,
+  "runtimeEnabled": false,
+  "items": [
+    {
+      "domain": "d1",
+      "field": "contribution",
+      "v1Snapshot": "When AI and I disagree, I rely on my own judgement.",
+      "v2FinalAndV3": "When AI and I disagree, I rely on my own judgement.",
+      "v4": "When AI and I disagree, I rely on my own judgement.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d1",
+      "field": "conditions",
+      "v1Snapshot": "I can recognise when an AI suggestion is wrong.",
+      "v2FinalAndV3": "I can recognise when AI output is wrong.",
+      "v4": "I can recognise when AI output is wrong.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d2",
+      "field": "conditions",
+      "v1Snapshot": "When AI saves me time, I can use it to improve my work.",
+      "v2FinalAndV3": "When AI saves me time, I can use that time to improve my work.",
+      "v4": "When AI saves me time, I use that time to improve my work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d2",
+      "field": "contribution",
+      "v1Snapshot": "I keep some of the time AI saves me free from new tasks.",
+      "v2FinalAndV3": "I can use some of the time AI saves me for myself, rather than taking on more work.",
+      "v4": "When AI saves me time, I keep some of that time free from work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d3",
+      "field": "contribution",
+      "v1Snapshot": "I talk to colleagues directly instead of relying on AI summaries.",
+      "v2FinalAndV3": "I talk to colleagues directly instead of relying on AI summaries of their work.",
+      "v4": "I speak directly with colleagues about their work, even when AI summaries are available.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d3",
+      "field": "conditions",
+      "v1Snapshot": "My colleagues speak with me instead of relying on AI summaries.",
+      "v2FinalAndV3": "My colleagues speak with me directly instead of relying on AI summaries of my work.",
+      "v4": "My colleagues speak directly with me about my work, even when AI summaries are available.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d4",
+      "field": "conditions",
+      "v1Snapshot": "My organisation allows enough time to check AI-assisted work.",
+      "v2FinalAndV3": "My organisation allows enough time to check the quality of AI-assisted work.",
+      "v4": "My organisation allows enough time to check the quality of my AI-assisted work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d4",
+      "field": "contribution",
+      "v1Snapshot": "I check AI-assisted work as carefully as work I do without AI.",
+      "v2FinalAndV3": "I check AI-assisted work as carefully as my other work.",
+      "v4": "I check AI-assisted work as carefully as work I do without AI.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d5",
+      "field": "contribution",
+      "v1Snapshot": "I'm comfortable explaining how I use AI at work.",
+      "v2FinalAndV3": "I'm comfortable explaining how I use AI at work.",
+      "v4": "I can decide when to use AI in my work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d5",
+      "field": "conditions",
+      "v1Snapshot": "I can use AI without close day-to-day monitoring.",
+      "v2FinalAndV3": "My organisation trusts me to decide when to rely on AI output.",
+      "v4": "My organisation gives me discretion over whether to rely on AI output.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d6",
+      "field": "conditions",
+      "v1Snapshot": "I have opportunities at work to build skills AI cannot replace.",
+      "v2FinalAndV3": "I have opportunities at work to build skills that will remain useful as AI changes my work.",
+      "v4": "I have opportunities at work to develop skills that I expect to remain useful as AI changes my work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d6",
+      "field": "contribution",
+      "v1Snapshot": "I actively develop skills AI cannot replace.",
+      "v2FinalAndV3": "I actively develop skills that will remain useful as AI changes my work.",
+      "v4": "I actively develop skills that I expect to remain useful as AI changes my work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d7",
+      "field": "contribution",
+      "v1Snapshot": "I trust my colleagues to decide when to rely on AI.",
+      "v2FinalAndV3": "I trust my colleagues to decide when to rely on AI.",
+      "v4": "I trust my colleagues’ judgement when they use AI.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d7",
+      "field": "conditions",
+      "v1Snapshot": "I'm trusted to decide when to rely on AI output.",
+      "v2FinalAndV3": "I'm trusted to decide when to rely on AI output.",
+      "v4": "My colleagues trust my judgement when I use AI.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d8",
+      "field": "contribution",
+      "v1Snapshot": "I give colleagues full credit when AI helps them work faster.",
+      "v2FinalAndV3": "I give colleagues full credit when AI helps them work faster.",
+      "v4": "I recognise the judgement my colleagues contribute to AI-assisted work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d8",
+      "field": "conditions",
+      "v1Snapshot": "I receive credit for the judgement I add to AI-assisted work.",
+      "v2FinalAndV3": "I receive credit for the judgement I add to AI-assisted work.",
+      "v4": "My colleagues recognise the judgement I contribute to AI-assisted work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d9",
+      "field": "contribution",
+      "v1Snapshot": "As AI changes my tasks, I seek out meaningful work.",
+      "v2FinalAndV3": "As AI changes my tasks, I look for new ways to make my work meaningful.",
+      "v4": "As AI changes my tasks, I look for new ways to make my work meaningful.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d9",
+      "field": "conditions",
+      "v1Snapshot": "The work I do alongside AI feels meaningful.",
+      "v2FinalAndV3": "The work I do alongside AI feels meaningful.",
+      "v4": "The work I do alongside AI feels meaningful.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d10",
+      "field": "conditions",
+      "v1Snapshot": "The pace expected of me when using AI is sustainable.",
+      "v2FinalAndV3": "The pace expected of me when using AI is sustainable.",
+      "v4": "The pace my organisation expects when I work with AI is sustainable.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d10",
+      "field": "contribution",
+      "v1Snapshot": "I set a sustainable pace when I work with AI.",
+      "v2FinalAndV3": "I set a sustainable pace when I work with AI.",
+      "v4": "I set a sustainable pace when I work with AI.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d11",
+      "field": "conditions",
+      "v1Snapshot": "My organisation clearly explains how AI should be used.",
+      "v2FinalAndV3": "My organisation clearly explains how AI should be used.",
+      "v4": "My organisation clearly explains how AI should be used at work.",
+      "classification": "changed-separate",
+      "approved": false
+    },
+    {
+      "domain": "d11",
+      "field": "contribution",
+      "v1Snapshot": "I influence how my team uses AI.",
+      "v2FinalAndV3": "I influence how my team uses AI.",
+      "v4": "I influence how my team uses AI.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d12",
+      "field": "conditions",
+      "v1Snapshot": "I feel secure in my role as AI changes work.",
+      "v2FinalAndV3": "I feel secure in my role as AI changes my work.",
+      "v4": "I feel secure in my role as AI changes my work.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    },
+    {
+      "domain": "d12",
+      "field": "contribution",
+      "v1Snapshot": "I am preparing for ways AI could change my role.",
+      "v2FinalAndV3": "I am preparing for ways AI could change my role.",
+      "v4": "I am preparing for ways AI could change my role.",
+      "classification": "exact-text-candidate",
+      "approved": false
+    }
+  ]
+}

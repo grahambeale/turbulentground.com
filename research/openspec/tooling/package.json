@@ -1,0 +1,6 @@
+{
+  "name": "turbulentground-research-openspec",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": { "@fission-ai/openspec": "1.13.0" }
+}

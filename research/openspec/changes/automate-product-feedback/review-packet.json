@@ -1,0 +1,17 @@
+{
+  "revision": 2,
+  "status": "Sanitised and approved — see sanitisation-approval.json (Graham's explicit approval of this exact sanitised amendment, 15 September 2026). The underlying revision-2 policy approval remains approved-revision-2.json, unchanged.",
+  "approved_files_historical": {
+    "note": "These are the file digests Graham actually approved for revision 2, unchanged. Preserved as historical evidence; do not overwrite. See approved-revision-2.json.",
+    "evidence-snapshot.md": "59751c4b94bb940631088725c14d7f47642b8f2a3468f8b2bae92f3e74f484f1",
+    "proposal.md": "8272b04fadec066c503344a781219ae33d9f9630e99c739fb0722f54249ebc8f",
+    "specs/automate-product-feedback/spec.md": "9789c4c7ec8f8350f744b1e59f54291c10149c7ff94d9d9417474d37cdd7a68c",
+    "review.md": "431d84203733d4e0c59ac591c0ab77ca481d705e4305e73f514a7b94d28187d1"
+  },
+  "files": {
+    "evidence-snapshot.md": "25286a794ea41a78fc2899c11d900a0b32e4ce1e945eff9d49c3b95887e15ded",
+    "proposal.md": "5c40c5a831af1d5236dfd10e793c558a4e4f62d518ad6fe5b956769213399f93",
+    "specs/automate-product-feedback/spec.md": "6ae0a8547030189d253ee4209f732b18f044d73c72c0877e4f8371232e32d87a",
+    "review.md": "3ea0fbe42450433dcc59c054e1845a175247d93d4302bd90607b9474fb6e0f7b"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-14",
+  "releasedCommit": "5f2521a6bf103746e667ee3b719d93593b8c9537",
+  "scope": "Response metadata only; no scores, contacts, tokens or free text inspected",
+  "versionCounts": {
+    "phase3-v1": {
+      "records": 6,
+      "completed": 6,
+      "eligible": 6
+    },
+    "phase3-v2-2026-09-06": {
+      "records": 6,
+      "completed": 6,
+      "eligible": 6
+    },
+    "phase3-v3-2026-09-08": {
+      "records": 3,
+      "completed": 2,
+      "eligible": 2
+    },
+    "phase3-v4-2026-09-13-paired": {
+      "records": 1,
+      "completed": 1,
+      "eligible": 1
+    }
+  },
+  "eligibleNumericStatementCounts": "Not inspected",
+  "deduplicatedParticipantCount": "Not established"
+}

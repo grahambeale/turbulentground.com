@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {sixMonthExpiry,planRetention} from './retention-plan.mjs';
+assert.equal(sixMonthExpiry('2026-09-14T12:00:00Z'),'2027-03-14T12:00:00.000Z');
+assert.equal(sixMonthExpiry('2026-08-31T12:00:00Z'),'2027-02-28T12:00:00.000Z');
+assert.equal(sixMonthExpiry('2023-08-31T12:00:00Z'),'2024-02-29T12:00:00.000Z');
+assert.throws(()=>sixMonthExpiry('invalid'));
+const source={receivedAt:'2026-09-14T12:00:00Z'};
+assert.equal(planRetention(source,'2027-03-14T11:59:59Z').state,'Not due');
+assert.equal(planRetention(source,'2027-03-14T12:00:00Z').state,'Needs review');
+const reviewed={...source,reviewedSynthesis:{anonymisationConfirmed:true,reviewer:'synthetic-reviewer',reviewedAt:'2027-03-14T10:00:00Z',problem:'The feedback control is difficult to find.'}};
+assert.equal(planRetention(reviewed,'2027-03-14T12:00:00Z').state,'Needs provider policy');
+const ready=planRetention({...reviewed,providerPolicyConfirmed:true},'2027-03-14T12:00:00Z');
+assert.equal(ready.state,'Plan ready for release review');assert.equal(ready.executionEnabled,false);assert(ready.excluded.includes('Research answers'));assert(ready.actions.some(a=>a.includes('child excerpts')));
+console.log('PASS: six calendar months including leap/month-end dates, receipt-based expiry, reviewed synthesis and provider gates; preview cannot execute deletion');

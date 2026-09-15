@@ -196,3 +196,14 @@ Tell Graham:
 - what was verified and what was not;
 - the Airtable record, commit and live URL when they exist;
 - any decision or access still needed from him.
+# OpenSpec specification gate for the survey-journey pilot
+
+For `FB-20260911-TEVOGK`, ACT activates specification work only. Read
+`openspec/README.md`. Publish the full review packet in Airtable Proposed solution;
+Graham supplies amendments in Review notes and decides in Graham's decision.
+Retrieve his notes before revising and preserve the originals. Material changes
+receive a new revision and return to Pending for confirmation. Before any design
+or prototype, record explicit approval of the exact revision and run
+`node openspec/airtable-sync.mjs check` against the live ticket. Artifact readiness
+does not approve work. Existing DEFER/MERGE evidence handling remains upstream;
+existing implementation and release gates remain separate and authoritative.

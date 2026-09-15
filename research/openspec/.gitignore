@@ -1,0 +1,4 @@
+tooling/node_modules/
+.sync/
+!tooling/package.json
+!tooling/package-lock.json

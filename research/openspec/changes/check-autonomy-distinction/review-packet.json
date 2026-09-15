@@ -1,0 +1,10 @@
+{
+  "revision": 1,
+  "status": "Decided in Airtable (see review.md current-state note); manifest refreshed 15 September 2026 to match a documentation-only current-state addition to review.md. Recorded decision unchanged.",
+  "files": {
+    "evidence-snapshot.md": "5043096024a2c85a0fff50225f0f02fc1a998b442d21919261af4c98d21011c7",
+    "proposal.md": "eb9c63c7adc75d48b8afc92bf892d5522f1d1f6d51219e456457c49af3f2d75f",
+    "specs/check-autonomy-distinction/spec.md": "17e049171421e067890337df32f85bf7d7cd3d9bc2ddb40950c7fb0cad6bdaea",
+    "review.md": "e745f7e2bcdaec59bfbf13ff8c9e2e2bd45ef956e7cf7161c2fc0e04b1ede9e6"
+  }
+}
