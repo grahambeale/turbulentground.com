@@ -2,9 +2,153 @@
 
 ## Question rationale, interpretation and hypotheses
 
-**Version:** 1.0  
-**Date:** 28 August 2026  
+**Version:** 1.1 — approved question wording; live in production as instrument v4
+
+**Updated:** 13 September 2026
 **Instrument:** 24 statements across 12 paired themes, plus four optional context questions and one optional open comment
+
+**Current state (added 15 September 2026):** This wording is implemented and
+released. `FB-20260911-TEVOGK` shipped at commit `3343293bda0415786f02a8281958e3a0b4d92e7f`,
+verified live in production. Submissions now identify as instrument v4; v3
+unfinished responses resume the frozen v3 questionnaire and historical data is
+not migrated or relabelled. The paragraphs below describing approval-without-
+implementation are historical — they record the state as of 13 September 2026,
+before release — and are retained for provenance, not as the present state.
+
+## Revision status and current research plan
+
+Graham requested this update following the question-copy and research-impact
+review. On 13 September 2026 he explicitly approved the 24 revised statements
+below and requested that the agent update the ticket and continue work. This
+records approval of the exact question wording, not a claim that the instrument
+has been implemented, released or validated **at the time of that approval**.
+Production release has since happened (see "Current state" above); the analysis
+recommendations remain implementation planning requirements to resolve
+explicitly, not approval to silently change scoring or benchmark inclusion rules.
+
+Approval source: Graham's direct message, “Questions approaved. AFter this get
+the agent to updtae the ticket and continue work”. Related implementation handoff:
+`FB-20260911-TEVOGK`, the paired survey-journey pilot. The approved wording is the
+table below, not the earlier copy-only draft on that ticket. Any subsequent
+material wording change requires renewed approval.
+
+This section is authoritative for the **approved wording revision** and supersedes any
+conflicting interpretation or hypothesis below. The original rationale and
+hypotheses are retained as the historical baseline for earlier responses; they
+must not be applied unchanged to the proposed instrument.
+
+### Proposed statements and interpretation
+
+| Theme | First statement | Second statement | What the pair explores |
+|---|---|---|---|
+| Judgement | When AI and I disagree, I rely on my own judgement. | I can recognise when AI output is wrong. | Reported independence and confidence detecting errors; neither establishes actual accuracy. |
+| Time and workload | When AI saves me time, I use that time to improve my work. | When AI saves me time, I keep some of that time free from work. | Two uses of saved time which may coexist. These measure reported behaviour, not permission or the amount of time saved. |
+| Working relationships | I speak directly with colleagues about their work, even when AI summaries are available. | My colleagues speak directly with me about my work, even when AI summaries are available. | Direct contact given and experienced alongside summaries, not rejection of summaries or their frequency of use. |
+| Quality and care | My organisation allows enough time to check the quality of my AI-assisted work. | I check AI-assisted work as carefully as work I do without AI. | Perceived checking time and reported comparative care. High comparative care does not establish adequate absolute checking. |
+| Autonomy | I can decide when to use AI in my work. | My organisation gives me discretion over whether to rely on AI output. | Discretion to use AI and discretion to rely on its output. These may still overlap and require comprehension testing. |
+| Learning | I have opportunities at work to develop skills that I expect to remain useful as AI changes my work. | I actively develop skills that I expect to remain useful as AI changes my work. | Perceived opportunity and reported action; expected usefulness is not an objective forecast. |
+| Trust | I trust my colleagues’ judgement when they use AI. | My colleagues trust my judgement when I use AI. | Trust given and perceived trust received from colleagues, not organisational trust or observed trustworthiness. |
+| Being seen | I recognise the judgement my colleagues contribute to AI-assisted work. | My colleagues recognise the judgement I contribute to AI-assisted work. | Recognition of judgement given and experienced; not specifically credit for faster output. |
+| Meaning | As AI changes my tasks, I look for new ways to make my work meaningful. | The work I do alongside AI feels meaningful. | Meaning-seeking and experienced meaning, not equivalent measures of personal action and organisational support. |
+| Pace | The pace my organisation expects when I work with AI is sustainable. | I set a sustainable pace when I work with AI. | Perceived external expectations and reported personal pace-setting. The latter does not establish freedom to set pace. |
+| Guidance and influence | My organisation clearly explains how AI should be used at work. | I influence how my team uses AI. | Guidance clarity and personal influence: related but distinct concepts, not interchangeable quantities. |
+| Job security | I feel secure in my role as AI changes my work. | I am preparing for ways AI could change my role. | Felt security and preparation. Preparation can accompany confidence, concern or routine planning. |
+
+### Coverage gained and lost
+
+The proposed revision makes reciprocal relationships, trust and recognition more
+specific. It retains the central aim: identifying personal and surrounding
+conditions relevant to making the AI shift with judgement, agency and care.
+
+It removes direct measurement of comfort explaining AI use, permission to use
+saved time for quality improvement, and credit given for AI-enabled speed.
+These topics can be explored in optional comments or separately consented
+follow-up research, but their absence must not be filled by inference from other
+items. If openness is essential, decide explicitly whether to retain or replace
+an item before final approval rather than silently adding questionnaire length.
+
+### Findings and participant-result rules
+
+1. Analyse and present each statement within its theme. Do not calculate a single
+   successful-AI-shift score or treat all pairs as contribution versus conditions.
+2. Replace blanket two-lens composite summaries with statement-specific benchmark
+   comparisons in the proposed results experience. Existing field names are
+   storage identifiers, not evidence that an item measures an organisational condition.
+3. Explore combinations of responses rather than ranking numerical paired gaps
+   as equivalent across themes. For example, careful checking alongside limited
+   checking time is a potential tension, not proof of organisational obstruction.
+4. Describe results as what participants report. Above benchmark is not
+   automatically better, and below benchmark is not automatically a deficit.
+5. Retain response distributions and distinct Not applicable / Prefer not to say
+   categories. Investigate role relevance and missingness rather than coding them
+   as neutral or assuming lack of capability.
+6. Use the invited sample as a descriptive comparison, not a workforce norm.
+   Do not claim causation, objective organisational quality or demonstrated skill.
+
+### Hypothesis amendments
+
+Retain the original IDs for traceability. Register the following amendments before
+analysing revised-instrument data; do not retrospectively describe them as the
+original hypotheses.
+
+| Original ID | Proposed-revision treatment |
+|---|---|
+| H1–H4 | Restrict enabling-conditions versus personal-action analyses to relevant items, especially checking time/care, learning opportunity/action and expected/personal pace. Do not generalise a gap across all 12 themes. Guidance and influence can be cross-tabulated, not treated as a validated paired deficit. |
+| H6 | Not testable: comfort explaining AI use is removed. A separately registered replacement could explore colleague trust received and discretion to rely on AI output. |
+| H7 | Not directly testable from these statements: close monitoring is not measured. Do not substitute discretion for observed monitoring. |
+| H8 | Examine guidance clarity alongside discretion and colleague trust, explicitly distinguishing those concepts. |
+| H9 | Test whether reported use of saved time to improve work is associated with sustainable expected pace; no longer a test of permission to improve quality. |
+| H10 | Examine reported protection of some saved time. The instrument cannot establish how often savings are absorbed by new tasks or quantify their allocation. |
+| H13 | Examine reported direct contact given versus received when summaries are available, not frequency of conversations or displacement by summaries. |
+| H14 | Examine recognition of judgement given versus received, not generosity about AI-enabled speed. |
+| H17 | Not directly testable: reliance on summaries is no longer measured. Explore direct-contact ratings alongside recognition and meaning without relabelling them as summary reliance. |
+| H25 | Use the two explicit discretion items for autonomy, not comfort explaining AI use. |
+| H29 | Assess interpretability and overlap within each pair, particularly autonomy. Correlation alone does not establish coherence or redundancy. |
+
+The substantive questions behind H5, H11–H12, H15–H16, H18–H24 and H26–H28 remain
+relevant, subject to exact wording, self-report limits and sufficient subgroup
+evidence. H30 must track benchmarks within questionnaire versions; a wording
+change is not evidence that participant experiences changed.
+
+### Versioning and implementation prerequisites
+
+- Assign a new instrument version if this wording is approved. Preserve earlier
+  answers, their original wording, item mappings and version labels.
+- Define the mapping by statement meaning, not first/second position. Several
+  pairs place the organisational item first while the existing storage uses
+  contribution/conditions keys; never swap historical answers to match layout.
+- Filter benchmarks by compatible instrument version and item meaning. The
+  results-email cohort loader reviewed on 13 September currently pools eligible
+  responses without fetching/filtering instrument version; fix and test this
+  before introducing materially changed questions.
+- Apply benchmark eligibility and privacy rules within the compatible cohort.
+  Suppress unavailable comparisons rather than borrowing an incompatible cohort.
+- Render an earlier participant's emailed results using their original instrument
+  interpretation, even if the email is requested after the revision launches.
+- Review question explanations, insight labels, headlines, suggested actions,
+  benchmark highlights and analyst instructions together. Some current email
+  labels differ even from the historical rationale, so check against the exact
+  deployed wording rather than treating this document as a deployment snapshot.
+- Check save/resume version handling so an unfinished response does not silently
+  mix instruments. Decide explicitly whether it completes its original version.
+- Record presentation/order changes separately, including paired screens, since
+  a wording revision should not conceal a concurrent presentation change.
+
+### Next research steps
+
+1. Confirm the proposed coverage and any topics Graham wants retained.
+2. Conduct a small think-aloud beta review: ask participants to paraphrase each
+   statement, distinguish its partner and explain how they chose an answer.
+   Pay particular attention to autonomy overlap and relevance when summaries or
+   time savings are absent. This tests comprehension, not statistical validation.
+3. Finalise wording, item mappings and a dated hypothesis amendment log before
+   the next data cut. Keep exploratory findings separate from prior expectations.
+4. Obtain implementation approval, verify the full results and save/resume flows,
+   then obtain separate release approval under the research agent workflow.
+5. Analyse the revised cohort descriptively and use consented follow-ups to
+   investigate mechanisms, exceptions and blind spots the fixed items miss.
+
+## Historical baseline — earlier instrument rationale
 
 ## Purpose of this document
 
