@@ -2,7 +2,8 @@
 
 ## Change
 
-- Added an explicit **Add context** disclosure after an answer is selected.
+- Added a persistent **Add context to your answer (optional)** disclosure so
+  answer selection does not alter the vertical flow.
 - Kept the textarea collapsed and unfocused until the disclosure is activated.
 - Restored saved context in an expanded panel labelled **Edit context**.
 - Preserved the existing data model, question flow and Continue gate.

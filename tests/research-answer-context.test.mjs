@@ -8,13 +8,13 @@ const submit = fs.readFileSync(new URL('../api/research-submit.js', import.meta.
 assert.doesNotMatch(html, /domainKey === 'd3' \|\| domainKey === 'd5'/, 'context must not be limited to selected domains');
 assert.match(html, /orderedStatements\.forEach[\s\S]*var contextWrap = document\.createElement\('div'\)/, 'every rendered statement must receive a context control');
 assert.match(html, /field \+ '_context'/, 'context must be stored against the exact statement field');
-assert.match(html, /contextToggle\.textContent = existingContext \? 'Edit context' : 'Add context'/, 'answered statements must offer an explicit context control');
+assert.match(html, /contextToggle\.textContent = 'Add context to your answer \(optional\)'/, 'every statement must offer one persistent, clearly optional context control');
 assert.match(html, /statement-context textarea::placeholder[^{]*\{[^}]*font-style: italic/s, 'the context prompt must read visually as a prompt');
 assert.match(html, /statement-context-continue[\s\S]*background: #b84215/, 'continue must be a visually prominent orange action');
 assert.match(html, /class="statement-navigation"[\s\S]*id="back-btn"[\s\S]*id="question-continue"/, 'Back and Continue must share a stable navigation row in the main question content');
 assert.doesNotMatch(html, /<div class="footer-bar"[^>]*>[\s\S]*?id="back-btn"/, 'Back must not sit inside the progress footer');
-assert.match(html, /contextWrap\.hidden = false;[\s\S]*getElementById\('question-continue'\)\.hidden = false/, 'answering must reveal Continue without moving Back to another container');
-assert.doesNotMatch(html, /contextWrap\.hidden = false;[\s\S]{0,180}querySelector\('textarea'\)\.focus/, 'answering must not focus the textarea or open a mobile keyboard');
+assert.doesNotMatch(html, /contextWrap\.hidden\s*=/, 'the context control must remain in the vertical flow before and after answering');
+assert.doesNotMatch(html, /function setResponse[\s\S]*contextInput\.focus/, 'answering must not focus the textarea or open a mobile keyboard');
 assert.match(html, /contextToggle\.addEventListener\('click'[\s\S]*contextInput\.focus\(\{ preventScroll: true \}\)/, 'textarea focus must follow an explicit Add context action');
 assert.match(html, /var INSTRUMENT_VERSION = 'phase3-v5-2026-09-25-examples'/, 'concrete examples must have a distinct instrument version');
 assert.match(html, /HELP_CLOSED_LABEL = 'See an example'/, 'the disclosure must describe its concrete content');

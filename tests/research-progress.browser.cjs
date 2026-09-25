@@ -7,11 +7,12 @@ await p.locator('.pair-item:visible').nth(0).locator('.scale-btn').nth(3).scroll
 const before=await p.evaluate(()=>scrollY);
 const samples=await p.locator('.pair-item:visible').nth(0).locator('.scale-btn').nth(3).evaluate(async e=>{
  const fill=document.getElementById('paired-progress-fill'),bar=document.querySelector('.paired-progress-track');
- const startY=scrollY,startWidth=bar.getBoundingClientRect().width;e.click();
+ const row=e.closest('.pair-item'),startY=scrollY,startWidth=bar.getBoundingClientRect().width,startHeight=row.getBoundingClientRect().height;e.click();
  const values=[];for(const delay of [100,100,220]){await new Promise(r=>setTimeout(r,delay));values.push(new DOMMatrixReadOnly(getComputedStyle(fill).transform).a);}
- return {values,startY,endY:scrollY,startWidth,endWidth:bar.getBoundingClientRect().width};
+ return {values,startY,endY:scrollY,startWidth,endWidth:bar.getBoundingClientRect().width,startHeight,endHeight:row.getBoundingClientRect().height};
 });
 assert.equal(samples.startY,before);assert.equal(samples.startY,samples.endY);assert.equal(samples.startWidth,samples.endWidth);
+assert.equal(samples.startHeight,samples.endHeight);
 assert(samples.values[0]>0&&samples.values[0]<1/24);assert(samples.values[1]>samples.values[0]);assert(Math.abs(samples.values[2]-1/24)<.001);
 assert.equal(await p.locator('#journey-progress').getAttribute('aria-valuenow'),'1');assert(await p.locator('#question-continue').isDisabled());
 await p.locator('.pair-item:visible').nth(1).locator('.scale-btn').nth(2).click();await p.locator('#question-continue').click();assert((await p.locator('#pair-position').innerText()).startsWith('Pair 2 of 12'));await p.locator('#back-btn').click();

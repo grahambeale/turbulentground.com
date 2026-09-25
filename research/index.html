@@ -1779,30 +1779,26 @@ Thank you for being a part of it.</div>
 
       var contextWrap = document.createElement('div');
       contextWrap.className = 'statement-context';
-      contextWrap.hidden = !(pairResponses[domainKey] && (field in pairResponses[domainKey]));
       var existingContext = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
       var contextToggle = document.createElement('button');
       contextToggle.type = 'button';
       contextToggle.className = 'statement-context-toggle';
-      contextToggle.textContent = existingContext ? 'Edit context' : 'Add context';
+      contextToggle.textContent = 'Add context to your answer (optional)';
       contextToggle.setAttribute('aria-expanded', 'false');
       contextToggle.setAttribute('aria-controls', 'statement-context-panel-' + index);
       var contextPanel = document.createElement('div');
       contextPanel.className = 'statement-context-panel';
       contextPanel.id = 'statement-context-panel-' + index;
       contextPanel.hidden = true;
-      var contextLabel = document.createElement('label');
-      contextLabel.textContent = 'Add context to your answer (optional)';
       var contextInput = document.createElement('textarea');
       contextInput.maxLength = 1000;
       contextInput.placeholder = 'A short example or explanation';
       contextInput.value = existingContext;
-      contextLabel.htmlFor = 'statement-context-' + index;
       contextInput.id = 'statement-context-' + index;
+      contextInput.setAttribute('aria-label', 'Add context to your answer (optional)');
       contextInput.addEventListener('input', function () {
         if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
         pairResponses[domainKey][field + '_context'] = contextInput.value;
-        contextToggle.textContent = contextInput.value ? 'Edit context' : 'Add context';
       });
       contextToggle.addEventListener('click', function () {
         var opening = contextPanel.hidden;
@@ -1810,7 +1806,6 @@ Thank you for being a part of it.</div>
         contextToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
         if (opening) contextInput.focus({ preventScroll: true });
       });
-      contextPanel.appendChild(contextLabel);
       contextPanel.appendChild(contextInput);
       contextWrap.appendChild(contextToggle);
       contextWrap.appendChild(contextPanel);
@@ -1902,13 +1897,8 @@ Thank you for being a part of it.</div>
     updateProgress();
     refreshPairContinue();
 
-    var contextWrap = rowEl && rowEl.querySelector('.statement-context');
-    if (contextWrap) {
-      window.clearTimeout(autoAdvanceTimer);
-      contextWrap.hidden = false;
-      document.getElementById('question-continue').hidden = false;
-      return; // Continue advances only after both individual answers are present.
-    }
+    window.clearTimeout(autoAdvanceTimer);
+    document.getElementById('question-continue').hidden = false;
 
   }
 
