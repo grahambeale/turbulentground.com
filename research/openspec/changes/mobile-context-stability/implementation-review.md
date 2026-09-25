@@ -8,7 +8,9 @@
 - Preserved saved context while keeping the field collapsed until requested.
 - Preserved the existing data model, question flow and Continue gate.
 - Moved the compact feedback control to the left edge, away from both the
-  lower-right Continue action and the lower-left Back action.
+  lower-right Continue action and the lower-left Back action. A review
+  refinement places it at 82% of the viewport height and reduces its visual
+  size while retaining a 44-pixel touch target.
 
 ## Verification required
 
