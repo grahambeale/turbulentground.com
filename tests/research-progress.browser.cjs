@@ -1,7 +1,7 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 const base=process.env.RESEARCH_PREVIEW_BASE||'http://127.0.0.1:8770';
 (async()=>{const b=await chromium.launch({headless:true});const p=await b.newPage();
-await p.route('**/api/**',r=>r.fulfill({json:{valid:true,savedState:{instrumentVersion:'phase3-v4-2026-09-13-paired',consent:{takingPart:true},pairResponses:{}}}}));
+await p.route('**/api/**',r=>r.fulfill({json:{valid:true,savedState:{instrumentVersion:'phase3-v5-2026-09-25-examples',consent:{takingPart:true},pairResponses:{}}}}));
 await p.goto(base+'/research/index.html?t=synthetic');await p.locator('#screen-pairs.active').waitFor();
 await p.locator('.pair-item:visible').nth(0).locator('.scale-btn').nth(3).scrollIntoViewIfNeeded();
 const before=await p.evaluate(()=>scrollY);

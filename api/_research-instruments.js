@@ -1,6 +1,7 @@
 // Frozen wording and storage mappings. Never relabel historical responses.
 export const LEGACY_VERSION = 'phase3-v3-2026-09-08';
-export const PAIRED_VERSION = 'phase3-v4-2026-09-13-paired';
+export const PREVIOUS_PAIRED_VERSION = 'phase3-v4-2026-09-13-paired';
+export const PAIRED_VERSION = 'phase3-v5-2026-09-25-examples';
 export const INSTRUMENTS = {
   "phase3-v3-2026-09-08": [
     {
@@ -343,3 +344,41 @@ export const INSTRUMENTS = {
     }
   ]
 };
+
+// V5 preserves V4's statement wording, order and storage mappings. It is a
+// distinct instrument because the optional explanatory context now uses
+// concrete examples, which may affect how participants interpret an item.
+const V5_EXAMPLES = [
+  'AI suggests one conclusion, but after checking the evidence you decide whether to accept, change or reject it.',
+  'You notice an invented fact, a contradiction or an answer that does not fit the situation.',
+  'Time saved on a first draft is used to check evidence, refine the work or explore the problem further.',
+  'Finishing a task sooner sometimes means the saved time is not immediately filled with another work task.',
+  'You ask a colleague about their reasoning or context rather than relying only on an AI-generated summary.',
+  'A colleague checks your reasoning or context with you rather than relying only on an AI-generated summary of your work.',
+  'Deadlines leave enough time to verify facts, sources, reasoning and sensitive details before the work is used.',
+  'You review facts, reasoning and possible mistakes before using the work, whether or not AI helped produce it.',
+  'You can choose to use AI for a task when it helps, or choose another approach when it does not.',
+  'You can accept, revise or reject AI output based on your judgement rather than being expected to follow it.',
+  'Your work gives you time, practice, coaching or assignments that build judgement, relationships or specialist knowledge.',
+  'You seek practice, feedback or learning that you believe will remain valuable as your tasks change.',
+  'You trust a colleague to decide when AI is useful and to check its output appropriately.',
+  'Colleagues allow you to decide when AI is useful and how its output should be checked or changed.',
+  'You credit a colleague for how they framed, checked and improved the work, rather than crediting the tool alone.',
+  'Colleagues notice the decisions, checks and expertise you add to work produced with AI.',
+  'As routine tasks change, you look for value in activities such as solving harder problems, helping others or improving decisions.',
+  'Even when AI is involved, the work still feels purposeful or worthwhile to you.',
+  'The deadlines and output expected when using AI feel manageable over time, rather than only for a short burst.',
+  'You make time to pause, check and recover rather than continually increasing your output because AI makes some tasks faster.',
+  'You know which uses are allowed, what must be checked and where to go when you are unsure.',
+  'Your input helps shape team rules, working practices or decisions about where AI should and should not be used.',
+  'As tasks and tools change, you still expect there to be a continuing place for your role or contribution.',
+  'You are learning, reshaping responsibilities or discussing development because AI may change parts of your role.'
+];
+
+INSTRUMENTS[PAIRED_VERSION] = INSTRUMENTS[PREVIOUS_PAIRED_VERSION].map((domain, domainIndex) => ({
+  ...domain,
+  statements: domain.statements.map((statement, statementIndex) => ({
+    ...statement,
+    help: V5_EXAMPLES[(domainIndex * 2) + statementIndex]
+  }))
+}));

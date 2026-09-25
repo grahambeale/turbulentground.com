@@ -7,7 +7,7 @@
 // per displayed statement. The revised instrument is statement-specific;
 // historical summaries retain their original interpretation and exact wording.
 
-import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION } from './_research-instruments.js';
+import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION, PREVIOUS_PAIRED_VERSION } from './_research-instruments.js';
 import { BENCHMARK_MIN_COHORT, computeStatementBenchmark, benchmarkProvenance } from './_research-benchmarks.js';
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
@@ -364,9 +364,9 @@ function lensCard(label, summary) {
   </td>`;
 }
 
-function buildPairedEmailHtml(name, pairs, benchmark, token) {
+function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) {
   const textStyle = 'font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;';
-  const sections = INSTRUMENTS[PAIRED_VERSION].map(domain => {
+  const sections = INSTRUMENTS[instrumentVersion].map(domain => {
     const rows = domain.statements.map(statement => {
       const value = pairs?.[domain.key]?.[statement.field];
       // The compatible cohort and each displayed statement must meet the floor.
@@ -387,7 +387,7 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
       <p style="${textStyle}">${name ? 'Hello ' + escapeHtml(name) + ',' : 'Hello,'}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
       <p style="${textStyle}">These are your answers to the questionnaire you completed. Each statement is shown separately: pairs explore different aspects of work and are not combined into a contribution, conditions or overall score.</p>
-      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${PAIRED_VERSION}. Results preserve that version's exact questions and meanings.</p>
+      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${instrumentVersion}. Results preserve that version's exact questions and meanings.</p>
       <p style="${textStyle}">${hasBenchmark ? 'Available comparisons use completed responses to the same question version. They describe the invited sample and may fluctuate as responses arrive. They are not workforce norms.' : 'Your summary shows your own answers only while comparison groups build. Earlier survey versions are kept separate because question wording, explanatory text and presentation changed.'}</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">The scale runs from 1, strongly disagree, to 5, strongly agree. Not applicable and Prefer not to say remain separate choices. Higher or lower agreement is not automatically better or worse. These self-reported answers do not establish ability, organisational quality or causes.</p>
       <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Comparisons are calculated separately for each statement from at least 15 eligible answers to the same question version.</p>
@@ -400,7 +400,9 @@ function buildPairedEmailHtml(name, pairs, benchmark, token) {
 
 export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion = LEGACY_VERSION) {
   if (!INSTRUMENTS[instrumentVersion]) throw new Error('Unknown questionnaire version');
-  if (instrumentVersion === PAIRED_VERSION) return buildPairedEmailHtml(name, pairs, benchmark, token);
+  if (instrumentVersion === PAIRED_VERSION || instrumentVersion === PREVIOUS_PAIRED_VERSION) {
+    return buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion);
+  }
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
     const domainBenchmark = benchmark.domains && benchmark.domains[key];

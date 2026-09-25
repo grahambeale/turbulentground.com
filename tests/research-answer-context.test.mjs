@@ -14,7 +14,11 @@ assert.match(html, /statement-context-continue[\s\S]*background: #b84215/, 'cont
 assert.match(html, /class="statement-navigation"[\s\S]*id="back-btn"[\s\S]*id="question-continue"/, 'Back and Continue must share a stable navigation row in the main question content');
 assert.doesNotMatch(html, /<div class="footer-bar"[^>]*>[\s\S]*?id="back-btn"/, 'Back must not sit inside the progress footer');
 assert.match(html, /contextWrap\.hidden = false;[\s\S]*getElementById\('question-continue'\)\.hidden = false/, 'answering must reveal Continue without moving Back to another container');
-// v4 context/navigation placement and visibility are verified by the paired browser journey test.
+assert.match(html, /var INSTRUMENT_VERSION = 'phase3-v5-2026-09-25-examples'/, 'concrete examples must have a distinct instrument version');
+assert.match(html, /HELP_CLOSED_LABEL = 'See an example'/, 'the disclosure must describe its concrete content');
+assert.match(html, /V4_HELP = \[/, 'unfinished v4 responses must retain their original explanations');
+assert.equal((html.match(/"help":/g) || []).length, 24, 'all 24 current statements must have contextual examples');
+// Context/navigation placement and visibility are verified by the paired browser journey test.
 assert.doesNotMatch(html, /id="guidance-btn"|id="survey-guidance"|There are no right answers/, 'redundant guidance must be removed');
 assert.match(html, /p\.appendChild\(helpToggle\);\s*row\.appendChild\(p\);[\s\S]*row\.appendChild\(help\);[\s\S]*row\.appendChild\(scaleGrid\);/, 'explanation link and text must sit between the question and scale');
 assert.match(html, /prefers-reduced-motion: reduce/, 'context continuation must respect reduced motion');
