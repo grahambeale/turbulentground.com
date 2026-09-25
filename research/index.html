@@ -408,6 +408,17 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .response-alternatives { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
   .statement-context { margin: 12px auto 0; max-width: 720px; }
   .statement-context[hidden] { display: none; }
+  .statement-context-toggle {
+    align-items: center; background: transparent; border: 1px solid var(--border);
+    border-radius: 999px; color: var(--ink-mid); cursor: pointer; display: inline-flex;
+    font: inherit; font-size: 0.92rem; gap: 7px; padding: 9px 15px;
+  }
+  .statement-context-toggle::before { content: '+'; font-size: 1.05rem; line-height: 1; }
+  .statement-context-toggle[aria-expanded="true"]::before { content: '\2212'; }
+  .statement-context-toggle:hover { border-color: var(--muted); color: var(--ink); }
+  .statement-context-toggle:focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; }
+  .statement-context-panel { margin-top: 10px; }
+  .statement-context-panel[hidden] { display: none; }
   .statement-context label { display: block; color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 6px; }
   .statement-context textarea { min-height: 74px; width: 100%; resize: vertical; }
   .statement-context textarea::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
@@ -1769,20 +1780,40 @@ Thank you for being a part of it.</div>
       var contextWrap = document.createElement('div');
       contextWrap.className = 'statement-context';
       contextWrap.hidden = !(pairResponses[domainKey] && (field in pairResponses[domainKey]));
+      var existingContext = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
+      var contextToggle = document.createElement('button');
+      contextToggle.type = 'button';
+      contextToggle.className = 'statement-context-toggle';
+      contextToggle.textContent = existingContext ? 'Edit context' : 'Add context';
+      contextToggle.setAttribute('aria-expanded', 'false');
+      contextToggle.setAttribute('aria-controls', 'statement-context-panel-' + index);
+      var contextPanel = document.createElement('div');
+      contextPanel.className = 'statement-context-panel';
+      contextPanel.id = 'statement-context-panel-' + index;
+      contextPanel.hidden = true;
       var contextLabel = document.createElement('label');
       contextLabel.textContent = 'Add context to your answer (optional)';
       var contextInput = document.createElement('textarea');
       contextInput.maxLength = 1000;
       contextInput.placeholder = 'A short example or explanation';
-      contextInput.value = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
+      contextInput.value = existingContext;
       contextLabel.htmlFor = 'statement-context-' + index;
       contextInput.id = 'statement-context-' + index;
       contextInput.addEventListener('input', function () {
         if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
         pairResponses[domainKey][field + '_context'] = contextInput.value;
+        contextToggle.textContent = contextInput.value ? 'Edit context' : 'Add context';
       });
-      contextWrap.appendChild(contextLabel);
-      contextWrap.appendChild(contextInput);
+      contextToggle.addEventListener('click', function () {
+        var opening = contextPanel.hidden;
+        contextPanel.hidden = !opening;
+        contextToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+        if (opening) contextInput.focus({ preventScroll: true });
+      });
+      contextPanel.appendChild(contextLabel);
+      contextPanel.appendChild(contextInput);
+      contextWrap.appendChild(contextToggle);
+      contextWrap.appendChild(contextPanel);
       row.appendChild(contextWrap);
 
       // If this statement was already answered in a restored savedState,
@@ -1876,7 +1907,6 @@ Thank you for being a part of it.</div>
       window.clearTimeout(autoAdvanceTimer);
       contextWrap.hidden = false;
       document.getElementById('question-continue').hidden = false;
-      contextWrap.querySelector('textarea').focus({ preventScroll: true });
       return; // Continue advances only after both individual answers are present.
     }
 

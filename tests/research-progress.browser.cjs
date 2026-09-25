@@ -15,8 +15,8 @@ assert.equal(samples.startY,before);assert.equal(samples.startY,samples.endY);as
 assert(samples.values[0]>0&&samples.values[0]<1/24);assert(samples.values[1]>samples.values[0]);assert(Math.abs(samples.values[2]-1/24)<.001);
 assert.equal(await p.locator('#journey-progress').getAttribute('aria-valuenow'),'1');assert(await p.locator('#question-continue').isDisabled());
 await p.locator('.pair-item:visible').nth(1).locator('.scale-btn').nth(2).click();await p.locator('#question-continue').click();assert((await p.locator('#pair-position').innerText()).startsWith('Pair 2 of 12'));await p.locator('#back-btn').click();
-assert.equal(await p.locator('#journey-progress').getAttribute('aria-valuenow'),'2');assert.equal(await p.locator('#statement-context-0').isVisible(),true);
+assert.equal(await p.locator('#journey-progress').getAttribute('aria-valuenow'),'2');assert.equal(await p.locator('.pair-item:visible').nth(0).locator('.statement-context-toggle').isVisible(),true);assert.equal(await p.locator('#statement-context-0').isVisible(),false);
 await p.emulateMedia({reducedMotion:'reduce'});assert.equal(await p.locator('#paired-progress-fill').evaluate(e=>getComputedStyle(e).transitionDuration),'0s');
-await p.setViewportSize({width:320,height:900});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert((await p.locator('#journey-progress').boundingBox()).y<(await p.locator('#pair-position').boundingBox()).y);
+await p.setViewportSize({width:320,height:900});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert((await p.locator('#journey-progress').boundingBox()).y<(await p.locator('#pair-position').boundingBox()).y);await p.addStyleTag({content:'html{font-size:200%!important}'});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
 await b.close();console.log('PASS: top progress, actual smooth interpolation, no context scroll/layout jump, partial answers, forward/back counts, mobile and reduced motion');
 })().catch(e=>{console.error(e);process.exit(1)});
