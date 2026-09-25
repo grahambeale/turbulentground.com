@@ -76,8 +76,9 @@ const FIELD = {
 
 // Legacy clients omit version; their answers retain the legacy instrument.
 const LEGACY_VERSION = "phase3-v3-2026-09-08";
-const INSTRUMENT_VERSION = "phase3-v4-2026-09-13-paired";
-const SUPPORTED_VERSIONS = new Set([LEGACY_VERSION, INSTRUMENT_VERSION]);
+const PREVIOUS_INSTRUMENT_VERSION = "phase3-v4-2026-09-13-paired";
+const INSTRUMENT_VERSION = "phase3-v5-2026-09-25-examples";
+const SUPPORTED_VERSIONS = new Set([LEGACY_VERSION, PREVIOUS_INSTRUMENT_VERSION, INSTRUMENT_VERSION]);
 // Published rationale baseline; approved unpublished drafts never stamp responses.
 const RATIONALE_VERSION = "phase3-rationale-v1.0-2026-08-28";
 

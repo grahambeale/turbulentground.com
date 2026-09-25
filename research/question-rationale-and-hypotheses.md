@@ -2,9 +2,9 @@
 
 ## Question rationale, interpretation and hypotheses
 
-**Version:** 1.1 — approved question wording; live in production as instrument v4
+**Version:** 1.2 — approved concrete examples; proposed as instrument v5
 
-**Updated:** 13 September 2026
+**Updated:** 25 September 2026
 **Instrument:** 24 statements across 12 paired themes, plus four optional context questions and one optional open comment
 
 **Current state (added 15 September 2026):** This wording is implemented and
@@ -14,6 +14,16 @@ unfinished responses resume the frozen v3 questionnaire and historical data is
 not migrated or relabelled. The paragraphs below describing approval-without-
 implementation are historical — they record the state as of 13 September 2026,
 before release — and are retained for provenance, not as the present state.
+
+**Context amendment (25 September 2026):** Graham approved Revision 2 of
+`FB-20260924-D1C872`: the 24 optional question explanations are replaced with
+concrete examples, while statement wording, order, response scale and storage
+mappings remain unchanged. Because explanatory context may affect
+interpretation, the proposed implementation identifies new responses as
+instrument v5 and does not pool their benchmarks with v4. Unfinished v4
+responses continue with their original explanations. This amendment is
+approved for a reviewable preview only; production release remains a separate
+decision.
 
 ## Revision status and current research plan
 

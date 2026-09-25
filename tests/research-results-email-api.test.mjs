@@ -54,6 +54,7 @@ try {
       return { ok: true, json: async () => ({ records: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].slice(0, cohortSize).map((value) => ({
         id: `recCohort${value}`,
         fields: {
+          flduL4PmBEfH9rLpz: `synthetic-cohort-${value}`,
           fldvxb2mrIYVKLGVM: JSON.stringify({
             d1: { contribution: 3, conditions: 3 },
             d2: { contribution: 3, conditions: 3 },
