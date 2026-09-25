@@ -5,8 +5,10 @@
 - Added a persistent **Add context to your answer (optional)** disclosure so
   answer selection does not alter the vertical flow.
 - Kept the textarea collapsed and unfocused until the disclosure is activated.
-- Restored saved context in an expanded panel labelled **Edit context**.
+- Preserved saved context while keeping the field collapsed until requested.
 - Preserved the existing data model, question flow and Continue gate.
+- Moved the compact feedback control to the left edge, away from both the
+  lower-right Continue action and the lower-left Back action.
 
 ## Verification required
 

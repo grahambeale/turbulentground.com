@@ -14,3 +14,7 @@ optional label become one persistent control: **Add context to your answer
 (optional)**. It must be present before answer selection so choosing a score
 does not alter the page's vertical flow. This amendment authorises a revised
 preview, not production release.
+
+Graham then requested that the floating feedback control move away from the
+right side. The revised preview places a compact tab on the left edge, above the
+bottom navigation zone, so it does not compete with Continue or Back.
