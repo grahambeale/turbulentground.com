@@ -9,10 +9,10 @@ const migrationSource = await readFile(new URL("../scripts/research-phase31-sche
 assert.equal(manifest.baseId, "app7dKDinTjxczEfD");
 assert.equal(manifest.existingTables.length, 2);
 assert.deepEqual(manifest.newTables.map((table) => table.name), [
-  "Research Referrals",
-  "Research Acquisitions",
-  "Research Recruitment Events",
-  "Research Propositions"
+  "Referrals",
+  "Acquisitions",
+  "Recruitment Events",
+  "Propositions"
 ]);
 assert.ok(Object.values(manifest.featureFlags).every((value) => value === false));
 assert.ok(!migrationSource.includes("prefersSingleRecordLink:"), "Airtable rejects this option during linked-field creation");

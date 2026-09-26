@@ -5,10 +5,10 @@
   "appliedSchema": {
     "appliedAt": "2026-09-26T23:12:00Z",
     "tables": {
-      "Research Referrals": "tblXBzl8mQal543xw",
-      "Research Acquisitions": "tblhjBvklwWNNx8Rg",
-      "Research Recruitment Events": "tbldf3XOuTy3DYth9",
-      "Research Propositions": "tblfbKoLuiI6maWrl"
+      "Referrals": "tblXBzl8mQal543xw",
+      "Acquisitions": "tblhjBvklwWNNx8Rg",
+      "Recruitment Events": "tbldf3XOuTy3DYth9",
+      "Propositions": "tblfbKoLuiI6maWrl"
     }
   },
   "existingTables": [
@@ -44,14 +44,14 @@
         "Meets Completion Floor": "fldc1EMbDAHAO99Av"
       },
       "addFields": [
-        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Research Acquisitions", "single": true },
+        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Acquisitions", "single": true },
         { "name": "Submission Origin", "type": "singleSelect", "choices": ["owner_invite", "public_self_service"] }
       ]
     }
   ],
   "newTables": [
     {
-      "name": "Research Referrals",
+      "name": "Referrals",
       "fields": [
         { "name": "Referral ID", "type": "singleLineText", "primary": true },
         { "name": "Referrer Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
@@ -65,11 +65,11 @@
       ]
     },
     {
-      "name": "Research Acquisitions",
+      "name": "Acquisitions",
       "fields": [
         { "name": "Acquisition ID", "type": "singleLineText", "primary": true },
         { "name": "Participant Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
-        { "name": "Referrer", "type": "multipleRecordLinks", "linkedTable": "Research Referrals", "single": true },
+        { "name": "Referrer", "type": "multipleRecordLinks", "linkedTable": "Referrals", "single": true },
         { "name": "First-touch Channel", "type": "singleSelect", "choices": ["direct", "organic", "email", "linkedin", "x", "facebook", "whatsapp", "other", "unknown"] },
         { "name": "Attribution Status", "type": "singleSelect", "choices": ["candidate", "attributed", "direct", "unknown", "invalid_referral", "self_referral", "conflicting_referral", "withdrawn"] },
         { "name": "Landing At", "type": "dateTime" },
@@ -81,14 +81,14 @@
       ]
     },
     {
-      "name": "Research Recruitment Events",
+      "name": "Recruitment Events",
       "fields": [
         { "name": "Event ID", "type": "singleLineText", "primary": true },
         { "name": "Event Name", "type": "singleSelect", "choices": ["public_landing_view", "referred_landing", "survey_start", "referred_start", "survey_complete", "referred_complete", "share_option_view", "share_option_selected", "share_action", "referral_invalid", "attribution_conflict", "withdrawal_applied"] },
         { "name": "Occurred At", "type": "dateTime" },
         { "name": "Received At", "type": "dateTime" },
         { "name": "Participant Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
-        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Research Acquisitions", "single": true },
+        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Acquisitions", "single": true },
         { "name": "Source Authority", "type": "singleSelect", "choices": ["client", "server", "admin"] },
         { "name": "Validity Status", "type": "singleSelect", "choices": ["candidate", "valid", "duplicate", "automated", "withdrawn", "excluded"] },
         { "name": "Event Schema Version", "type": "number" },
@@ -98,7 +98,7 @@
       ]
     },
     {
-      "name": "Research Propositions",
+      "name": "Propositions",
       "fields": [
         { "name": "Proposition Key", "type": "singleLineText", "primary": true },
         { "name": "Proposition ID", "type": "singleLineText" },
