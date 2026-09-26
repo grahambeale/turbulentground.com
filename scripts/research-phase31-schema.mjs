@@ -23,7 +23,9 @@ function fieldOptions(field, tableIds = {}) {
   if (field.type === "multipleRecordLinks") {
     const linkedTableId = tableIds[field.linkedTable];
     if (!linkedTableId) throw new Error(`Linked table is unavailable: ${field.linkedTable}`);
-    return { linkedTableId, prefersSingleRecordLink: Boolean(field.single) };
+    // Airtable's schema API does not accept prefersSingleRecordLink when a
+    // linked-record field is created. Cardinality is enforced by the app.
+    return { linkedTableId };
   }
   return undefined;
 }

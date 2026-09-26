@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const manifest = JSON.parse(await readFile(new URL("../research/versions/phase-3-1-schema-v1.json", import.meta.url), "utf8"));
+const migrationSource = await readFile(new URL("../scripts/research-phase31-schema.mjs", import.meta.url), "utf8");
 
 assert.equal(manifest.baseId, "app7dKDinTjxczEfD");
 assert.equal(manifest.existingTables.length, 2);
@@ -14,6 +15,7 @@ assert.deepEqual(manifest.newTables.map((table) => table.name), [
   "Research Propositions"
 ]);
 assert.ok(Object.values(manifest.featureFlags).every((value) => value === false));
+assert.ok(!migrationSource.includes("prefersSingleRecordLink:"), "Airtable rejects this option during linked-field creation");
 
 const allFields = [
   ...manifest.existingTables.flatMap((table) => table.addFields),
