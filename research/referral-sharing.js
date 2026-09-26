@@ -3,7 +3,7 @@
   document.addEventListener('tg:research-submitted',function(event){
     var privateToken=event.detail&&event.detail.token;
     if(!privateToken)return;
-    fetch('/api/research-sharing-config').then(function(response){return response.ok?response.json():{enabled:false}}).then(function(config){
+    fetch('/api/research-referral-issue').then(function(response){return response.ok?response.json():{enabled:false}}).then(function(config){
       if(!config.enabled)return null;
       return fetch('/api/research-referral-issue',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:privateToken})});
     }).then(function(response){if(!response)return null;if(!response.ok)throw new Error('unavailable');return response.json()}).then(function(result){

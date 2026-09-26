@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import configHandler from '../api/research-sharing-config.js';
+import referralHandler from '../api/research-referral-issue.js';
 
 const html = await readFile(new URL('../research/index.html', import.meta.url), 'utf8');
 const script = await readFile(new URL('../research/referral-sharing.js', import.meta.url), 'utf8');
 assert.match(html, /id="referral-sharing"[^>]+hidden/);
 assert.match(html, /tg:research-submitted/);
-assert.match(script, /api\/research-sharing-config/);
+assert.match(script, /fetch\('\/api\/research-referral-issue'\)/);
 assert.match(script, /if\(!config\.enabled\)return null/);
 assert.match(script, /api\/research-referral-issue/);
 assert.match(html, /These details stay in this browser/);
@@ -14,9 +14,9 @@ assert.doesNotMatch(script, /localStorage|sessionStorage|indexedDB|sendBeacon/);
 
 function response(){const res={code:0,body:null};res.status=(code)=>{res.code=code;return res};res.json=(body)=>{res.body=body;return res};return res}
 delete process.env.RESEARCH_SHARING_UI_ENABLED;
-let res=response();configHandler({method:'GET'},res);
+let res=response();await referralHandler({method:'GET'},res);
 assert.deepEqual({code:res.code,body:res.body},{code:200,body:{enabled:false}});
 process.env.RESEARCH_SHARING_UI_ENABLED='true';
-res=response();configHandler({method:'GET'},res);
+res=response();await referralHandler({method:'GET'},res);
 assert.deepEqual({code:res.code,body:res.body},{code:200,body:{enabled:true}});
 console.log('Phase 3.1 sharing integration safety checks passed.');

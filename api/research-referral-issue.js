@@ -24,6 +24,9 @@ async function find(table, formula, token) {
 }
 
 export default async function handler(req, res) {
+  if (req.method === "GET") {
+    return res.status(200).json({ enabled: process.env.RESEARCH_SHARING_UI_ENABLED === "true" });
+  }
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   if (process.env.RESEARCH_REFERRAL_ISSUE_ENABLED !== "true") return res.status(404).json({ error: "Not found" });
   const privateToken = typeof req.body?.token === "string" ? req.body.token.trim() : "";
