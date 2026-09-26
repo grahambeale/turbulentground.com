@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Sharing prototype — Turbulent Ground Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--bg:#131110;--warm:#1c1915;--surface:#26211c;--ink:#e8dcc8;--mid:#c8b89a;--muted:#9e8e7c;--orange:#d9571c;--orange-light:#e8763a;--border:rgba(232,220,200,.14);--focus:#ffb37a}
+    html{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:18px;line-height:1.55}
+    body{min-height:100vh;margin:0;padding:0 0 80px}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+    .preview-note{margin:0;padding:10px 20px;background:#34241c;color:var(--mid);font-size:.76rem;text-align:center;letter-spacing:.02em}
+    .nav{min-height:72px;padding:12px 48px;display:flex;align-items:center;border-bottom:1px solid rgba(245,240,232,.35)}
+    .wordmark{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.18em;color:#f5f0e8;text-transform:uppercase}
+    main{width:min(100% - 40px,780px);margin:0 auto;padding-top:72px}
+    .eyebrow{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.16em;color:var(--orange-light);text-transform:uppercase;margin:0 0 12px}
+    h1,h2{font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1.12;margin:0;color:var(--ink)}
+    h1{font-size:clamp(2.45rem,7vw,4.2rem);max-width:680px}
+    h2{font-size:clamp(1.65rem,4vw,2.25rem)}
+    .lead{max-width:620px;color:var(--mid);font-size:1.03rem;margin:20px 0 34px}
+    .card{border:1px solid var(--border);border-radius:18px;background:var(--warm);padding:clamp(22px,5vw,40px);box-shadow:0 22px 70px rgba(0,0,0,.18)}
+    .link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin:24px 0 10px}
+    .link-value{min-width:0;border:1px solid rgba(232,220,200,.22);border-radius:10px;background:var(--surface);color:var(--ink);padding:14px 16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .button{border:0;border-radius:999px;background:#c74414;color:white;font-weight:500;padding:13px 22px;min-height:52px;transition:transform .15s ease,background .15s ease}
+    .button:hover{background:#a83a13}.button:active{transform:scale(.97)}
+    .button.secondary{background:transparent;border:1px solid rgba(232,220,200,.3);color:var(--ink)}
+    .button.secondary:hover{background:rgba(232,220,200,.06)}
+    .status{min-height:1.5em;color:var(--orange-light);font-size:.83rem;margin:0}
+    .privacy-summary{display:flex;gap:12px;margin:26px 0 0;padding:18px;border-left:3px solid var(--orange);background:rgba(217,87,28,.08);color:var(--mid);font-size:.91rem}
+    .privacy-summary strong{display:block;color:var(--ink);margin-bottom:3px}
+    .mode-group{border:0;padding:0;margin:38px 0 0}
+    .mode-group legend{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);margin-bottom:13px}
+    .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .mode{position:relative}
+    .mode input{position:absolute;opacity:0;pointer-events:none}
+    .mode label{display:block;height:100%;padding:18px;border:1px solid rgba(232,220,200,.18);border-radius:12px;background:var(--bg);color:var(--mid);cursor:pointer}
+    .mode label strong{display:block;color:var(--ink);margin-bottom:4px}
+    .mode input:checked+label{border-color:var(--orange);box-shadow:inset 0 0 0 1px var(--orange);background:rgba(217,87,28,.1)}
+    .mode input:focus-visible+label{outline:3px solid var(--focus);outline-offset:3px}
+    .panel{margin-top:24px;padding-top:28px;border-top:1px solid var(--border)}
+    .panel[hidden]{display:none}
+    .field{margin-top:20px}
+    label.field-label{display:block;color:var(--mid);font-size:.94rem;margin-bottom:8px}
+    .optional{color:var(--muted);font-size:.83em}
+    input[type=text],input[type=email],textarea{width:100%;border:1px solid rgba(232,220,200,.22);border-radius:10px;background:var(--surface);color:var(--ink);padding:14px 16px}
+    textarea{min-height:160px;resize:vertical;line-height:1.5}
+    .private-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .helper{color:var(--muted);font-size:.82rem;margin:7px 0 0}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+    .platforms{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .platform{border:1px solid rgba(232,220,200,.22);border-radius:999px;background:transparent;color:var(--mid);padding:9px 14px;font-size:.86rem}
+    .platform:hover{color:var(--ink);border-color:var(--orange-light)}
+    .disclosure{margin-top:34px;color:var(--muted);font-size:.82rem}
+    .disclosure summary{cursor:pointer;color:var(--mid)}
+    .disclosure p{margin:10px 0 0}
+    .footer{width:min(100% - 40px,780px);margin:50px auto 0;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:.78rem}
+    @media(max-width:620px){.nav{padding:12px 20px}.preview-note{text-align:left}.link-row{grid-template-columns:1fr}.modes,.private-grid{grid-template-columns:1fr}.button{width:100%}.actions{display:grid}.platforms{display:grid;grid-template-columns:1fr 1fr}.platform{min-height:46px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <p class="preview-note"><strong>Synthetic prototype:</strong> no real participant, referral or recipient information is used or stored.</p>
+  <header class="nav"><span class="wordmark">Turbulent Ground</span></header>
+  <main>
+    <p class="eyebrow">Thank you for taking part</p>
+    <h1>Help someone else add their experience.</h1>
+    <p class="lead">Your response is complete. If someone in your network has a perspective on the AI shift at work, invite them to take part too.</p>
+
+    <section class="card" aria-labelledby="sharing-title">
+      <h2 id="sharing-title">Your personal sharing link</h2>
+      <div class="link-row">
+        <div class="link-value" id="referral-link" aria-label="Your personal sharing link">https://www.turbulentground.com/research/join?r=K7M4PX</div>
+        <button class="button" type="button" id="copy-link">Copy link</button>
+      </div>
+      <p class="status" id="link-status" role="status" aria-live="polite"></p>
+      <div class="privacy-summary">
+        <div>
+          <strong>The link does not reveal anything about you.</strong>
+          It contains a random referral code, not your name, email, answers or results. You will not see who uses it or what they say.
+        </div>
+      </div>
+
+      <fieldset class="mode-group">
+        <legend>How would you like to share it?</legend>
+        <div class="modes">
+          <div class="mode">
+            <input type="radio" id="mode-public" name="share-mode" value="public" checked>
+            <label for="mode-public"><strong>Share publicly</strong>Post the invitation to your wider network.</label>
+          </div>
+          <div class="mode">
+            <input type="radio" id="mode-private" name="share-mode" value="private">
+            <label for="mode-private"><strong>Invite someone privately</strong>Personalise a message for one person.</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <section class="panel" id="public-panel" aria-labelledby="public-heading">
+        <h2 id="public-heading" tabindex="-1">Share with your network</h2>
+        <div class="field">
+          <label class="field-label" for="public-message">Your message <span class="optional">(editable)</span></label>
+          <textarea id="public-message">How is AI changing your experience of work? I’ve taken part in this independent study from Turbulent Ground. Add your perspective and get a personal benchmark comparison.</textarea>
+        </div>
+        <div class="actions">
+          <button class="button" type="button" id="copy-public">Copy message and link</button>
+          <button class="button secondary" type="button" id="native-share">Open sharing options</button>
+        </div>
+        <div class="platforms" aria-label="Social sharing options">
+          <button class="platform" type="button" data-platform="LinkedIn">LinkedIn</button>
+          <button class="platform" type="button" data-platform="X">X</button>
+          <button class="platform" type="button" data-platform="Facebook">Facebook</button>
+          <button class="platform" type="button" data-platform="WhatsApp">WhatsApp</button>
+        </div>
+        <p class="status" id="public-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="private-panel" aria-labelledby="private-heading" hidden>
+        <h2 id="private-heading" tabindex="-1">Invite someone privately</h2>
+        <div class="private-grid">
+          <div class="field">
+            <label class="field-label" for="recipient-name">Their first name <span class="optional">(optional)</span></label>
+            <input id="recipient-name" type="text" autocomplete="off" maxlength="80" placeholder="Sam">
+          </div>
+          <div class="field">
+            <label class="field-label" for="recipient-email">Their email address <span class="optional">(optional)</span></label>
+            <input id="recipient-email" type="email" autocomplete="off" maxlength="254" placeholder="sam@example.com">
+          </div>
+        </div>
+        <p class="helper">These details stay in this browser. Turbulent Ground does not receive or save them.</p>
+        <div class="field">
+          <label class="field-label" for="private-message">Your message <span class="optional">(editable)</span></label>
+          <textarea id="private-message">I thought you might have an interesting perspective on how AI is changing work. I’ve taken part in this independent study from Turbulent Ground. If you’d like to add your experience, it also gives you a personal benchmark comparison.</textarea>
+        </div>
+        <div class="actions">
+          <button class="button" type="button" id="open-email">Open email draft</button>
+          <button class="button secondary" type="button" id="copy-private">Copy private message</button>
+        </div>
+        <div class="platforms" aria-label="Private messaging options">
+          <button class="platform" type="button" data-platform="WhatsApp">WhatsApp</button>
+          <button class="platform" type="button" data-platform="LinkedIn">LinkedIn message</button>
+          <button class="platform" type="button" data-platform="Facebook Messenger">Messenger</button>
+        </div>
+        <p class="status" id="private-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <details class="disclosure">
+        <summary>How referral attribution works</summary>
+        <p>If someone starts through your link, the study may record your random code as the first referral connected with their participation. It will never show you who they are or what they answered.</p>
+      </details>
+    </section>
+  </main>
+  <footer class="footer">Turbulent Ground research prototype · helping product teams make the AI shift, together.</footer>
+  <script>
+  (function(){
+    'use strict';
+    var referralLink=document.getElementById('referral-link').textContent;
+    var publicPanel=document.getElementById('public-panel');
+    var privatePanel=document.getElementById('private-panel');
+    var publicMessage=document.getElementById('public-message');
+    var privateMessage=document.getElementById('private-message');
+    var recipientName=document.getElementById('recipient-name');
+    var recipientEmail=document.getElementById('recipient-email');
+    var linkStatus=document.getElementById('link-status');
+    var publicStatus=document.getElementById('public-status');
+    var privateStatus=document.getElementById('private-status');
+
+    function personalisedMessage(){
+      var name=recipientName.value.trim();
+      var greeting=name?'Hi '+name+',\n\n':'';
+      return greeting+privateMessage.value.trim()+'\n\n'+referralLink;
+    }
+    function publicShareText(){return publicMessage.value.trim()+'\n\n'+referralLink;}
+    function setStatus(el,text){el.textContent=text;window.setTimeout(function(){if(el.textContent===text)el.textContent='';},4000)}
+    function copyText(text,statusEl,label){
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){setStatus(statusEl,label)}).catch(function(){setStatus(statusEl,'Copy was unavailable. Select the text and copy it manually.')});
+      }else{setStatus(statusEl,'Copy was unavailable. Select the text and copy it manually.')}
+    }
+    document.querySelectorAll('input[name="share-mode"]').forEach(function(input){
+      input.addEventListener('change',function(){
+        var isPrivate=input.value==='private'&&input.checked;
+        privatePanel.hidden=!isPrivate;publicPanel.hidden=isPrivate;
+        (isPrivate?document.getElementById('private-heading'):document.getElementById('public-heading')).focus({preventScroll:true});
+      });
+    });
+    document.getElementById('copy-link').addEventListener('click',function(){copyText(referralLink,linkStatus,'Personal link copied.')});
+    document.getElementById('copy-public').addEventListener('click',function(){copyText(publicShareText(),publicStatus,'Message and link copied.')});
+    document.getElementById('copy-private').addEventListener('click',function(){copyText(personalisedMessage(),privateStatus,'Private message copied.')});
+    document.getElementById('native-share').addEventListener('click',function(){
+      if(navigator.share){navigator.share({title:'Turbulent Ground research',text:publicMessage.value.trim(),url:referralLink}).catch(function(){})}
+      else{copyText(publicShareText(),publicStatus,'Sharing options are unavailable here, so the message was copied instead.')}
+    });
+    document.getElementById('open-email').addEventListener('click',function(){
+      var email=recipientEmail.value.trim();
+      var subject='An independent study about AI and work';
+      window.location.href='mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(personalisedMessage());
+    });
+    document.querySelectorAll('[data-platform]').forEach(function(button){
+      button.addEventListener('click',function(){
+        var isPrivate=!privatePanel.hidden;
+        var statusEl=isPrivate?privateStatus:publicStatus;
+        copyText(isPrivate?personalisedMessage():publicShareText(),statusEl,button.dataset.platform+' would open here. For this prototype, the message has been copied instead.');
+      });
+    });
+  }());
+  </script>
+</body>
+</html>
