@@ -11,6 +11,30 @@
     {
       "source": "/learnings",
       "destination": "/learnings/index.html"
+    },
+    {
+      "source": "/api/research-public-start",
+      "destination": "/api/research-invite?phase31=public-start"
+    },
+    {
+      "source": "/api/research-incomplete-maintenance",
+      "destination": "/api/research-invite?phase31=incomplete-maintenance"
+    },
+    {
+      "source": "/api/research-referral-attribution",
+      "destination": "/api/research-invite?phase31=referral-attribution"
+    },
+    {
+      "source": "/api/research-referral-disable",
+      "destination": "/api/research-invite?phase31=referral-disable"
+    },
+    {
+      "source": "/api/research-referral-issue",
+      "destination": "/api/research-invite?phase31=referral-issue"
+    },
+    {
+      "source": "/api/research-referral-resolve",
+      "destination": "/api/research-invite?phase31=referral-resolve"
     }
   ],
   "redirects": [

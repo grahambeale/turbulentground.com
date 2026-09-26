@@ -10,6 +10,12 @@
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import saveResearchFeedback from "../lib/research-feedback.js";
 import saveFeedbackSubmission from "../lib/research-feedback-submission.js";
+import publicStart from "../lib/research-phase31/public-start.js";
+import incompleteMaintenance from "../lib/research-phase31/incomplete-maintenance.js";
+import referralAttribution from "../lib/research-phase31/referral-attribution.js";
+import referralDisable from "../lib/research-phase31/referral-disable.js";
+import referralIssue from "../lib/research-phase31/referral-issue.js";
+import referralResolve from "../lib/research-phase31/referral-resolve.js";
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -44,6 +50,17 @@ function looksLikeEmail(value) {
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
+
+  const phase31Handlers = {
+    "public-start": publicStart,
+    "incomplete-maintenance": incompleteMaintenance,
+    "referral-attribution": referralAttribution,
+    "referral-disable": referralDisable,
+    "referral-issue": referralIssue,
+    "referral-resolve": referralResolve,
+  };
+  const phase31Action = typeof req.query?.phase31 === "string" ? req.query.phase31 : "";
+  if (phase31Handlers[phase31Action]) return phase31Handlers[phase31Action](req, res);
 
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");

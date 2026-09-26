@@ -3,9 +3,9 @@
 process.env.AIRTABLE_RESEARCH_TOKEN = "synthetic-airtable-token";
 process.env.RESEARCH_REFERRAL_SECRET = "synthetic-referral-secret-that-is-long-enough";
 
-const { default: issue } = await import("../api/research-referral-issue.js");
-const { default: resolve } = await import("../api/research-referral-resolve.js");
-const { default: disable } = await import("../api/research-referral-disable.js");
+const { default: issue } = await import("../lib/research-phase31/referral-issue.js");
+const { default: resolve } = await import("../lib/research-phase31/referral-resolve.js");
+const { default: disable } = await import("../lib/research-phase31/referral-disable.js");
 
 function response() {
   const res = { code: 0, body: null };

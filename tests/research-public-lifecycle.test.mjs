@@ -3,8 +3,8 @@
 process.env.AIRTABLE_RESEARCH_TOKEN = "synthetic-airtable-token";
 process.env.RESEARCH_MAINTENANCE_KEY = "synthetic-maintenance-key";
 
-const { default: start } = await import("../api/research-public-start.js");
-const { default: maintain } = await import("../api/research-incomplete-maintenance.js");
+const { default: start } = await import("../lib/research-phase31/public-start.js");
+const { default: maintain } = await import("../lib/research-phase31/incomplete-maintenance.js");
 
 function response() {
   const res = { code: 0, body: null };

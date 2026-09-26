@@ -5,8 +5,8 @@ process.env.RESEARCH_REFERRAL_SECRET = "synthetic-referral-secret-that-is-long-e
 process.env.RESEARCH_PUBLIC_ENTRY_ENABLED = "true";
 process.env.RESEARCH_REFERRAL_RESOLVE_ENABLED = "true";
 
-const { default: start } = await import("../api/research-public-start.js");
-const { default: attribution } = await import("../api/research-referral-attribution.js");
+const { default: start } = await import("../lib/research-phase31/public-start.js");
+const { default: attribution } = await import("../lib/research-phase31/referral-attribution.js");
 
 function response() {
   const res = { code: 0, body: null };
