@@ -51,6 +51,9 @@ const IDENTITY_FIELD = {
   name: "fldGto31lmx5KwyNr",
   email: "fldePJtCCYwLsmNjp",
   inviteStatus: "fldEhm06lLDvEeF6q",
+  identityOrigin: "fldzOXQwAKsJFvjx4",
+  incompleteExpiresAt: "fldj4eidGJYUhVeUQ",
+  lifecycleState: "fldAU2mJzl7jwcCWz",
 };
 
 // Same field/value pairing api/research-submit.js and
@@ -136,6 +139,13 @@ export default async function handler(req, res) {
 
   if (!record) {
     return res.status(200).json({ valid: false });
+  }
+
+  const isPublic = record.fields[IDENTITY_FIELD.identityOrigin] === "public_self_service";
+  const expiry = Date.parse(record.fields[IDENTITY_FIELD.incompleteExpiresAt] || "");
+  if (isPublic && (record.fields[IDENTITY_FIELD.lifecycleState] === "expired" ||
+      (Number.isFinite(expiry) && Date.now() >= expiry))) {
+    return res.status(200).json({ valid: false, expired: true });
   }
 
   const name = firstNameOf(record.fields[IDENTITY_FIELD.name]);

@@ -95,6 +95,7 @@ const FIELD = {
   orgSize: "fldNrxY2Jm8OOcBFm",
   instrumentVersion: "fldHJ4KNzMbpzdob6",
   rationaleVersion: "fldW2IulhhJHIdIjV",
+  submissionOrigin: "fld7t6e21yjvQmTTh",
 };
 
 // Legacy clients omit version; their answers retain the legacy instrument.
@@ -108,6 +109,9 @@ const RATIONALE_VERSION = "phase3-rationale-v1.0-2026-08-28";
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
   inviteStatus: "fldEhm06lLDvEeF6q",
+  identityOrigin: "fldzOXQwAKsJFvjx4",
+  incompleteExpiresAt: "fldj4eidGJYUhVeUQ",
+  lifecycleState: "fldAU2mJzl7jwcCWz",
 };
 
 const INVITE_STATUS_COMPLETED = "Completed";
@@ -206,6 +210,12 @@ export default async function handler(req, res) {
   if (currentStatus === INVITE_STATUS_COMPLETED) {
     return res.status(409).json({ error: "This invite has already been used." });
   }
+  const isPublic = identityRecord.fields[IDENTITY_FIELD.identityOrigin] === "public_self_service";
+  const expiry = Date.parse(identityRecord.fields[IDENTITY_FIELD.incompleteExpiresAt] || "");
+  if (isPublic && (identityRecord.fields[IDENTITY_FIELD.lifecycleState] === "expired" ||
+      (Number.isFinite(expiry) && Date.now() >= expiry))) {
+    return res.status(410).json({ error: "This saved response has expired." });
+  }
 
   const fields = {
     [FIELD.token]: token,
@@ -217,6 +227,7 @@ export default async function handler(req, res) {
     [FIELD.instrumentVersion]: requestedVersion,
     [FIELD.rationaleVersion]: requestedRationale,
   };
+  if (isPublic) fields[FIELD.submissionOrigin] = "public_self_service";
   if (typeof context.role === "string" && context.role) fields[FIELD.role] = context.role;
   if (typeof context.discipline === "string" && context.discipline) fields[FIELD.discipline] = context.discipline;
   if (typeof context.teamResponsibility === "string" && context.teamResponsibility) {

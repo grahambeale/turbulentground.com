@@ -72,6 +72,7 @@ const FIELD = {
   meetsCompletionFloor: "fldc1EMbDAHAO99Av",
   instrumentVersion: "fldHJ4KNzMbpzdob6",
   rationaleVersion: "fldW2IulhhJHIdIjV",
+  submissionOrigin: "fld7t6e21yjvQmTTh",
 };
 
 // Legacy clients omit version; their answers retain the legacy instrument.
@@ -85,6 +86,9 @@ const RATIONALE_VERSION = "phase3-rationale-v1.0-2026-08-28";
 const IDENTITY_FIELD = {
   token: "fld6danERot7gjOqb",
   inviteStatus: "fldEhm06lLDvEeF6q",
+  identityOrigin: "fldzOXQwAKsJFvjx4",
+  incompleteExpiresAt: "fldj4eidGJYUhVeUQ",
+  lifecycleState: "fldAU2mJzl7jwcCWz",
 };
 
 // Paired with scripts/generate-invite.mjs's INVITE_STATUS_SENT = "Sent".
@@ -232,6 +236,12 @@ export default async function handler(req, res) {
   if (currentStatus === INVITE_STATUS_COMPLETED) {
     return res.status(409).json({ error: "This invite has already been used." });
   }
+  const isPublic = identityRecord.fields[IDENTITY_FIELD.identityOrigin] === "public_self_service";
+  const expiry = Date.parse(identityRecord.fields[IDENTITY_FIELD.incompleteExpiresAt] || "");
+  if (isPublic && (identityRecord.fields[IDENTITY_FIELD.lifecycleState] === "expired" ||
+      (Number.isFinite(expiry) && Date.now() >= expiry))) {
+    return res.status(410).json({ error: "This saved response has expired." });
+  }
 
   let existingResponse;
   try { existingResponse = await findResponseRecord(token, airtableToken); }
@@ -254,6 +264,7 @@ export default async function handler(req, res) {
     [FIELD.instrumentVersion]: requestedVersion,
     [FIELD.rationaleVersion]: requestedRationale,
   };
+  if (isPublic) fields[FIELD.submissionOrigin] = "public_self_service";
 
   if (typeof data.startedAt === "string" && data.startedAt) {
     fields[FIELD.startedAt] = data.startedAt;
@@ -278,6 +289,8 @@ export default async function handler(req, res) {
   // Reserve the invite before writing the response. If the response write
   // fails, restore the previous status so the participant can retry.
   try {
+    const identityFields = { [IDENTITY_FIELD.inviteStatus]: INVITE_STATUS_COMPLETED };
+    if (isPublic) identityFields[IDENTITY_FIELD.lifecycleState] = "completed";
     const patchRes = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identityRecord.id}`,
       {
@@ -287,7 +300,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fields: { [IDENTITY_FIELD.inviteStatus]: INVITE_STATUS_COMPLETED },
+          fields: identityFields,
           typecast: true,
         }),
       }
@@ -329,6 +342,11 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("Airtable response write error:", err.message);
     try {
+      const rollbackFields = { [IDENTITY_FIELD.inviteStatus]: currentStatus || "Sent" };
+      if (isPublic) {
+        rollbackFields[IDENTITY_FIELD.lifecycleState] =
+          identityRecord.fields[IDENTITY_FIELD.lifecycleState] || "started";
+      }
       const rollbackRes = await fetch(
         `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identityRecord.id}`,
         {
@@ -338,7 +356,7 @@ export default async function handler(req, res) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fields: { [IDENTITY_FIELD.inviteStatus]: currentStatus || "Sent" },
+            fields: rollbackFields,
             typecast: true,
           }),
         }
