@@ -35,6 +35,7 @@ window.plausible = window.plausible || function () {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,circle,close,code,domain,flare,group,groups,manage_accounts,more_horiz,palette,person,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
+<link rel="stylesheet" href="/research/referral-sharing.css">
 <style>
   /* ── Typography scale ──────────────────────────────────────────────
      Bumped up from the original build after a real walkthrough flagged
@@ -974,6 +975,19 @@ Thank you for being a part of it.</div>
         <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
         <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
       </form>
+
+      <section class="referral-sharing" id="referral-sharing" aria-labelledby="referral-sharing-title" hidden>
+        <h2 id="referral-sharing-title">Help someone else add their experience</h2>
+        <p>If someone in your network has a perspective on the AI shift at work, invite them to take part too.</p>
+        <div class="referral-link-row"><div class="referral-link-value" id="referral-link-value" aria-label="Your personal sharing link"></div><button class="btn" type="button" id="referral-copy-link">Copy link</button></div>
+        <div class="referral-privacy"><strong>The link does not reveal anything about you.</strong><br>It contains a random referral code, not your name, email, answers or results.</div>
+        <fieldset class="referral-mode"><legend>How would you like to share it?</legend><div class="referral-mode-options">
+          <div class="referral-mode-option"><input type="radio" id="referral-mode-public" name="referral-mode" value="public" checked><label for="referral-mode-public"><strong>Share publicly</strong><br>Post the invitation to your wider network.</label></div>
+          <div class="referral-mode-option"><input type="radio" id="referral-mode-private" name="referral-mode" value="private"><label for="referral-mode-private"><strong>Invite someone privately</strong><br>Personalise a message for one person.</label></div>
+        </div></fieldset>
+        <div class="referral-panel" id="referral-public-panel"><label class="referral-field" for="referral-public-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-public-message">How is AI changing your experience of work? I’ve taken part in this independent study from Turbulent Ground. Add your perspective and get a personal benchmark comparison.</textarea></label><div class="referral-actions"><button class="btn" type="button" id="referral-copy-public">Copy message and link</button><button class="btn secondary" type="button" id="referral-native-share">Open sharing options</button></div><div class="referral-platforms" aria-label="Social sharing options"><button class="referral-platform" type="button" data-referral-platform="LinkedIn">LinkedIn</button><button class="referral-platform" type="button" data-referral-platform="X">X</button><button class="referral-platform" type="button" data-referral-platform="Facebook">Facebook</button><button class="referral-platform" type="button" data-referral-platform="WhatsApp">WhatsApp</button></div><p class="referral-status" id="referral-public-status" role="status" aria-live="polite"></p></div>
+        <div class="referral-panel" id="referral-private-panel" hidden><div class="referral-private-fields"><label class="referral-field" for="referral-recipient-name">Their first name <span class="optional-tag">(optional)</span><input id="referral-recipient-name" type="text" autocomplete="off" maxlength="80"></label><label class="referral-field" for="referral-recipient-email">Their email address <span class="optional-tag">(optional)</span><input id="referral-recipient-email" type="email" autocomplete="off" maxlength="254"></label></div><p>These details stay in this browser. Turbulent Ground does not receive or save them.</p><label class="referral-field" for="referral-private-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-private-message">I thought you might have an interesting perspective on how AI is changing work. I’ve taken part in this independent study from Turbulent Ground. If you’d like to add your experience, it also gives you a personal benchmark comparison.</textarea></label><div class="referral-actions"><button class="btn" type="button" id="referral-open-email">Open email draft</button><button class="btn secondary" type="button" id="referral-copy-private">Copy private message</button></div><div class="referral-platforms" aria-label="Private messaging options"><button class="referral-platform" type="button" data-referral-platform="WhatsApp">WhatsApp</button><button class="referral-platform" type="button" data-referral-platform="LinkedIn message">LinkedIn message</button><button class="referral-platform" type="button" data-referral-platform="Messenger">Messenger</button></div><p class="referral-status" id="referral-private-status" role="status" aria-live="polite"></p></div>
+      </section>
 
       <form class="results-email stay-involved" id="stay-involved-form">
         <h2>Being quoted <span class="optional-tag">(optional)</span></h2>
@@ -2016,6 +2030,7 @@ Thank you for being a part of it.</div>
       trackResearchEvent('Research: Submitted');
       showScreen('screen-done');
       prepareResultsEmail();
+      document.dispatchEvent(new CustomEvent('tg:research-submitted', { detail: { token: token } }));
     }).catch(function () {
       if (trackSubmissionFailure) trackResearchEvent('Research: Submission Failed');
       errorEl.classList.add('visible');
@@ -2191,5 +2206,5 @@ Thank you for being a part of it.</div>
 </script>
 <!-- NAV_JS_END -->
 
-<link rel="stylesheet" href="/research/feedback-widget.css"><script src="/research/feedback-widget.js"></script></body>
+<script src="/research/referral-sharing.js"></script><link rel="stylesheet" href="/research/feedback-widget.css"><script src="/research/feedback-widget.js"></script></body>
 </html>
