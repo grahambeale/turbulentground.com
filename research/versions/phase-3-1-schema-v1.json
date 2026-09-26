@@ -2,6 +2,15 @@
   "version": 1,
   "baseId": "app7dKDinTjxczEfD",
   "status": "approved-disabled-migration",
+  "appliedSchema": {
+    "appliedAt": "2026-09-26T23:12:00Z",
+    "tables": {
+      "Research Referrals": "tblXBzl8mQal543xw",
+      "Research Acquisitions": "tblhjBvklwWNNx8Rg",
+      "Research Recruitment Events": "tbldf3XOuTy3DYth9",
+      "Research Propositions": "tblfbKoLuiI6maWrl"
+    }
+  },
   "existingTables": [
     {
       "name": "Identity",
