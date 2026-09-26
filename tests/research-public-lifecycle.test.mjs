@@ -50,7 +50,7 @@ await start({ method: "POST", body: {
   adultConfirmed: true, participationConsent: true
 } }, res);
 assert(res.code === 201, "valid synthetic public start should be created");
-assert(writes.length === 1, "valid start should make one Airtable write");
+assert(writes.length === 2, "valid start should create one identity and one acquisition");
 const fields = writes[0].records[0].fields;
 assert(fields.fldzOXQwAKsJFvjx4 === "public_self_service", "origin must be public_self_service");
 assert(fields.fldAU2mJzl7jwcCWz === "started", "lifecycle must start as started");
@@ -58,6 +58,9 @@ const duration = Date.parse(fields.fldj4eidGJYUhVeUQ) - Date.parse(fields.fldBUl
 assert(duration === 14 * 86400000, "expiry must be fixed at exactly 14 days");
 assert(Date.parse(fields.fldBUlgc1HW9JKJqo) >= before, "consent timestamp must be server generated");
 assert(/^\/research\?t=/.test(res.body.resumePath), "response should contain a private return path");
+const acquisition = writes[1].records[0].fields;
+assert(acquisition.fldD7AXUyBI6heSeI === "direct", "unreferred start should lock direct attribution");
+assert(acquisition.fldqU9bCJH5V4m4Lx[0] === "recSynthetic", "acquisition should link to the created identity");
 
 res = response();
 await maintain({ method: "POST", headers: {}, body: { mode: "count-only" } }, res);
@@ -73,7 +76,7 @@ assert(res.code === 200, "authorised count-only maintenance should run");
 assert(res.body.counts.active === 1, "dry run should count active records");
 assert(res.body.counts.reminderEligible === 1, "dry run should count reminder-eligible records");
 assert(res.body.counts.expired === 1, "dry run should count expired records");
-assert(writes.length === 1, "maintenance dry run must not write");
+assert(writes.length === 2, "maintenance dry run must not write");
 
 console.log("Phase 3.1 disabled public lifecycle checks passed.");
 

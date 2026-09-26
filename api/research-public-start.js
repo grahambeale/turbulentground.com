@@ -6,6 +6,8 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
+const REFERRALS_TABLE_ID = "tblXBzl8mQal543xw";
+const ACQUISITIONS_TABLE_ID = "tblhjBvklwWNNx8Rg";
 const RETURN_DAYS = 14;
 const PRIVACY_VERSION = "phase-3-1-privacy-v1";
 const CONSENT_VERSION = "phase-3-1-consent-v1";
@@ -23,6 +25,13 @@ const FIELD = {
   lifecycleState: "fldAU2mJzl7jwcCWz",
   publicParticipantId: "fld1Eki2yPUVPS72T",
 };
+const REFERRAL_FIELD = { referralId: "fldhsVcyzGsgcIZXU", status: "fld8XFaGgrsGKkABg" };
+const ACQUISITION_FIELD = {
+  id: "fldqnGM9SWMpPcZtK", participant: "fldqU9bCJH5V4m4Lx", referrer: "fldWurPEyDv2OhIXp",
+  channel: "fldagXCapTLv19hLF", status: "fldD7AXUyBI6heSeI", landingAt: "fldxDn7WjkfJONBQb",
+  lockedAt: "fldkh3datrGFaXNlT", generation: "fldao8tphfNYi86lC", conflictCount: "fldwGlpOjfvSvhXpq"
+};
+const CHANNELS = new Set(["direct", "organic", "email", "linkedin", "x", "facebook", "whatsapp", "other", "unknown"]);
 
 function parseBody(body) {
   if (typeof body === "string") {
@@ -36,6 +45,19 @@ function parseBody(body) {
 
 function validEmail(value) {
   return typeof value === "string" && value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+async function resolveReferral(referralId, token) {
+  if (process.env.RESEARCH_REFERRAL_RESOLVE_ENABLED !== "true") return null;
+  if (!/^[A-Za-z0-9_-]{20,64}$/.test(referralId)) return null;
+  const formula = `{${REFERRAL_FIELD.referralId}}="${referralId.replace(/"/g, '\\"')}"`;
+  const params = new URLSearchParams({ filterByFormula: formula, maxRecords: "1", returnFieldsByFieldId: "true" });
+  const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${REFERRALS_TABLE_ID}?${params}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error(`Airtable referral lookup failed: ${response.status}`);
+  const record = (await response.json()).records?.[0];
+  return record && record.fields[REFERRAL_FIELD.status] === "active" ? record : null;
 }
 
 export default async function handler(req, res) {
@@ -64,6 +86,14 @@ export default async function handler(req, res) {
   const expiresAt = new Date(now.getTime() + RETURN_DAYS * 24 * 60 * 60 * 1000);
   const privateToken = randomBytes(32).toString("base64url");
   const participantId = randomUUID();
+  const suppliedReferral = typeof data.referralId === "string" ? data.referralId.trim() : "";
+  const channel = CHANNELS.has(data.channel) ? data.channel : (suppliedReferral ? "unknown" : "direct");
+  let referral = null;
+  try { referral = suppliedReferral ? await resolveReferral(suppliedReferral, airtableToken) : null; }
+  catch (error) {
+    console.error(error.message);
+    return res.status(502).json({ error: "Could not start the survey. Please try again." });
+  }
   const fields = {
     [FIELD.token]: privateToken,
     [FIELD.name]: name,
@@ -85,6 +115,31 @@ export default async function handler(req, res) {
       body: JSON.stringify({ records: [{ fields }], typecast: true }),
     });
     if (!response.ok) throw new Error(`Airtable identity creation failed: ${response.status}`);
+    const identity = (await response.json()).records?.[0];
+    if (!identity?.id) throw new Error("Airtable identity creation returned no record");
+
+    const acquisitionFields = {
+      [ACQUISITION_FIELD.id]: randomUUID(),
+      [ACQUISITION_FIELD.participant]: [identity.id],
+      [ACQUISITION_FIELD.channel]: channel,
+      [ACQUISITION_FIELD.status]: referral ? "attributed" : (suppliedReferral ? "invalid_referral" : "direct"),
+      [ACQUISITION_FIELD.landingAt]: now.toISOString(),
+      [ACQUISITION_FIELD.lockedAt]: now.toISOString(),
+      [ACQUISITION_FIELD.generation]: referral ? 1 : 0,
+      [ACQUISITION_FIELD.conflictCount]: 0,
+    };
+    if (referral) acquisitionFields[ACQUISITION_FIELD.referrer] = [referral.id];
+    const acquisition = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${ACQUISITIONS_TABLE_ID}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${airtableToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ records: [{ fields: acquisitionFields }], typecast: true }),
+    });
+    if (!acquisition.ok) {
+      await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}/${identity.id}`, {
+        method: "DELETE", headers: { Authorization: `Bearer ${airtableToken}` }
+      });
+      throw new Error(`Airtable acquisition creation failed: ${acquisition.status}`);
+    }
   } catch (error) {
     console.error(error.message);
     return res.status(502).json({ error: "Could not start the survey. Please try again." });
