@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "baseId": "app7dKDinTjxczEfD",
+  "status": "approved-disabled-migration",
+  "existingTables": [
+    {
+      "name": "Identity",
+      "id": "tblwpricYYzx4rmiR",
+      "verifiedExistingFields": {
+        "Name": "fldGto31lmx5KwyNr",
+        "Email": "fldePJtCCYwLsmNjp",
+        "Token": "fld6danERot7gjOqb",
+        "Invite Status": "fldEhm06lLDvEeF6q"
+      },
+      "addFields": [
+        { "name": "Identity Origin", "type": "singleSelect", "choices": ["owner_invite", "public_self_service"] },
+        { "name": "Privacy Version", "type": "singleLineText" },
+        { "name": "Consent Version", "type": "singleLineText" },
+        { "name": "Participation Consent At", "type": "dateTime" },
+        { "name": "Incomplete Expires At", "type": "dateTime" },
+        { "name": "Incomplete Reminder Sent At", "type": "dateTime" },
+        { "name": "Lifecycle State", "type": "singleSelect", "choices": ["created", "started", "completed", "withdrawn", "expired"] },
+        { "name": "Public Participant ID", "type": "singleLineText" }
+      ]
+    },
+    {
+      "name": "Responses",
+      "id": "tblL9mf8VfAmbhuG7",
+      "verifiedExistingFields": {
+        "Instrument Version": "fldHJ4KNzMbpzdob6",
+        "Rationale Version": "fldW2IulhhJHIdIjV",
+        "Started At": "fldsN6iDwlfMkxamH",
+        "Completed At": "fld8sYjswX21vvVXz",
+        "Token": "flduL4PmBEfH9rLpz",
+        "Meets Completion Floor": "fldc1EMbDAHAO99Av"
+      },
+      "addFields": [
+        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Research Acquisitions", "single": true },
+        { "name": "Submission Origin", "type": "singleSelect", "choices": ["owner_invite", "public_self_service"] }
+      ]
+    }
+  ],
+  "newTables": [
+    {
+      "name": "Research Referrals",
+      "fields": [
+        { "name": "Referral ID", "type": "singleLineText", "primary": true },
+        { "name": "Referrer Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
+        { "name": "Status", "type": "singleSelect", "choices": ["active", "disabled", "withdrawn", "expired"] },
+        { "name": "Issued At", "type": "dateTime" },
+        { "name": "Disabled At", "type": "dateTime" },
+        { "name": "Disabled Reason", "type": "singleSelect", "choices": ["withdrawal", "misuse", "admin", "pilot_closed"] },
+        { "name": "Instrument Version", "type": "singleLineText" },
+        { "name": "Privacy Version", "type": "singleLineText" },
+        { "name": "Consent Version", "type": "singleLineText" }
+      ]
+    },
+    {
+      "name": "Research Acquisitions",
+      "fields": [
+        { "name": "Acquisition ID", "type": "singleLineText", "primary": true },
+        { "name": "Participant Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
+        { "name": "Referrer", "type": "multipleRecordLinks", "linkedTable": "Research Referrals", "single": true },
+        { "name": "First-touch Channel", "type": "singleSelect", "choices": ["direct", "organic", "email", "linkedin", "x", "facebook", "whatsapp", "other", "unknown"] },
+        { "name": "Attribution Status", "type": "singleSelect", "choices": ["candidate", "attributed", "direct", "unknown", "invalid_referral", "self_referral", "conflicting_referral", "withdrawn"] },
+        { "name": "Landing At", "type": "dateTime" },
+        { "name": "Locked At", "type": "dateTime" },
+        { "name": "Referral Generation", "type": "number" },
+        { "name": "Proposition ID", "type": "singleLineText" },
+        { "name": "Proposition Version", "type": "number" },
+        { "name": "Conflict Count", "type": "number" }
+      ]
+    },
+    {
+      "name": "Research Recruitment Events",
+      "fields": [
+        { "name": "Event ID", "type": "singleLineText", "primary": true },
+        { "name": "Event Name", "type": "singleSelect", "choices": ["public_landing_view", "referred_landing", "survey_start", "referred_start", "survey_complete", "referred_complete", "share_option_view", "share_option_selected", "share_action", "referral_invalid", "attribution_conflict", "withdrawal_applied"] },
+        { "name": "Occurred At", "type": "dateTime" },
+        { "name": "Received At", "type": "dateTime" },
+        { "name": "Participant Identity", "type": "multipleRecordLinks", "linkedTable": "Identity", "single": true },
+        { "name": "Acquisition", "type": "multipleRecordLinks", "linkedTable": "Research Acquisitions", "single": true },
+        { "name": "Source Authority", "type": "singleSelect", "choices": ["client", "server", "admin"] },
+        { "name": "Validity Status", "type": "singleSelect", "choices": ["candidate", "valid", "duplicate", "automated", "withdrawn", "excluded"] },
+        { "name": "Event Schema Version", "type": "number" },
+        { "name": "Action", "type": "singleSelect", "choices": ["copy_link", "copy_message", "native_share", "open_email", "open_platform"] },
+        { "name": "Sharing Mode", "type": "singleSelect", "choices": ["public", "private"] },
+        { "name": "Platform", "type": "singleSelect", "choices": ["linkedin", "x", "facebook", "whatsapp", "email", "other"] }
+      ]
+    },
+    {
+      "name": "Research Propositions",
+      "fields": [
+        { "name": "Proposition Key", "type": "singleLineText", "primary": true },
+        { "name": "Proposition ID", "type": "singleLineText" },
+        { "name": "Version", "type": "number" },
+        { "name": "Hypothesis", "type": "multilineText" },
+        { "name": "Approved Copy", "type": "multilineText" },
+        { "name": "Status", "type": "singleSelect", "choices": ["draft", "approved", "active", "paused", "retired"] },
+        { "name": "Approved By", "type": "singleLineText" },
+        { "name": "Approved At", "type": "dateTime" },
+        { "name": "Decision Reference", "type": "singleLineText" }
+      ]
+    }
+  ],
+  "featureFlags": {
+    "RESEARCH_PUBLIC_ENTRY_ENABLED": false,
+    "RESEARCH_REFERRAL_ISSUE_ENABLED": false,
+    "RESEARCH_REFERRAL_RESOLVE_ENABLED": false,
+    "RESEARCH_SHARING_UI_ENABLED": false,
+    "RESEARCH_INCOMPLETE_REMINDER_ENABLED": false
+  }
+}
