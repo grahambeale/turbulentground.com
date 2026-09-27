@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node scripts/build-learnings.mjs && node scripts/build-nav.mjs && node scripts/build-feedback.mjs",
-    "test": "node tests/diagnostic-flow.test.js && node tests/submit-api.test.mjs && node tests/research-feedback-api.test.mjs && node tests/research-plausible-funnel.test.mjs && node tests/research-upfront-email-consent.test.mjs && node tests/research-answer-context.test.mjs && node tests/research-scoped-airtable-mcp.test.mjs && node --test tests/research-phase31-schema.test.mjs tests/research-public-lifecycle.test.mjs tests/research-public-expiry.test.mjs tests/research-incomplete-maintenance.test.mjs tests/research-referral-identity.test.mjs tests/research-referral-safeguards.test.mjs tests/research-referral-sharing-integration.test.mjs",
+    "test": "node tests/diagnostic-flow.test.js && node tests/submit-api.test.mjs && node tests/research-feedback-api.test.mjs && node tests/research-plausible-funnel.test.mjs && node tests/research-upfront-email-consent.test.mjs && node tests/research-answer-context.test.mjs && node tests/research-scoped-airtable-mcp.test.mjs && node --test tests/research-phase31-schema.test.mjs tests/research-public-lifecycle.test.mjs tests/research-public-expiry.test.mjs tests/research-incomplete-cron.test.mjs tests/research-incomplete-maintenance.test.mjs tests/research-referral-identity.test.mjs tests/research-referral-safeguards.test.mjs tests/research-referral-sharing-integration.test.mjs",
     "test:smoke": "playwright test"
   }
 }
