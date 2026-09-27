@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research lifecycle email review · Turbulent Ground</title>
+  <style>
+    :root { color-scheme: dark; --ink:#ece0cc; --muted:#ad9c86; --paper:#151310; --card:#211d18; --line:#443a30; --orange:#d6531d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#0e0d0c; color:var(--ink); font:16px/1.55 Arial,sans-serif; }
+    .shell { width:min(1080px,calc(100% - 32px)); margin:0 auto; padding:40px 0 72px; }
+    header { display:grid; gap:10px; margin-bottom:26px; }
+    .eyebrow { color:#d9794f; font-size:12px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; }
+    h1 { margin:0; font:400 clamp(34px,5vw,58px)/1.05 Georgia,serif; letter-spacing:-.025em; }
+    header p { margin:0; max-width:740px; color:var(--muted); }
+    .notice { padding:14px 16px; border:1px solid var(--line); border-left:3px solid var(--orange); background:#191612; color:#cfc0aa; }
+    .tabs { display:flex; gap:8px; margin:30px 0 18px; }
+    .tab { border:1px solid var(--line); border-radius:999px; padding:10px 16px; background:transparent; color:var(--ink); font:inherit; cursor:pointer; }
+    .tab[aria-selected="true"] { border-color:var(--orange); background:var(--orange); color:white; }
+    .panel[hidden] { display:none; }
+    .review-grid { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:28px; align-items:start; }
+    .email-frame { padding:22px; border:1px solid #2d2924; border-radius:18px; background:#171512; box-shadow:0 24px 70px rgba(0,0,0,.28); }
+    .meta { display:grid; grid-template-columns:70px 1fr; gap:6px 12px; padding:0 4px 18px; color:#a99c8c; font-size:13px; }
+    .meta strong { color:#d8c9b5; font-weight:600; }
+    .email { max-width:640px; margin:0 auto; overflow:hidden; border:1px solid #3a332a; border-radius:10px; background:var(--paper); }
+    .email-brand { padding:26px 34px 18px; border-bottom:1px solid #302a23; font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    .email-body { padding:34px; }
+    .email-body h2 { margin:0 0 24px; font:400 32px/1.15 Georgia,serif; }
+    .email-body p { margin:0 0 18px; color:#d4c6b1; }
+    .cta { display:inline-block; margin:4px 0 22px; border-radius:999px; padding:14px 24px; background:#c9470e; color:white; font-weight:700; text-decoration:none; }
+    .fine { padding-top:18px; border-top:1px solid #302a23; color:#968979!important; font-size:13px; }
+    aside { padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--card); }
+    aside h2 { margin:0 0 12px; font:400 23px/1.2 Georgia,serif; }
+    aside ul { margin:0; padding-left:20px; color:#cbbda9; }
+    aside li+li { margin-top:10px; }
+    @media (max-width:760px) { .review-grid { grid-template-columns:1fr; } .email-frame { padding:10px; } .email-body { padding:26px 22px; } .email-brand { padding:22px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <span class="eyebrow">Copy review · not live</span>
+      <h1>Incomplete-response emails</h1>
+      <p>These previews use placeholder participant details. They do not send anything, access Airtable or enable the lifecycle process.</p>
+    </header>
+    <div class="notice">Please review the meaning and tone as well as the appearance. The dates and private return link will be generated separately for each participant.</div>
+
+    <div class="tabs" role="tablist" aria-label="Email previews">
+      <button class="tab" id="reminder-tab" role="tab" aria-selected="true" aria-controls="reminder">7-day reminder</button>
+      <button class="tab" id="deletion-tab" role="tab" aria-selected="false" aria-controls="deletion">14-day deletion</button>
+    </div>
+
+    <section class="panel" id="reminder" role="tabpanel" aria-labelledby="reminder-tab">
+      <div class="review-grid">
+        <div class="email-frame">
+          <div class="meta"><strong>Subject</strong><span>A reminder about your incomplete research response</span><strong>To</strong><span>alex@example.com</span></div>
+          <article class="email">
+            <div class="email-brand">Turbulent Ground</div>
+            <div class="email-body">
+              <h2>A reminder about your research response</h2>
+              <p>Hi Alex,</p>
+              <p>You started the Turbulent Ground research study but have not completed it yet.</p>
+              <a class="cta" href="#" onclick="return false">Resume your survey</a>
+              <p>Your incomplete answers and contact details will be deleted after 11 October 2026 unless you complete the study.</p>
+              <p class="fine">This automatic deletion helps ensure I only keep research data with your permission.</p>
+            </div>
+          </article>
+        </div>
+        <aside><h2>Check this email</h2><ul><li>Does it feel helpful rather than pressuring?</li><li>Is the deletion deadline clear?</li><li>Does the privacy explanation make sense?</li><li>Is the button wording right?</li></ul></aside>
+      </div>
+    </section>
+
+    <section class="panel" id="deletion" role="tabpanel" aria-labelledby="deletion-tab" hidden>
+      <div class="review-grid">
+        <div class="email-frame">
+          <div class="meta"><strong>Subject</strong><span>Your incomplete research response has been deleted</span><strong>To</strong><span>alex@example.com</span></div>
+          <article class="email">
+            <div class="email-brand">Turbulent Ground</div>
+            <div class="email-body">
+              <h2>Your incomplete response has been deleted</h2>
+              <p>Hi Alex,</p>
+              <p>Your incomplete Turbulent Ground research response and the contact details connected to it have now been deleted.</p>
+              <p>If you would still like to take part, you can begin again.</p>
+              <a class="cta" href="#" onclick="return false">Start the survey again</a>
+              <p class="fine">This email is a one-off confirmation. The email address used to send it is not being kept as part of the incomplete response.</p>
+            </div>
+          </article>
+        </div>
+        <aside><h2>Check this email</h2><ul><li>Is it reassuring and unambiguous?</li><li>Is “begin again” clear enough?</li><li>Should it explicitly mention the 14-day period?</li><li>Does the final privacy sentence help?</li></ul></aside>
+      </div>
+    </section>
+  </main>
+  <script>
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(candidate => {
+        const selected = candidate === tab;
+        candidate.setAttribute('aria-selected', String(selected));
+        document.getElementById(candidate.getAttribute('aria-controls')).hidden = !selected;
+      });
+    }));
+  </script>
+</body>
+</html>
