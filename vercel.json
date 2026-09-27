@@ -27,6 +27,10 @@
       "destination": "/api/research-invite?phase31=incomplete-maintenance"
     },
     {
+      "source": "/api/research-incomplete-cron",
+      "destination": "/api/research-invite?phase31=incomplete-cron"
+    },
+    {
       "source": "/api/research-referral-attribution",
       "destination": "/api/research-invite?phase31=referral-attribution"
     },

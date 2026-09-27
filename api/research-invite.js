@@ -12,6 +12,7 @@ import saveResearchFeedback from "../lib/research-feedback.js";
 import saveFeedbackSubmission from "../lib/research-feedback-submission.js";
 import publicStart from "../lib/research-phase31/public-start.js";
 import incompleteMaintenance from "../lib/research-phase31/incomplete-maintenance.js";
+import incompleteCron from "../lib/research-phase31/incomplete-cron.js";
 import referralAttribution from "../lib/research-phase31/referral-attribution.js";
 import referralDisable from "../lib/research-phase31/referral-disable.js";
 import referralIssue from "../lib/research-phase31/referral-issue.js";
@@ -54,6 +55,7 @@ export default async function handler(req, res) {
   const phase31Handlers = {
     "public-start": publicStart,
     "incomplete-maintenance": incompleteMaintenance,
+    "incomplete-cron": incompleteCron,
     "referral-attribution": referralAttribution,
     "referral-disable": referralDisable,
     "referral-issue": referralIssue,

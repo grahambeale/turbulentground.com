@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 
 process.env.CRON_SECRET = "synthetic-cron-secret";
 process.env.RESEARCH_MAINTENANCE_KEY = "synthetic-maintenance-key";
-const { createCronHandler } = await import("../api/research-incomplete-cron.js");
+const { createCronHandler } = await import("../lib/research-phase31/incomplete-cron.js");
 
 function response() {
   const res = { code: 0, body: null, headers: {} };
