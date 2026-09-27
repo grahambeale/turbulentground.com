@@ -33,11 +33,19 @@ global.fetch = async (url, options = {}) => {
 
 delete process.env.RESEARCH_PUBLIC_ENTRY_ENABLED;
 let res = response();
+await start({ method: "GET" }, res);
+assert(res.code === 200 && res.body.enabled === false, "public start availability must report disabled safely");
+
+res = response();
 await start({ method: "POST", body: {} }, res);
 assert(res.code === 404, "public start must be unavailable while its flag is off");
 assert(writes.length === 0, "disabled public start must not write");
 
 process.env.RESEARCH_PUBLIC_ENTRY_ENABLED = "true";
+res = response();
+await start({ method: "GET" }, res);
+assert(res.code === 200 && res.body.enabled === true, "public start availability must report enabled");
+
 res = response();
 await start({ method: "POST", body: { name: "Synthetic Person", email: "synthetic@example.test" } }, res);
 assert(res.code === 400, "public start must require adult and participation confirmation");

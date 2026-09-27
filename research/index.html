@@ -505,6 +505,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .error-msg.visible { display: block; }
 
   .loading-wrap { text-align: center; padding: 90px 0; color: var(--muted); }
+  .public-start-wrap { max-width: 680px; margin: 0 auto; }
+  .public-start-wrap .intro { margin-bottom: 18px; }
+  .public-start-fields { display: grid; gap: 18px; margin: 28px 0 12px; }
+  .public-start-field label { display: block; margin-bottom: 7px; color: var(--ink-mid); }
+  .public-start-field input {
+    width: 100%; padding: 13px 14px; border: 1px solid rgba(232,220,200,0.28);
+    border-radius: 8px; background: var(--surface); color: var(--ink); font: inherit;
+  }
+  .public-start-note { color: var(--muted); font-size: .9rem; margin: 14px 0 6px; }
+  .public-start-status { min-height: 1.7em; color: var(--orange-lt); margin-top: 12px; }
 
   /* ── Consent-screen greeting ──────────────────────────────────── */
   .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
@@ -740,6 +750,28 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     <div class="loading-wrap"><p>Checking your invite…</p></div>
   </section>
 
+  <!-- ============ SCREEN 0a: PUBLIC START ============ -->
+  <section class="screen" id="screen-public-start">
+    <div class="public-start-wrap">
+      <p class="eyebrow">Your experience of the AI shift</p>
+      <h1>Take part in the research</h1>
+      <p class="intro">This personal research project is for people working in or alongside product development teams who are experiencing the AI shift first-hand.</p>
+      <p class="intro">Your name helps make the study personal. Your email gives you a private link so you can return if you need to. It will not add you to study updates unless you choose that separately.</p>
+      <p class="public-start-note">If you do not complete the survey, I will send one reminder after seven days and automatically delete the incomplete answers and contact details after 14 days.</p>
+      <p class="public-start-note">Read the <a class="privacy-link" href="/research/privacy" target="_blank" rel="noopener">privacy notice</a> before continuing.</p>
+      <form id="public-start-form">
+        <div class="public-start-fields">
+          <div class="public-start-field"><label for="public-start-name">Your name</label><input id="public-start-name" name="name" type="text" autocomplete="name" maxlength="120" required></div>
+          <div class="public-start-field"><label for="public-start-email">Your email address</label><input id="public-start-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+        </div>
+        <div class="check-row"><input type="checkbox" id="public-start-adult" required><label for="public-start-adult">I am 18 or over.<span class="required-tag">Required</span></label></div>
+        <div class="check-row"><input type="checkbox" id="public-start-consent" required><label for="public-start-consent">I have read the privacy information and agree to take part in this research study.<span class="required-tag">Required</span></label></div>
+        <div style="margin-top:28px;"><button type="submit" class="btn" id="public-start-submit">Start the survey</button></div>
+        <p class="public-start-status" id="public-start-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
   <!-- ============ SCREEN 0b: INVALID TOKEN ============ -->
   <section class="screen" id="screen-invalid">
     <div class="loading-wrap">
@@ -803,7 +835,7 @@ So thank you for being a part of it.</div>
       </details>
     </div>
     <p class="intro">
-      This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
+      This research study is for people working in or alongside product development teams who are experiencing the AI shift first-hand.
     </p>
     <p class="intro">
       This study explores how AI is changing work in product teams, and the personal practices and workplace conditions that help people use it with judgement, agency and care. It is a short account of your experience, rather than an AI maturity assessment. Your answers will help identify patterns and questions for further research.
@@ -1365,12 +1397,14 @@ Thank you for being a part of it.</div>
   var RESTRAINED_PREVIEW_KEY = '71890dda2c5d486b8925d282ba29d62bafd59568';
   var localRestrainedPreview = previewMode === 'restrained' &&
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
+  var publicStartPreview = previewMode === 'public-start' &&
+    new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   document.documentElement.classList.add('likert-transitions');
   document.documentElement.classList.add('restrained-research');
   var researchEventsSent = {};
 
   function trackResearchEvent(name) {
-    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || researchEventsSent[name]) return;
+    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || publicStartPreview || researchEventsSent[name]) return;
     researchEventsSent[name] = true;
     window.plausible(name);
   }
@@ -1387,13 +1421,20 @@ Thank you for being a part of it.</div>
     window.scrollTo(0, 0);
   }
 
-  // ---- screen 0: token lookup, before the consent screen is ever shown ----
+  // ---- screen 0: public entry or token lookup, before consent is shown ----
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
+  if (publicStartPreview) {
+    showScreen('screen-public-start');
+  } else if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
     renderPairs();
     showScreen('screen-pairs');
+  } else if (!token) {
+    fetch('/api/research-public-start')
+      .then(function (res) { return res.json(); })
+      .then(function (data) { showScreen(data && data.enabled === true ? 'screen-public-start' : 'screen-invalid'); })
+      .catch(function () { showScreen('screen-invalid'); });
   } else {
     fetch('/api/research-lookup?t=' + encodeURIComponent(token))
       .then(function (res) { return res.json(); })
@@ -1446,6 +1487,42 @@ Thank you for being a part of it.</div>
         showScreen('screen-invalid');
       });
   }
+
+  var publicStartForm = document.getElementById('public-start-form');
+  publicStartForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var submit = document.getElementById('public-start-submit');
+    var status = document.getElementById('public-start-status');
+    var name = document.getElementById('public-start-name').value.trim();
+    var email = document.getElementById('public-start-email').value.trim();
+    var adultConfirmed = document.getElementById('public-start-adult').checked;
+    var participationConsent = document.getElementById('public-start-consent').checked;
+    if (!name || !looksLikeEmailClientSide(email) || !adultConfirmed || !participationConsent) {
+      status.textContent = 'Please complete your name, email and both confirmations.';
+      return;
+    }
+    if (publicStartPreview) {
+      status.textContent = 'Preview complete. No participant record was created.';
+      return;
+    }
+    submit.disabled = true;
+    submit.textContent = 'Starting…';
+    status.textContent = '';
+    fetch('/api/research-public-start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, adultConfirmed: adultConfirmed, participationConsent: participationConsent })
+    }).then(function (res) {
+      return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+    }).then(function (result) {
+      if (!result.ok || !result.data || !result.data.resumePath) throw new Error(result.data && result.data.error || 'Could not start the survey.');
+      window.location.replace(result.data.resumePath);
+    }).catch(function (error) {
+      status.textContent = error.message || 'Could not start the survey. Please try again.';
+      submit.disabled = false;
+      submit.textContent = 'Start the survey';
+    });
+  });
 
   function isPlainObjectClient(v) {
     return typeof v === 'object' && v !== null && !Array.isArray(v);

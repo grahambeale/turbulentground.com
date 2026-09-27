@@ -14,11 +14,11 @@ For anything about this research or your information, email [graham@turbulentgro
 
 ## What this is
 
-This is an invite-only research study for people working in or alongside product development teams who are experiencing the AI shift first-hand.
+This research study is for people working in or alongside product development teams who are experiencing the AI shift first-hand. People may take part after a direct invitation or through the public study page.
 
 The aim is to understand how AI is changing people's work, and the personal and organisational conditions that help them use it with judgement, agency and care.
 
-I may have your name and email because I know you through my professional network, because someone introduced or recommended you, or because you provided them after receiving an invitation through another channel.
+I may have your name and email because I know you through my professional network, because someone introduced or recommended you, because you provided them after receiving an invitation, or because you entered them when starting through the public study page.
 
 ## What I'm asking you to do
 
@@ -44,7 +44,7 @@ I may have your name and email because I know you through my professional networ
 
 You do not have to take part. The profile questions, answer context and open comment are optional, and each statement also offers “Prefer not to say” and “Not applicable”.
 
-Where I rely on legitimate interests, those interests are selecting and administering a small invite-only study, keeping the survey secure, preventing duplicate submissions and maintaining a reliable website. I limit this processing to what is reasonably necessary and give you the right to object below.
+Where I rely on legitimate interests, those interests are administering the study, keeping the survey secure, preventing duplicate submissions and maintaining a reliable website. I limit this processing to what is reasonably necessary and give you the right to object below.
 
 Please do **not** include information about your physical or mental health, alleged wrongdoing, trade-union membership or any other sensitive personal information. Do not identify a colleague or anyone else by name. If you include this unexpectedly, I will remove it from the research dataset where reasonably possible and will not intentionally use it in the analysis.
 
@@ -87,6 +87,8 @@ Some suppliers process data in the United States or other countries outside the 
 
 ## How long I keep it
 
+If you start through the public study page but do not finish, I keep the incomplete answers and connected name and email for up to 14 days. I send one reminder after seven days. If you still do not complete the survey, I automatically delete that incomplete response and its connected contact details after 14 days.
+
 I keep identifiable invitation, contact, consent and response records for up to 24 months after you complete the study, unless you withdraw sooner. After that, I delete them or irreversibly remove the link to you. I may keep anonymised aggregate statistics and published findings indefinitely because they no longer identify you.
 
 If you unsubscribe or ask not to be invited again, I may retain the minimum information needed to respect that request. Website and supplier logs are kept for the shorter operational periods set by those services.
@@ -109,4 +111,4 @@ Email me at [graham@turbulentground.com](mailto:graham@turbulentground.com). If 
 
 ---
 
-**Last updated:** 6 September 2026
+**Last updated:** 28 September 2026
