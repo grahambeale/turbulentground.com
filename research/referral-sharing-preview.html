@@ -41,7 +41,7 @@
     .mode{position:relative}
     .mode input{position:absolute;opacity:0;pointer-events:none}
     .mode label{display:block;height:100%;padding:18px;border:1px solid rgba(232,220,200,.18);border-radius:12px;background:var(--bg);color:var(--mid);cursor:pointer}
-    .mode label strong{display:block;color:var(--ink);margin-bottom:4px}
+    .mode label strong{display:block;color:var(--ink)}
     .mode input:checked+label{border-color:var(--orange);box-shadow:inset 0 0 0 1px var(--orange);background:rgba(217,87,28,.1)}
     .mode input:focus-visible+label{outline:3px solid var(--focus);outline-offset:3px}
     .panel{margin-top:24px;padding-top:28px;border-top:1px solid var(--border)}
@@ -53,15 +53,21 @@
     textarea{min-height:160px;resize:vertical;line-height:1.5}
     .private-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .helper{color:var(--muted);font-size:.82rem;margin:7px 0 0}
-    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-    .platforms{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-    .platform{border:1px solid rgba(232,220,200,.22);border-radius:999px;background:transparent;color:var(--mid);padding:9px 14px;font-size:.86rem}
-    .platform:hover{color:var(--ink);border-color:var(--orange-light)}
+    .message-action{display:flex;justify-content:flex-end;margin-top:8px}
+    .button.compact{min-height:0;padding:7px 12px;background:transparent;border:1px solid rgba(232,220,200,.24);color:var(--mid);font-size:.78rem;font-weight:400}
+    .button.compact:hover{background:rgba(232,220,200,.06);color:var(--ink)}
+    .recipient-preview{min-height:1.45em;margin:16px 0 -8px;color:var(--orange-light);font-size:.82rem}
+    .platforms{display:grid;gap:9px;margin-top:22px}
+    .platform{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;border:1px solid rgba(232,220,200,.22);border-radius:10px;background:transparent;color:var(--mid);padding:11px 14px;text-align:left;font-size:.9rem}
+    .platform:hover{color:var(--ink);border-color:var(--orange-light);background:rgba(232,220,200,.04)}
+    .platform-icon{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;color:var(--ink)}
+    .platform-icon svg{display:block;width:24px;height:24px;fill:currentColor}
+    .platform-icon .stroke{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .disclosure{margin-top:34px;color:var(--muted);font-size:.82rem}
     .disclosure summary{cursor:pointer;color:var(--mid)}
     .disclosure p{margin:10px 0 0}
     .footer{width:min(100% - 40px,780px);margin:50px auto 0;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:.78rem}
-    @media(max-width:620px){.nav{padding:12px 20px}.preview-note{text-align:left}.link-row{grid-template-columns:1fr}.modes,.private-grid{grid-template-columns:1fr}.button{width:100%}.actions{display:grid}.platforms{display:grid;grid-template-columns:1fr 1fr}.platform{min-height:46px}}
+    @media(max-width:620px){.nav{padding:12px 20px}.preview-note{text-align:left}.link-row{grid-template-columns:1fr}.modes,.private-grid{grid-template-columns:1fr}.link-row .button{width:100%}.button.compact{width:auto}.platform{min-height:50px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
   </style>
 </head>
@@ -88,15 +94,15 @@
       </div>
 
       <fieldset class="mode-group">
-        <legend>How would you like to share it?</legend>
+        <legend>Share or invite someone</legend>
         <div class="modes">
           <div class="mode">
             <input type="radio" id="mode-public" name="share-mode" value="public" checked>
-            <label for="mode-public"><strong>Share publicly</strong>Post the invitation to your wider network.</label>
+            <label for="mode-public"><strong>Share publicly</strong></label>
           </div>
           <div class="mode">
             <input type="radio" id="mode-private" name="share-mode" value="private">
-            <label for="mode-private"><strong>Invite someone privately</strong>Personalise a message for one person.</label>
+            <label for="mode-private"><strong>Invite someone privately</strong></label>
           </div>
         </div>
       </fieldset>
@@ -107,15 +113,15 @@
           <label class="field-label" for="public-message">Your message <span class="optional">(editable)</span></label>
           <textarea id="public-message">How is AI changing your experience of work? I’ve taken part in this independent study from Turbulent Ground. Add your perspective and get a personal benchmark comparison.</textarea>
         </div>
-        <div class="actions">
-          <button class="button" type="button" id="copy-public">Copy message and link</button>
-          <button class="button secondary" type="button" id="native-share">Open sharing options</button>
+        <div class="message-action">
+          <button class="button compact" type="button" id="copy-public">Copy message and link</button>
         </div>
         <div class="platforms" aria-label="Social sharing options">
-          <button class="platform" type="button" data-platform="LinkedIn">LinkedIn</button>
-          <button class="platform" type="button" data-platform="X">X</button>
-          <button class="platform" type="button" data-platform="Facebook">Facebook</button>
-          <button class="platform" type="button" data-platform="WhatsApp">WhatsApp</button>
+          <button class="platform" type="button" id="native-share"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="stroke" d="M12 16V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></span>Share using this device</button>
+          <button class="platform" type="button" data-platform="LinkedIn"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 3.5A2.2 2.2 0 1 1 5.2 8a2.2 2.2 0 0 1 0-4.5ZM3.3 9.5h3.8V21H3.3V9.5Zm6.1 0H13v1.6h.1c.5-.9 1.7-2 3.6-2 3.9 0 4.6 2.5 4.6 5.8V21h-3.8v-5.4c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9.4V9.5Z"/></svg></span>Share to LinkedIn</button>
+          <button class="platform" type="button" data-platform="X"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 3h4.7l4.2 5.6L17.8 3H20l-6.1 7.2L20.7 21H16l-4.8-6.4L5.8 21H3.5l6.7-8L4 3Zm3.5 1.8 9.4 14.4h1.6L9.1 4.8H7.5Z"/></svg></span>Share to X</button>
+          <button class="platform" type="button" data-platform="Facebook"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8.2V6.5c0-.8.5-1 1-1h2.6V2.1L14.4 2C11.1 2 10 4 10 6.2v2H7v4h3V22h4v-9.8h3.3l.5-4H14Z"/></svg></span>Share to Facebook</button>
+          <button class="platform" type="button" data-platform="WhatsApp"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 17.8a7.8 7.8 0 0 1-4-1.1l-.3-.2-3.2.8.9-3.1-.2-.3A7.8 7.8 0 1 1 12 19.8Zm4.3-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1a6.4 6.4 0 0 1-3.2-2.8c-.2-.3.2-.5.6-1 .1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.9 4.2 1.8.7 2.5.8 3.4.7 1-.2 2.8-1.2 3.2-2.3.4-1.1.4-2 .3-2.2-.1-.2-.2-.2-.4-.3Z"/></svg></span>Share via WhatsApp</button>
         </div>
         <p class="status" id="public-status" role="status" aria-live="polite"></p>
       </section>
@@ -133,18 +139,19 @@
           </div>
         </div>
         <p class="helper">These details stay in this browser. Turbulent Ground does not receive or save them.</p>
+        <p class="recipient-preview" id="recipient-preview" aria-live="polite"></p>
         <div class="field">
           <label class="field-label" for="private-message">Your message <span class="optional">(editable)</span></label>
           <textarea id="private-message">I thought you might have an interesting perspective on how AI is changing work. I’ve taken part in this independent study from Turbulent Ground. If you’d like to add your experience, it also gives you a personal benchmark comparison.</textarea>
         </div>
-        <div class="actions">
-          <button class="button" type="button" id="open-email">Open email draft</button>
-          <button class="button secondary" type="button" id="copy-private">Copy private message</button>
+        <div class="message-action">
+          <button class="button compact" type="button" id="copy-private">Copy private message</button>
         </div>
         <div class="platforms" aria-label="Private messaging options">
-          <button class="platform" type="button" data-platform="WhatsApp">WhatsApp</button>
-          <button class="platform" type="button" data-platform="LinkedIn">LinkedIn message</button>
-          <button class="platform" type="button" data-platform="Facebook Messenger">Messenger</button>
+          <button class="platform" type="button" id="open-email"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="stroke" d="M3 5h18v14H3zM3 6l9 7 9-7"/></svg></span>Invite via email</button>
+          <button class="platform" type="button" data-platform="Facebook Messenger"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.5 5.5 3.8 7.2V22l3.5-1.9c.9.3 1.8.4 2.7.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2Zm1 12.4-2.5-2.7-4.8 2.7 5.3-5.6 2.5 2.7 4.8-2.7-5.3 5.6Z"/></svg></span>Invite via Facebook Messenger</button>
+          <button class="platform" type="button" data-platform="LinkedIn"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 3.5A2.2 2.2 0 1 1 5.2 8a2.2 2.2 0 0 1 0-4.5ZM3.3 9.5h3.8V21H3.3V9.5Zm6.1 0H13v1.6h.1c.5-.9 1.7-2 3.6-2 3.9 0 4.6 2.5 4.6 5.8V21h-3.8v-5.4c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9.4V9.5Z"/></svg></span>Invite via LinkedIn message</button>
+          <button class="platform" type="button" data-platform="WhatsApp"><span class="platform-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 17.8a7.8 7.8 0 0 1-4-1.1l-.3-.2-3.2.8.9-3.1-.2-.3A7.8 7.8 0 1 1 12 19.8Zm4.3-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1a6.4 6.4 0 0 1-3.2-2.8c-.2-.3.2-.5.6-1 .1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.9 4.2 1.8.7 2.5.8 3.4.7 1-.2 2.8-1.2 3.2-2.3.4-1.1.4-2 .3-2.2-.1-.2-.2-.2-.4-.3Z"/></svg></span>Invite via WhatsApp</button>
         </div>
         <p class="status" id="private-status" role="status" aria-live="polite"></p>
       </section>
@@ -166,14 +173,20 @@
     var privateMessage=document.getElementById('private-message');
     var recipientName=document.getElementById('recipient-name');
     var recipientEmail=document.getElementById('recipient-email');
+    var recipientPreview=document.getElementById('recipient-preview');
     var linkStatus=document.getElementById('link-status');
     var publicStatus=document.getElementById('public-status');
     var privateStatus=document.getElementById('private-status');
 
+    var privateBody=privateMessage.value.trim();
     function personalisedMessage(){
+      return privateMessage.value.trim()+'\n\n'+referralLink;
+    }
+    function updateRecipientPreview(){
       var name=recipientName.value.trim();
-      var greeting=name?'Hi '+name+',\n\n':'';
-      return greeting+privateMessage.value.trim()+'\n\n'+referralLink;
+      var email=recipientEmail.value.trim();
+      privateMessage.value=(name?'Hi '+name+',\n\n':'')+privateBody;
+      recipientPreview.textContent=(name||email)?'Previewing invitation for '+(name||'this person')+(email?' · '+email:''):'';
     }
     function publicShareText(){return publicMessage.value.trim()+'\n\n'+referralLink;}
     function setStatus(el,text){el.textContent=text;window.setTimeout(function(){if(el.textContent===text)el.textContent='';},4000)}
@@ -200,6 +213,13 @@
       var email=recipientEmail.value.trim();
       var subject='An independent study about AI and work';
       window.location.href='mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(personalisedMessage());
+    });
+    recipientName.addEventListener('input',updateRecipientPreview);
+    recipientEmail.addEventListener('input',updateRecipientPreview);
+    privateMessage.addEventListener('input',function(){
+      var name=recipientName.value.trim();
+      var prefix=name?'Hi '+name+',\n\n':'';
+      privateBody=privateMessage.value.slice(prefix.length).trim();
     });
     document.querySelectorAll('[data-platform]').forEach(function(button){
       button.addEventListener('click',function(){
