@@ -12,39 +12,40 @@
     *,*::before,*::after{box-sizing:border-box}
     :root{--bg:#131110;--warm:#1c1915;--surface:#26211c;--ink:#e8dcc8;--mid:#c8b89a;--muted:#9e8e7c;--orange:#d9571c;--orange-light:#e8763a;--border:rgba(232,220,200,.14);--focus:#ffb37a}
     html{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:18px;line-height:1.55}
-    body{min-height:100vh;margin:0;padding:0 0 80px}
+    body{min-height:100vh;margin:0;padding:0 0 48px}
     button,input,textarea{font:inherit}
     button{cursor:pointer}
     :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
     .preview-note{margin:0;padding:10px 20px;background:#34241c;color:var(--mid);font-size:.76rem;text-align:center;letter-spacing:.02em}
-    .nav{min-height:72px;padding:12px 48px;display:flex;align-items:center;border-bottom:1px solid rgba(245,240,232,.35)}
+    .nav{min-height:56px;padding:9px 40px;display:flex;align-items:center;border-bottom:1px solid rgba(245,240,232,.35)}
     .wordmark{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.18em;color:#f5f0e8;text-transform:uppercase}
-    main{width:min(100% - 40px,780px);margin:0 auto;padding-top:72px}
+    main{width:min(100% - 40px,800px);margin:0 auto;padding-top:24px}
     .eyebrow{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.16em;color:var(--orange-light);text-transform:uppercase;margin:0 0 12px}
     h1,h2{font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1.12;margin:0;color:var(--ink)}
-    h1{font-size:clamp(2.45rem,7vw,4.2rem);max-width:680px}
-    h2{font-size:clamp(1.65rem,4vw,2.25rem)}
+    h1{font-size:clamp(2.05rem,4.6vw,2.8rem);line-height:1.06;max-width:800px}
+    h2{font-size:clamp(1.45rem,3.4vw,1.95rem)}
     .lead{max-width:620px;color:var(--mid);font-size:1.03rem;margin:20px 0 34px}
-    .card{border:1px solid var(--border);border-radius:18px;background:var(--warm);padding:clamp(22px,5vw,40px);box-shadow:0 22px 70px rgba(0,0,0,.18)}
-    .link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin:24px 0 10px}
-    .link-value{min-width:0;border:1px solid rgba(232,220,200,.22);border-radius:10px;background:var(--surface);color:var(--ink);padding:14px 16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .video-link{display:inline-block;margin:8px 0 14px;color:var(--orange-light);font-size:.8rem;text-underline-offset:3px}
+    .card{border:1px solid var(--border);border-radius:16px;background:var(--warm);padding:clamp(18px,3vw,24px);box-shadow:0 22px 70px rgba(0,0,0,.18)}
+    .link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin:16px 0 6px}
+    .link-value{min-width:0;border:1px solid rgba(232,220,200,.22);border-radius:10px;background:var(--surface);color:var(--ink);padding:11px 14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .button{border:0;border-radius:999px;background:#c74414;color:white;font-weight:500;padding:13px 22px;min-height:52px;transition:transform .15s ease,background .15s ease}
     .button:hover{background:#a83a13}.button:active{transform:scale(.97)}
     .button.secondary{background:transparent;border:1px solid rgba(232,220,200,.3);color:var(--ink)}
     .button.secondary:hover{background:rgba(232,220,200,.06)}
     .status{min-height:1.5em;color:var(--orange-light);font-size:.83rem;margin:0}
-    .privacy-summary{display:flex;gap:12px;margin:26px 0 0;padding:18px;border-left:3px solid var(--orange);background:rgba(217,87,28,.08);color:var(--mid);font-size:.91rem}
+    .privacy-summary{display:flex;gap:12px;margin:16px 0 0;padding:12px 14px;border-left:3px solid var(--orange);background:rgba(217,87,28,.08);color:var(--mid);font-size:.82rem}
     .privacy-summary strong{display:block;color:var(--ink);margin-bottom:3px}
-    .mode-group{border:0;padding:0;margin:38px 0 0}
-    .mode-group legend{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);margin-bottom:13px}
+    .mode-group{border:0;padding:0;margin:22px 0 0}
+    .mode-group legend{font-family:'Cormorant Garamond',serif;font-size:1.38rem;color:var(--ink);margin-bottom:9px}
     .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .mode{position:relative}
     .mode input{position:absolute;opacity:0;pointer-events:none}
-    .mode label{display:block;height:100%;padding:18px;border:1px solid rgba(232,220,200,.18);border-radius:12px;background:var(--bg);color:var(--mid);cursor:pointer}
+    .mode label{display:block;height:100%;padding:12px 14px;border:1px solid rgba(232,220,200,.18);border-radius:10px;background:var(--bg);color:var(--mid);cursor:pointer;font-size:.88rem}
     .mode label strong{display:block;color:var(--ink)}
     .mode input:checked+label{border-color:var(--orange);box-shadow:inset 0 0 0 1px var(--orange);background:rgba(217,87,28,.1)}
     .mode input:focus-visible+label{outline:3px solid var(--focus);outline-offset:3px}
-    .panel{margin-top:24px;padding-top:28px;border-top:1px solid var(--border)}
+    .panel{margin-top:18px;padding-top:20px;border-top:1px solid var(--border)}
     .panel[hidden]{display:none}
     .field{margin-top:20px}
     label.field-label{display:block;color:var(--mid);font-size:.94rem;margin-bottom:8px}
@@ -67,7 +68,7 @@
     .disclosure summary{cursor:pointer;color:var(--mid)}
     .disclosure p{margin:10px 0 0}
     .footer{width:min(100% - 40px,780px);margin:50px auto 0;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:.78rem}
-    @media(max-width:620px){.nav{padding:12px 20px}.preview-note{text-align:left}.link-row{grid-template-columns:1fr}.modes,.private-grid{grid-template-columns:1fr}.link-row .button{width:100%}.button.compact{width:auto}.platform{min-height:50px}}
+    @media(max-width:620px){.nav{padding:9px 20px}.preview-note{text-align:left}main{padding-top:24px}.link-row{grid-template-columns:1fr}.modes,.private-grid{grid-template-columns:1fr}.link-row .button{width:100%}.button.compact{width:auto}.platform{min-height:50px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
   </style>
 </head>
@@ -75,9 +76,8 @@
   <p class="preview-note"><strong>Synthetic prototype:</strong> no real participant, referral or recipient information is used or stored.</p>
   <header class="nav"><span class="wordmark">Turbulent Ground</span></header>
   <main>
-    <p class="eyebrow">Thank you for taking part</p>
     <h1>Know someone with a perspective on the AI shift at work?</h1>
-    <p class="lead">Your response is complete. Invite them to take part too.</p>
+    <a class="video-link" href="/research/media/research-outro.mp4" target="_blank" rel="noopener">Watch Graham’s thank-you video</a>
 
     <section class="card" aria-labelledby="sharing-title">
       <h2 id="sharing-title">Your personal invitation link</h2>

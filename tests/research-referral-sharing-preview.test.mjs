@@ -5,7 +5,10 @@ const html = await readFile(new URL('../research/referral-sharing-preview.html',
 
 assert.match(html, /Synthetic prototype:/);
 assert.match(html, /Know someone with a perspective on the AI shift at work\?/);
-assert.match(html, /Your response is complete\. Invite them to take part too\./);
+assert.doesNotMatch(html, /Thank you for taking part/);
+assert.doesNotMatch(html, /Your response is complete\. Invite them to take part too\./);
+assert.match(html, /Watch Graham’s thank-you video/);
+assert.match(html, /research-outro\.mp4/);
 assert.match(html, /Your personal invitation link/);
 assert.match(html, /Share publicly/);
 assert.match(html, /Invite someone privately/);
