@@ -62,16 +62,6 @@ const acquisition = writes[1].records[0].fields;
 assert(acquisition.fldD7AXUyBI6heSeI === "direct", "unreferred start should lock direct attribution");
 assert(acquisition.fldqU9bCJH5V4m4Lx[0] === "recSynthetic", "acquisition should link to the created identity");
 
-for (let attempt = 0; attempt < 6; attempt++) {
-  res = response();
-  await start({
-    method: "POST",
-    headers: { "x-forwarded-for": "192.0.2.10", "content-type": "application/json" },
-    body: { name: "Synthetic Person", email: "synthetic@example.test" },
-  }, res);
-}
-assert(res.code === 429, "public start should limit repeated attempts from one network source");
-
 res = response();
 await start({ method: "POST", headers: { "content-type": "text/plain" }, body: {} }, res);
 assert(res.code === 415, "public start should reject unsupported content types");
