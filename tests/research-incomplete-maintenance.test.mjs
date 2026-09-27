@@ -56,7 +56,16 @@ test("execute sends one reminder and deletes expired participant data without re
   assert.equal(res.body.actions.remindersSent, 1);
   assert.equal(res.body.actions.deletionsCompleted, 1);
   assert.equal(res.body.actions.deletionConfirmationsAttempted, 1);
-  assert.equal(calls.filter(call => call.url.includes("api.resend.com")).length, 2);
+  const emailCalls = calls.filter(call => call.url.includes("api.resend.com"));
+  assert.equal(emailCalls.length, 2);
+  const emails = emailCalls.map(call => JSON.parse(call.options.body));
+  const reminderEmail = emails.find(email => email.subject === "Your research response is saved");
+  const deletionEmail = emails.find(email => email.subject === "Your incomplete research response has been deleted");
+  assert.match(reminderEmail.html, /your progress is saved/i);
+  assert.match(reminderEmail.html, /Resume my survey/);
+  assert.match(reminderEmail.html, /you don’t need to do anything/i);
+  assert.match(deletionEmail.html, /As promised/);
+  assert.match(deletionEmail.html, /I no longer retain the answers, name or email address/);
   assert.ok(calls.some(call => call.options.method === "PATCH" && call.url.includes("recReminder")), "reminder attempt must be claimed first");
   assert.ok(calls.some(call => call.options.method === "DELETE" && call.url.includes("recResponse")), "linked response must be deleted");
   assert.ok(calls.some(call => call.options.method === "DELETE" && call.url.includes("recExpired")), "identity must be deleted");
