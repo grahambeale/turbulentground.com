@@ -4,7 +4,9 @@ import { readFile } from 'node:fs/promises';
 const html = await readFile(new URL('../research/referral-sharing-preview.html', import.meta.url), 'utf8');
 
 assert.match(html, /Synthetic prototype:/);
-assert.match(html, /Your personal sharing link/);
+assert.match(html, /Know someone with a perspective on the AI shift at work\?/);
+assert.match(html, /Your response is complete\. Invite them to take part too\./);
+assert.match(html, /Your personal invitation link/);
 assert.match(html, /Share publicly/);
 assert.match(html, /Invite someone privately/);
 assert.match(html, /Share or invite someone/);
@@ -23,6 +25,10 @@ assert.doesNotMatch(html, /Post the invitation to your wider network\./);
 assert.doesNotMatch(html, /Personalise a message for one person\./);
 assert.match(html, /These details stay in this browser/);
 assert.match(html, /does not receive or save them/);
+assert.match(html, /I thought you’d have an interesting perspective/);
+assert.match(html, /you’ll also receive a personal benchmark comparison/);
+assert.doesNotMatch(html, /you might have an interesting perspective/);
+assert.doesNotMatch(html, /it also gives you/);
 assert.match(html, /prefers-reduced-motion/);
 assert.match(html, /@media\(max-width:620px\)/);
 
