@@ -32,4 +32,5 @@
     privateMessage.addEventListener('input',function(){var name=recipientName.value.trim(),prefix=name?'Hi '+name+',\n\n':'';privateBody=privateMessage.value.slice(prefix.length).trim()});
     document.querySelectorAll('[data-referral-platform]').forEach(function(button){button.addEventListener('click',function(){var isPrivate=!privatePanel.hidden;copy(isPrivate?privateText():publicText(),isPrivate?privateStatus:publicStatus,button.dataset.referralPlatform+' message copied.')})});
   }
+  if(window.__TG_COMPLETION_PREVIEW__)initialise('https://www.turbulentground.com/research?r=K7M4PX');
 }());

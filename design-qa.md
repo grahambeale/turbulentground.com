@@ -57,6 +57,52 @@ Final result: passed.
 
 ---
 
+# Research completion screen — unified action canvas
+
+## Reference and implementation
+
+- Selected visual direction: `/Users/graham/.codex/generated_images/01a0458e-3900-7642-90ab-76448e63906d/exec-0d205bd5-94f6-4cb7-8dc7-7fd1999a6761.png`
+- Initial browser implementation: `/private/tmp/tg-completion-redesign/completion-redesign-implementation.png`
+- Revised browser implementation: `/private/tmp/tg-completion-redesign/completion-redesign-implementation-v2.png`
+- Viewport: desktop in-app browser, 1265 × 712 capture
+- State: synthetic completion preview with an email on file, a referral link available, and public sharing selected. No submission, analytics event, email or referral issuance occurs in this preview.
+
+## Visual comparison
+
+The completion experience is now one coherent page rather than a sequence of narrow stacked cards. The thank-you, supporting message and Graham's video form a centred hero. The two immediate actions — receive the benchmark and invite another participant — sit side by side beneath one dividing rule, preserving the selected direction's primary/secondary hierarchy.
+
+The benchmark caveat appears once. Existing brand typography, palette, buttons and real sharing controls are retained rather than replaced with decorative mock controls.
+
+## Required fidelity surfaces
+
+- Fonts and typography: existing Cormorant Garamond and DM Sans hierarchy retained.
+- Spacing and layout rhythm: desktop content expands to a balanced two-column canvas; mobile returns to a single column.
+- Colors and visual tokens: existing ink, muted, border and orange tokens reused.
+- Image and icon fidelity: Graham's real video thumbnail and the existing referral icons are preserved.
+- Copy and content: the repeated benchmark caveat was removed and the saved-email explanation was shortened.
+
+## Interaction and runtime checks
+
+- Public sharing state renders with the referral link and social-sharing controls: passed.
+- Private invitation state renders with optional name/email, editable message and private channels: passed.
+- Completion preview suppresses Plausible events and does not call the referral issuance API: passed.
+- Full automated test suite: passed.
+- Diff whitespace validation: passed.
+
+## Comparison history
+
+- Initial finding: the first implementation retained a left-aligned completion heading and success mark, which drifted toward a different visual direction.
+- Fix: centred the completion hero, removed the redundant success mark on this screen and moved feedback to the unobtrusive lower-left position.
+- Revised evidence: `completion-redesign-implementation-v2.png`.
+
+## Findings
+
+No actionable P0, P1 or P2 differences remain. The normal 1265 × 712 desktop viewport shows the full hero and both next actions; the detailed sharing controls continue below the fold by design.
+
+Final result: passed.
+
+---
+
 # Referral sharing tabs — design QA
 
 ## Reference and implementation

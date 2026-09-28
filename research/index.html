@@ -623,35 +623,49 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .email-capture .email-status.error { display: block; color: var(--orange-lt); }
 
   /* ── Thank-you screen ─────────────────────────────────────────────── */
-  .done-wrap { text-align: center; padding: 90px 0 40px; }
+  #screen-done { width: min(1180px, calc(100vw - 48px)); margin-left: 50%; transform: translateX(-50%); }
+  .done-wrap { padding: 34px 0 56px; }
+  .done-hero {
+    display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center;
+    padding: 22px 0 34px; border-bottom: 1px solid var(--border);
+  }
+  .done-heading { display: block; }
   .done-check {
-    width: 76px; height: 76px; margin: 0 auto 32px; border-radius: 50%;
+    width: 58px; height: 58px; margin: 0; border-radius: 50%;
     border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center;
     animation: done-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
-  .done-check svg { width: 36px; height: 36px; }
+  .done-check svg { width: 28px; height: 28px; }
   .done-check svg path {
     stroke: var(--orange-lt); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round;
     stroke-dasharray: 40; stroke-dashoffset: 40;
     animation: done-draw 0.45s 0.35s ease forwards;
   }
+  #screen-done .done-check { display: none; }
   @keyframes done-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes done-draw { to { stroke-dashoffset: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .done-check { animation: none; }
     .done-check svg path { animation: none; stroke-dashoffset: 0; }
   }
-  .done-wrap h1 { margin: 0 auto 20px; max-width: 480px; }
+  .done-wrap h1 { margin: 0 auto; max-width: 660px; font-size: clamp(2.45rem, 4.4vw, 4.2rem); line-height: 1.02; }
+  .done-intro { margin-top: 10px; color: var(--ink-mid); font-size: 1rem; }
+  .section-kicker { margin: 0 0 8px !important; color: var(--muted) !important; font-size: .72rem !important; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+  .done-actions-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(360px, .88fr); gap: 46px; align-items: start; padding-top: 34px; }
+  .done-actions-grid > * { min-width: 0; }
+  #screen-done .referral-sharing { margin: 0; padding: 0 0 0 46px; border: 0; border-left: 1px solid var(--border); border-radius: 0; background: transparent; }
   /* The results-email form is the primary interactive element on this
      screen and needs to be reachable without scrolling past it first —
      measured on a 375px mobile viewport: the form's input was sitting
      8px below the fold with the desktop spacing, so this isn't just a
      nicety, it's the difference between fitting and not. */
   @media (max-width: 480px) {
-    .done-wrap { padding-top: 20px; }
+    #screen-done { width: min(100% - 28px, 680px); }
+    .done-wrap { padding-top: 10px; }
+    .done-hero { gap: 14px; padding-bottom: 24px; }
     .done-check { width: 44px; height: 44px; margin-bottom: 10px; }
     .done-check svg { width: 22px; height: 22px; }
-    .done-wrap h1 { margin-bottom: 8px; font-size: 28px; }
+    .done-wrap h1 { margin-bottom: 4px; font-size: 34px; }
     .done-video-block { margin: 0 0 6px; }
     .video-thumb-avatar { width: 44px; height: 44px; }
     .video-thumb-label { font-size: 0.65rem; }
@@ -659,10 +673,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .transcript-toggle summary { font-size: 0.8rem; }
   }
   .results-email {
-    max-width: 480px; margin: 28px auto 0; padding: 22px; text-align: left;
-    background: var(--bg-warm); border: 1px solid var(--border); border-radius: 10px;
+    max-width: none; margin: 0; padding: 0; text-align: left;
+    background: transparent; border: 0; border-radius: 0;
   }
-  .results-email h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 400; margin-bottom: 8px; }
+  .results-email h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.65rem); font-weight: 400; line-height: 1.08; margin-bottom: 12px; }
   .results-email p { color: var(--ink-mid); font-size: 0.95rem; margin-bottom: 16px; }
   .results-email-row { display: flex; align-items: stretch; gap: 10px; }
   .results-email input[type=email] {
@@ -670,8 +684,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     border-radius: 8px; padding: 12px 14px; color: var(--ink); font: inherit; font-size: 1rem;
   }
   .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
-  .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 12px 0 0; }
-  .stay-involved { margin-top: 18px; }
+  .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+  .stay-involved { max-width: 680px; margin: 42px 0 0; padding-top: 28px; border-top: 1px solid var(--border); }
   .stay-involved .check-row { margin: 16px 0; padding: 0; border: 0; }
   .stay-involved .check-row label { font-size: 0.92rem; line-height: 1.55; }
   .stay-involved .email-capture { margin: 10px 0 18px 42px; }
@@ -692,6 +706,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .choice-grid { grid-template-columns: 1fr; }
     .footer-bar { gap: 14px; padding: 12px 18px; }
   }
+  @media (max-width: 900px) {
+    .done-actions-grid { grid-template-columns: 1fr; gap: 34px; }
+    #screen-done .referral-sharing { padding: 34px 0 0; border-left: 0; border-top: 1px solid var(--border); }
+  }
+  body:has(#screen-done.active) #feedback-launch { top: auto !important; bottom: 18px !important; }
 
   /* Restrained route treatment approved after comparative local review. */
   .restrained-research .journey-route::after { opacity: 0.34; }
@@ -954,10 +973,13 @@ So thank you for being a part of it.</div>
   <!-- ============ SCREEN 4: DONE ============ -->
   <section class="screen" id="screen-done">
     <div class="done-wrap">
-      <div class="done-check" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
-      </div>
-      <h1>Thank you — your response has been saved.</h1>
+      <div class="done-hero">
+        <div class="done-heading">
+          <div class="done-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
+          </div>
+          <div><h1>Thank you — your response has been saved.</h1><p class="done-intro">You're helping me understand how people experience AI at work.</p></div>
+        </div>
 
       <!-- The video now carries the sentiment the removed paragraph used
            to (the previous longer "I genuinely appreciate you..." text),
@@ -992,10 +1014,13 @@ So whether you remain involved or this is your only contribution, your experienc
 Thank you for being a part of it.</div>
         </details>
       </div>
+      </div>
 
+      <div class="done-actions-grid">
       <form class="results-email" id="results-email-form">
+        <p class="section-kicker">Your next step</p>
         <h2>Email my benchmark comparison</h2>
-        <p id="results-email-copy">Enter your email address and I'll send your personal comparison immediately.</p>
+        <p id="results-email-copy">Receive your personal comparison immediately.</p>
         <div class="results-email-row">
           <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
           <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
@@ -1028,6 +1053,7 @@ Thank you for being a part of it.</div>
         <div class="referral-panel" id="referral-public-panel"><label class="referral-field" for="referral-public-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-public-message">How is AI changing your experience of work? I’ve taken part in this independent study from Turbulent Ground. Add your perspective and get a personal benchmark comparison.</textarea></label><div class="referral-message-action"><button class="btn secondary" type="button" id="referral-copy-public">Copy message and link</button></div><div class="referral-platforms" aria-label="Social sharing options"><button class="referral-platform" type="button" id="referral-native-share"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-share"/></svg></span>Share using this device</button><button class="referral-platform" type="button" data-referral-platform="LinkedIn"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-linkedin"/></svg></span>Share to LinkedIn</button><button class="referral-platform" type="button" data-referral-platform="X"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-x"/></svg></span>Share to X</button><button class="referral-platform" type="button" data-referral-platform="Facebook"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-facebook"/></svg></span>Share to Facebook</button><button class="referral-platform" type="button" data-referral-platform="WhatsApp"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-whatsapp"/></svg></span>Share via WhatsApp</button></div><p class="referral-status" id="referral-public-status" role="status" aria-live="polite"></p></div>
         <div class="referral-panel" id="referral-private-panel" hidden><div class="referral-private-fields"><label class="referral-field" for="referral-recipient-name">Their first name <span class="optional-tag">(optional)</span><input id="referral-recipient-name" type="text" autocomplete="off" maxlength="80"></label><label class="referral-field" for="referral-recipient-email">Their email address <span class="optional-tag">(optional)</span><input id="referral-recipient-email" type="email" autocomplete="off" maxlength="254"></label></div><p>These details stay in this browser. Turbulent Ground does not receive or save them.</p><p class="referral-recipient-preview" id="referral-recipient-preview" aria-live="polite"></p><label class="referral-field" for="referral-private-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-private-message">I thought you’d have an interesting perspective on how AI is changing work. I’ve taken part in this independent study from Turbulent Ground. If you’d like to add your experience, you’ll also receive a personal benchmark comparison.</textarea></label><div class="referral-message-action"><button class="btn secondary" type="button" id="referral-copy-private">Copy private message</button></div><div class="referral-platforms" aria-label="Private messaging options"><button class="referral-platform" type="button" id="referral-open-email"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-email"/></svg></span>Invite via email</button><button class="referral-platform" type="button" data-referral-platform="Facebook Messenger"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-messenger"/></svg></span>Invite via Facebook Messenger</button><button class="referral-platform" type="button" data-referral-platform="LinkedIn"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-linkedin"/></svg></span>Invite via LinkedIn message</button><button class="referral-platform" type="button" data-referral-platform="WhatsApp"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-whatsapp"/></svg></span>Invite via WhatsApp</button></div><p class="referral-status" id="referral-private-status" role="status" aria-live="polite"></p></div>
       </section>
+      </div>
 
       <form class="results-email stay-involved" id="stay-involved-form">
         <h2>Being quoted <span class="optional-tag">(optional)</span></h2>
@@ -1399,12 +1425,14 @@ Thank you for being a part of it.</div>
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   var publicStartPreview = previewMode === 'public-start' &&
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
+  var completionPreview = previewMode === 'completion' &&
+    new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   document.documentElement.classList.add('likert-transitions');
   document.documentElement.classList.add('restrained-research');
   var researchEventsSent = {};
 
   function trackResearchEvent(name) {
-    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || publicStartPreview || researchEventsSent[name]) return;
+    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || publicStartPreview || completionPreview || researchEventsSent[name]) return;
     researchEventsSent[name] = true;
     window.plausible(name);
   }
@@ -1425,7 +1453,11 @@ Thank you for being a part of it.</div>
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  if (publicStartPreview) {
+  if (completionPreview) {
+    hasEmailOnFile = true;
+    showScreen('screen-done');
+    window.__TG_COMPLETION_PREVIEW__ = true;
+  } else if (publicStartPreview) {
     showScreen('screen-public-start');
   } else if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
     renderPairs();
@@ -1662,6 +1694,7 @@ Thank you for being a part of it.</div>
   // ---- optional contact choices ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
   var quoteNameCheckbox = document.getElementById('consent-quote-name');
+  if (completionPreview) prepareResultsEmail();
   var emailCaptureWrap = document.getElementById('email-capture');
   var emailCaptureInput = document.getElementById('email-capture-input');
 
@@ -2134,7 +2167,7 @@ Thank you for being a part of it.</div>
     if (hasEmailOnFile) {
       input.hidden = true;
       input.required = false;
-      copy.textContent = 'I already have an email address from your invitation. Choose the button to receive your comparison immediately. The study benchmark is likely to fluctuate frequently during the early phase of this research.';
+      copy.textContent = 'Your email is already saved. Choose the button to receive your comparison immediately.';
     } else {
       input.hidden = false;
       input.required = true;
