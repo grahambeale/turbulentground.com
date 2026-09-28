@@ -74,7 +74,7 @@ The existing palette, typography and layout are preserved. The old large rounded
 
 ## Focused-region comparison evidence
 
-Public uses the Material Symbols globe; private uses the complementary Material Symbols lock. Both icons loaded successfully. Selected, unselected and focusable radio states retain native accessible labels. Switching either radio shows the matching panel and hides the other.
+Public uses the Material Symbols globe to convey one-to-many sharing; private uses the complementary Material Symbols person to convey a one-to-one invitation. Both icons loaded successfully. Selected, unselected and focusable radio states retain native accessible labels. Switching either radio shows the matching panel and hides the other.
 
 ## Required fidelity surfaces
 
@@ -100,7 +100,7 @@ No actionable P0, P1 or P2 differences remain for the requested refinement.
 ## Comparison history
 
 - Initial finding: the modes read as independent large buttons rather than navigation between related panels.
-- Fix: shared bottom rule, open-bottom selected tab, active top accent and complementary icons.
+- Fix: shared bottom rule, open-bottom selected tab, active top accent and complementary one-to-many/one-to-one icons.
 - Post-fix evidence: `referral-tabs-private-implementation.jpg`.
 
 ## Follow-up polish
