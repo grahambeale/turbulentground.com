@@ -328,7 +328,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     to { transform: translateX(var(--station-space)); }
   }
 
-  .pair-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .pair-card { display: flex; flex-direction: column; gap: 14px; }
+  .pair-card[hidden] { display: none; }
+  .pair-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px 22px;
+  }
   .pair-item[hidden] { display: none; }
   .pair-item:focus-visible { outline: none; }
   .pair-item p { color: var(--ink); font-size: 1.3rem; font-weight: 400; line-height: 1.45; margin-bottom: 12px; }
@@ -409,17 +414,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .response-alternatives { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
   .statement-context { margin: 12px auto 0; max-width: 720px; }
   .statement-context[hidden] { display: none; }
-  .statement-context-toggle {
-    align-items: center; background: transparent; border: 1px solid var(--border);
-    border-radius: 999px; color: var(--ink-mid); cursor: pointer; display: inline-flex;
-    font: inherit; font-size: 0.92rem; gap: 7px; padding: 9px 15px;
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
-  .statement-context-toggle::before { content: '+'; font-size: 1.05rem; line-height: 1; }
-  .statement-context-toggle[aria-expanded="true"]::before { content: '\2212'; }
-  .statement-context-toggle:hover { border-color: var(--muted); color: var(--ink); }
-  .statement-context-toggle:focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; }
-  .statement-context-panel { margin-top: 10px; }
-  .statement-context-panel[hidden] { display: none; }
   body.feedback-pill #feedback-launch {
     top: 82% !important; bottom: auto !important; left: 0 !important; right: auto !important;
     min-height: 44px !important; padding: 9px 10px !important;
@@ -432,9 +430,14 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     body.feedback-pill #feedback-launch:hover .feedback-label,
     body.feedback-pill #feedback-launch:focus-visible .feedback-label { max-width: 100px !important; opacity: 1 !important; }
   }
-  .statement-context label { display: block; color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 6px; }
-  .statement-context textarea { min-height: 74px; width: 100%; resize: vertical; }
-  .statement-context textarea::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
+  .statement-context-input {
+    width: 100%; min-height: 44px; max-height: 44px; padding: 11px 14px; resize: none;
+    transition: max-height 0.22s ease, min-height 0.22s ease;
+  }
+  .statement-context-input:focus,
+  .statement-context-input.has-content { min-height: 74px; max-height: 160px; resize: vertical; }
+  .statement-context-input::placeholder { color: var(--muted); font-style: italic; opacity: 0.82; }
+  @media (prefers-reduced-motion: reduce) { .statement-context-input { transition: none; } }
   .statement-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
   .statement-context-continue {
     background: #b84215; border: 1px solid #b84215; border-radius: 999px; color: #fff;
@@ -748,6 +751,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   @keyframes station-settle { to { transform: scale(0.72); opacity: 0.28; } }
   #pair-position { font-size: 1.1rem; color: var(--ink-mid); margin: 1rem 0; }
   #pairs-list .pair-item { margin-bottom: 2rem; }
+  #pairs-list .pair-card .pair-item { margin-bottom: 0; }
   .journey-viewport { display: none; }
   #screen-pairs .journey-progress {
     position: sticky; top: 76px; z-index: 20; width: 100%; max-width: none;
@@ -965,7 +969,7 @@ So thank you for being a part of it.</div>
 
     <div class="journey-progress" id="journey-progress" role="progressbar" aria-label="Statements answered" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" aria-valuetext="0 of 24 statements answered; 24 unanswered">
       <div class="paired-progress-track" aria-hidden="true"><div class="paired-progress-fill" id="paired-progress-fill"></div></div>
-      <div class="journey-remaining" aria-live="polite"><span><strong id="statements-answered">0</strong> of 24 answered</span><span><strong id="questions-left">24</strong> <span id="questions-left-copy">statements unanswered</span></span></div>
+      <div class="journey-remaining" aria-live="polite"><span><strong id="statements-answered">0</strong> of 24 answered</span></div>
     </div>
     <h2 id="pair-position" aria-live="polite"></h2>
     <div id="pairs-list"></div>
@@ -1929,17 +1933,7 @@ Thank you for being a part of it.</div>
   });
 
   // ---- v4 paired order approved by Graham on 13 September ----
-  function renderPairs() {
-    var list = document.getElementById('pairs-list');
-    list.innerHTML = '';
-
-    var pass1 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s1 }; });
-    var pass2 = DOMAINS.map(function (d) { return { domain: d, stmt: d.s2 }; });
-    orderedStatements = DOMAINS.reduce(function (items, d) {
-      return items.concat([{ domain: d, stmt: d.s1 }, { domain: d, stmt: d.s2 }]);
-    }, []);
-
-    orderedStatements.forEach(function (item, index) {
+  function buildStatementRow(item, index) {
       var domainKey = item.domain.key;
       var field = item.stmt.field; // 'contribution' | 'conditions'
 
@@ -2009,6 +2003,31 @@ Thank you for being a part of it.</div>
       labels.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
       row.appendChild(labels);
 
+      var contextWrap = document.createElement('div');
+      contextWrap.className = 'statement-context';
+      var existingContext = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
+      var contextInputId = 'statement-context-' + index;
+      var contextLabel = document.createElement('label');
+      contextLabel.className = 'visually-hidden';
+      contextLabel.setAttribute('for', contextInputId);
+      contextLabel.textContent = 'Add context to your answer (optional)';
+      var contextInput = document.createElement('textarea');
+      contextInput.rows = 1;
+      contextInput.maxLength = 1000;
+      contextInput.placeholder = 'Share an experience or thought, if you\'d like';
+      contextInput.value = existingContext;
+      contextInput.id = contextInputId;
+      contextInput.className = 'statement-context-input';
+      if (existingContext) contextInput.classList.add('has-content');
+      contextInput.addEventListener('input', function () {
+        if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
+        pairResponses[domainKey][field + '_context'] = contextInput.value;
+        contextInput.classList.toggle('has-content', contextInput.value.trim() !== '');
+      });
+      contextWrap.appendChild(contextLabel);
+      contextWrap.appendChild(contextInput);
+      row.appendChild(contextWrap);
+
       var alternatives = document.createElement('div');
       alternatives.className = 'response-alternatives';
 
@@ -2033,40 +2052,6 @@ Thank you for being a part of it.</div>
       alternatives.appendChild(skipBtn);
       row.appendChild(alternatives);
 
-      var contextWrap = document.createElement('div');
-      contextWrap.className = 'statement-context';
-      var existingContext = (pairResponses[domainKey] && pairResponses[domainKey][field + '_context']) || '';
-      var contextToggle = document.createElement('button');
-      contextToggle.type = 'button';
-      contextToggle.className = 'statement-context-toggle';
-      contextToggle.textContent = 'Add context to your answer (optional)';
-      contextToggle.setAttribute('aria-expanded', 'false');
-      contextToggle.setAttribute('aria-controls', 'statement-context-panel-' + index);
-      var contextPanel = document.createElement('div');
-      contextPanel.className = 'statement-context-panel';
-      contextPanel.id = 'statement-context-panel-' + index;
-      contextPanel.hidden = true;
-      var contextInput = document.createElement('textarea');
-      contextInput.maxLength = 1000;
-      contextInput.placeholder = 'A short example or explanation';
-      contextInput.value = existingContext;
-      contextInput.id = 'statement-context-' + index;
-      contextInput.setAttribute('aria-label', 'Add context to your answer (optional)');
-      contextInput.addEventListener('input', function () {
-        if (!pairResponses[domainKey]) pairResponses[domainKey] = {};
-        pairResponses[domainKey][field + '_context'] = contextInput.value;
-      });
-      contextToggle.addEventListener('click', function () {
-        var opening = contextPanel.hidden;
-        contextPanel.hidden = !opening;
-        contextToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
-        if (opening) contextInput.focus({ preventScroll: true });
-      });
-      contextPanel.appendChild(contextInput);
-      contextWrap.appendChild(contextToggle);
-      contextWrap.appendChild(contextPanel);
-      row.appendChild(contextWrap);
-
       // If this statement was already answered in a restored savedState,
       // reflect that in the button state now, so it's visibly there if
       // the respondent navigates back to it — not just present in the
@@ -2076,7 +2061,25 @@ Thank you for being a part of it.</div>
         applyPressedState(scaleGrid, [skipBtn, naBtn], existingValue);
       }
 
-      list.appendChild(row);
+      return row;
+  }
+
+  function renderPairs() {
+    var list = document.getElementById('pairs-list');
+    list.innerHTML = '';
+
+    orderedStatements = DOMAINS.reduce(function (items, d) {
+      return items.concat([{ domain: d, stmt: d.s1 }, { domain: d, stmt: d.s2 }]);
+    }, []);
+
+    DOMAINS.forEach(function (domain, pairIndex) {
+      var card = document.createElement('div');
+      card.className = 'pair-card';
+      card.setAttribute('data-pair-index', String(pairIndex));
+      card.hidden = pairIndex !== Math.floor(currentStatementIndex / 2);
+      card.appendChild(buildStatementRow({ domain: domain, stmt: domain.s1 }, pairIndex * 2));
+      card.appendChild(buildStatementRow({ domain: domain, stmt: domain.s2 }, pairIndex * 2 + 1));
+      list.appendChild(card);
     });
     showStatement(0);
   }
@@ -2092,6 +2095,10 @@ Thank you for being a part of it.</div>
     rows.forEach(function (row, rowIndex) {
       row.classList.remove('question-leaving', 'question-entering', 'question-leaving-back', 'question-entering-back');
       row.hidden = rowIndex < currentStatementIndex || rowIndex >= currentStatementIndex + 2;
+    });
+    var currentPairIndex = Math.floor(currentStatementIndex / 2);
+    document.querySelectorAll('.pair-card').forEach(function (card, cardIndex) {
+      card.hidden = cardIndex !== currentPairIndex;
     });
 
     var atEnd = currentStatementIndex >= TOTAL_STATEMENTS;
@@ -2187,9 +2194,7 @@ Thank you for being a part of it.</div>
     var n = Math.min(answeredCount, TOTAL_STATEMENTS);
     var questionsLeft = Math.max(TOTAL_STATEMENTS - n, 0);
     var progress = document.getElementById('journey-progress');
-    document.getElementById('questions-left').textContent = String(questionsLeft);
     document.getElementById('statements-answered').textContent = String(n);
-    document.getElementById('questions-left-copy').textContent = questionsLeft === 1 ? 'statement unanswered' : 'statements unanswered';
     progress.setAttribute('aria-valuenow', String(n));
     progress.setAttribute('aria-valuetext', n + ' of 24 statements answered; ' + questionsLeft + ' unanswered');
   }
