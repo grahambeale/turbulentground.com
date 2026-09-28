@@ -41,9 +41,10 @@
   .stage-detail { display:block; color:var(--muted); font-size:.68rem; margin-top:1px; }
   .canvas { min-width:0; min-height:0; background:#090807; position:relative; }
   .walkthrough { height:100%; display:grid; grid-template-rows:1fr auto; }
-  .journey-frame { width:100%; height:100%; min-height:620px; border:0; background:#131110; }
+  .journey-image { display:block; width:100%; height:100%; min-height:620px; object-fit:contain; object-position:top center; background:#131110; }
   .canvas-footer { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:10px 18px; border-top:1px solid var(--line); background:var(--panel); }
   .canvas-footer span { color:var(--muted); font-size:.74rem; }
+  .interactive-link { color:var(--ink); font-size:.74rem; text-decoration:none; border-bottom:1px solid rgba(232,220,200,.35); }
   .step-controls { display:flex; gap:8px; }
   .step-controls button, .secondary { border:1px solid var(--line); background:var(--surface); padding:8px 12px; border-radius:7px; cursor:pointer; }
   .step-controls button:disabled { opacity:.35; cursor:default; }
@@ -69,13 +70,13 @@
   .gallery-card-head strong { font-size:.82rem; }
   .gallery-card-head span { color:var(--muted); font-size:.7rem; }
   .thumb-viewport { position:relative; height:300px; overflow:hidden; background:#131110; }
-  .thumb-viewport iframe { width:1280px; height:800px; border:0; pointer-events:none; transform:scale(.39); transform-origin:top left; }
+  .thumb-viewport img { width:100%; height:100%; object-fit:cover; object-position:top center; }
   body.gallery-mode .walkthrough, body.gallery-mode .sidebar, body.gallery-mode .notes { display:none; }
   body.gallery-mode .workspace { display:block; }
   body.gallery-mode .gallery { display:block; }
   .safety { margin-top:24px; padding:12px; border-left:3px solid var(--orange); background:rgba(217,87,28,.08); color:var(--mid); font-size:.72rem; line-height:1.5; }
   @media (max-width:1050px) { .workspace { grid-template-columns:210px minmax(0,1fr); } .notes { display:none; } .gallery-grid { grid-template-columns:1fr; } }
-  @media (max-width:720px) { .topbar { flex-wrap:wrap; } .workspace { display:block; } .sidebar { border:0; border-bottom:1px solid var(--line); } .stage-list { display:flex; overflow:auto; } .stage { min-width:170px; } .journey-frame { min-height:720px; } }
+  @media (max-width:720px) { .topbar { flex-wrap:wrap; } .workspace { display:block; } .sidebar { border:0; border-bottom:1px solid var(--line); } .stage-list { display:flex; overflow:auto; } .stage { min-width:170px; } .journey-image { min-height:720px; } }
 </style>
 </head>
 <body>
@@ -96,8 +97,8 @@
     </aside>
     <main class="canvas">
       <section class="walkthrough">
-        <iframe class="journey-frame" id="journey-frame" title="Research journey preview"></iframe>
-        <footer class="canvas-footer"><span id="stage-position"></span><div class="step-controls"><button type="button" id="previous-stage">Previous</button><button type="button" id="next-stage">Next</button></div></footer>
+        <img class="journey-image" id="journey-image" alt="">
+        <footer class="canvas-footer"><span id="stage-position"></span><a class="interactive-link" id="interactive-link" target="_blank" rel="noopener">Open interactive screen</a><div class="step-controls"><button type="button" id="previous-stage">Previous</button><button type="button" id="next-stage">Next</button></div></footer>
       </section>
       <section class="gallery">
         <div class="gallery-intro"><h1>The complete participant journey</h1><p>Use this view to compare hierarchy, density, pacing and consistency. Choose any screen to open it in the interactive walkthrough.</p></div>
@@ -128,10 +129,11 @@
     { id:'completion', name:'Completion', detail:'Benchmark, sharing and follow-up' }
   ];
   var current = 0;
-  var frame = document.getElementById('journey-frame');
+  var journeyImage = document.getElementById('journey-image');
   var note = document.getElementById('review-note');
   var notes = JSON.parse(localStorage.getItem('tg-ux-review-notes') || '{}');
   function src(id) { return '/research/?preview=ux-review&stage=' + encodeURIComponent(id) + '&pk=' + KEY; }
+  function imageSrc(id) { return '/research/ux-review-assets/' + id + '.png'; }
   function renderStages() {
     document.getElementById('stage-list').innerHTML = stages.map(function (stage, index) {
       return '<button type="button" class="stage' + (index === current ? ' active' : '') + '" data-stage-index="' + index + '"><span class="stage-number">' + (index + 1) + '</span><span class="stage-name">' + stage.name + '<span class="stage-detail">' + stage.detail + '</span></span></button>';
@@ -146,7 +148,9 @@
   function openStage(index) {
     current = Math.max(0, Math.min(index, stages.length - 1));
     var stage = stages[current];
-    frame.src = src(stage.id);
+    journeyImage.src = imageSrc(stage.id);
+    journeyImage.alt = stage.name + ' screen';
+    document.getElementById('interactive-link').href = src(stage.id);
     note.value = notes[stage.id] || '';
     document.getElementById('notes-title').textContent = stage.name;
     document.getElementById('stage-position').textContent = (current + 1) + ' of ' + stages.length + ' · ' + stage.name;
@@ -156,7 +160,7 @@
     renderStages();
   }
   function buildGallery() {
-    document.getElementById('gallery-grid').innerHTML = stages.map(function (stage, index) { return '<article class="gallery-card" data-gallery-index="' + index + '" tabindex="0"><div class="gallery-card-head"><strong>' + (index + 1) + '. ' + stage.name + '</strong><span>' + stage.detail + '</span></div><div class="thumb-viewport"><iframe loading="lazy" title="' + stage.name + ' preview" src="' + src(stage.id) + '"></iframe></div></article>'; }).join('');
+    document.getElementById('gallery-grid').innerHTML = stages.map(function (stage, index) { return '<article class="gallery-card" data-gallery-index="' + index + '" tabindex="0"><div class="gallery-card-head"><strong>' + (index + 1) + '. ' + stage.name + '</strong><span>' + stage.detail + '</span></div><div class="thumb-viewport"><img loading="lazy" alt="' + stage.name + ' screen" src="' + imageSrc(stage.id) + '"></div></article>'; }).join('');
     document.querySelectorAll('[data-gallery-index]').forEach(function (card) {
       function select() { document.body.classList.remove('gallery-mode'); setMode('walkthrough'); openStage(Number(card.dataset.galleryIndex)); }
       card.addEventListener('click', select); card.addEventListener('keydown', function (event) { if (event.key === 'Enter' || event.key === ' ') select(); });

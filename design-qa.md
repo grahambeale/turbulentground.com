@@ -57,6 +57,22 @@ Final result: passed.
 
 ---
 
+# Research journey review console — hosted-screen QA
+
+## Finding and fix
+
+- Finding: Vercel sends a frame-denial policy, so the live survey cannot render inside the review console's embedded frames. The console navigation and notes loaded, but the central screen area was blank.
+- Fix: the walkthrough and gallery now use committed captures of all seven safe review states. Each stage also provides an **Open interactive screen** link, opening the real protected screen in a separate tab where Vercel permits it to run.
+
+## Checks
+
+- Every journey stage has a corresponding capture: passed.
+- No iframe remains in the review console: passed.
+- The safe interactive route remains available for every stage: passed.
+- Review notes remain browser-local and are never submitted automatically: passed.
+
+---
+
 # Research journey UX review console — design QA
 
 ## Evidence
