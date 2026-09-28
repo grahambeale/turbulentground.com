@@ -1,10 +1,10 @@
 {
   "_comment": "On-demand research-project session lease. This is independent of _experiment/sprint-state.json. See research/agent-workflow.md.",
-  "active_run": null,
-  "runner": null,
-  "work_item": null,
-  "phase": null,
-  "started_at": null,
-  "lease_expires": null,
-  "last_checkpoint": null
+  "active_run": "claude-code:pairs-screen-visual-grouping-20260928T223842Z",
+  "runner": "claude-code",
+  "work_item": "research/index.html paired-statement screen: visual grouping card, reorder context-before-skip, self-expanding context field",
+  "phase": "investigate",
+  "started_at": "2026-09-28T22:38:42Z",
+  "lease_expires": "2026-09-29T00:38:42Z",
+  "last_checkpoint": "lease claimed"
 }
