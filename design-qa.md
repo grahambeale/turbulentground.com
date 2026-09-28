@@ -54,3 +54,57 @@ The earlier route retained a full-width line after its final visible station, wh
 Fonts and typography, spacing and layout rhythm, colour tokens, icon quality, and copy remain consistent with the selected visual direction and the existing survey. No new image assets were required. No P0, P1, or P2 findings remain. Browser console errors: none.
 
 Final result: passed.
+
+---
+
+# Referral sharing tabs — design QA
+
+## Reference and implementation
+
+- Source visual truth: `/var/folders/nf/k_4g44qx6pn4k86dzz0s9ldw0000gp/T/codex-clipboard-a3718b12-a2d7-4525-bc81-ca363bd53418.png`
+- Browser-rendered implementation: `/private/tmp/tg-phase31-activation/referral-tabs-private-implementation.jpg`
+- Viewport: desktop in-app browser, 1265 × 712 capture
+- Source pixels: 2030 × 1116; implementation pixels: 1265 × 712
+- Normalisation: compared the same private-selected sharing region at each capture's native density; the source is a tighter crop, so judgement used component proportions and state rather than pixel-for-pixel page coordinates.
+- State: private invitation selected; public and private switching also tested in the browser.
+
+## Visual comparison
+
+The existing palette, typography and layout are preserved. The old large rounded option buttons are replaced by a connected tab rail. The selected tab visually joins the content area through its open lower edge and shared background.
+
+## Focused-region comparison evidence
+
+Public uses the Material Symbols globe; private uses the complementary Material Symbols lock. Both icons loaded successfully. Selected, unselected and focusable radio states retain native accessible labels. Switching either radio shows the matching panel and hides the other.
+
+## Required fidelity surfaces
+
+- Fonts and typography: existing DM Sans and Cormorant Garamond hierarchy retained.
+- Spacing and layout rhythm: compact connected tabs reduce the oversized button treatment without disturbing the card rhythm.
+- Colors and visual tokens: existing background, border, ink, muted and orange tokens reused.
+- Image and icon fidelity: no raster imagery is involved; icons come from Material Symbols.
+- Copy and content: `Share publicly` remains; the tab shortens the private label to `Invite privately`, while the panel retains the full heading.
+
+## Findings
+
+No actionable P0, P1 or P2 differences remain for the requested refinement.
+
+## Interaction and runtime checks
+
+- Public → private switch: passed.
+- Private → public switch: passed.
+- Correct panel visibility: passed.
+- Material Symbols font loaded: passed.
+- Page reached `complete` with no visible runtime failure: passed.
+- Existing synthetic sharing and integration tests: passed.
+
+## Comparison history
+
+- Initial finding: the modes read as independent large buttons rather than navigation between related panels.
+- Fix: shared bottom rule, open-bottom selected tab, active top accent and complementary icons.
+- Post-fix evidence: `referral-tabs-private-implementation.jpg`.
+
+## Follow-up polish
+
+- P3: confirm label wrapping on a physical 320px-wide device during release verification.
+
+Final result: passed.
