@@ -711,6 +711,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     #screen-done .referral-sharing { padding: 34px 0 0; border-left: 0; border-top: 1px solid var(--border); }
   }
   body:has(#screen-done.active) #feedback-launch { top: auto !important; bottom: 18px !important; }
+  html.ux-review-embed #feedback-launch { display: none !important; }
 
   /* Restrained route treatment approved after comparative local review. */
   .restrained-research .journey-route::after { opacity: 0.34; }
@@ -1427,12 +1428,16 @@ Thank you for being a part of it.</div>
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   var completionPreview = previewMode === 'completion' &&
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
+  var uxReviewPreview = previewMode === 'ux-review' &&
+    new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
+  var uxReviewStage = uxReviewPreview ? (new URLSearchParams(window.location.search).get('stage') || 'consent') : '';
+  if (uxReviewPreview) document.documentElement.classList.add('ux-review-embed');
   document.documentElement.classList.add('likert-transitions');
   document.documentElement.classList.add('restrained-research');
   var researchEventsSent = {};
 
   function trackResearchEvent(name) {
-    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || publicStartPreview || completionPreview || researchEventsSent[name]) return;
+    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || publicStartPreview || completionPreview || uxReviewPreview || researchEventsSent[name]) return;
     researchEventsSent[name] = true;
     window.plausible(name);
   }
@@ -1453,7 +1458,27 @@ Thank you for being a part of it.</div>
   // A network failure here is treated the same as an invalid token (fails
   // safe: no token means no survey, rather than silently letting a lookup
   // error through to the consent screen as if everything were fine).
-  if (completionPreview) {
+  if (uxReviewPreview) {
+    window.__TG_UX_REVIEW__ = true;
+    if (uxReviewStage === 'entry') {
+      showScreen('screen-public-start');
+    } else if (uxReviewStage === 'consent') {
+      document.getElementById('consent-greeting').textContent = 'Hi Alex, welcome.';
+      showScreen('screen-consent');
+    } else if (uxReviewStage === 'profile') {
+      showScreen('screen-context');
+    } else if (uxReviewStage === 'questions' || uxReviewStage === 'final-question' || uxReviewStage === 'submit') {
+      renderPairs();
+      showStatement(uxReviewStage === 'submit' ? 24 : (uxReviewStage === 'final-question' ? 22 : 0));
+      showScreen('screen-pairs');
+    } else if (uxReviewStage === 'completion') {
+      hasEmailOnFile = true;
+      showScreen('screen-done');
+      window.__TG_COMPLETION_PREVIEW__ = true;
+    } else {
+      showScreen('screen-consent');
+    }
+  } else if (completionPreview) {
     hasEmailOnFile = true;
     showScreen('screen-done');
     window.__TG_COMPLETION_PREVIEW__ = true;
@@ -1533,7 +1558,7 @@ Thank you for being a part of it.</div>
       status.textContent = 'Please complete your name, email and both confirmations.';
       return;
     }
-    if (publicStartPreview) {
+    if (publicStartPreview || uxReviewPreview) {
       status.textContent = 'Preview complete. No participant record was created.';
       return;
     }
@@ -1655,6 +1680,7 @@ Thank you for being a part of it.</div>
   // case the browser closes in a way that skips the pagehide/unload save
   // below entirely.
   function scheduleCheckpointSave() {
+    if (uxReviewPreview) return;
     if (!consent.takingPart) return;
     if (statementsAnswered === 0 || statementsAnswered % 6 !== 0) return;
     fetch('/api/research-save-progress', {
@@ -1672,6 +1698,7 @@ Thank you for being a part of it.</div>
   // parsing ever changed to trust the header. Using a Blob is the
   // documented way to control the content type sendBeacon sends.
   function saveProgressOnHide() {
+    if (uxReviewPreview) return;
     if (!consent.takingPart) return;
     if (!navigator.sendBeacon) return;
     var blob = new Blob([JSON.stringify(buildSavePayload())], { type: 'application/json' });
@@ -1694,7 +1721,7 @@ Thank you for being a part of it.</div>
   // ---- optional contact choices ----
   var studyEmailsCheckbox = document.getElementById('consent-study-emails');
   var quoteNameCheckbox = document.getElementById('consent-quote-name');
-  if (completionPreview) prepareResultsEmail();
+  if (completionPreview || (uxReviewPreview && uxReviewStage === 'completion')) prepareResultsEmail();
   var emailCaptureWrap = document.getElementById('email-capture');
   var emailCaptureInput = document.getElementById('email-capture-input');
 
@@ -1760,6 +1787,15 @@ Thank you for being a part of it.</div>
 
     consentContinue.disabled = true;
     consentContinue.textContent = 'Saving...';
+
+    if (uxReviewPreview) {
+      trackResearchEvent('Research: Consent Completed');
+      showScreen('screen-context');
+      consentContinue.disabled = false;
+      consentContinue.textContent = 'Continue';
+      updateConsentAcknowledgement();
+      return;
+    }
 
     var emailSave = Promise.resolve();
     if (wantsEmails && !hasEmailOnFile && !emailCaptured) {
@@ -2098,8 +2134,14 @@ Thank you for being a part of it.</div>
   // ---- submit ----
   document.getElementById('submit-btn').addEventListener('click', function () {
     var btn = this;
-    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview) {
+    if (localJourneyPreview || localTransitionPreview || localRestrainedPreview || uxReviewPreview) {
       showScreen('screen-done');
+      if (uxReviewPreview) {
+        hasEmailOnFile = true;
+        window.__TG_COMPLETION_PREVIEW__ = true;
+        prepareResultsEmail();
+        document.dispatchEvent(new CustomEvent('tg:research-submitted', { detail: { token: token } }));
+      }
       return; // Preview never submits responses or prepares results emails.
     }
     var trackSubmissionFailure = true;
@@ -2182,6 +2224,12 @@ Thank you for being a part of it.</div>
     var status = document.getElementById('results-email-status');
     var email = input.hidden ? '' : input.value.trim();
 
+    if (uxReviewPreview) {
+      status.textContent = 'Review preview only — no email was sent.';
+      status.hidden = false;
+      return;
+    }
+
     if (!input.hidden && !looksLikeEmailClientSide(email)) {
       status.textContent = 'Please enter a valid email address.';
       status.hidden = false;
@@ -2242,6 +2290,11 @@ Thank you for being a part of it.</div>
     var button = document.getElementById('stay-involved-button');
     var status = document.getElementById('stay-involved-status');
     var wantsEmails = consent.contactStudyEmails;
+    if (uxReviewPreview) {
+      status.textContent = 'Review preview only — no choice was saved.';
+      status.hidden = false;
+      return;
+    }
     button.disabled = true;
     button.textContent = 'Saving...';
     status.hidden = true;

@@ -57,6 +57,33 @@ Final result: passed.
 
 ---
 
+# Research journey UX review console — design QA
+
+## Evidence
+
+- Interactive walkthrough: `/private/tmp/tg-ux-review-package/ux-review-walkthrough.png`
+- All-screens gallery: `/private/tmp/tg-ux-review-package/ux-review-gallery.png`
+- Desktop browser viewport: 1265 × 712
+- Visual source: the production research journey's existing typography, palette and screen components.
+
+## Review coverage
+
+The console exposes seven distinct participant moments: entry and identity, consent, research context, the question experience, the final question pair, the optional final comment and submission moment, and completion. Each preview uses the actual research page rather than a redrawn facsimile.
+
+Walkthrough navigation, gallery-to-walkthrough navigation, safe synthetic stage loading, public/private completion controls and responsive layout were checked in the in-app browser. The complete automated test suite passed.
+
+## Safety and annotation
+
+Review mode suppresses analytics and prevents participant creation, checkpoint saves, page-hide saves, survey submission, result-email requests and preference writes. Notes are stored only in the reviewer's browser and can be downloaded as Markdown; they are not posted to Airtable or any API.
+
+## Findings
+
+The first review pass grouped the final pair and submission moment together. The browser comparison showed these are meaningfully different states, so the submission moment was added as a seventh stage. No actionable P0, P1 or P2 findings remain in the review console itself.
+
+Final result: passed.
+
+---
+
 # Research completion screen — unified action canvas
 
 ## Reference and implementation
