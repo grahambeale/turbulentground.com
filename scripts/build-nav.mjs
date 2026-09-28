@@ -69,6 +69,19 @@ const RESEARCH_NAV_CONFIG = {
   cta: null,
 };
 
+// Homepage (Phase 3 public launch, 29 Sep 2026): the homepage's job is to
+// recruit to the research study, so its nav CTA points there. Every other
+// main-site page keeps the diagnostic CTA.
+const HOME_NAV_CONFIG = {
+  logoHref: '/',
+  strapline: STRAPLINE,
+  links: [
+    { href: '/learnings', label: 'Learnings' },
+    { href: '/diagnostic', label: 'Diagnostic' },
+  ],
+  cta: { href: '/research', label: 'Take part &rarr;' },
+};
+
 const TARGET_FILES = [
   'index.html',
   'writing.html',
@@ -92,6 +105,7 @@ const TARGET_FILES = [
 ];
 
 const NAV_CONFIG = {
+  'index.html': HOME_NAV_CONFIG,
   'research/index.html': RESEARCH_NAV_CONFIG,
   'research/admin.html': RESEARCH_NAV_CONFIG,
   'research/privacy.html': RESEARCH_NAV_CONFIG,
