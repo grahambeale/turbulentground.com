@@ -57,6 +57,18 @@ Final result: passed.
 
 ---
 
+# Entry and consent simplification — design QA
+
+- Entry: removed the repeated eyebrow while preserving the existing heading, explanatory copy and required fields.
+- Privacy: the maintained privacy notice now opens in a large, scrollable modal without taking the participant away from the survey.
+- Consent: removed the repeated privacy prompt, the “Before you start” heading and the explanatory paragraphs.
+- Video: Graham's introduction is embedded at full content width and starts muted when the consent screen appears; controls and the complete transcript remain available.
+- Profile: all radio choices now use a single vertical reading order, avoiding the previous left-to-right and top-to-bottom scan pattern.
+- Visual check: entry hierarchy, modal legibility, consent spacing and the embedded player were inspected at a 1265 × 712 desktop viewport.
+- Regression suite and whitespace checks: passed.
+
+---
+
 # Research journey review console — hosted-screen QA
 
 ## Finding and fix
@@ -84,9 +96,21 @@ Final result: passed.
 
 ## Review coverage
 
-The console exposes seven distinct participant moments: entry and identity, consent, research context, the question experience, the final question pair, the optional final comment and submission moment, and completion. Each preview uses the actual research page rather than a redrawn facsimile.
+The console exposes six distinct participant moments: combined welcome, identity and consent; research context; the question experience; the final question pair; the optional final comment and submission moment; and completion. Each preview uses the actual research page rather than a redrawn facsimile.
 
 Walkthrough navigation, gallery-to-walkthrough navigation, safe synthetic stage loading, public/private completion controls and responsive layout were checked in the in-app browser. The complete automated test suite passed.
+
+## Consolidated annotation pass — 28 September 2026
+
+- Combined the public welcome, embedded introduction, identity fields, privacy access and consent choices into one opening step. The recorded consent is carried through the private-token redirect so public participants do not meet a duplicate consent screen.
+- Matched the 720×1280 introduction video’s native 9:16 portrait ratio and rewrote the 14-day retention note to lead with flexibility and end with the privacy benefit.
+- Kept the research-context choices in one vertical reading order.
+- Increased the space between those choices from 8px to 12px so each option is easier to distinguish without materially lengthening the journey.
+- Made the questionnaire progress indicator sticky below the navigation. Browser verification at the bottom of the question recorded `position: sticky` with its top edge held at 76px.
+- Reduced completion to the single heading “Thank you”, a full embedded autoplay-muted video with transcript, and stacked actions.
+- Matched the separate 720×1280 thank-you video to its native 9:16 portrait ratio as well.
+- When an email is already held, the benchmark request panel is omitted and the comparison is requested automatically. When an address is missing, the participant sees one compact email field and “Send my comparison”; success replaces the panel with a confirmation.
+- Kept the personal invitation link immediately visible, while moving public/private channel controls behind a “More ways to share” disclosure.
 
 ## Safety and annotation
 

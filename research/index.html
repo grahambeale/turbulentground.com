@@ -192,7 +192,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .choice-field .optional-tag {
     font-family: 'DM Sans', sans-serif; color: var(--muted); font-weight: 400; font-size: 0.64em;
   }
-  .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .choice-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 620px; }
   .choice-option { position: relative; }
   .choice-option input {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -353,7 +353,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   html.likert-transitions,
   html.likert-transitions body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   .likert-transitions #pairs-list.is-transitioning {
     display: grid;
@@ -515,6 +515,26 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   .public-start-note { color: var(--muted); font-size: .9rem; margin: 14px 0 6px; }
   .public-start-status { min-height: 1.7em; color: var(--orange-lt); margin-top: 12px; }
+  .privacy-open {
+    padding: 0; border: 0; background: none; color: var(--orange-lt); font: inherit;
+    text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+
+  .privacy-modal { width: min(920px, calc(100vw - 32px)); max-height: calc(100vh - 32px); margin: auto; padding: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--ink); }
+  .privacy-modal::backdrop { background: rgba(10,8,6,.9); backdrop-filter: blur(4px); }
+  .privacy-modal-header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 22px; border-bottom: 1px solid var(--border); background: rgba(14,11,8,.97); }
+  .privacy-modal-header h2 { margin: 0; font-size: clamp(28px,4vw,38px); }
+  .privacy-modal-close { flex: 0 0 auto; border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; background: var(--surface); color: var(--ink); cursor: pointer; }
+  .privacy-modal-content { padding: 12px 28px 36px; color: var(--ink-mid); line-height: 1.7; }
+  .privacy-modal-content h1, .privacy-modal-content > .eyebrow { display: none; }
+  .privacy-modal-content h2 { margin: 34px 0 12px; font-size: clamp(24px,4vw,32px); }
+  .privacy-modal-content p { margin: 0 0 16px; }
+  .privacy-modal-content ul, .privacy-modal-content ol { margin: 0 0 20px 24px; }
+  .privacy-modal-content li { margin-bottom: 8px; }
+  .privacy-modal-content a { color: var(--orange-lt); }
+  .privacy-modal-content .table-wrap { overflow-x: auto; }
+  .privacy-modal-content table { min-width: 640px; border-collapse: collapse; }
+  .privacy-modal-content th, .privacy-modal-content td { padding: 12px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
 
   /* ── Consent-screen greeting ──────────────────────────────────── */
   .greeting { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3.2vw, 30px); font-weight: 400; color: var(--orange-lt); line-height: 1.35; margin-bottom: 10px; }
@@ -547,16 +567,17 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .video-thumb-label { color: var(--ink-mid); font-size: 0.8rem; text-align: center; max-width: 76px; line-height: 1.3; transition: color 0.15s ease; }
   .video-thumb-btn:hover .video-thumb-label, .video-thumb-btn:focus-visible .video-thumb-label { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
 
-  /* Intro screen: thumbnail sits under the "Before you start" headline,
-     row layout (avatar beside label) matching the outro thumbnail on the
-     thank-you screen, transcript link directly under it — same row
-     pattern as .done-video-block, but left-aligned since this screen's
-     content isn't centered the way the thank-you screen is. */
-  .intro-video-block { margin: 4px 0 28px; }
-  .intro-video-block .video-thumb { align-items: flex-start; }
-  .intro-video-block .video-thumb-btn { flex-direction: row; gap: 10px; }
-  .intro-video-block .video-thumb-label { text-align: left; max-width: none; }
-  .intro-video-block .transcript-toggle { margin: 10px 0 0; }
+  /* Video opens automatically in the shared portrait popup. Keeping only
+     a quiet replay link and transcript here means closing it reveals the
+     useful page content immediately, without leaving a video-sized gap. */
+  .intro-video-block { margin: 8px 0 22px; }
+  .video-reopen-link {
+    appearance: none; border: 0; padding: 0; background: transparent;
+    color: var(--orange-lt); font: inherit; font-size: .88rem;
+    text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+  .video-reopen-link:hover, .video-reopen-link:focus-visible { color: var(--ink); }
+  .intro-video-block .transcript-toggle { margin: 8px 0 0; }
 
   /* Shared popup, reused for both intro and outro — the JS swaps the
      <source> src and poster per-thumbnail rather than building two
@@ -565,7 +586,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .video-modal[hidden] { display: none; }
   .video-modal-backdrop { position: absolute; inset: 0; background: rgba(10,8,6,0.88); }
   .video-modal-panel { position: relative; z-index: 1; width: 100%; max-width: min(90vw, 360px); }
-  .video-modal-panel video { display: block; width: 100%; max-height: 80vh; border-radius: 10px; background: #000; }
+  .video-modal-panel video { display: block; width: 100%; max-height: 80vh; aspect-ratio: 9 / 16; object-fit: contain; border-radius: 10px; background: #000; }
   .video-modal-close {
     position: absolute; top: -42px; right: 0; width: 36px; height: 36px; border-radius: 50%;
     background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; font-size: 22px;
@@ -596,7 +617,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
      lighter spacing than before, no top border needed since it isn't
      separating from a big block of content above it any more, just a
      one-line message. */
-  .done-video-block { margin: 4px 0 24px; }
+  .done-video-block { width: min(100%, 760px); margin: 0 auto 20px; text-align: center; }
   /* Row layout instead of the default stacked button — the round
      thumbnail sitting directly under the round checkmark read as a visual
      echo of it, and putting the label beside rather than below the
@@ -627,7 +648,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .done-wrap { padding: 34px 0 56px; }
   .done-hero {
     display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center;
-    padding: 22px 0 34px; border-bottom: 1px solid var(--border);
+    padding: 22px 0 8px;
   }
   .done-heading { display: block; }
   .done-check {
@@ -651,9 +672,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .done-wrap h1 { margin: 0 auto; max-width: 660px; font-size: clamp(2.45rem, 4.4vw, 4.2rem); line-height: 1.02; }
   .done-intro { margin-top: 10px; color: var(--ink-mid); font-size: 1rem; }
   .section-kicker { margin: 0 0 8px !important; color: var(--muted) !important; font-size: .72rem !important; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
-  .done-actions-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(360px, .88fr); gap: 46px; align-items: start; padding-top: 34px; }
+  .done-actions-grid { display: grid; grid-template-columns: 1fr; gap: 34px; align-items: start; width:min(100%,760px); margin:0 auto; padding-top: 8px; }
   .done-actions-grid > * { min-width: 0; }
-  #screen-done .referral-sharing { margin: 0; padding: 0 0 0 46px; border: 0; border-left: 1px solid var(--border); border-radius: 0; background: transparent; }
+  #screen-done .referral-sharing { margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+  .referral-more-toggle { margin-top:14px; padding:0; border:0; background:transparent; color:var(--orange-lt); font:inherit; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+  .results-email-confirmation { display:flex; align-items:center; gap:10px; padding:16px 18px; border:1px solid rgba(232,220,200,.18); border-radius:10px; background:var(--surface); color:var(--ink); }
+  .results-email-confirmation .material-symbols-outlined { color:var(--orange-lt); }
   /* The results-email form is the primary interactive element on this
      screen and needs to be reachable without scrolling past it first —
      measured on a 375px mobile viewport: the form's input was sitting
@@ -706,10 +730,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     .choice-grid { grid-template-columns: 1fr; }
     .footer-bar { gap: 14px; padding: 12px 18px; }
   }
-  @media (max-width: 900px) {
-    .done-actions-grid { grid-template-columns: 1fr; gap: 34px; }
-    #screen-done .referral-sharing { padding: 34px 0 0; border-left: 0; border-top: 1px solid var(--border); }
-  }
   body:has(#screen-done.active) #feedback-launch { top: auto !important; bottom: 18px !important; }
   html.ux-review-embed #feedback-launch { display: none !important; }
 
@@ -729,11 +749,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   #pair-position { font-size: 1.1rem; color: var(--ink-mid); margin: 1rem 0; }
   #pairs-list .pair-item { margin-bottom: 2rem; }
   .journey-viewport { display: none; }
-  #screen-pairs .journey-progress { width: 100%; max-width: none; margin: 24px 0; padding: 0; }
+  #screen-pairs .journey-progress {
+    position: sticky; top: 76px; z-index: 20; width: 100%; max-width: none;
+    margin: 24px 0; padding: 10px 0 8px; background: rgba(14,11,8,.96);
+    box-shadow: 0 10px 18px rgba(14,11,8,.88);
+  }
   #screen-pairs .journey-remaining { justify-content: space-between; padding: 0; margin: 10px 0 0; color: var(--ink); font-size: .95rem; }
   .paired-progress-track { height: 12px; width: 100%; background: #51463b; border-radius: 8px; overflow: hidden; }
   .paired-progress-fill { height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: #e55b20; transition: transform 360ms ease-out; }
   @media (prefers-reduced-motion: reduce) { .paired-progress-fill { transition: none; } }
+  @media (max-width: 720px) { #screen-pairs .journey-progress { top: 64px; } }
   .statement-context-continue:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
@@ -773,19 +798,38 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   <!-- ============ SCREEN 0a: PUBLIC START ============ -->
   <section class="screen" id="screen-public-start">
     <div class="public-start-wrap">
-      <p class="eyebrow">Your experience of the AI shift</p>
-      <h1>Take part in the research</h1>
-      <p class="intro">This personal research project is for people working in or alongside product development teams who are experiencing the AI shift first-hand.</p>
-      <p class="intro">Your name helps make the study personal. Your email gives you a private link so you can return if you need to. It will not add you to study updates unless you choose that separately.</p>
-      <p class="public-start-note">If you do not complete the survey, I will send one reminder after seven days and automatically delete the incomplete answers and contact details after 14 days.</p>
-      <p class="public-start-note">Read the <a class="privacy-link" href="/research/privacy" target="_blank" rel="noopener">privacy notice</a> before continuing.</p>
+      <h1>Welcome</h1>
+      <div class="intro-video-block">
+        <button type="button" class="video-reopen-link" id="public-start-video-link">Watch the welcome video again</button>
+        <details class="transcript-toggle">
+          <summary>Read the transcript</summary>
+          <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
+
+Over the past few years, I've seen hundreds of AI prototypes created that go nowhere. They don't become part of how an organisation actually works.
+
+Now, I don't think that's simply a technology problem.
+
+And Bill Gates, in his recent essay on the turbulent AI era, put it plainly. AI can improve people's lives and work, but that won't happen automatically. Product teams and their wider organisations still have real blind spots about how to get there.
+
+My aim is to help understand those blind spots and build a community of people experiencing the shift firsthand, so we can learn from each other's experience.
+
+At the end, you'll receive a personal summary of your answers. When enough eligible responses are available, it will also show how your answers compare with the current study benchmark.
+
+I write regularly about what I find, and I may explore some experiences more deeply, but always asking you first. Individual responses will remain private, unless you separately agree to be named, and there are no right answers here. This isn't a test and I'm interested in your real experience.
+
+So thank you for being a part of it.</div>
+        </details>
+      </div>
+      <p class="public-start-note">Take your time: you have 14 days to complete the survey and can return whenever suits you. I’ll send one reminder after seven days. If it’s still incomplete after 14 days, I’ll delete your answers and personal details to protect your privacy.</p>
+      <p class="public-start-note">Read the <button class="privacy-open" type="button" data-open-privacy>privacy notice</button> before continuing.</p>
       <form id="public-start-form">
         <div class="public-start-fields">
           <div class="public-start-field"><label for="public-start-name">Your name</label><input id="public-start-name" name="name" type="text" autocomplete="name" maxlength="120" required></div>
           <div class="public-start-field"><label for="public-start-email">Your email address</label><input id="public-start-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
         </div>
         <div class="check-row"><input type="checkbox" id="public-start-adult" required><label for="public-start-adult">I am 18 or over.<span class="required-tag">Required</span></label></div>
-        <div class="check-row"><input type="checkbox" id="public-start-consent" required><label for="public-start-consent">I have read the privacy information and agree to take part in this research study.<span class="required-tag">Required</span></label></div>
+        <div class="check-row"><input type="checkbox" id="public-start-consent" required><label for="public-start-consent">I have read the privacy information and agree to take part and for my responses to contribute to anonymised, aggregated research findings.<span class="required-tag">Required</span></label></div>
+        <div class="check-row"><input type="checkbox" id="public-start-study-emails"><label for="public-start-study-emails">Send me occasional study emails with findings, follow-up questions and opportunities to contribute. No more than once every 30 days. I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label></div>
         <div style="margin-top:28px;"><button type="submit" class="btn" id="public-start-submit">Start the survey</button></div>
         <p class="public-start-status" id="public-start-status" role="status" aria-live="polite"></p>
       </form>
@@ -816,25 +860,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
          real opening line now. -->
     <p class="greeting" id="consent-greeting"></p>
 
-    <h1>Before you start</h1>
-
-    <!-- Was top-right of the greeting row, thumbnail over label — sat
-         awkwardly right-aligned against the left-aligned page content.
-         Moved under the headline, row layout matching the outro
-         thumbnail on the thank-you screen, transcript CTA directly
-         beneath it. -->
     <div class="intro-video-block">
-      <div class="video-thumb">
-        <button type="button" class="video-thumb-btn" id="intro-video-btn" aria-haspopup="dialog">
-          <span class="video-thumb-avatar">
-            <img src="/research/media/intro-poster.jpg" alt="" aria-hidden="true">
-            <span class="video-thumb-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
-            </span>
-          </span>
-          <span class="video-thumb-label">A message from Graham</span>
-        </button>
-      </div>
+      <button type="button" class="video-reopen-link" id="intro-video-link">Watch the welcome video again</button>
       <details class="transcript-toggle">
         <summary>Read the transcript</summary>
         <div class="transcript-body">Hi, I'm Graham. And I wanted to briefly explain why I'm doing this study.
@@ -854,18 +881,6 @@ I write regularly about what I find, and I may explore some experiences more dee
 So thank you for being a part of it.</div>
       </details>
     </div>
-    <p class="intro">
-      This research study is for people working in or alongside product development teams who are experiencing the AI shift first-hand.
-    </p>
-    <p class="intro">
-      This study explores how AI is changing work in product teams, and the personal practices and workplace conditions that help people use it with judgement, agency and care. It is a short account of your experience, rather than an AI maturity assessment. Your answers will help identify patterns and questions for further research.
-    </p>
-    <p class="intro">
-      You can read what I collect and why in the
-      <a class="privacy-link" href="/research/privacy" target="_blank" rel="noopener">privacy notice</a>.
-      Please read it before continuing.
-    </p>
-
     <form id="consent-form">
       <div class="check-row">
         <input type="checkbox" id="consent-taking-part" required>
@@ -979,25 +994,11 @@ So thank you for being a part of it.</div>
           <div class="done-check" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
           </div>
-          <div><h1>Thank you — your response has been saved.</h1><p class="done-intro">You're helping me understand how people experience AI at work.</p></div>
+          <div><h1>Thank you</h1></div>
         </div>
 
-      <!-- The video now carries the sentiment the removed paragraph used
-           to (the previous longer "I genuinely appreciate you..." text),
-           so it sits right here, immediately below that short line —
-           not duplicated in text and not left orphaned somewhere else. -->
       <div class="done-video-block">
-        <div class="video-thumb">
-          <button type="button" class="video-thumb-btn" id="outro-video-btn" aria-haspopup="dialog">
-            <span class="video-thumb-avatar">
-              <img src="/research/media/outro-poster.jpg" alt="" aria-hidden="true">
-              <span class="video-thumb-play" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
-              </span>
-            </span>
-            <span class="video-thumb-label">Watch Graham's message</span>
-          </button>
-        </div>
+        <button type="button" class="video-reopen-link" id="outro-video-link">Watch the thank-you video again</button>
         <details class="transcript-toggle">
           <summary>Read the transcript</summary>
           <div class="transcript-body">I genuinely appreciate you taking the time to complete this survey.
@@ -1019,18 +1020,16 @@ Thank you for being a part of it.</div>
 
       <div class="done-actions-grid">
       <form class="results-email" id="results-email-form">
-        <p class="section-kicker">Your next step</p>
-        <h2>Email my benchmark comparison</h2>
-        <p id="results-email-copy">Receive your personal comparison immediately.</p>
+        <h2>See how your experience compares</h2>
+        <p id="results-email-copy">Enter your email address and I’ll send your personal comparison.</p>
         <div class="results-email-row">
           <input type="email" id="results-email-input" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-          <button class="btn" id="results-email-button" type="submit">Email my comparison</button>
+          <button class="btn" id="results-email-button" type="submit">Send my comparison</button>
         </div>
         <div class="check-row">
           <input type="checkbox" id="results-study-emails">
           <label for="results-study-emails">Also send me occasional study emails with findings, follow-up questions and opportunities to contribute. No more than once every 30 days. I can unsubscribe at any time. <span class="optional-tag">(optional)</span></label>
         </div>
-        <p class="results-email-note">The study benchmark is likely to fluctuate frequently during the early phase of this research.</p>
         <p class="results-email-status" id="results-email-status" role="status" aria-live="polite" hidden></p>
       </form>
 
@@ -1044,15 +1043,18 @@ Thank you for being a part of it.</div>
           <symbol id="referral-icon-messenger" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.5 5.5 3.8 7.2V22l3.5-1.9c.9.3 1.8.4 2.7.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2Zm1 12.4-2.5-2.7-4.8 2.7 5.3-5.6 2.5 2.7 4.8-2.7-5.3 5.6Z"/></symbol>
           <symbol id="referral-icon-whatsapp" viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 17.8a7.8 7.8 0 0 1-4-1.1l-.3-.2-3.2.8.9-3.1-.2-.3A7.8 7.8 0 1 1 12 19.8Zm4.3-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1a6.4 6.4 0 0 1-3.2-2.8c-.2-.3.2-.5.6-1 .1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.9 4.2 1.8.7 2.5.8 3.4.7 1-.2 2.8-1.2 3.2-2.3.4-1.1.4-2 .3-2.2-.1-.2-.2-.2-.4-.3Z"/></symbol>
         </defs></svg>
-        <h2 id="referral-sharing-title">Know someone with a perspective on the AI shift at work?</h2>
+        <h2 id="referral-sharing-title">Help me hear more perspectives on AI at work</h2>
         <div class="referral-link-row"><div class="referral-link-value" id="referral-link-value" aria-label="Your personal invitation link"></div><button class="btn" type="button" id="referral-copy-link">Copy link</button></div>
         <div class="referral-privacy"><strong>The link does not reveal anything about you.</strong><br>It contains a random referral code, not your name, email, answers or results.</div>
+        <button class="referral-more-toggle" type="button" id="referral-more-toggle" aria-expanded="false" aria-controls="referral-more-options">More ways to share</button>
+        <div id="referral-more-options" hidden>
         <fieldset class="referral-mode"><legend>Share or invite someone</legend><div class="referral-mode-options">
           <div class="referral-mode-option"><input type="radio" id="referral-mode-public" name="referral-mode" value="public" checked><label for="referral-mode-public"><span class="referral-mode-icon" aria-hidden="true">public</span><strong>Share publicly</strong></label></div>
           <div class="referral-mode-option"><input type="radio" id="referral-mode-private" name="referral-mode" value="private"><label for="referral-mode-private"><span class="referral-mode-icon" aria-hidden="true">person</span><strong>Invite privately</strong></label></div>
         </div></fieldset>
         <div class="referral-panel" id="referral-public-panel"><label class="referral-field" for="referral-public-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-public-message">How is AI changing your experience of work? I’ve taken part in this independent study from Turbulent Ground. Add your perspective and get a personal benchmark comparison.</textarea></label><div class="referral-message-action"><button class="btn secondary" type="button" id="referral-copy-public">Copy message and link</button></div><div class="referral-platforms" aria-label="Social sharing options"><button class="referral-platform" type="button" id="referral-native-share"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-share"/></svg></span>Share using this device</button><button class="referral-platform" type="button" data-referral-platform="LinkedIn"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-linkedin"/></svg></span>Share to LinkedIn</button><button class="referral-platform" type="button" data-referral-platform="X"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-x"/></svg></span>Share to X</button><button class="referral-platform" type="button" data-referral-platform="Facebook"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-facebook"/></svg></span>Share to Facebook</button><button class="referral-platform" type="button" data-referral-platform="WhatsApp"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-whatsapp"/></svg></span>Share via WhatsApp</button></div><p class="referral-status" id="referral-public-status" role="status" aria-live="polite"></p></div>
         <div class="referral-panel" id="referral-private-panel" hidden><div class="referral-private-fields"><label class="referral-field" for="referral-recipient-name">Their first name <span class="optional-tag">(optional)</span><input id="referral-recipient-name" type="text" autocomplete="off" maxlength="80"></label><label class="referral-field" for="referral-recipient-email">Their email address <span class="optional-tag">(optional)</span><input id="referral-recipient-email" type="email" autocomplete="off" maxlength="254"></label></div><p>These details stay in this browser. Turbulent Ground does not receive or save them.</p><p class="referral-recipient-preview" id="referral-recipient-preview" aria-live="polite"></p><label class="referral-field" for="referral-private-message">Your message <span class="optional-tag">(editable)</span><textarea id="referral-private-message">I thought you’d have an interesting perspective on how AI is changing work. I’ve taken part in this independent study from Turbulent Ground. If you’d like to add your experience, you’ll also receive a personal benchmark comparison.</textarea></label><div class="referral-message-action"><button class="btn secondary" type="button" id="referral-copy-private">Copy private message</button></div><div class="referral-platforms" aria-label="Private messaging options"><button class="referral-platform" type="button" id="referral-open-email"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-email"/></svg></span>Invite via email</button><button class="referral-platform" type="button" data-referral-platform="Facebook Messenger"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-messenger"/></svg></span>Invite via Facebook Messenger</button><button class="referral-platform" type="button" data-referral-platform="LinkedIn"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-linkedin"/></svg></span>Invite via LinkedIn message</button><button class="referral-platform" type="button" data-referral-platform="WhatsApp"><span class="referral-platform-icon" aria-hidden="true"><svg><use href="#referral-icon-whatsapp"/></svg></span>Invite via WhatsApp</button></div><p class="referral-status" id="referral-private-status" role="status" aria-live="polite"></p></div>
+        </div>
       </section>
       </div>
 
@@ -1070,6 +1072,14 @@ Thank you for being a part of it.</div>
   </section>
 
 </main>
+
+<dialog class="privacy-modal" id="privacy-modal" aria-labelledby="privacy-modal-title">
+  <div class="privacy-modal-header">
+    <h2 id="privacy-modal-title">Privacy notice</h2>
+    <button class="privacy-modal-close" id="privacy-modal-close" type="button">Close</button>
+  </div>
+  <div class="privacy-modal-content" id="privacy-modal-content"><p>Loading privacy information…</p></div>
+</dialog>
 
 <!-- Shared video popup — one instance, reused for both the intro and
      outro thumbnails. JS swaps the <source>/poster per click. -->
@@ -1092,6 +1102,9 @@ Thank you for being a part of it.</div>
   var backdrop = document.getElementById('video-modal-backdrop');
   var closeBtn = document.getElementById('video-modal-close');
   var player = document.getElementById('video-modal-player');
+  var publicStartVideoLink = document.getElementById('public-start-video-link');
+  var introVideoLink = document.getElementById('intro-video-link');
+  var outroVideoLink = document.getElementById('outro-video-link');
   var lastTrigger = null;
   var currentVideo = null;
 
@@ -1100,18 +1113,16 @@ Thank you for being a part of it.</div>
     outro: { src: '/research/media/research-outro.mp4', poster: '/research/media/outro-poster.jpg' }
   };
 
-  function openVideo(which, triggerEl) {
+  function openVideo(which, triggerEl, isAutomatic) {
     var source = SOURCES[which];
     if (!source) return;
     currentVideo = which;
     lastTrigger = triggerEl;
     player.setAttribute('poster', source.poster);
     player.src = source.src;
+    player.muted = Boolean(isAutomatic);
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
-    // A genuine click gesture just happened, so autoplay-with-sound is
-    // allowed here — unlike the page-load case, which browsers block
-    // (and which would feel intrusive here regardless).
     player.play().catch(function () {
       // If the browser still refuses for some reason, the video's own
       // visible controls let the person press play manually — no need
@@ -1137,10 +1148,16 @@ Thank you for being a part of it.</div>
     if (!modal.hidden && e.key === 'Escape') closeVideo();
   });
 
-  var introBtn = document.getElementById('intro-video-btn');
-  var outroBtn = document.getElementById('outro-video-btn');
-  if (introBtn) introBtn.addEventListener('click', function () { openVideo('intro', introBtn); });
-  if (outroBtn) outroBtn.addEventListener('click', function () { openVideo('outro', outroBtn); });
+  if (publicStartVideoLink) publicStartVideoLink.addEventListener('click', function () { openVideo('intro', publicStartVideoLink, false); });
+  if (introVideoLink) introVideoLink.addEventListener('click', function () { openVideo('intro', introVideoLink, false); });
+  if (outroVideoLink) outroVideoLink.addEventListener('click', function () { openVideo('outro', outroVideoLink, false); });
+  window.startIntroVideo = function () {
+    var trigger = document.getElementById('screen-public-start').classList.contains('active') ? publicStartVideoLink : introVideoLink;
+    if (trigger) openVideo('intro', trigger, true);
+  };
+  window.startOutroVideo = function () {
+    if (outroVideoLink) openVideo('outro', outroVideoLink, true);
+  };
   player.addEventListener('play', function () {
     if (!currentVideo || typeof window.trackResearchEvent !== 'function') return;
     if (currentVideo === 'intro') {
@@ -1158,6 +1175,37 @@ Thank you for being a part of it.</div>
     }
   });
 })();
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var modal = document.getElementById('privacy-modal');
+  var content = document.getElementById('privacy-modal-content');
+  var closeButton = document.getElementById('privacy-modal-close');
+  var loaded = false;
+
+  function openPrivacy() {
+    modal.showModal();
+    if (loaded) return;
+    fetch('/research/privacy.html')
+      .then(function (response) { if (!response.ok) throw new Error('Privacy notice unavailable'); return response.text(); })
+      .then(function (html) {
+        var parsed = new DOMParser().parseFromString(html, 'text/html');
+        var main = parsed.querySelector('main');
+        if (!main) throw new Error('Privacy notice unavailable');
+        content.innerHTML = main.innerHTML;
+        loaded = true;
+      })
+      .catch(function () {
+        content.innerHTML = '<p>The privacy notice could not be loaded here. <a href="/research/privacy">Open the privacy notice on this page</a>.</p>';
+      });
+  }
+
+  document.querySelectorAll('[data-open-privacy]').forEach(function (button) { button.addEventListener('click', openPrivacy); });
+  closeButton.addEventListener('click', function () { modal.close(); });
+  modal.addEventListener('click', function (event) { if (event.target === modal) modal.close(); });
+}());
 </script>
 
 <div class="footer-bar" id="footer-bar" style="display:none;">
@@ -1451,6 +1499,8 @@ Thank you for being a part of it.</div>
     if (id === 'screen-consent' || id === 'screen-context' || id === 'screen-pairs') {
       trackResearchEvent('Research: Invite Validated');
     }
+    if ((id === 'screen-public-start' || id === 'screen-consent') && typeof window.startIntroVideo === 'function') window.startIntroVideo();
+    if (id === 'screen-done' && typeof window.startOutroVideo === 'function') window.startOutroVideo();
     window.scrollTo(0, 0);
   }
 
@@ -1537,7 +1587,31 @@ Thank you for being a part of it.</div>
           }
           resumeFromSavedState(data.savedState);
         } else {
-          showScreen('screen-consent');
+          var publicStartConsent = null;
+          try {
+            publicStartConsent = JSON.parse(sessionStorage.getItem('tg-public-start-consent') || 'null');
+            sessionStorage.removeItem('tg-public-start-consent');
+          } catch (_) {
+            sessionStorage.removeItem('tg-public-start-consent');
+          }
+          if (publicStartConsent && publicStartConsent.takingPart === true) {
+            consent.takingPart = true;
+            consent.contactStudyEmails = publicStartConsent.contactStudyEmails === true;
+            consent.quoteAnonymously = true;
+            consent.quoteByName = false;
+            takingPartCheckbox.checked = true;
+            studyEmailsCheckbox.checked = consent.contactStudyEmails;
+            startedAt = new Date().toISOString();
+            trackResearchEvent('Research: Consent Completed');
+            showScreen('screen-context');
+            fetch('/api/research-save-progress', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(buildSavePayload())
+            }).catch(function () { /* Final submission still carries the same consent state. */ });
+          } else {
+            showScreen('screen-consent');
+          }
         }
       })
       .catch(function () {
@@ -1554,6 +1628,7 @@ Thank you for being a part of it.</div>
     var email = document.getElementById('public-start-email').value.trim();
     var adultConfirmed = document.getElementById('public-start-adult').checked;
     var participationConsent = document.getElementById('public-start-consent').checked;
+    var contactStudyEmails = document.getElementById('public-start-study-emails').checked;
     if (!name || !looksLikeEmailClientSide(email) || !adultConfirmed || !participationConsent) {
       status.textContent = 'Please complete your name, email and both confirmations.';
       return;
@@ -1573,6 +1648,7 @@ Thank you for being a part of it.</div>
       return res.json().then(function (data) { return { ok: res.ok, data: data }; });
     }).then(function (result) {
       if (!result.ok || !result.data || !result.data.resumePath) throw new Error(result.data && result.data.error || 'Could not start the survey.');
+      sessionStorage.setItem('tg-public-start-consent', JSON.stringify({ takingPart: true, contactStudyEmails: contactStudyEmails }));
       window.location.replace(result.data.resumePath);
     }).catch(function (error) {
       status.textContent = error.message || 'Could not start the survey. Please try again.';
@@ -2200,6 +2276,7 @@ Thank you for being a part of it.</div>
   });
 
   function prepareResultsEmail() {
+    var form = document.getElementById('results-email-form');
     var input = document.getElementById('results-email-input');
     var copy = document.getElementById('results-email-copy');
     var resultsStudyEmails = document.getElementById('results-study-emails');
@@ -2207,10 +2284,14 @@ Thank you for being a part of it.</div>
     resultsStudyEmails.checked = consent.contactStudyEmails;
     if (emailCaptured && emailCaptureInput.value) input.value = emailCaptureInput.value;
     if (hasEmailOnFile) {
+      form.hidden = true;
       input.hidden = true;
       input.required = false;
-      copy.textContent = 'Your email is already saved. Choose the button to receive your comparison immediately.';
+      if (!localJourneyPreview && !localTransitionPreview && !localRestrainedPreview && !completionPreview && !uxReviewPreview) {
+        window.setTimeout(function () { form.requestSubmit(); }, 0);
+      }
     } else {
+      form.hidden = false;
       input.hidden = false;
       input.required = true;
     }
@@ -2225,8 +2306,7 @@ Thank you for being a part of it.</div>
     var email = input.hidden ? '' : input.value.trim();
 
     if (uxReviewPreview) {
-      status.textContent = 'Review preview only — no email was sent.';
-      status.hidden = false;
+      event.currentTarget.innerHTML = '<div class="results-email-confirmation"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><strong>Your comparison is on its way.</strong></div>';
       return;
     }
 
@@ -2272,16 +2352,13 @@ Thank you for being a part of it.</div>
         emailCaptureInput.value = email;
         emailCaptureWrap.hidden = true;
       }
-      status.textContent = 'Sent. Check your inbox.';
-      status.hidden = false;
-      button.hidden = true;
-      input.hidden = true;
+      event.currentTarget.innerHTML = '<div class="results-email-confirmation"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><strong>Your comparison is on its way.</strong></div>';
     }).catch(function (error) {
       trackResearchEvent('Research: Comparison Failed');
       status.textContent = error.message;
       status.hidden = false;
       button.disabled = false;
-      button.textContent = 'Email my comparison';
+      button.textContent = 'Send my comparison';
     });
   });
 
@@ -2377,5 +2454,18 @@ Thank you for being a part of it.</div>
 </script>
 <!-- NAV_JS_END -->
 
+<script>
+(function () {
+  var toggle = document.getElementById('referral-more-toggle');
+  var options = document.getElementById('referral-more-options');
+  if (!toggle || !options) return;
+  toggle.addEventListener('click', function () {
+    var opening = options.hidden;
+    options.hidden = !opening;
+    toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    toggle.textContent = opening ? 'Fewer ways to share' : 'More ways to share';
+  });
+}());
+</script>
 <script src="/research/referral-sharing.js"></script><link rel="stylesheet" href="/research/feedback-widget.css"><script src="/research/feedback-widget.js"></script></body>
 </html>

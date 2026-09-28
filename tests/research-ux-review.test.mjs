@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 const journey = fs.readFileSync(new URL('../research/index.html', import.meta.url), 'utf8');
 const review = fs.readFileSync(new URL('../research/ux-review.html', import.meta.url), 'utf8');
-const stages = ['entry','consent','profile','questions','final-question','submit','completion'];
+const stages = ['entry','profile','questions','final-question','submit','completion'];
 
 function check(label, condition) {
   if (!condition) throw new Error(`FAIL  ${label}`);
