@@ -2,6 +2,7 @@
 
 process.env.AIRTABLE_RESEARCH_TOKEN = "synthetic-airtable-token";
 process.env.RESEARCH_MAINTENANCE_KEY = "synthetic-maintenance-key";
+process.env.RESEARCH_ABUSE_SECRET = "synthetic-abuse-secret-that-is-long-enough";
 
 const { default: start } = await import("../lib/research-phase31/public-start.js");
 const { default: maintain } = await import("../lib/research-phase31/incomplete-maintenance.js");
@@ -18,6 +19,13 @@ global.fetch = async (url, options = {}) => {
   if (options.method === "POST") {
     writes.push(JSON.parse(options.body));
     return { ok: true, status: 201, json: async () => ({ records: [{ id: "recSynthetic" }] }) };
+  }
+  // D10 abuse-control lookups (rate limit by IP hash, idempotency by email)
+  // must not be answered with the maintenance fixture data below — they
+  // should see no prior activity for this synthetic run.
+  const urlStr = String(url);
+  if (urlStr.includes("fldvtRXWe3D2YqFHG") || urlStr.includes("LOWER")) {
+    return { ok: true, status: 200, json: async () => ({ records: [] }) };
   }
   const now = Date.now();
   return {

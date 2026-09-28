@@ -14,7 +14,7 @@ For anything about this research or your information, email [graham@turbulentgro
 
 ## What this is
 
-This research study is for people working in or alongside product development teams who are experiencing the AI shift first-hand. People may take part after a direct invitation or through the public study page.
+This research study is for people working in or alongside product development teams who are experiencing the AI shift first-hand. People may take part after a direct invitation or through the public study page. Taking part requires confirming you are 18 or over, checked on the entry screen before the survey starts.
 
 The aim is to understand how AI is changing people's work, and the personal and organisational conditions that help them use it with judgement, agency and care.
 
@@ -72,6 +72,14 @@ The benchmark is only shown once there are enough eligible completed responses. 
 Your invitation link contains a unique token. The same token links your identity record to your response, controls access to the survey, prevents duplicate submissions and lets me send a requested comparison. Your response is therefore **pseudonymous, not anonymous**, while I retain that link.
 
 I store identity and contact details separately from survey responses in Airtable. Access is limited to me and the service providers needed to run the study. When analysing response content, I work from the response dataset without names or email addresses wherever reasonably possible.
+
+## If you're referred, or you refer someone else
+
+After you complete the study, you can optionally share a personal referral link so others can take part. This is entirely optional and is never required to finish the survey or to receive your comparison. I only issue you a referral link once your own response is complete and eligible.
+
+Your personal link contains a random referral code, not your name, email, answers or identity. Sharing it does not let anyone see anything about you, and starting the survey through someone else's link does not let them see anything about you either — a referral code itself never grants access to anyone's saved answers, submission or identity record.
+
+If you start through someone else's referral link, I keep a record connecting your entry to theirs, so I can understand which recruitment channels and referrals bring in eligible responses. That record links two entries, not two people's answers. If you later start again through a different referral link, I record that as a separate event without changing who was originally credited with referring you.
 
 ## Where your data goes, including AI
 

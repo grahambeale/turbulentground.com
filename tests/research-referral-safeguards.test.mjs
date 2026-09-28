@@ -2,6 +2,7 @@
 
 process.env.AIRTABLE_RESEARCH_TOKEN = "synthetic-airtable-token";
 process.env.RESEARCH_REFERRAL_SECRET = "synthetic-referral-secret-that-is-long-enough";
+process.env.RESEARCH_ABUSE_SECRET = "synthetic-abuse-secret-that-is-long-enough";
 process.env.RESEARCH_PUBLIC_ENTRY_ENABLED = "true";
 process.env.RESEARCH_REFERRAL_RESOLVE_ENABLED = "true";
 
@@ -29,17 +30,20 @@ let sequence = 0;
 global.fetch = async (url, options = {}) => {
   calls.push({ url: String(url), options });
   sequence++;
-  if (sequence === 1) return ok({ records: [{ id: "recReferral", fields: {
+  // sequence 1: D10 rate-limit lookup (by IP hash); sequence 2: D10
+  // idempotency lookup (by email) — both empty, so the request proceeds.
+  if (sequence === 1 || sequence === 2) return ok({ records: [] });
+  if (sequence === 3) return ok({ records: [{ id: "recReferral", fields: {
     fld8XFaGgrsGKkABg: "active", fldgZjeCrX8WJDfSJ: ["recReferrer"]
   } }] });
-  if (sequence === 2) return ok({ id: "recReferrer", fields: { fldePJtCCYwLsmNjp: "SAME@example.test" } });
-  if (sequence === 3) return ok({ records: [{ id: "recParticipant" }] });
+  if (sequence === 4) return ok({ id: "recReferrer", fields: { fldePJtCCYwLsmNjp: "SAME@example.test" } });
+  if (sequence === 5) return ok({ records: [{ id: "recParticipant" }] });
   return ok({ records: [{ id: "recAcquisition" }] });
 };
 let res = response();
 await start(validStart, res);
 assert(res.code === 201, "self-referral should not block participation");
-const selfAcquisition = JSON.parse(calls[3].options.body).records[0].fields;
+const selfAcquisition = JSON.parse(calls[5].options.body).records[0].fields;
 assert(selfAcquisition.fldD7AXUyBI6heSeI === "self_referral", "same normalized email must be marked self_referral");
 assert(!selfAcquisition.fldWurPEyDv2OhIXp, "self-referral must not credit or link the supplied referrer");
 
@@ -48,18 +52,19 @@ sequence = 0;
 global.fetch = async (url, options = {}) => {
   calls.push({ url: String(url), options });
   sequence++;
-  if (sequence === 1) return ok({ records: [{ id: "recReferral", fields: {
+  if (sequence === 1 || sequence === 2) return ok({ records: [] });
+  if (sequence === 3) return ok({ records: [{ id: "recReferral", fields: {
     fld8XFaGgrsGKkABg: "active", fldgZjeCrX8WJDfSJ: ["recReferrer"]
   } }] });
-  if (sequence === 2) return ok({ id: "recReferrer", fields: { fldePJtCCYwLsmNjp: "different@example.test" } });
-  if (sequence === 3) return ok({ records: [{ id: "recParentAcquisition", fields: { fldao8tphfNYi86lC: 5 } }] });
-  if (sequence === 4) return ok({ records: [{ id: "recParticipant" }] });
+  if (sequence === 4) return ok({ id: "recReferrer", fields: { fldePJtCCYwLsmNjp: "different@example.test" } });
+  if (sequence === 5) return ok({ records: [{ id: "recParentAcquisition", fields: { fldao8tphfNYi86lC: 5 } }] });
+  if (sequence === 6) return ok({ records: [{ id: "recParticipant" }] });
   return ok({ records: [{ id: "recAcquisition" }] });
 };
 res = response();
 await start(validStart, res);
 assert(res.code === 201, "excess-depth referral should not block participation");
-const depthAcquisition = JSON.parse(calls[4].options.body).records[0].fields;
+const depthAcquisition = JSON.parse(calls[6].options.body).records[0].fields;
 assert(depthAcquisition.fldD7AXUyBI6heSeI === "invalid_referral", "generation six must be excluded");
 assert(depthAcquisition.fldao8tphfNYi86lC === 6, "excluded depth should remain auditable");
 assert(!depthAcquisition.fldWurPEyDv2OhIXp, "excess-depth referral must not receive credit");
