@@ -452,7 +452,8 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
    globe → city skyline → open-plan office → globe rising (earthrise).
    Globe land dots: 30,000-point Fibonacci sphere masked to land
    (bitmask generated offline from the global-land-mask dataset).
-   City and office: drawn to an offscreen canvas, then sampled on a grid.
+   City and office: procedural 3D point clouds, rotated and projected
+   with perspective each frame.
    Everything here is illustrative. None of it represents participants.
    ─────────────────────────────────────────────────────────────────── */
 (function(){
@@ -534,111 +535,108 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   }
   var M = land.length;
 
-  /* Offscreen scene sampler: white = structure, pure red = lit/warm. */
-  var SW = 640, SH = 420, STEP = 5;
-  function sample(draw){
-    var c = document.createElement('canvas'); c.width = SW; c.height = SH;
-    var g = c.getContext('2d'); var anchors = [];
-    draw(g, anchors);
-    var d = g.getImageData(0, 0, SW, SH).data, pts = [];
-    for (var y = 2; y < SH; y += STEP) for (var x = 2; x < SW; x += STEP) {
-      var k = (y * SW + x) * 4, a = d[k + 3];
-      if (a < 22) continue;
-      pts.push({ x: x / SW, y: y / SH, a: Math.min(1, a / 255 * 1.15), warm: d[k] > 200 && d[k + 1] < 110 ? 1 : 0, ph: rnd() * 6.28 });
-    }
-    // Shuffle so particle flights mix across the scene.
-    for (var j = pts.length - 1; j > 0; j--) { var r = Math.floor(rnd() * (j + 1)); var t = pts[j]; pts[j] = pts[r]; pts[r] = t; }
-    return { pts: pts, anchors: anchors };
-  }
-  var WHITE = function(a){ return 'rgba(255,255,255,' + a + ')'; };
-  var WARM = 'rgb(255,60,0)';
+  /* ── 3D point clouds for the city and the office ─────────────
+     World units: x/z across the ground, y up, roughly -1.2..1.2.
+     Each point: position, optional outward normal (nx, nz) used to dim
+     faces turned away from the viewer, brightness, warm flag. */
+  function P3(x, y, z, a, warm, nx, nz){ return { x:x, y:y, z:z, a:a, warm:warm ? 1 : 0, nx:nx === undefined ? null : nx, nz:nz || 0, ph:rnd() * 6.28 }; }
+  function shuffle(arr){ for (var j = arr.length - 1; j > 0; j--) { var r = Math.floor(rnd() * (j + 1)); var t = arr[j]; arr[j] = arr[r]; arr[r] = t; } return arr; }
+  var GS = 0.05; // dot spacing in world units
+  var SW = 640, SH = 420; // layout aspect for the scene box
 
-  function windows(g, x, y, w, h, lit){
-    for (var wy = y + 6; wy < y + h - 6; wy += 10) for (var wx = x + 5; wx < x + w - 6; wx += 10) {
-      var r = rnd();
-      if (r < lit) { g.fillStyle = WARM; g.fillRect(wx, wy, 5, 6); }
-      else if (r < 0.62) { g.fillStyle = WHITE(.8); g.fillRect(wx, wy, 5, 6); }
-    }
-  }
-
-  var city = sample(function(g){
-    var ground = 396;
-    // far layer
-    for (var x = 0; x < SW; x += 26 + rnd() * 18) {
-      var h = 60 + rnd() * 120; g.fillStyle = WHITE(.13); g.fillRect(x, ground - h, 22 + rnd() * 16, h);
-    }
-    // near layer
-    var specs = [];
-    for (x = 4; x < SW - 20;) {
-      var w = 30 + rnd() * 34, hh = 90 + rnd() * 170;
-      specs.push({ x: x, w: w, h: hh, top: rnd() < .2 ? 'spire' : 'flat' });
-      x += w + 6 + rnd() * 10;
-    }
-    specs.push({ x: 132, w: 56, h: 300, top: 'taper' });
-    specs.push({ x: 292, w: 64, h: 336, top: 'pyramid' });
-    specs.push({ x: 462, w: 58, h: 236, top: 'dome' });
-    specs.forEach(function(b){
-      var y = ground - b.h;
-      g.save();
-      g.beginPath();
-      if (b.top === 'taper') { g.moveTo(b.x, ground); g.lineTo(b.x + b.w * .42, y - 40); g.lineTo(b.x + b.w * .5, y - 70); g.lineTo(b.x + b.w * .58, y - 40); g.lineTo(b.x + b.w, ground); }
-      else if (b.top === 'dome') { g.moveTo(b.x, ground); g.lineTo(b.x, y + 40); g.bezierCurveTo(b.x, y - 30, b.x + b.w, y - 30, b.x + b.w, y + 40); g.lineTo(b.x + b.w, ground); }
-      else g.rect(b.x, y, b.w, b.h);
-      g.closePath();
-      g.fillStyle = '#000'; g.globalCompositeOperation = 'destination-out'; g.fill();
-      g.globalCompositeOperation = 'source-over';
-      g.fillStyle = WHITE(.2); g.fill(); g.clip();
-      windows(g, b.x, y - 60, b.w, b.h + 60, .14);
-      g.restore();
-      if (b.top === 'pyramid') {
-        g.beginPath(); g.moveTo(b.x, y); g.lineTo(b.x + b.w / 2, y - 44); g.lineTo(b.x + b.w, y); g.closePath();
-        g.fillStyle = WHITE(.5); g.fill();
-        g.fillStyle = WARM; g.fillRect(b.x + b.w / 2 - 3, y - 50, 6, 6);
+  // One face of a building: from corner (x0,z0) to (x1,z1), 0..h high.
+  // taper: 0 = straight, >0 narrows towards the top (for a shard).
+  function face(out, x0, z0, x1, z1, y0, h, lit, taper){
+    var len = Math.hypot(x1 - x0, z1 - z0), nx = -(z1 - z0) / len, nz = (x1 - x0) / len;
+    var mx = (x0 + x1) / 2, mz = (z0 + z1) / 2;
+    for (var v = 0; v <= h; v += GS) {
+      var k = taper ? 1 - (v / h) * taper : 1, half = len * k / 2;
+      for (var u = -half; u <= half + 1e-6; u += GS) {
+        var edge = Math.abs(Math.abs(u) - half) < GS * .6, r = rnd();
+        var px_ = mx + (x1 - x0) / len * u, pz_ = mz + (z1 - z0) / len * u;
+        if (edge) out.push(P3(px_, y0 + v, pz_, .75, 0, nx, nz));
+        else if (r < lit) out.push(P3(px_, y0 + v, pz_, 1, 1, nx, nz));
+        else if (r < .55) out.push(P3(px_, y0 + v, pz_, .5, 0, nx, nz));
       }
-      if (b.top === 'spire') { g.fillStyle = WHITE(.55); g.fillRect(b.x + b.w / 2 - 1.5, y - 30, 3, 30); }
-    });
-    // ground and reflection
-    g.fillStyle = WHITE(.5); g.fillRect(0, ground, SW, 3);
-    for (var ry = ground + 8; ry < SH; ry += 6) { g.fillStyle = WHITE(.1); g.fillRect(0, ry, SW, 2); }
-  });
+    }
+  }
+  function tower(out, cx, cz, w, d, h, lit, top){
+    var x0 = cx - w / 2, x1 = cx + w / 2, z0 = cz - d / 2, z1 = cz + d / 2, tp = top === 'taper' ? .8 : 0;
+    face(out, x0, z1, x1, z1, 0, h, lit, tp); face(out, x1, z1, x1, z0, 0, h, lit, tp);
+    face(out, x1, z0, x0, z0, 0, h, lit, tp); face(out, x0, z0, x0, z1, 0, h, lit, tp);
+    if (top === 'pyramid') {
+      for (var v = 0; v <= .26; v += GS * .8) { var k = 1 - v / .26;
+        for (var u = -1; u <= 1; u += GS / (w * k + .001) * 2) {
+          out.push(P3(cx + u * w / 2 * k, h + v, cz + d / 2 * k, .8, 0, 0, 1)); out.push(P3(cx + u * w / 2 * k, h + v, cz - d / 2 * k, .8, 0, 0, -1));
+          out.push(P3(cx + w / 2 * k, h + v, cz + u * d / 2 * k, .8, 0, 1, 0)); out.push(P3(cx - w / 2 * k, h + v, cz + u * d / 2 * k, .8, 0, -1, 0));
+        } }
+      out.push(P3(cx, h + .3, cz, 1, 1));
+    } else if (top === 'spire') {
+      for (var sv = 0; sv < .22; sv += GS * .7) out.push(P3(cx, h + sv, cz, .8, 0));
+    } else if (top !== 'taper') {
+      for (var rx = x0; rx <= x1; rx += GS) { out.push(P3(rx, h, z0, .8, 0)); out.push(P3(rx, h, z1, .8, 0)); }
+      for (var rz = z0; rz <= z1; rz += GS) { out.push(P3(x0, h, rz, .8, 0)); out.push(P3(x1, h, rz, .8, 0)); }
+    }
+  }
+  function dome(out, cx, cz, r, h, lit){
+    var n = Math.round(2 * Math.PI * r / GS);
+    for (var k = 0; k < n; k++) { var an = k / n * 2 * Math.PI, nx = Math.cos(an), nz = Math.sin(an);
+      for (var v = 0; v <= h; v += GS) { var rr = v > h * .7 ? r * Math.cos((v - h * .7) / (h * .3) * 1.35) : r; var q = rnd();
+        if (q < lit) out.push(P3(cx + nx * rr, v, cz + nz * rr, 1, 1, nx, nz)); else if (q < .6) out.push(P3(cx + nx * rr, v, cz + nz * rr, .55, 0, nx, nz)); } }
+  }
 
-  var office = sample(function(g, anchors){
-    // back window with a distant skyline
-    g.fillStyle = WHITE(.35); g.fillRect(20, 24, 600, 3); g.fillRect(20, 124, 600, 3);
-    for (var x = 20; x <= 620; x += 100) g.fillRect(x, 24, 3, 103);
-    for (x = 24; x < 616; x += 12 + rnd() * 14) { var h = 20 + rnd() * 60; g.fillStyle = WHITE(.16); g.fillRect(x, 124 - h, 9 + rnd() * 8, h); }
-    // ceiling lights
-    for (x = 70; x < 600; x += 170) { g.fillStyle = WHITE(.9); g.fillRect(x, 8, 80, 4); }
-    // floor lines toward a vanishing point
-    g.strokeStyle = WHITE(.14); g.lineWidth = 2;
-    for (var fx = -300; fx <= 940; fx += 120) { g.beginPath(); g.moveTo(320, 150); g.lineTo(fx, SH); g.stroke(); }
-    var rows = [ { s: .78, base: 206, n: 4 }, { s: 1.1, base: 300, n: 3 }, { s: 1.55, base: 418, n: 2 } ];
-    rows.forEach(function(row, ri){
-      var s = row.s, span = 600 * (0.62 + s * 0.3), start = 320 - span / 2, gap = span / row.n;
-      for (var k = 0; k < row.n; k++) {
-        var cx = start + gap * (k + .5), base = row.base;
-        var empty = (ri === 0 && k === 2) || (ri === 1 && k === 0);
-        // desk
-        g.fillStyle = WHITE(.55); g.fillRect(cx - 58 * s, base, 116 * s, 6 * s);
-        g.fillStyle = WHITE(.25); g.fillRect(cx - 52 * s, base + 6 * s, 5 * s, 34 * s); g.fillRect(cx + 47 * s, base + 6 * s, 5 * s, 34 * s);
-        // monitor (glowing screen)
-        g.fillStyle = WHITE(.6); g.fillRect(cx - 27 * s, base - 46 * s, 54 * s, 38 * s);
-        g.fillStyle = WARM; g.fillRect(cx - 23 * s, base - 42 * s, 46 * s, 30 * s);
-        g.fillStyle = WHITE(.5); g.fillRect(cx - 3 * s, base - 8 * s, 6 * s, 8 * s);
-        anchors.push({ x: cx / SW, y: (base - 46 * s) / SH, s: s });
-        if (empty) continue;
-        // person, seen from behind, sitting in front of the screen
-        var px = cx + (rnd() - .5) * 8 * s, hy = base - 12 * s;
-        g.fillStyle = '#000'; g.globalCompositeOperation = 'destination-out';
-        g.beginPath(); g.arc(px, hy, 17 * s, 0, 6.3); g.fill();
-        g.beginPath(); g.moveTo(px - 36 * s, base + 44 * s); g.quadraticCurveTo(px - 38 * s, base + 4 * s, px, base + 3 * s); g.quadraticCurveTo(px + 38 * s, base + 4 * s, px + 36 * s, base + 44 * s); g.closePath(); g.fill();
-        g.globalCompositeOperation = 'source-over';
-        g.fillStyle = WHITE(.8);
-        g.beginPath(); g.arc(px, hy, 14 * s, 0, 6.3); g.fill();
-        g.beginPath(); g.moveTo(px - 33 * s, base + 44 * s); g.quadraticCurveTo(px - 35 * s, base + 7 * s, px, base + 6 * s); g.quadraticCurveTo(px + 35 * s, base + 7 * s, px + 33 * s, base + 44 * s); g.closePath(); g.fill();
+  var city = (function(){
+    var pts = [];
+    for (var gx = -2; gx <= 2; gx++) for (var gz = -2; gz <= 2; gz++) {
+      if ((gx === 0 && gz === 0) || (gx === -1 && gz === 1) || (gx === 1 && gz === -1)) continue;
+      if (rnd() < .12) continue;
+      var w = .14 + rnd() * .12, d = .14 + rnd() * .12, h = .25 + rnd() * rnd() * 1.05 + (2 - Math.max(Math.abs(gx), Math.abs(gz))) * .12;
+      tower(pts, gx * .42 + (rnd() - .5) * .08, gz * .42 + (rnd() - .5) * .08, w, d, h, .1, rnd() < .18 ? 'spire' : 'flat');
+    }
+    tower(pts, 0, 0, .26, .26, 1.45, .14, 'pyramid');      // centrepiece, pyramid roof
+    tower(pts, -.42, .42, .24, .24, 1.3, .12, 'taper');     // tapering shard
+    dome(pts, .42, -.42, .12, .95, .12);                    // rounded tower
+    for (var fx = -1.15; fx <= 1.15; fx += .1) for (var fz = -1.15; fz <= 1.15; fz += .1) pts.push(P3(fx, 0, fz, .22, 0));
+    pts.forEach(function(p){ p.y -= .72; });
+    return { pts: shuffle(pts), anchors: [], pitch: .36, scale: .30 };
+  })();
+
+  var office = (function(){
+    var pts = [], anchors = [];
+    // floor and ceiling lights
+    for (var fx = -1.2; fx <= 1.2; fx += .1) for (var fz = -1.2; fz <= 1.2; fz += .1) pts.push(P3(fx, 0, fz, .2, 0));
+    for (var lx = -.8; lx <= .8; lx += .8) for (var lz = -.6; lz <= .6; lz += .6) for (var u = -.18; u <= .18; u += .03) pts.push(P3(lx + u, 1.15, lz, .45, 0));
+    var empties = { '1,0': 1, '-1,1': 1 };
+    for (var row = -1; row <= 1; row++) for (var c = -1; c <= 1; c++) {
+      var dx = c * .72, dz = row * .72;
+      // desk top and legs
+      for (var tx = -.26; tx <= .26; tx += GS) for (var tz = -.12; tz <= .12; tz += GS) pts.push(P3(dx + tx, .38, dz + tz, .5, 0));
+      [[-.25,-.11],[.25,-.11],[-.25,.11],[.25,.11]].forEach(function(l){ for (var ly = 0; ly < .38; ly += GS) pts.push(P3(dx + l[0], ly, dz + l[1], .3, 0)); });
+      // monitor: glowing front facing the seat (+z), plain back
+      var mz = dz - .08;
+      for (var mx = -.14; mx <= .14; mx += .028) for (var my = .45; my <= .63; my += .028) {
+        var rim = Math.abs(mx) > .12 || my < .47 || my > .61;
+        pts.push(P3(dx + mx, my, mz + .005, rim ? .7 : 1, rim ? 0 : 1, 0, 1));
+        pts.push(P3(dx + mx, my, mz - .005, .35, 0, 0, -1));
       }
-    });
-  });
+      for (var sy = .38; sy < .45; sy += .025) pts.push(P3(dx, sy, mz, .6, 0));
+      anchors.push({ x: dx + .1, y: .7, z: mz });
+      if (empties[row + ',' + c]) continue;
+      // person, seated facing the screen: head sphere and torso
+      var pz = dz + .22, hn = 60;
+      for (var k = 0; k < hn; k++) { var yy = 1 - 2 * (k + .5) / hn, rr = Math.sqrt(1 - yy * yy), th = k * 2.39996;
+        pts.push(P3(dx + Math.cos(th) * rr * .058, .74 + yy * .066, pz + Math.sin(th) * rr * .058, .9, 0, Math.cos(th), Math.sin(th))); }
+      for (var ty = .42; ty <= .64; ty += .03) { var wv = .085 - (ty - .42) * .1;
+        for (var an = 0; an < 6.28; an += .32) pts.push(P3(dx + Math.cos(an) * wv, ty, pz + Math.sin(an) * .055, .75, 0, Math.cos(an), Math.sin(an))); }
+      // chair back
+      for (var cx2 = -.12; cx2 <= .12; cx2 += .035) for (var cy2 = .4; cy2 <= .66; cy2 += .035) pts.push(P3(dx + cx2, cy2, pz + .12, .3, 0, 0, 1));
+    }
+    pts.forEach(function(p){ p.y -= .6; });
+    anchors.forEach(function(a){ a.y -= .6; });
+    return { pts: shuffle(pts), anchors: anchors, pitch: .6, scale: .36 };
+  })();
+  if (city.pts.length > M) city.pts.length = M;
+  if (office.pts.length > M) office.pts.length = M;
 
   /* ── Particles ─────────────────────────────────────────────── */
   var px = new Float32Array(M), py = new Float32Array(M), pa = new Float32Array(M), ps = new Float32Array(M), pw = new Float32Array(M);
@@ -688,7 +686,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   var last = performance.now(), running = true;
   document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(frame); } });
 
-  var tmp = [0,0,0];
+  var tmp = [0,0,0], tmp4 = [0,0,0,0,1];
   function frame(now){
     if (!running) return;
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
@@ -742,7 +740,21 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     // Particle targets
     var B = box(), pts = scene === 'city' ? city.pts : scene === 'office' ? office.pts : null;
     var since = (now - sceneChangedAt) / 1000;
-    var dotBase = Math.max(0.9, R / 260), sceneDot = B.w / SW * STEP * 0.62;
+    var dotBase = Math.max(0.9, R / 260);
+    // 3D camera for the city and office: slow continuous yaw like the globe,
+    // plus a little extra turn as you scroll.
+    var sc3 = scene === 'office' ? office : city;
+    var yaw = (reduce ? 0.6 : t * 0.16) + (reduce ? 0 : window.scrollY * 0.0005), pitch = sc3.pitch;
+    var cy3 = Math.cos(yaw), sy3 = Math.sin(yaw), cx3 = Math.cos(pitch), sx3 = Math.sin(pitch);
+    var S3 = Math.min(B.w * sc3.scale, B.h * .5), OX = B.x + B.w / 2, OY = B.y + B.h * .56, D3 = 3.4;
+    var sceneDot = Math.max(1, S3 * GS * .34);
+    function proj3(P, out){
+      var x1 = P.x * cy3 + P.z * sy3, z1 = -P.x * sy3 + P.z * cy3;
+      var y2 = P.y * cx3 - z1 * sx3, z2 = P.y * sx3 + z1 * cx3, f = D3 / (D3 - z2);
+      out[0] = OX + x1 * S3 * f; out[1] = OY - y2 * S3 * f; out[2] = z2; out[4] = f;
+      if (P.nx !== null && P.nx !== undefined) { var nz1 = -P.nx * sy3 + P.nz * cy3; out[3] = nz1 * cx3; } else out[3] = 1;
+      return out;
+    }
     var warmGlobe = scene === 'earthrise' ? .8 : .35;
     for (i = 0; i < M; i++) {
       var tx, ty, ta, ts, tw2;
@@ -753,12 +765,15 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         ts = dotBase * (0.55 + Math.max(0, z) * 0.75); tw2 = warmGlobe * (0.4 + 0.6 * Math.max(0, z));
       } else {
         var P = pts[i % pts.length];
-        tx = B.x + P.x * B.w; ty = B.y + P.y * B.h;
-        ta = i < pts.length ? P.a * (P.warm ? (reduce ? .9 : .7 + .3 * Math.sin(t * 1.3 + P.ph)) : .85) : 0;
-        ts = sceneDot * (P.warm ? 1.1 : .9); tw2 = P.warm ? 1 : .15;
+        proj3(P, tmp4);
+        tx = tmp4[0]; ty = tmp4[1];
+        var depth = .5 + .5 * Math.max(0, Math.min(1, (tmp4[2] + 1.3) / 2.6));
+        var facing = P.nx === null ? 1 : (tmp4[3] > 0 ? 1 : .28);
+        ta = i < pts.length ? P.a * facing * depth * (P.warm ? (reduce ? .9 : .7 + .3 * Math.sin(t * 1.3 + P.ph)) : .85) : 0;
+        ts = sceneDot * tmp4[4] * (P.warm ? 1.15 : .9); tw2 = P.warm ? 1 : .15;
       }
       if (first || reduce) { px[i] = tx; py[i] = ty; pa[i] = ta; ps[i] = ts; pw[i] = tw2; continue; }
-      var k = since > delay[i] ? Math.min(1, dt * (pts ? 3.2 : 4.5)) : (isGlobe ? Math.min(1, dt * 4.5) : 0);
+      var k = since > delay[i] + 1.2 ? Math.min(1, dt * 12) : since > delay[i] ? Math.min(1, dt * (pts ? 3.2 : 4.5)) : (isGlobe ? Math.min(1, dt * 4.5) : 0);
       px[i] += (tx - px[i]) * k; py[i] += (ty - py[i]) * k;
       pa[i] += (ta - pa[i]) * Math.min(1, dt * 3); ps[i] += (ts - ps[i]) * Math.min(1, dt * 3); pw[i] += (tw2 - pw[i]) * Math.min(1, dt * 3);
     }
@@ -798,7 +813,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     // City overlay: a volatile market line of dots across the sky
     if (cityVis > 0.02) {
       if (!reduce) { marketShift += dt * 6; while (marketShift >= 1) { marketShift -= 1; market.shift(); mv = Math.max(.08, Math.min(.92, market[market.length - 1] + (rnd() - .5) * .3)); market.push(mv); } }
-      var top = B.y - B.h * .02, band = B.h * .28;
+      var top = OY - S3 * 1.25, band = S3 * .38;
       for (i = 0; i < MK; i++) {
         var mx = B.x + (i - marketShift) / (MK - 1) * B.w, my = top + (1 - market[i]) * band;
         var fade = Math.min(1, i / 10) * cityVis;
@@ -822,12 +837,12 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         if (!reduce) pg.t += dt;
         if (pg.t > pg.life) { pings[i] = newPing(); continue; }
         if (pg.t <= 0) continue;
-        var an = office.anchors[pg.a], ax = B.x + an.x * B.w, ay = B.y + an.y * B.h - 10 * an.s * (B.w / SW), qq = pg.t / pg.life;
-        var sc = B.w / SW * an.s;
+        var an = office.anchors[pg.a]; proj3({ x: an.x, y: an.y, z: an.z, nx: null }, tmp4);
+        var ax = tmp4[0], ay = tmp4[1], qq = pg.t / pg.life, sc = S3 / 180 * tmp4[4];
         ctx.strokeStyle = 'rgba(232,118,58,' + ((1 - qq) * .9 * officeVis).toFixed(3) + ')'; ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.arc(ax + 22 * sc, ay, (4 + qq * 20) * sc, 0, 6.2832); ctx.stroke();
+        ctx.beginPath(); ctx.arc(ax, ay, (4 + qq * 20) * sc, 0, 6.2832); ctx.stroke();
         ctx.fillStyle = 'rgba(255,190,140,' + (Math.min(1, (1 - qq) * 2) * officeVis).toFixed(3) + ')';
-        ctx.beginPath(); ctx.arc(ax + 22 * sc, ay, 4.5 * sc, 0, 6.2832); ctx.fill();
+        ctx.beginPath(); ctx.arc(ax, ay, 4.5 * sc, 0, 6.2832); ctx.fill();
       }
     }
 
