@@ -38,7 +38,7 @@ const root = path.resolve(__dirname, '..');
 // The strapline is site-wide — every page gets it, in the shared logo
 // lockup, not just research pages. Kept as one constant rather than
 // repeated in both configs below so it can't drift between them.
-const STRAPLINE = 'Helping teams navigate the AI shift, together.';
+const STRAPLINE = 'Helping product teams navigate the AI shift, together.';
 
 // Default config: the full main-site nav, exactly as it's always looked —
 // Home, Learnings, the diagnostic CTA, a clickable logo — plus the

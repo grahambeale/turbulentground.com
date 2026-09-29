@@ -322,13 +322,24 @@ details[open] .condition-chevron { transform:rotate(180deg); }
 }
 @media(max-width:768px) { .cta-card { grid-template-columns:1fr; } }
 
-/* ── Footer ──────────────────────────────────────────────────────────── */
-footer {
-  padding:40px 48px;
-  border-top:1px solid var(--border-n);
-  display:flex; justify-content:space-between;
-  align-items:center; flex-wrap:wrap; gap:16px;
-}
+/* FOOTER_CSS_START */
+/* Shared site footer. Uses var() fallback chains (--ink/--ink-mid falling
+   back to --cream, then a literal) because not every page defines the
+   same token names — see FOOTER_CONFIG in scripts/build-footer.mjs for
+   why this exists (it replaces four hand-duplicated footers that had
+   already drifted from each other). */
+footer { position:relative; z-index:1; background:var(--bg); border-top:1px solid var(--border); padding:32px 48px; display:flex; flex-wrap:wrap; gap:16px 28px; align-items:center; justify-content:space-between; }
+.footer-brand { font-family:'Bebas Neue',sans-serif; letter-spacing:.18em; font-size:16px; color:var(--ink, var(--cream, #efe5d3)); }
+.footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+.footer-link { color:var(--muted); text-decoration:none; font-size:13px; transition:color .2s; }
+.footer-link:hover { color:var(--ink, var(--cream, #efe5d3)); }
+.footer-note { font-size:12px; color:var(--muted); max-width:560px; }
+.footer-note a { color:var(--ink-mid, var(--cream, #cdbd9f)); text-decoration:none; border-bottom:1px solid var(--border-dk, var(--border, rgba(232,220,200,0.18))); }
+/* The feedback tab (partials/feedback.*) pins to the bottom-left of the
+   viewport on narrow screens; this keeps the footer's own bottom padding
+   wide enough that its links never sit under it. */
+@media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* FOOTER_CSS_END */
 
 /* ── Topo bg ─────────────────────────────────────────────────────────── */
 .topo-bg {
@@ -351,7 +362,6 @@ footer {
   .container, .container--narrow { padding:0 24px; }
   section { padding:64px 0; }
   .nav { padding:0 24px; }
-  footer { padding:32px 24px; }
   .nav-links { gap:16px; }
   .cta-card { padding:32px 24px; }
 }
@@ -440,7 +450,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       </svg></div>
     <div class="nav-logo-text">
       <span class="nav-wordmark">TURBULENT GROUND</span>
-      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+      <span class="nav-strapline">Helping product teams navigate the AI shift, together.</span>
     </div>
   </a>
   <div class="nav-links">
@@ -798,28 +808,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 <!-- ── Footer ───────────────────────────────────────────────────────── -->
 </main>
+<!-- FOOTER_START -->
 <footer>
-  <div style="display:flex;align-items:center;gap:14px;">
-    <svg width="32" height="32" viewBox="0 0 52 52">
-      <circle cx="26" cy="26" r="26" fill="#0e0b08"/>
-      <clipPath id="fc"><circle cx="26" cy="26" r="26"/></clipPath>
-      <g clip-path="url(#fc)">
-        <path d="M0 46.28 L0 39.42 L8 67.18 L16 34.42 L24 36.53 L32 66.28 L40 37.88 L48 34.90 L52 52 L0 52 Z" fill="#2a1508"/>
-        <path d="M0 26 L0 31.01 L8 12.79 L16 29.02 L24 36.11 L32 19.83 L40 20.32 L48 29.32" stroke="#d9571c" stroke-width="2.4" fill="none"/>
-        <path d="M0 39.52 L0 26.79 L8 51.87 L16 41.58 L24 27.43 L32 45.90 L40 45.76 L48 30.28" stroke="#d9571c" stroke-width="3.2" fill="none"/>
-      </g>
-      <circle cx="26" cy="26" r="25" fill="none" stroke="#7a3a18" stroke-width="1.5"/>
-    </svg>
-    <span style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.16em;color:var(--cream);">TURBULENT GROUND</span>
+  <span class="footer-brand">TURBULENT GROUND</span>
+  <div class="footer-links">
+    <a href="/research" class="footer-link">The study</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+    <a href="privacy.html" class="footer-link">Privacy</a>
   </div>
-  <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
-    <a href="/research" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">The study</a>
-    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
-    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">YouTube</a>
-    <a href="privacy.html" style="font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--orange-lt)'" onmouseout="this.style.color='var(--muted)'">Privacy</a>
-  </div>
-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.16);">Read about it</a>.</span>
+  <span class="footer-note">Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.</span>
 </footer>
+<!-- FOOTER_END -->
 
 <!-- ── Nav scroll JS ─────────────────────────────────────────────────── -->
 <!-- NAV_JS_START -->

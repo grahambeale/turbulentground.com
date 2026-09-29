@@ -157,12 +157,24 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   article strong { color: var(--ink); font-weight: 500; }
   article em { color: var(--muted); font-style: italic; }
   article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
-  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
-  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
-  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
-  .footer-links a:hover { color: var(--ink-mid); }
-  .footer-copy { font-size: 12px; color: var(--muted); }
-  .footer-copy a { color: var(--muted); }
+/* FOOTER_CSS_START */
+/* Shared site footer. Uses var() fallback chains (--ink/--ink-mid falling
+   back to --cream, then a literal) because not every page defines the
+   same token names — see FOOTER_CONFIG in scripts/build-footer.mjs for
+   why this exists (it replaces four hand-duplicated footers that had
+   already drifted from each other). */
+footer { position:relative; z-index:1; background:var(--bg); border-top:1px solid var(--border); padding:32px 48px; display:flex; flex-wrap:wrap; gap:16px 28px; align-items:center; justify-content:space-between; }
+.footer-brand { font-family:'Bebas Neue',sans-serif; letter-spacing:.18em; font-size:16px; color:var(--ink, var(--cream, #efe5d3)); }
+.footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+.footer-link { color:var(--muted); text-decoration:none; font-size:13px; transition:color .2s; }
+.footer-link:hover { color:var(--ink, var(--cream, #efe5d3)); }
+.footer-note { font-size:12px; color:var(--muted); max-width:560px; }
+.footer-note a { color:var(--ink-mid, var(--cream, #cdbd9f)); text-decoration:none; border-bottom:1px solid var(--border-dk, var(--border, rgba(232,220,200,0.18))); }
+/* The feedback tab (partials/feedback.*) pins to the bottom-left of the
+   viewport on narrow screens; this keeps the footer's own bottom padding
+   wide enough that its links never sit under it. */
+@media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
 /* Main-site feedback widget: same look and behaviour as the Phase 3
    research widget (research/feedback-widget.css), left-edge tab placement. */
@@ -246,7 +258,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
       </svg></div>
     <div class="nav-logo-text">
       <span class="nav-wordmark">TURBULENT GROUND</span>
-      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+      <span class="nav-strapline">Helping product teams navigate the AI shift, together.</span>
     </div>
   </a>
   <div class="nav-links">
@@ -303,16 +315,18 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 </div>
 
 </main>
+<!-- FOOTER_START -->
 <footer>
+  <span class="footer-brand">TURBULENT GROUND</span>
   <div class="footer-links">
-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1, a live experiment. <a href="zero-humans-in-the-loop">Read about it</a>.
-    <a href="/research">The study</a>
-    <a href="/learnings">Learnings</a>
-    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="/privacy">Privacy</a>
+    <a href="/research" class="footer-link">The study</a>
+    <a href="/learnings" class="footer-link">Learnings</a>
+    <a href="https://linkedin.com/in/grahambeale" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/privacy" class="footer-link">Privacy</a>
   </div>
-  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
+  <span class="footer-note">Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>. &copy; 2026 Turbulent Ground</span>
 </footer>
+<!-- FOOTER_END -->
 
 <!-- NAV_JS_START -->
 <script>

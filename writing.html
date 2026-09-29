@@ -280,23 +280,24 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 }
 .btn-ghost:hover { color:var(--ink-mid); }
 
-/* ── Footer ──────────────────────────────────────────────────────── */
-footer {
-  padding:36px 48px;
-  border-top:1px solid var(--border);
-  background:var(--bg-warm);
-  display:flex; justify-content:space-between;
-  align-items:center; flex-wrap:wrap; gap:16px;
-}
-.footer-brand {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:15px; letter-spacing:0.16em; color:var(--ink);
-}
-.footer-link {
-  font-size:11px; color:var(--muted); text-decoration:none;
-  transition:color 0.2s; letter-spacing:0.04em;
-}
-.footer-link:hover { color:var(--orange-lt); }
+/* FOOTER_CSS_START */
+/* Shared site footer. Uses var() fallback chains (--ink/--ink-mid falling
+   back to --cream, then a literal) because not every page defines the
+   same token names — see FOOTER_CONFIG in scripts/build-footer.mjs for
+   why this exists (it replaces four hand-duplicated footers that had
+   already drifted from each other). */
+footer { position:relative; z-index:1; background:var(--bg); border-top:1px solid var(--border); padding:32px 48px; display:flex; flex-wrap:wrap; gap:16px 28px; align-items:center; justify-content:space-between; }
+.footer-brand { font-family:'Bebas Neue',sans-serif; letter-spacing:.18em; font-size:16px; color:var(--ink, var(--cream, #efe5d3)); }
+.footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+.footer-link { color:var(--muted); text-decoration:none; font-size:13px; transition:color .2s; }
+.footer-link:hover { color:var(--ink, var(--cream, #efe5d3)); }
+.footer-note { font-size:12px; color:var(--muted); max-width:560px; }
+.footer-note a { color:var(--ink-mid, var(--cream, #cdbd9f)); text-decoration:none; border-bottom:1px solid var(--border-dk, var(--border, rgba(232,220,200,0.18))); }
+/* The feedback tab (partials/feedback.*) pins to the bottom-left of the
+   viewport on narrow screens; this keeps the footer's own bottom padding
+   wide enough that its links never sit under it. */
+@media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* FOOTER_CSS_END */
 
 @media(max-width:600px) {
   .nav { padding:0 20px; }
@@ -304,7 +305,6 @@ footer {
   .phase-nav { flex-direction:column; }
   .phase-nav-item { border-right:none; border-bottom:1px solid var(--border); }
   .phase-nav-item:last-child { border-bottom:none; }
-  footer { padding:28px 20px; }
   .post-item:not(.coming):hover { margin:0; padding-left:0; padding-right:0; }
 }
 
@@ -392,7 +392,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       </svg></div>
     <div class="nav-logo-text">
       <span class="nav-wordmark">TURBULENT GROUND</span>
-      <span class="nav-strapline">Helping teams navigate the AI shift, together.</span>
+      <span class="nav-strapline">Helping product teams navigate the AI shift, together.</span>
     </div>
   </a>
   <div class="nav-links">
@@ -685,17 +685,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 <!-- Footer -->
 </main>
+<!-- FOOTER_START -->
 <footer>
-  <span class="footer-brand" style="color:#f5f0e8;">TURBULENT GROUND</span>
-  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+  <span class="footer-brand">TURBULENT GROUND</span>
+  <div class="footer-links">
     <a href="/research" class="footer-link">The study</a>
     <a href="writing.html" class="footer-link">Writing</a>
-    <a href="https://www.linkedin.com/in/grahambeale/" target="_blank" class="footer-link">LinkedIn</a>
-    <a href="https://www.youtube.com/@TurbulentGround" target="_blank" class="footer-link">YouTube</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.youtube.com/@TurbulentGround" class="footer-link" target="_blank" rel="noopener">YouTube</a>
     <a href="privacy.html" class="footer-link">Privacy</a>
   </div>
-  <span style="font-size:11px;color:var(--muted);">Originally built by <a href="https://beale.co.uk" target="_blank" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop" style="color:#c8b89a;text-decoration:none;border-bottom:1px solid rgba(232,220,200,0.14);">Read about it</a>.</span>
+  <span class="footer-note">Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.</span>
 </footer>
+<!-- FOOTER_END -->
 
 <!-- NAV_JS_START -->
 <script>
