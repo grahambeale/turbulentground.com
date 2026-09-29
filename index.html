@@ -627,7 +627,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     var name = best.getAttribute('data-scene');
     if (jumpTo) { if (name !== jumpTo) name = scene; else { jumpTo = null; clearTimeout(jumpTimer); } }
     // Hide the rail once the page has scrolled past the last section (footer).
-    railNav.classList.toggle('away', footerEl.getBoundingClientRect().top < window.innerHeight * .85);
+    railNav.classList.toggle('away', footerEl.getBoundingClientRect().top < window.innerHeight - 8);
     if (name !== scene) {
       var nowT = performance.now();
       zt = reduce ? null
