@@ -210,6 +210,13 @@ h1 em, h2 em { font-style:italic; color:var(--orange-lt); }
 .promise .ico { color:var(--orange-lt); }
 .small { margin-top:22px; font-size:13px; color:var(--muted); line-height:1.9; }
 .for { margin:-8px 0 22px; font-size:15px; color:var(--ink-mid); max-width:44ch; }
+.progress { margin:4px auto 22px; max-width:540px; }
+.progress .togo { white-space:nowrap; color:var(--orange-lt); }
+.progress-bar { height:6px; border-radius:6px; background:rgba(232,220,200,.12); overflow:hidden; }
+.progress-bar span { display:block; height:100%; width:0; border-radius:6px; background:linear-gradient(90deg, #b84215, #ffb27a); box-shadow:0 0 12px rgba(232,118,58,.6); transition:width 1.6s var(--ease); }
+.progress p { margin-top:10px; font-size:15px; color:var(--ink-mid); }
+.progress p strong { color:var(--ink); font-weight:500; }
+.who { margin:0 auto 14px; font-size:14px; color:var(--muted); }
 .findings { margin:26px auto 0; max-width:52ch; font-size:16px; color:var(--ink-mid); }
 .byline { display:flex; align-items:center; gap:14px; justify-content:center; margin:22px auto 0; max-width:560px; text-align:left; }
 .byline p { font-size:14px; color:var(--ink-mid); line-height:1.5; }
@@ -454,6 +461,13 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         <div class="ctas reveal" style="--d:.16s">
           <a href="/research" class="btn btn-primary btn-lg" data-research-cta="final">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
+        <!-- Live progress towards the pre-registered 30-completion milestone.
+             Hidden unless the live count loads; never shows a stale number. -->
+        <div class="progress reveal" id="study-progress" style="--d:.2s" hidden>
+          <div class="progress-bar" role="progressbar" aria-labelledby="progress-text" aria-valuemin="0" aria-valuemax="30" aria-valuenow="0"><span id="progress-fill"></span></div>
+          <p id="progress-text"></p>
+        </div>
+        <p class="who reveal" style="--d:.22s">People from product, design, research and engineering have already taken part.</p>
         <ul class="promise reveal" style="--d:.24s">
           <li><svg class="ico" aria-hidden="true"><use href="#i-summary"/></svg>Your personal summary</li>
           <li><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Name kept apart from answers</li>
@@ -510,6 +524,34 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       try { plausible('Homepage Research CTA Clicked', { props: { position: a.getAttribute('data-research-cta') || 'nav' } }); } catch(e){}
     });
   });
+
+  /* ── Live participation progress ───────────────────────────── */
+  // Counts only, from /api/research-participation. If it can't load, the
+  // element stays hidden and the failure is reported, never faked.
+  (function(){
+    var box = document.getElementById('study-progress');
+    if (!box || !window.fetch) return;
+    fetch('/api/research-participation', { headers: { Accept: 'application/json' } })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(d){
+        if (!d || typeof d.completed !== 'number' || typeof d.milestone !== 'number') throw new Error('Bad payload');
+        var text = document.getElementById('progress-text'), fill = document.getElementById('progress-fill');
+        var bar = box.querySelector('.progress-bar'), n = Math.min(d.completed, d.milestone);
+        bar.setAttribute('aria-valuemax', String(d.milestone)); bar.setAttribute('aria-valuenow', String(n));
+        if (d.completed >= d.milestone) {
+          text.innerHTML = '<strong>First-findings milestone reached.</strong> Every new response sharpens the picture.';
+        } else {
+          var left = d.milestone - d.completed;
+          text.innerHTML = '<strong>' + d.completed + ' of ' + d.milestone + '</strong> responses needed for the first published findings. <span class="togo">' + left + ' to go.</span>';
+        }
+        box.hidden = false;
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = (n / d.milestone * 100).toFixed(1) + '%'; }); });
+      })
+      .catch(function(e){
+        try { plausible('Participation Count Failed', { props: { reason: String(e && e.message || e).slice(0, 60) } }); } catch (x) {}
+        if (window.console) console.warn('Participation count unavailable:', e);
+      });
+  })();
 
   /* ── Reveal ────────────────────────────────────────────────── */
   var revealEls = document.querySelectorAll('.reveal');

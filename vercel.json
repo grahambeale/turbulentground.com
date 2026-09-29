@@ -23,6 +23,10 @@
       "destination": "/api/research-invite?phase31=public-start"
     },
     {
+      "source": "/api/research-participation",
+      "destination": "/api/research-invite?phase31=participation-count"
+    },
+    {
       "source": "/api/research-incomplete-maintenance",
       "destination": "/api/research-invite?phase31=incomplete-maintenance"
     },

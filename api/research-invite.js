@@ -18,6 +18,7 @@ import referralAttribution from "../lib/research-phase31/referral-attribution.js
 import referralDisable from "../lib/research-phase31/referral-disable.js";
 import referralIssue from "../lib/research-phase31/referral-issue.js";
 import referralResolve from "../lib/research-phase31/referral-resolve.js";
+import participationCount from "../lib/research-phase31/participation-count.js";
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -61,6 +62,7 @@ export default async function handler(req, res) {
     "referral-disable": referralDisable,
     "referral-issue": referralIssue,
     "referral-resolve": referralResolve,
+    "participation-count": participationCount,
   };
   const phase31Action = typeof req.query?.phase31 === "string" ? req.query.phase31 : "";
   if (phase31Handlers[phase31Action]) return phase31Handlers[phase31Action](req, res);
