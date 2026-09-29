@@ -10,6 +10,7 @@
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import saveResearchFeedback from "../lib/research-feedback.js";
 import saveFeedbackSubmission from "../lib/research-feedback-submission.js";
+import saveSiteFeedbackSubmission from "../lib/site-feedback-submission.js";
 import publicStart from "../lib/research-phase31/public-start.js";
 import incompleteMaintenance from "../lib/research-phase31/incomplete-maintenance.js";
 import incompleteCron from "../lib/research-phase31/incomplete-cron.js";
@@ -78,6 +79,12 @@ export default async function handler(req, res) {
 
   if (data?.action === "feedback-submission") {
     return saveFeedbackSubmission(req, res, data);
+  }
+
+  // Main-site feedback widget (not research). Routed through this function
+  // because the project is at the Vercel function limit.
+  if (data?.action === "site-feedback-submission") {
+    return saveSiteFeedbackSubmission(req, res, data);
   }
 
   if (data?.action === "feedback") {

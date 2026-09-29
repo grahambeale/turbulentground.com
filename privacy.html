@@ -3,25 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy · Turbulent Ground</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<meta name="description" content="Privacy notice for Turbulent Ground — what we collect, why, where it's stored, and how to request deletion.">
-<meta name="robots" content="noindex">
+<meta name="description" content="Privacy notice for the Turbulent Ground website: what the site collects, why, where it goes and your rights.">
+<link rel="canonical" href="https://turbulentground.com/privacy">
+<title>Privacy notice | Turbulent Ground</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
+  /* Same format as the Phase 3 study notice (research/privacy.html). */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
-    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --bg: #131110; --bg-warm: #1c1915; --surface: #26211c;
+    --orange: #d9571c; --orange-light: #e8763a; --orange-lt: #e8763a; --orange-hover: #a23a13;
     --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
+    --border: rgba(232,220,200,0.12);
   }
-  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
-  body { min-height: 100vh; }
-
-  /* Nav */
-/* NAV_CSS_START */
+  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.75; }
+  body { min-height: 100vh; padding-top: 92px; }
+  :focus-visible { outline: 3px solid #ffb37a; outline-offset: 3px; }
+  /* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
   min-height:72px; padding:12px 48px;
@@ -129,134 +130,61 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 }
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
-
-  /* Content */
-  .page-wrap { max-width: 720px; margin: 0 auto; padding: 152px 24px 120px; }
-  .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
-  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 300; color: var(--ink); line-height: 1.15; margin-bottom: 12px; }
-  .updated { font-size: 13px; color: var(--muted); margin-bottom: 48px; }
-  h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--ink); margin: 48px 0 12px; }
-  p { color: var(--ink-mid); margin-bottom: 16px; }
-  ul { color: var(--ink-mid); padding-left: 20px; margin-bottom: 16px; }
-  li { margin-bottom: 6px; }
-  a { color:var(--orange-lt); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  main { margin: 46px auto 110px; width: min(100% - 40px, 760px); }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 8vw, 62px); font-weight: 300; line-height: 1.05; margin-bottom: 22px; }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin: 54px 0 16px; }
+  p { color: var(--ink-mid); margin-bottom: 18px; }
   strong { color: var(--ink); font-weight: 500; }
-  .divider { border: none; border-top: 1px solid var(--surface); margin: 48px 0; }
-
-  /* Footer */
-  footer { background: var(--bg-dark); border-top: 1px solid var(--surface); padding: 32px 24px; text-align: center; }
-  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 16px; }
-  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
-  .footer-links a:hover { color: var(--ink-mid); }
-  .footer-copy { font-size: 12px; color: var(--muted); }
-  .footer-copy a { color: var(--muted); }
-/* FEEDBACK_CSS_START */
-.feedback-tab-wrap {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 150;
-}
-.feedback-tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 132px;
-  padding: 12px 14px;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-right: none;
-  border-radius: 10px 0 0 10px;
-  color: var(--ink-mid);
-  text-decoration: none;
-  font-size: 12px;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  box-shadow: -2px 0 12px rgba(0,0,0,0.25);
-  transition: color 0.2s ease, background 0.2s ease;
-}
-.feedback-tab:hover,
-.feedback-tab:focus-visible {
-  color: var(--orange-lt);
-  background: var(--bg-warm);
-}
-.feedback-tab:focus-visible {
-  outline: 3px solid #ffb37a;
-  outline-offset: 2px;
-  border-radius: 10px 0 0 10px;
-}
-.feedback-tab-icon { flex-shrink: 0; opacity: 0.85; }
-.feedback-tab-close {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1;
-  cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-.feedback-tab-close:hover { color: var(--orange-lt); background: var(--bg-warm); }
-.feedback-tab-close:focus-visible {
-  outline: 3px solid #ffb37a;
-  outline-offset: 1px;
-}
-.feedback-tab-wrap.dismissed { display: none; }
-
-/* Icon-only on narrow viewports — stays right-center so it never overlaps
-   the diagnostic page's full-width fixed bottom survey bar. */
-@media (max-width: 560px) {
-  .feedback-tab {
-    max-width: none;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    justify-content: center;
-    border-radius: 22px 0 0 22px;
+  a { color: var(--orange-light); text-underline-offset: 3px; }
+  ul, ol { color: var(--ink-mid); margin: 0 0 22px 24px; }
+  li { margin-bottom: 10px; padding-left: 5px; }
+  .important { background: var(--surface); border-left: 3px solid var(--orange); margin: 24px 0; padding: 18px 20px; }
+  .important p:last-child { margin-bottom: 0; }
+  .table-wrap { border: 1px solid var(--border); border-radius: 10px; margin: 24px 0 30px; overflow-x: auto; }
+  table { border-collapse: collapse; min-width: 640px; width: 100%; }
+  th, td { border-bottom: 1px solid var(--border); color: var(--ink-mid); padding: 14px 16px; text-align: left; vertical-align: top; }
+  th { background: var(--surface); color: var(--ink); font-weight: 500; }
+  tr:last-child td { border-bottom: 0; }
+  .updated { border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; margin-top: 58px; padding-top: 20px; }
+  @media (max-width: 520px) { main { margin-top: 24px; } h2 { margin-top: 44px; } }
+  @media print {
+    :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
+    .nav, #feedback-launch { display: none; } body { padding-top: 0; } main { margin: 0 auto; width: 100%; } a { color: inherit; }
   }
-  .feedback-tab-label { display: none; }
-}
+/* FEEDBACK_CSS_START */
+/* Main-site feedback widget: same look and behaviour as the Phase 3
+   research widget (research/feedback-widget.css), pill placement. */
+#feedback-launch{position:fixed;right:16px;bottom:calc(24px + env(safe-area-inset-bottom));z-index:160;display:flex;align-items:center;gap:9px;min-height:48px;padding:12px 16px;border:1px solid #9a8370;border-radius:28px;background:rgba(40,34,29,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#efe5d3;font:600 14px Arial,sans-serif;cursor:pointer;transition:transform .25s ease,opacity .2s ease,background .2s ease}
+#feedback-launch:hover,#feedback-launch:focus-visible{background:#b9aa99;color:#30261f}
+#feedback-launch svg{width:21px;height:21px;flex:none}
+#feedback-launch.away{transform:translateX(130%);opacity:0;pointer-events:none}
+#feedback-launch:focus-visible,#feedback-panel button:focus-visible,#feedback-panel a:focus-visible{outline:3px solid #e55b20;outline-offset:3px}
+#feedback-panel{position:fixed;inset:0;margin:auto;height:fit-content;background:#c8beb3;color:#30261f;border:1px solid #8e7763;border-radius:18px;padding:26px;width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overflow:auto;box-sizing:border-box;box-shadow:0 10px 50px #0003}
+#feedback-panel::backdrop{background:#0008}
+#feedback-panel h2{font:600 24px/1.3 Arial,sans-serif;margin:0 0 8px;padding-right:28px;color:#30261f;letter-spacing:0}
+#feedback-panel p,#feedback-panel label{font:15px/1.5 Arial,sans-serif}
+#feedback-panel textarea{display:block;box-sizing:border-box;width:100%;min-height:140px;margin:8px 0 14px;padding:12px;font:16px/1.5 Arial,sans-serif;background:#eee9e3;color:#30261f;border:1px solid #8e7763;border-radius:8px}
+#feedback-panel textarea::placeholder{font-style:italic;color:#766456;opacity:1}
+#feedback-panel button{padding:12px 18px;min-height:44px;border-radius:8px;border:1px solid #8e7763;font:600 15px Arial,sans-serif;cursor:pointer;color:#30261f}
+#feedback-close{position:absolute;right:12px;top:12px;border:0!important;padding:5px!important;min-height:0!important;font-size:25px!important;background:transparent}
+#feedback-send{background:#e55b20;color:#fff!important}
+#feedback-done{background:transparent}
+#feedback-actions{display:flex;justify-content:flex-end;gap:12px}
+#feedback-stage{color:#6b5848;margin:0 0 4px}
+#feedback-panel .feedback-note{font-size:13px;color:#5b4a3d;margin-top:14px}
+#feedback-panel .feedback-note a{color:#30261f}
+#feedback-panel [hidden]{display:none!important}
+#feedback-success{text-align:center}
+#feedback-success-mark{color:#8a5528;font:40px Arial,sans-serif;margin:4px 0 18px}
+#feedback-error{color:#9a321c}
+.feedback-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){#feedback-launch{padding:12px}#feedback-launch .feedback-label{display:none}#feedback-panel{width:calc(100vw - 24px);min-height:70dvh;padding:24px 20px}#feedback-panel textarea{min-height:30dvh}}
+@media (prefers-reduced-motion: reduce){#feedback-launch{transition:none}}
 /* FEEDBACK_CSS_END */
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
-<script>
-// Client-side error telemetry, added Sprint 7 (2026-07-19). Without this,
-// a JS crash (e.g. a form handler throwing before its request is sent) is
-// invisible to analytics and looks identical to "nobody tried" — which is
-// exactly what let the diagnostic submission bug go undetected for four
-// sprints. This reports uncaught errors as a Plausible event so they show
-// up as real data in the weekly sprint review. See decision-log.md row 15.
-(function(){
-  function reportJsError(message, source){
-    try{
-      if (typeof plausible !== 'function') return;
-      // Skip the generic cross-origin "Script error." placeholder browsers
-      // emit for errors thrown by third-party scripts (extensions, ad
-      // blockers, etc.) — no useful information, just noise.
-      if (!message || message === 'Script error.') return;
-      plausible('JS Error', { props: { message: String(message).slice(0,120), page: location.pathname, source: source || '' } });
-    } catch(err) { /* error reporting must never itself throw */ }
-  }
-  window.addEventListener('error', function(e){ reportJsError(e.message, 'onerror'); });
-  window.addEventListener('unhandledrejection', function(e){
-    var msg = (e.reason && e.reason.message) ? e.reason.message : String(e.reason);
-    reportJsError(msg, 'unhandledrejection');
-  });
-})();
-</script>
 </head>
 <body>
-
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
   <a href="/" class="nav-logo">
@@ -280,7 +208,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   <div class="nav-links">
     <a href="/" class="nav-link">Home</a>
     <a href="/learnings" class="nav-link">Learnings</a>
-    <div class="nav-btn-wrap"><a href="/diagnostic" class="nav-btn">Take the diagnostic &rarr;</a></div>
+    <div class="nav-btn-wrap"><a href="/research" class="nav-btn">Take part &rarr;</a></div>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
@@ -289,89 +217,59 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 <div class="mobile-menu" id="mobile-menu">
   <a href="/">Home</a>
   <a href="/learnings">Learnings</a>
-  <a href="/diagnostic" class="mobile-menu-btn">Take the diagnostic &rarr;</a>
+  <a href="/research" class="mobile-menu-btn">Take part &rarr;</a>
 </div>
 <!-- NAV_END -->
 <main>
+  <h1>Privacy notice</h1>
+  <p>This notice covers the Turbulent Ground website. If you take part in the AI shift research study, the <a href="/research/privacy">study privacy notice</a> also applies and explains the study in full.</p>
 
-<div class="page-wrap">
-  <p class="eyebrow">Turbulent Ground</p>
-  <h1>Privacy Notice</h1>
-  <p class="updated">Last updated: June 2026</p>
+  <h2>Who is responsible for your data</h2>
+  <p>Turbulent Ground is run by me, <strong>Graham Beale</strong>. It is not a company or a separate legal entity. I am the data controller, the person legally responsible for how your information is collected and used.</p>
+  <p>ICO registration reference: <strong>ZC232927</strong>. You can check the public register at <a href="https://ico.org.uk/register">ico.org.uk/register</a>.</p>
+  <p>For anything about your information, email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a>.</p>
 
-  <p>Turbulent Ground is run by Graham Beale. This notice explains what personal data is collected when you use this site, why it is collected, where it is stored, and your rights in relation to it. Graham is based in the United Kingdom and this notice is written to comply with UK GDPR.</p>
-
-  <h2>What we collect and why</h2>
-
-  <p><strong>Diagnostic submissions.</strong> When you complete the Care Capital diagnostic and submit the capture form, we collect:</p>
-  <ul>
-    <li>Your <strong>work email address</strong> — used to send your results (if you opted in) and to group responses by organisation for aggregate analysis.</li>
-    <li>Your <strong>name</strong> and <strong>team name</strong>, if you choose to provide them.</li>
-    <li>Your <strong>five dimension scores and overall score</strong> (0&ndash;100), calculated from your 25 answers.</li>
-    <li>Your <strong>raw answers</strong> to all 25 questions — stored so scores can be recomputed if the scoring model is updated.</li>
-    <li>Optional context fields: <strong>role, organisation size, sector, country</strong>.</li>
-    <li>Three <strong>consent flags</strong> recording exactly what you agreed to.</li>
-    <li>A <strong>source tag and UTM parameters</strong> if you arrived via a tracked link.</li>
-  </ul>
-
-  <p>The legal basis for processing is <strong>consent</strong> (Article 6(1)(a) UK GDPR). You indicate this by submitting the form. You can withdraw consent at any time by emailing <a href="mailto:privacy@turbulentground.com">privacy@turbulentground.com</a>.</p>
-
-  <p><strong>Analytics.</strong> This site uses <a href="https://plausible.io" target="_blank" rel="noopener">Plausible Analytics</a>, a privacy-first tool. It does not use cookies, collect personal data, or track you across sites. Aggregate page-view and referral data only.</p>
-
-  <h2>How we use your email domain</h2>
-
-  <p>We derive your <strong>email domain</strong> (the part after @) server-side and store it alongside your submission. This lets us group responses by organisation and show aggregate benchmarks over time.</p>
-
-  <p><strong>Minimum group size safeguard:</strong> no organisation-level aggregate, benchmark, or per-group comparison is computed or displayed until at least <strong>three submissions</strong> exist for that domain. This prevents any individual's data from being identifiable through a group result.</p>
-
-  <p>Consumer email domains (Gmail, Outlook, Hotmail, Yahoo, iCloud, Proton, and others) are treated as ungrouped individuals and never combined into a company-level aggregate.</p>
-
-  <h2>Where data is stored</h2>
-
-  <p>Submission records are stored in <strong>Airtable</strong> (airtable.com), a cloud database with servers in the United States. Airtable is covered by a Data Processing Agreement and participates in the UK International Data Transfer Agreement framework.</p>
-
-  <p>Results emails are sent via <strong>Resend</strong> (resend.com). Resend processes your email address to deliver the message and does not use it for any other purpose.</p>
-
-  <p>The site is hosted on <strong>Vercel</strong> (vercel.com). Vercel processes request logs transiently; no personal data is stored in logs beyond standard retention.</p>
-
-  <h2>How long we keep it</h2>
-
-  <p>Submission records are retained for <strong>three years</strong> from the date of submission, or until you request deletion, whichever comes first. We review and purge stale records annually.</p>
-
-  <h2>Your rights</h2>
-
-  <p>Under UK GDPR you have the right to:</p>
-  <ul>
-    <li><strong>Access</strong> the personal data we hold about you.</li>
-    <li><strong>Rectification</strong> of inaccurate data.</li>
-    <li><strong>Erasure</strong> ("right to be forgotten").</li>
-    <li><strong>Restriction</strong> of processing.</li>
-    <li><strong>Data portability</strong> — receive your data in a machine-readable format.</li>
-    <li><strong>Object</strong> to processing.</li>
-    <li><strong>Withdraw consent</strong> at any time without affecting prior processing.</li>
-  </ul>
-
-  <p>To exercise any of these rights, email <a href="mailto:privacy@turbulentground.com">privacy@turbulentground.com</a>. We will respond within 30 days.</p>
-
-  <p>You also have the right to lodge a complaint with the <strong>Information Commissioner's Office</strong> (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
-
-  <hr class="divider">
-
-  <p>Questions? Email <a href="mailto:privacy@turbulentground.com">privacy@turbulentground.com</a>.</p>
-</div>
-
-</main>
-<footer>
-  <div class="footer-links">
-    <a href="https://beale.co.uk">Originally built by Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.
-    <a href="/diagnostic">Diagnostic</a>
-    <a href="/learnings">Learnings</a>
-    <a href="https://linkedin.com/in/grahambeale" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="/privacy">Privacy</a>
+  <h2>What this site collects, and why</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>What</th><th>Why</th><th>Legal basis</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Anonymous usage statistics</strong> from Plausible Analytics: pages viewed, referring site, broad location from your IP address (not stored), device type, and site events such as button clicks or page errors</td><td>To understand how the site is used and to spot problems</td><td>Legitimate interests</td></tr>
+        <tr><td><strong>Feedback you send</strong> with the feedback button: your message, the address of the page you were on and the time you sent it</td><td>To fix problems and improve the site</td><td>Legitimate interests</td></tr>
+        <tr><td><strong>Diagnostic submissions</strong> (the Care Capital diagnostic, which is no longer promoted on this site): your work email, optional name and team name, your 25 answers and scores, optional role, organisation size, sector and country, consent choices, and any tracked-link source</td><td>To send results you asked for and produce aggregate analysis</td><td>Consent</td></tr>
+      </tbody>
+    </table>
   </div>
-  <p class="footer-copy">&copy; 2026 Turbulent Ground</p>
-</footer>
+  <div class="important">
+    <p>Plausible does not use cookies and does not track you across sites. This site sets no advertising or tracking cookies.</p>
+  </div>
+  <p>Please don't include personal details in feedback. If you do, I will treat them as described here and delete anything that isn't needed.</p>
 
+  <h2>Diagnostic data</h2>
+  <p>If you submitted the diagnostic, your email domain was used to group responses by organisation. No organisation-level result is calculated until at least three submissions exist for that domain, and consumer email domains (such as Gmail or Outlook) are never grouped. You can withdraw consent at any time by emailing me.</p>
+
+  <h2>Where your data goes</h2>
+  <ul>
+    <li><strong>Vercel</strong> hosts the site and processes request logs for a short period.</li>
+    <li><strong>Plausible Analytics</strong> (EU-hosted) processes anonymous usage statistics.</li>
+    <li><strong>Airtable</strong> stores feedback and diagnostic submissions. Airtable's servers are in the United States and transfers are covered by its data processing agreement and the UK International Data Transfer Agreement framework.</li>
+    <li><strong>Resend</strong> sends any results emails you requested.</li>
+  </ul>
+  <p>I do not sell your data or share it with anyone else for their own purposes.</p>
+
+  <h2>How long I keep it</h2>
+  <ul>
+    <li>Feedback: until the issue it raises is dealt with, and no longer than two years.</li>
+    <li>Diagnostic submissions: three years from submission, or until you ask me to delete them, whichever comes first.</li>
+    <li>Plausible statistics are aggregate and contain no personal data.</li>
+  </ul>
+
+  <h2>Your rights, and how to use them</h2>
+  <p>Under UK GDPR you can ask to access, correct or delete your data, restrict or object to how it is used, receive it in a portable format, and withdraw consent at any time without affecting what happened before. Email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a> and I will respond within one month.</p>
+  <p>If you are unhappy with how I have handled your information, you can complain to the Information Commissioner's Office at <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>.</p>
+
+  <p class="updated"><strong>Last updated:</strong> 29 September 2026</p>
+</main>
 <!-- NAV_JS_START -->
 <script>
 (function(){
@@ -420,39 +318,76 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 })();
 </script>
 <!-- NAV_JS_END -->
-
 <!-- FEEDBACK_START -->
-<div class="feedback-tab-wrap" id="feedback-tab-wrap">
-  <a href="mailto:feedback@turbulentground.com" class="feedback-tab" id="feedback-tab" aria-label="Spot something broken? Tell the team — opens an email to feedback@turbulentground.com">
-    <svg class="feedback-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-      <path d="m22 6-10 7L2 6"></path>
-    </svg>
-    <span class="feedback-tab-label">Spot something broken? Tell the team</span>
-  </a>
-  <button type="button" class="feedback-tab-close" id="feedback-tab-close" aria-label="Dismiss feedback prompt">&times;</button>
-</div>
+<button id="feedback-launch" type="button" aria-label="Give feedback" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 3V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg><span class="feedback-label">Feedback</span></button>
+<dialog id="feedback-panel" aria-labelledby="feedback-title">
+  <button id="feedback-close" type="button" aria-label="Close feedback">&times;</button>
+  <section id="feedback-compose">
+    <h2 id="feedback-title">Send Graham your feedback</h2>
+    <p id="feedback-stage">About this page</p>
+    <form id="feedback-form">
+      <label for="feedback-message" class="feedback-sr">Your feedback</label>
+      <textarea id="feedback-message" maxlength="5000" required placeholder="Tell Graham what isn't working on this page, or what you'd change&hellip;"></textarea>
+      <p id="feedback-error" role="alert"></p>
+      <div id="feedback-actions"><button id="feedback-send" type="submit">Send</button></div>
+    </form>
+    <p class="feedback-note">Please don't include personal details. Only your message, this page's address and the time are saved. <a href="/privacy">Privacy notice</a></p>
+  </section>
+  <section id="feedback-success" hidden aria-labelledby="feedback-success-title">
+    <div id="feedback-success-mark" aria-hidden="true">&#10003;</div>
+    <h2 id="feedback-success-title" tabindex="-1">Thank you</h2>
+    <p id="feedback-receipt" role="status" aria-live="polite"></p>
+    <button id="feedback-done" type="button">Done</button>
+  </section>
+</dialog>
 <!-- FEEDBACK_END -->
-
 <!-- FEEDBACK_JS_START -->
 <script>
+/* Main-site feedback widget, adopted from the Phase 3 research widget.
+   Saves to the shared feedback table via /api/research-invite
+   (action: site-feedback-submission). Failures are shown to the visitor
+   and the draft is kept; nothing fails silently. */
 (function(){
-  var wrap = document.getElementById('feedback-tab-wrap');
-  var closeBtn = document.getElementById('feedback-tab-close');
-  if (!wrap || !closeBtn) return;
-  try {
-    if (localStorage.getItem('tg-feedback-dismissed') === '1') {
-      wrap.classList.add('dismissed');
-      return;
-    }
-  } catch (e) {}
-  closeBtn.addEventListener('click', function(){
-    wrap.classList.add('dismissed');
-    try { localStorage.setItem('tg-feedback-dismissed', '1'); } catch (e) {}
+  var launch=document.getElementById('feedback-launch'),panel=document.getElementById('feedback-panel');
+  if(!launch||!panel||typeof panel.showModal!=='function')return;
+  var message=document.getElementById('feedback-message'),receipt=document.getElementById('feedback-receipt'),
+      compose=document.getElementById('feedback-compose'),success=document.getElementById('feedback-success'),
+      send=document.getElementById('feedback-send'),error=document.getElementById('feedback-error');
+  var reduced=function(){return matchMedia('(prefers-reduced-motion: reduce)').matches;};
+  var submissionId=null,submittedAt=null,openedY=0,timer=null,confirmed=false,busy=false;
+  function uuid(){ if(window.crypto&&crypto.randomUUID)return crypto.randomUUID(); return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16);}); }
+  function page(){ var p=location.pathname.replace(/\/+$/,'')||'/'; return p.replace(/[^A-Za-z0-9\-._/]/g,'').slice(0,160)||'/'; }
+  launch.addEventListener('click',function(){
+    clearTimeout(timer);openedY=scrollY;confirmed=false;busy=false;compose.hidden=false;success.hidden=true;
+    panel.setAttribute('aria-labelledby','feedback-title');send.disabled=false;error.textContent='';
+    submissionId=submissionId||uuid();
+    panel.showModal();launch.classList.add('away');
+    if(!reduced()&&panel.animate)panel.animate([{opacity:0,transform:'translateY(16px) scale(.96)'},{opacity:1,transform:'none'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
+    message.focus();
+    try{ if(typeof plausible==='function')plausible('Site Feedback Opened',{props:{page:page()}}); }catch(e){}
+  });
+  function close(){clearTimeout(timer);panel.close();}
+  document.getElementById('feedback-close').addEventListener('click',close);
+  document.getElementById('feedback-done').addEventListener('click',close);
+  panel.addEventListener('close',function(){clearTimeout(timer);launch.classList.remove('away');if(confirmed){message.value='';submissionId=null;submittedAt=null;}busy=false;launch.focus({preventScroll:true});window.scrollTo(0,openedY);});
+  message.addEventListener('input',function(){message.setCustomValidity('');});
+  document.getElementById('feedback-form').addEventListener('submit',function(e){
+    e.preventDefault();if(busy)return;
+    if(!message.value.trim()){message.setCustomValidity('Please enter your feedback.');message.reportValidity();return;}
+    busy=true;send.disabled=true;error.textContent='';
+    submittedAt=submittedAt||new Date().toISOString();
+    fetch('/api/research-invite',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'site-feedback-submission',submissionId:submissionId,feedback:message.value,page:page(),submittedAt:submittedAt})})
+      .then(function(r){return r.json().catch(function(){return {};}).then(function(j){if(!r.ok||j.saved!==true)throw new Error(j.error||'Could not save your feedback. Please retry.');});})
+      .then(function(){
+        confirmed=true;compose.hidden=true;success.hidden=false;panel.setAttribute('aria-labelledby','feedback-success-title');
+        receipt.textContent='Your feedback has been received.';document.getElementById('feedback-success-title').focus();
+        try{ if(typeof plausible==='function')plausible('Site Feedback Sent',{props:{page:page()}}); }catch(e){}
+        timer=setTimeout(close,1800);
+      })
+      .catch(function(err){error.textContent=err.message;busy=false;send.disabled=false;});
   });
 })();
 </script>
 <!-- FEEDBACK_JS_END -->
-
 </body>
 </html>

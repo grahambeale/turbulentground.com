@@ -1,10 +1,21 @@
-<div class="feedback-tab-wrap" id="feedback-tab-wrap">
-  <a href="mailto:feedback@turbulentground.com" class="feedback-tab" id="feedback-tab" aria-label="Spot something broken? Tell the team — opens an email to feedback@turbulentground.com">
-    <svg class="feedback-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-      <path d="m22 6-10 7L2 6"></path>
-    </svg>
-    <span class="feedback-tab-label">Spot something broken? Tell the team</span>
-  </a>
-  <button type="button" class="feedback-tab-close" id="feedback-tab-close" aria-label="Dismiss feedback prompt">&times;</button>
-</div>
+<button id="feedback-launch" type="button" aria-label="Give feedback" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 3V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg><span class="feedback-label">Feedback</span></button>
+<dialog id="feedback-panel" aria-labelledby="feedback-title">
+  <button id="feedback-close" type="button" aria-label="Close feedback">&times;</button>
+  <section id="feedback-compose">
+    <h2 id="feedback-title">Send Graham your feedback</h2>
+    <p id="feedback-stage">About this page</p>
+    <form id="feedback-form">
+      <label for="feedback-message" class="feedback-sr">Your feedback</label>
+      <textarea id="feedback-message" maxlength="5000" required placeholder="Tell Graham what isn't working on this page, or what you'd change&hellip;"></textarea>
+      <p id="feedback-error" role="alert"></p>
+      <div id="feedback-actions"><button id="feedback-send" type="submit">Send</button></div>
+    </form>
+    <p class="feedback-note">Please don't include personal details. Only your message, this page's address and the time are saved. <a href="/privacy">Privacy notice</a></p>
+  </section>
+  <section id="feedback-success" hidden aria-labelledby="feedback-success-title">
+    <div id="feedback-success-mark" aria-hidden="true">&#10003;</div>
+    <h2 id="feedback-success-title" tabindex="-1">Thank you</h2>
+    <p id="feedback-receipt" role="status" aria-live="polite"></p>
+    <button id="feedback-done" type="button">Done</button>
+  </section>
+</dialog>
