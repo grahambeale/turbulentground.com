@@ -251,9 +251,15 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
 /* FOOTER_CSS_END */
 
-.rail { position:fixed; left:22px; top:50%; transform:translateY(-50%); z-index:5; display:flex; flex-direction:column; gap:14px; list-style:none; }
-.rail span { display:block; width:8px; height:8px; border-radius:50%; background:rgba(232,220,200,.25); transition:all .3s var(--ease); }
-.rail span.on { background:var(--orange-lt); transform:scale(1.5); box-shadow:0 0 12px rgba(232,118,58,.7); }
+.rail-nav { position:fixed; left:12px; top:50%; transform:translateY(-50%); z-index:20; transition:opacity .4s ease; }
+.rail-nav.away { opacity:0; pointer-events:none; }
+.rail { display:flex; flex-direction:column; gap:2px; list-style:none; }
+.rail a { position:relative; display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; text-decoration:none; }
+.rail .dot { display:block; width:8px; height:8px; border-radius:50%; background:rgba(232,220,200,.28); transition:all .3s var(--ease); }
+.rail a:hover .dot, .rail a:focus-visible .dot { background:rgba(232,220,200,.75); transform:scale(1.25); }
+.rail a.on .dot { background:var(--orange-lt); transform:scale(1.5); box-shadow:0 0 12px rgba(232,118,58,.7); }
+.rail .tip { position:absolute; left:34px; top:50%; transform:translate(-6px,-50%); white-space:nowrap; font-size:12px; letter-spacing:.06em; color:var(--ink); background:rgba(19,17,16,.92); border:1px solid var(--border-dk); padding:4px 10px; border-radius:20px; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s var(--ease); }
+.rail a:hover .tip, .rail a:focus-visible .tip { opacity:1; transform:translate(0,-50%); }
 
 .float-cta { position:fixed; left:50%; bottom:22px; z-index:150; transform:translate(-50%,140%); opacity:0; transition:transform .5s var(--ease), opacity .4s ease; padding:13px 24px; font-size:15px; white-space:nowrap; }
 .float-cta.show { transform:translate(-50%,0); opacity:1; }
@@ -263,7 +269,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
   .chapter { align-items:flex-end; padding:110px 0 96px; }
   .copy { max-width:none; }
   .stage-fade { background:linear-gradient(180deg, rgba(11,9,7,0.1) 0%, rgba(11,9,7,0.35) 38%, rgba(11,9,7,0.94) 66%); }
-  .rail { display:none; }
+  .rail-nav { display:none; }
   .final { align-items:flex-start; padding-top:110px; }
   .tile { font-size:15px; padding:12px 12px; gap:10px; }
   .tile .ico { width:26px; height:26px; }
@@ -398,7 +404,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   <div class="stage-fade" id="stage-fade"></div>
 </div>
 
-<ol class="rail" aria-hidden="true" id="rail"></ol>
+<nav class="rail-nav" id="rail-nav" aria-label="Page sections"><ol class="rail" id="rail"></ol></nav>
 
 <main id="main">
 
@@ -585,7 +591,26 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   /* ── Scene picking ─────────────────────────────────────────── */
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
   var rail = document.getElementById('rail');
-  sections.forEach(function(s){ var li = document.createElement('li'); var d = document.createElement('span'); li.appendChild(d); rail.appendChild(li); s._dot = d; });
+  // Clickable section rail: jump straight to a section with a smooth scroll.
+  var RAIL_LABELS = { globe: 'The AI shift', city: 'Organisations', office: 'Teams', desk: 'The desk', earthrise: 'Take part' };
+  var jumpTo = null, jumpTimer = null;
+  sections.forEach(function(s){
+    var name = s.getAttribute('data-scene');
+    var li = document.createElement('li'), a = document.createElement('a');
+    a.href = '#' + s.id; a.setAttribute('aria-label', 'Go to: ' + (RAIL_LABELS[name] || name));
+    a.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="tip" aria-hidden="true">' + (RAIL_LABELS[name] || name) + '</span>';
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      // A jump across several sections skips the intermediate zooms: the
+      // scene only changes once the target section is reached.
+      jumpTo = name; clearTimeout(jumpTimer); jumpTimer = setTimeout(function(){ jumpTo = null; pickScene(); }, 2500);
+      s.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (history.replaceState) history.replaceState(null, '', '#' + s.id);
+      try { plausible('Homepage Section Jump', { props: { to: name } }); } catch (x) {}
+    });
+    li.appendChild(a); rail.appendChild(li); s._dot = a;
+  });
+  var railNav = document.getElementById('rail-nav'), footerEl = document.querySelector('footer');
   var scene = 'globe', sceneChangedAt = 0;
   var fadeEl = document.getElementById('stage-fade');
   // Active zoom transition, if any (see frame(): zoom out of one scene, into the next).
@@ -600,6 +625,9 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       if (d < bestD) { bestD = d; best = s; }
     });
     var name = best.getAttribute('data-scene');
+    if (jumpTo) { if (name !== jumpTo) name = scene; else { jumpTo = null; clearTimeout(jumpTimer); } }
+    // Hide the rail once the page has scrolled past the last section (footer).
+    railNav.classList.toggle('away', footerEl.getBoundingClientRect().top < window.innerHeight * .85);
     if (name !== scene) {
       var nowT = performance.now();
       zt = reduce ? null
@@ -609,7 +637,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
          : null;
       scene = name; sceneChangedAt = nowT;
     }
-    sections.forEach(function(s){ s._dot.classList.toggle('on', s === best); });
+    sections.forEach(function(s){ var on = s === best; s._dot.classList.toggle('on', on); if (on) s._dot.setAttribute('aria-current', 'true'); else s._dot.removeAttribute('aria-current'); });
     fadeEl.style.opacity = scene === 'earthrise' ? (isMobile() ? .2 : 0) : 1;
     var showFloat = scene === 'city' || scene === 'office' || scene === 'desk';
     floatCta.classList.toggle('show', showFloat);
