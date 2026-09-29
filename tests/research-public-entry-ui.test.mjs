@@ -17,6 +17,8 @@ check('.video-modal-panel video', "welcome video uses the shared popup");
 check('aspect-ratio: 9 / 16', "video popup uses the source portrait ratio rather than a forced widescreen frame");
 check("fetch('/api/research-public-start'", "public entry checks and calls the protected start service");
 check("window.location.replace(result.data.resumePath)", "successful public start continues with the private return token");
+check("result.data.status === 'return_link_sent'", "an existing unfinished response becomes a secure emailed return-link recovery");
+check("You’ve already started. I’ve emailed your secure return link.", "duplicate starts receive a clear confirmation rather than a generic failure");
 check("previewMode === 'public-start'", "protected visual preview is available without creating participant data");
 check("you have 14 days to complete the survey", "entry screen leads with the benefit of a flexible completion window");
 check("delete your answers and personal details to protect your privacy", "entry screen explains deletion as a privacy safeguard");
