@@ -721,7 +721,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   .results-email-status { margin: 12px 0 0 !important; color: var(--orange-lt) !important; }
   .results-email-note { color: var(--muted); font-size: 0.82rem; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
-  .stay-involved { max-width: 680px; margin: 42px 0 0; padding-top: 28px; border-top: 1px solid var(--border); }
+  .stay-involved {
+    width: min(100%, 760px); max-width: none; margin: 42px auto 0;
+    padding-top: 28px; border-top: 1px solid var(--border);
+  }
   .stay-involved .check-row { margin: 16px 0; padding: 0; border: 0; }
   .stay-involved .check-row label { font-size: 0.92rem; line-height: 1.55; }
   .stay-involved .email-capture { margin: 10px 0 18px 42px; }
