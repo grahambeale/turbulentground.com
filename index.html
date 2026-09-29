@@ -486,6 +486,8 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   sections.forEach(function(s){ var li = document.createElement('li'); var d = document.createElement('span'); li.appendChild(d); rail.appendChild(li); s._dot = d; });
   var scene = 'globe', sceneChangedAt = 0;
   var fadeEl = document.getElementById('stage-fade');
+  // Active zoom transition, if any (see frame(): zoom out of one scene, into the next).
+  var zt = null, ZT_DUR = 2.5;
   var floatCta = document.getElementById('float-cta');
   function isMobile(){ return window.innerWidth <= 900; }
   function pickScene(){
@@ -496,7 +498,14 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       if (d < bestD) { bestD = d; best = s; }
     });
     var name = best.getAttribute('data-scene');
-    if (name !== scene) { scene = name; sceneChangedAt = performance.now(); }
+    if (name !== scene) {
+      var nowT = performance.now();
+      zt = reduce ? null
+         : (scene === 'globe' && name === 'city') ? { kind: 'g2c', from: 'globe', to: 'city', t0: nowT, rotStart: null }
+         : (scene === 'city' && name === 'office') ? { kind: 'c2o', from: 'city', to: 'office', t0: nowT, yawStart: null }
+         : null;
+      scene = name; sceneChangedAt = nowT;
+    }
     sections.forEach(function(s){ s._dot.classList.toggle('on', s === best); });
     fadeEl.style.opacity = scene === 'earthrise' ? (isMobile() ? .2 : 0) : 1;
     var showFloat = scene === 'city' || scene === 'office';
@@ -755,7 +764,12 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   };
   var G = { x:.68, y:.52, r:.44, tilt:.32 };
   if (isMobile()) { G.x = .5; G.y = .3; G.r = .46; }
-  var globeVis = 1, cityVis = 0, officeVis = 0, rotY = -0.6, youT = 0, first = true;
+  var globeVis = 1, cityVis = 0, officeVis = 0, rotY = -0.6, youT = 0, first = true, cityYaw = 0.6;
+  var LONDON = (function(){ var la = 51.5 * Math.PI / 180, lo = -0.1 * Math.PI / 180; return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo)]; })();
+  function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function smooth(x){ x = clamp01(x); return x * x * (3 - 2 * x); }
+  function easeIn(x){ x = clamp01(x); return x * x * x; }
+  function easeOut(x){ x = clamp01(x); return 1 - Math.pow(1 - x, 3); }
 
   function box(){
     var bw, bh, bx, by;
@@ -794,6 +808,13 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     var t = now / 1000, mob = isMobile();
     var isGlobe = scene === 'globe' || scene === 'earthrise';
+    // Zoom transition: phase A (0..0.5) flies into the old scene, phase B
+    // (0.5..1) opens the new scene out of that point.
+    var tp = zt ? (now - zt.t0) / 1000 / ZT_DUR : 1;
+    if (zt && tp >= 1) zt = null;
+    var za = zt ? clamp01(tp / .5) : 0, zb = zt ? clamp01((tp - .5) / .5) : 0;
+    var rs = zt ? (tp < .5 ? zt.from : zt.to) : scene;          // scene actually rendered
+    var Bx = box(), BOX = Bx.x + Bx.w / 2, BOY = Bx.y + Bx.h * .56;
 
     // Globe placement
     var gt = (mob ? GLOBE_M : GLOBE)[isGlobe ? scene : 'globe'], gtilt = GLOBE[isGlobe ? scene : 'globe'].tilt;
@@ -803,11 +824,30 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     globeVis = mix(globeVis, isGlobe ? 1 : 0, ev);
     cityVis = mix(cityVis, scene === 'city' ? 1 : 0, ev);
     officeVis = mix(officeVis, scene === 'office' ? 1 : 0, ev);
+    var outFade = 1 - smooth((za - .72) / .28);                 // old scene fades at the end of phase A
+    if (zt) {
+      globeVis = rs === 'globe' ? outFade : 0;
+      cityVis = rs === 'city' ? (zt.kind === 'g2c' ? zb : outFade) : 0;
+      officeVis = rs === 'office' ? zb : 0;
+    }
 
-    if (!reduce) rotY += dt * 0.12 * (scene === 'earthrise' ? .5 : 1);
-    var ry = rotY + (reduce ? 0 : window.scrollY * 0.0004), rx = G.tilt;
+    var scrollG = reduce ? 0 : window.scrollY * 0.0004;
+    if (zt && zt.kind === 'g2c' && rs === 'globe') {
+      if (zt.rotStart === null) { zt.rotStart = rotY; zt.rotEnd = Math.round((rotY + scrollG) / 6.2832) * 6.2832 - scrollG; }
+      rotY = mix(zt.rotStart, zt.rotEnd, smooth(za / .8));
+    } else if (!reduce) rotY += dt * 0.12 * (scene === 'earthrise' ? .5 : 1);
+    var ry = rotY + scrollG, rx = G.tilt;
     var cyr = Math.cos(ry), syr = Math.sin(ry), cxr = Math.cos(rx), sxr = Math.sin(rx);
-    var R = Math.min(W, H) * G.r, CX = W * G.x, CY = H * G.y;
+    var R = Math.min(W, H) * G.r, CX = W * G.x, CY = H * G.y, gZoom = 1;
+    if (zt && zt.kind === 'g2c' && rs === 'globe') {
+      // Project London with the unzoomed globe, then scale about it while
+      // sliding it to where the city will stand.
+      var lx1 = LONDON[0] * cyr + LONDON[2] * syr, lz1 = -LONDON[0] * syr + LONDON[2] * cyr;
+      var fx0 = CX + lx1 * R, fy0 = CY - (LONDON[1] * cxr - lz1 * sxr) * R;
+      gZoom = 1 + 16 * easeIn(za);
+      var Fx = mix(fx0, BOX, smooth(za)), Fy = mix(fy0, BOY, smooth(za));
+      CX = Fx + (CX - fx0) * gZoom; CY = Fy + (CY - fy0) * gZoom; R *= gZoom;
+    }
     function proj(x, y, z, out){
       var x1 = x * cyr + z * syr, z1 = -x * syr + z * cyr;
       out[0] = CX + x1 * R; out[1] = CY - (y * cxr - z1 * sxr) * R; out[2] = y * sxr + z1 * cxr; return out;
@@ -858,31 +898,55 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     }
 
     // Particle targets
-    var B = box(), pts = scene === 'city' ? city.pts : scene === 'office' ? office.pts : null;
+    var B = Bx, pts = rs === 'city' ? city.pts : rs === 'office' ? office.pts : null;
     var since = (now - sceneChangedAt) / 1000;
-    var dotBase = Math.max(0.9, R / 260);
+    var dotBase = Math.max(0.9, Math.min(W, H) * G.r / 260) * Math.sqrt(gZoom);
     // 3D camera for the city and office: slow continuous yaw like the globe,
     // plus a little extra turn as you scroll.
-    var sc3 = scene === 'office' ? office : city;
-    var yaw = (reduce ? 0.6 : t * 0.16) + (reduce ? 0 : window.scrollY * 0.0005), pitch = sc3.pitch;
+    var sc3 = rs === 'office' ? office : city;
+    var scrollC = reduce ? 0 : window.scrollY * 0.0005;
+    if (zt && zt.kind === 'c2o' && rs === 'city') {
+      // Turn the centre tower's front face to us before flying through a window.
+      if (zt.yawStart === null) { zt.yawStart = cityYaw; zt.yawEnd = Math.round((cityYaw + scrollC) / 6.2832) * 6.2832 - scrollC; }
+      cityYaw = mix(zt.yawStart, zt.yawEnd, smooth(za / .7));
+    } else if (!reduce) cityYaw += dt * 0.16;
+    var spinIn = (zt && zt.kind === 'g2c' && rs === 'city') ? (1 - easeOut(zb)) * 1.4 : 0;
+    var yaw = cityYaw + scrollC + spinIn, pitch = sc3.pitch;
     var cy3 = Math.cos(yaw), sy3 = Math.sin(yaw), cx3 = Math.cos(pitch), sx3 = Math.sin(pitch);
     var S3 = Math.min(B.w * sc3.scale, B.h * .5), OX = B.x + B.w / 2, OY = B.y + B.h * .56, D3 = 3.4;
-    var sceneDot = Math.max(.9, S3 * (scene === 'office' ? .03 : GS) * .42);
+    // Scale for the scene opening out of the zoom point (phase B).
+    var grow = 1;
+    if (zt && rs === zt.to) grow = zt.kind === 'g2c' ? .03 + .97 * easeOut(zb) : .3 + .7 * easeOut(zb);
+    S3 *= grow;
+    var sceneDot = Math.max(.9, S3 / grow * (rs === 'office' ? .03 : GS) * .42) * Math.max(.35, grow);
     B0 = { OX: OX, OY: OY, S: S3 };
+    // Phase A of city -> office: dive into one window of the centre tower.
+    var winZoom = 1, WFx = 0, WFy = 0, wox = 0, woy = 0;
+    if (zt && zt.kind === 'c2o' && rs === 'city') {
+      var WP = { x: .0, y: .12, z: .131, nx: null };
+      var cyw = Math.cos(yaw), syw = Math.sin(yaw), cxw = Math.cos(pitch), sxw = Math.sin(pitch);
+      var wx1 = WP.x * cyw + WP.z * syw, wz1 = -WP.x * syw + WP.z * cyw, wy2 = WP.y * cxw - wz1 * sxw, wz2 = WP.y * sxw + wz1 * cxw, wf = 3.4 / (3.4 - wz2);
+      wox = OX + wx1 * S3 * wf; woy = OY - wy2 * S3 * wf;
+      var cellW = 2 * GS * S3 * wf, zEnd = Math.max(8, (Math.min(W, H) * .16) / cellW);
+      winZoom = 1 + (zEnd - 1) * easeIn(za);
+      WFx = mix(wox, OX, smooth(za)); WFy = mix(woy, OY, smooth(za));
+    }
     function proj3(P, out){
       var x1 = P.x * cy3 + P.z * sy3, z1 = -P.x * sy3 + P.z * cy3;
       var y2 = P.y * cx3 - z1 * sx3, z2 = P.y * sx3 + z1 * cx3, f = D3 / (D3 - z2);
       out[0] = OX + x1 * S3 * f; out[1] = OY - y2 * S3 * f; out[2] = z2; out[4] = f;
+      if (winZoom > 1) { out[0] = WFx + (out[0] - wox) * winZoom; out[1] = WFy + (out[1] - woy) * winZoom; out[4] = f * Math.pow(winZoom, .55); }
       if (P.nx !== null && P.nx !== undefined) { var nz1 = -P.nx * sy3 + P.nz * cy3; out[3] = nz1 * cx3; } else out[3] = 1;
       return out;
     }
-    var warmGlobe = scene === 'earthrise' ? .8 : .35;
+    var warmGlobe = rs === 'earthrise' ? .8 : .35;
+    var zAlpha = !zt ? 1 : (rs === zt.from ? outFade : Math.sqrt(zb));
     for (i = 0; i < M; i++) {
       var tx, ty, ta, ts, tw2;
       if (!pts) {
         var L = land[i % LAND]; proj(L[0], L[1], L[2], tmp);
         var z = tmp[2]; tx = tmp[0]; ty = tmp[1];
-        ta = (i < LAND && z > 0.02) ? 0.18 + Math.min(1, z * 1.35) * 0.62 : 0;
+        ta = (i < LAND && z > 0.02) ? (0.18 + Math.min(1, z * 1.35) * 0.62) * zAlpha : 0;
         ts = dotBase * (0.55 + Math.max(0, z) * 0.75); tw2 = warmGlobe * (0.4 + 0.6 * Math.max(0, z));
       } else {
         var P = pts[i % pts.length];
@@ -890,24 +954,49 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         tx = tmp4[0]; ty = tmp4[1];
         var depth = .5 + .5 * Math.max(0, Math.min(1, (tmp4[2] + 1.3) / 2.6));
         var facing = P.nx === null ? 1 : (tmp4[3] > 0 ? 1 : .28);
-        ta = i < pts.length ? P.a * facing * depth * (P.warm ? (reduce ? .9 : .7 + .3 * Math.sin(t * 1.3 + P.ph)) : .85) : 0;
+        ta = i < pts.length ? P.a * facing * depth * zAlpha * (P.warm ? (reduce ? .9 : .7 + .3 * Math.sin(t * 1.3 + P.ph)) : .85) : 0;
         ts = sceneDot * tmp4[4] * (P.warm ? 1.15 : .9); tw2 = P.warm ? 1 : .15;
       }
-      if (first || reduce) { px[i] = tx; py[i] = ty; pa[i] = ta; ps[i] = ts; pw[i] = tw2; continue; }
+      if (first || reduce || zt) { px[i] = tx; py[i] = ty; pa[i] = ta; ps[i] = ts; pw[i] = tw2; continue; }
       var k = since > delay[i] + 1.2 ? Math.min(1, dt * 12) : since > delay[i] ? Math.min(1, dt * (pts ? 3.2 : 4.5)) : (isGlobe ? Math.min(1, dt * 4.5) : 0);
       px[i] += (tx - px[i]) * k; py[i] += (ty - py[i]) * k;
       pa[i] += (ta - pa[i]) * Math.min(1, dt * 3); ps[i] += (ts - ps[i]) * Math.min(1, dt * 3); pw[i] += (tw2 - pw[i]) * Math.min(1, dt * 3);
     }
     first = false;
+    var winClip = zt && zt.kind === 'c2o' && rs === 'office';
+    var wHalfW = 0, wHalfH = 0;
+    if (winClip) {
+      wHalfW = mix(Math.min(W, H) * .08, Math.max(W, H) * 1.1, easeIn(zb)); wHalfH = wHalfW * 1.25;
+      ctx.save();
+      ctx.fillStyle = 'rgba(11,9,7,1)'; ctx.fillRect(0, 0, W, H);                 // the tower wall around the window
+      var fsp = wHalfW * .9, fa = .5 * (1 - zb);
+      ctx.fillStyle = 'rgba(214,200,178,' + fa.toFixed(3) + ')';
+      for (var gx2 = OX - Math.ceil(W / fsp) * fsp; gx2 < W + fsp; gx2 += fsp / 3) for (var gy3 = OY - Math.ceil(H / fsp) * fsp; gy3 < H + fsp; gy3 += fsp / 3) {
+        if (Math.abs(gx2 - OX) < wHalfW + 4 && Math.abs(gy3 - OY) < wHalfH + 4) continue;
+        ctx.fillRect(gx2 - 1, gy3 - 1, 2, 2);
+      }
+      ctx.beginPath(); ctx.rect(OX - wHalfW, OY - wHalfH, wHalfW * 2, wHalfH * 2); ctx.clip();
+      var inner = ctx.createRadialGradient(OX, OY, 0, OX, OY, wHalfH * 1.2);
+      inner.addColorStop(0, 'rgba(40,28,18,1)'); inner.addColorStop(1, 'rgba(14,11,8,1)');
+      ctx.fillStyle = inner; ctx.fillRect(OX - wHalfW, OY - wHalfH, wHalfW * 2, wHalfH * 2);
+    }
     for (i = 0; i < M; i++) {
       if (pa[i] < 0.02) continue;
       var ck = ((pw[i] * 8 + .5) | 0) * 32 + ((pa[i] * 31 + .5) | 0);
       ctx.fillStyle = colCache[ck] || (colCache[ck] = col(((pw[i] * 8 + .5) | 0) / 8, 0, ((pa[i] * 31 + .5) | 0) / 31));
       var sz = ps[i]; ctx.fillRect(px[i] - sz / 2, py[i] - sz / 2, sz, sz);
     }
+    if (winClip) {
+      ctx.restore();
+      // window frame in dots, bright orange at first, fading as we pass through
+      var fa2 = (1 - zb) * .95, fd = Math.max(2, 3 + zb * 10);
+      ctx.fillStyle = 'rgba(255,170,110,' + fa2.toFixed(3) + ')';
+      for (var e1 = -wHalfW; e1 <= wHalfW; e1 += fd * 2) { ctx.fillRect(OX + e1 - fd / 2, OY - wHalfH - fd / 2, fd, fd); ctx.fillRect(OX + e1 - fd / 2, OY + wHalfH - fd / 2, fd, fd); }
+      for (var e2 = -wHalfH; e2 <= wHalfH; e2 += fd * 2) { ctx.fillRect(OX - wHalfW - fd / 2, OY + e2 - fd / 2, fd, fd); ctx.fillRect(OX + wHalfW - fd / 2, OY + e2 - fd / 2, fd, fd); }
+    }
 
     // Globe arcs (hero only)
-    if (scene === 'globe' && globeVis > .5) {
+    if (rs === 'globe' && globeVis > .5 && !zt) {
       ctx.lineCap = 'round';
       for (i = 0; i < arcs.length; i++) {
         var ar = arcs[i];
@@ -935,7 +1024,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     // City overlay: a volatile valuation line that draws itself from the
     // middle of the screen towards the right, bright at the pen and fading
     // behind it, then clears and redraws with a new random walk.
-    if (cityVis > 0.02) {
+    if (cityVis > 0.02 && !zt) {
       if (!reduce) mkT += dt;
       if (mkT > MK_DRAW + MK_FADE) { mkT = 0; newMarket(); }
       var p = reduce ? 1 : Math.min(1, mkT / MK_DRAW), fadeOut = mkT > MK_DRAW ? Math.max(0, 1 - (mkT - MK_DRAW) / MK_FADE) : 1;
@@ -963,7 +1052,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     }
 
     // Office overlay: notifications popping over screens
-    if (officeVis > 0.02) {
+    if (officeVis > 0.02 && !zt) {
       for (i = 0; i < pings.length; i++) {
         var pg = pings[i];
         if (!reduce) pg.t += dt;
