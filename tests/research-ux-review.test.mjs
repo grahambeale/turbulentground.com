@@ -18,7 +18,7 @@ check('offers each real screen in a separate tab', review.includes('id="interact
 check('stores notes locally rather than posting them', review.includes("localStorage.setItem('tg-ux-review-notes'") && !review.includes("fetch("));
 check('suppresses analytics in UX review mode', /completionPreview \|\| uxReviewPreview \|\| researchEventsSent/.test(journey));
 check('suppresses checkpoint and page-hide saves', /function scheduleCheckpointSave\(\) \{\s*if \(uxReviewPreview\) return;/.test(journey) && /function saveProgressOnHide\(\) \{\s*if \(uxReviewPreview\) return;/.test(journey));
-check('prevents public entry creation in review mode', /if \(publicStartPreview \|\| uxReviewPreview\)/.test(journey));
+check('prevents public entry creation in review mode', /if \(isPublicStartReviewPreview\(\) \|\| uxReviewPreview\)/.test(journey));
 check('prevents completion email and preference writes', (journey.match(/if \(uxReviewPreview\) \{/g) || []).length >= 4);
 
 console.log('\nALL CHECKS PASSED');

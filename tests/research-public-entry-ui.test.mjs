@@ -19,7 +19,9 @@ check("fetch('/api/research-public-start'", "public entry checks and calls the p
 check("window.location.replace(result.data.resumePath)", "successful public start continues with the private return token");
 check("result.data.status === 'return_link_sent'", "an existing unfinished response becomes a secure emailed return-link recovery");
 check("You’ve already started. I’ve emailed your secure return link.", "duplicate starts receive a clear confirmation rather than a generic failure");
-check("previewMode === 'public-start'", "protected visual preview is available without creating participant data");
+check("params.get('preview') === 'public-start'", "protected visual preview is available without creating participant data");
+check("isPublicStartReviewPreview()", "the protected preview gate is re-evaluated when the form is submitted");
+check("previewState === 'existing-participant'", "the preview can safely demonstrate the existing-participant recovery outcome");
 check("you have 14 days to complete the survey", "entry screen leads with the benefit of a flexible completion window");
 check("delete your answers and personal details to protect your privacy", "entry screen explains deletion as a privacy safeguard");
 check('data-open-privacy', "entry screen opens the privacy notice without leaving the survey");

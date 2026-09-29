@@ -1511,10 +1511,14 @@ Thank you for being a part of it.</div>
   // just unguessable in practice) gates it, since ?preview=restrained
   // alone is guessable by anyone who reads this source.
   var RESTRAINED_PREVIEW_KEY = '71890dda2c5d486b8925d282ba29d62bafd59568';
+  function isPublicStartReviewPreview() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('preview') === 'public-start' &&
+      params.get('pk') === RESTRAINED_PREVIEW_KEY;
+  }
   var localRestrainedPreview = previewMode === 'restrained' &&
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
-  var publicStartPreview = previewMode === 'public-start' &&
-    new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
+  var publicStartPreview = isPublicStartReviewPreview();
   var completionPreview = previewMode === 'completion' &&
     new URLSearchParams(window.location.search).get('pk') === RESTRAINED_PREVIEW_KEY;
   var uxReviewPreview = previewMode === 'ux-review' &&
@@ -1672,8 +1676,17 @@ Thank you for being a part of it.</div>
       status.textContent = 'Please complete your name, email and both confirmations.';
       return;
     }
-    if (publicStartPreview || uxReviewPreview) {
-      status.textContent = 'Preview complete. No participant record was created.';
+    // Re-evaluate from the current URL at submit time. This keeps the protected
+    // review fail-closed even if browser navigation restores an older page
+    // state: a review can never fall through to the participant-start API.
+    if (isPublicStartReviewPreview() || uxReviewPreview) {
+      var previewState = new URLSearchParams(window.location.search).get('state');
+      if (isPublicStartReviewPreview() && previewState === 'existing-participant') {
+        status.textContent = 'You’ve already started. I’ve emailed your secure return link.';
+        submit.textContent = 'Email sent';
+      } else {
+        status.textContent = 'Preview complete. No participant record was created.';
+      }
       return;
     }
     submit.disabled = true;
