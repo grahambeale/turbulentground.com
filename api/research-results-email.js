@@ -457,7 +457,7 @@ function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) 
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">Scores run from 1 (strongly disagree) to 5 (strongly agree). There is no “good” score — this is a snapshot of your experience, not an assessment of your ability or organisation.</p>
       ${sections}
       <p style="${textStyle}">As you read, look for answers that surprise you or feel especially important. Those are often the most useful places to start a conversation or make a change.</p>
-      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the Turbulent Ground research survey.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </main></body></html>`;
 }
@@ -497,7 +497,7 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
         </tr></thead><tbody>${rows}</tbody>
       </table>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;margin-top:24px;">The response scale runs from 1, strongly disagree, to 5, strongly agree. These results are descriptive and should not be treated as a psychological assessment.</p>
-      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the Turbulent Ground research survey.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </div></body></html>`;
 }
