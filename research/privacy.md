@@ -87,7 +87,7 @@ I may use AI tools, including services from OpenAI and Anthropic, to help review
 
 The main services involved are:
 - **Airtable:** stores identity records, consent records and survey responses in separate tables
-- **Resend:** sends requested comparisons and study emails
+- **Resend:** sends secure survey return links, requested comparisons and study emails
 - **Vercel:** hosts the website and server functions
 - **OpenAI and Anthropic:** may assist with pseudonymous research analysis and review
 

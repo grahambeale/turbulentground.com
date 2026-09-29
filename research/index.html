@@ -1686,6 +1686,11 @@ Thank you for being a part of it.</div>
     }).then(function (res) {
       return res.json().then(function (data) { return { ok: res.ok, data: data }; });
     }).then(function (result) {
+      if (result.ok && result.data && result.data.status === 'return_link_sent') {
+        status.textContent = 'You’ve already started. I’ve emailed your secure return link.';
+        submit.textContent = 'Email sent';
+        return;
+      }
       if (!result.ok || !result.data || !result.data.resumePath) throw new Error(result.data && result.data.error || 'Could not start the survey.');
       sessionStorage.setItem('tg-public-start-consent', JSON.stringify({ takingPart: true, contactStudyEmails: contactStudyEmails }));
       window.location.replace(result.data.resumePath);
