@@ -186,6 +186,9 @@ h1 em, h2 em { font-style:italic; color:var(--orange-lt); }
 .chapter--center .facts { justify-content:center; }
 
 .tiles { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:30px; }
+/* Reserve clearance below the tile grid on chapters where .float-cta can be showing,
+   so its fixed position never overlaps the last row of tiles on short viewports. */
+#pressure .tiles, #people .tiles, #desk .tiles { margin-bottom:90px; }
 .tile { display:flex; flex-direction:row; align-items:center; gap:14px; padding:16px 18px; border-radius:16px; background:var(--surface); border:1px solid var(--border); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); font-size:17px; line-height:1.3; color:var(--ink); }
 .tile .ico { width:28px; height:28px; color:var(--orange-lt); stroke-width:1.5; }
 
