@@ -364,6 +364,72 @@ function lensCard(label, summary) {
   </td>`;
 }
 
+function legacyComparisonItems(pairs, benchmark) {
+  if (!benchmark.domains) return { different: [], similar: [], questionKeys: [] };
+  const items = DOMAINS.flatMap(([key, label], order) => ["contribution", "conditions"].map((field, fieldOrder) => {
+    const response = pairs?.[key]?.[field];
+    const entry = benchmark.domains?.[key]?.[field];
+    if (typeof response !== "number" || !entry || typeof entry.mean !== "number") return null;
+    return {
+      key,
+      label,
+      field,
+      order: order * 2 + fieldOrder,
+      response,
+      benchmark: entry.mean,
+      difference: response - entry.mean,
+    };
+  })).filter(Boolean);
+  const byDifference = [...items].sort((a, b) => Math.abs(b.difference) - Math.abs(a.difference) || a.order - b.order);
+  const bySimilarity = [...items].sort((a, b) => Math.abs(a.difference) - Math.abs(b.difference) || a.order - b.order);
+  const different = byDifference.filter(item => Math.abs(item.difference) >= 0.5).slice(0, 3);
+  const similar = bySimilarity.filter(item => Math.abs(item.difference) <= 0.35).slice(0, 3);
+  const questionKeys = [];
+  for (const item of different) {
+    if (!questionKeys.includes(item.key)) questionKeys.push(item.key);
+    if (questionKeys.length === 3) break;
+  }
+  return { different, similar, questionKeys };
+}
+
+function comparisonItemList(items, emptyText, mode) {
+  if (!items.length) return `<p style="margin:0;color:#9e8e7c;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">${escapeHtml(emptyText)}</p>`;
+  return `<ul style="margin:0;padding-left:20px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.65;">${items.map(item => {
+    const lens = item.field === "contribution" ? "your contribution" : "conditions around you";
+    const comparison = mode === "similar"
+      ? `Your answer was ${item.response}; the current benchmark is ${item.benchmark.toFixed(1)}.`
+      : `Your answer was ${Math.abs(item.difference).toFixed(1)} ${item.difference > 0 ? "higher" : "lower"} than the current benchmark.`;
+    return `<li style="margin:0 0 10px;"><strong style="color:#e8dcc8;">${escapeHtml(item.label)}</strong> <span style="color:#9e8e7c;">(${escapeHtml(lens)})</span><br>${escapeHtml(comparison)}</li>`;
+  }).join("")}</ul>`;
+}
+
+function legacyComparisonSummary(pairs, benchmark) {
+  if (!benchmark.domains) {
+    return `<section style="margin-top:28px;padding:20px;background:#1c1916;border:1px solid #3a332d;">
+      <h2 style="margin:0 0 10px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">Your comparison is still building</h2>
+      <p style="margin:0;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">You can see your own answers below. I&rsquo;ll only show comparisons when enough people have answered the same questions to make them useful.</p>
+    </section>`;
+  }
+  const insight = legacyComparisonItems(pairs, benchmark);
+  return `<section style="margin-top:28px;">
+    <h2 style="margin:0 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">How you compare with others</h2>
+    <p style="margin:0 0 16px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">This shows where your answers stand out and where they are broadly in line with the current study benchmark. It is a point of comparison, not a score or judgement.</p>
+    <div style="padding:18px;background:#1c1916;border:1px solid #3a332d;">
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Where you differ most</h3>
+      ${comparisonItemList(insight.different, "None of your answers is notably different from the current benchmark.", "different")}
+    </div>
+    <div style="margin-top:12px;padding:18px;background:#1c1916;border:1px solid #3a332d;">
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Where you are broadly similar</h3>
+      ${comparisonItemList(insight.similar, "Your closest matches are shown in the detailed answers below.", "similar")}
+    </div>
+    <div style="margin-top:12px;padding:18px;background:#231c17;border-left:3px solid #e55b20;">
+      <h3 style="margin:0 0 8px;font-family:Georgia,serif;font-size:20px;font-weight:400;color:#e8dcc8;">Questions to consider</h3>
+      <p style="margin:0 0 12px;color:#9e8e7c;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;">The differences are most useful as prompts for reflection. They do not explain why the difference exists.</p>
+      ${reflectionList(insight.questionKeys)}
+    </div>
+  </section>`;
+}
+
 function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) {
   const textStyle = 'font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;';
   const sections = INSTRUMENTS[instrumentVersion].map(domain => {
@@ -404,8 +470,8 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
     const domainBenchmark = benchmark.domains && benchmark.domains[key];
-    const contributionBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.contribution);
-    const conditionsBenchmark = domainBenchmark && benchmarkValue(domainBenchmark.conditions);
+    const contributionBenchmark = typeof pair.contribution === "number" && domainBenchmark && benchmarkValue(domainBenchmark.contribution);
+    const conditionsBenchmark = typeof pair.conditions === "number" && domainBenchmark && benchmarkValue(domainBenchmark.conditions);
     return `<tr>
       <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#e8dcc8;font-family:Arial,sans-serif;font-size:14px;">${escapeHtml(label)}</td>
       <td style="padding:10px 8px;border-bottom:1px solid #3a332d;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;"><p>${escapeHtml(INSTRUMENTS[instrumentVersion].find(d => d.key === key).statements.find(s => s.field === 'contribution').text)}</p>${displayValue(pair.contribution)}${contributionBenchmark ? `<br><span style="font-size:12px;color:#9e8e7c;">${contributionBenchmark}</span>` : ""}${comparisonBar(pair.contribution, domainBenchmark?.contribution)}</td>
@@ -414,37 +480,15 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
   }).join("");
 
   const greeting = name ? `Hello ${escapeHtml(name)},` : "Hello,";
-  const benchmarkNote = benchmark.domains
-    ? `The comparison benchmark is likely to fluctuate frequently during the early phase of this research.`
-    : `A comparison benchmark is not available yet. Your summary will show your own answers only.`;
-  const contributionSummary = lensSummary(pairs, benchmark, "contribution");
-  const conditionsSummary = lensSummary(pairs, benchmark, "conditions");
-  const summaryCards = benchmark.domains ? `<table role="presentation" style="width:100%;border-collapse:separate;border-spacing:8px;margin:18px -8px 8px;">
-    <tr>${lensCard("Your contribution", contributionSummary)}${lensCard("Conditions around you", conditionsSummary)}</tr>
-  </table>
-  <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#9e8e7c;">The orange bar is your response. The light marker is the current study benchmark.</p>` : "";
-  const contributionHighlights = lensHighlights(pairs, benchmark, "contribution");
-  const conditionsHighlights = lensHighlights(pairs, benchmark, "conditions");
-  const highlights = benchmark.domains ? `<h2 style="margin:28px 0 8px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">Benchmark highlights</h2>
-  <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">These are the largest differences in your answers. They are not strengths or weaknesses. Conditions around you reflects your experience of work, not an assessment of your whole organisation.</p>
-  <table role="presentation" style="width:100%;border-collapse:separate;border-spacing:8px;margin:12px -8px 8px;"><tr>
-    ${highlightsCard("Your contribution", contributionHighlights)}
-    ${highlightsCard("Conditions around you", conditionsHighlights)}
-  </tr></table>` : "";
-  const participantSummary = personalSummary(pairs);
-  const benchmarkSection = benchmark.domains ? `<h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your emerging benchmark comparison</h2>
-    <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>
-    ${summaryCards}
-    ${highlights}` : `<h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your emerging benchmark comparison</h2>
-    <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>`;
+  const comparisonSummary = legacyComparisonSummary(pairs, benchmark);
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
-      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
-      ${participantSummary}
-      ${benchmarkSection}
-      <h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your detailed responses</h2>
+      <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">Here&rsquo;s how your experience compares with other people in the study: where your answers stand out, where they are similar, and what might be worth exploring further.</p>
+      ${comparisonSummary}
+      <h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your answers, theme by theme</h2>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">Your contribution and the conditions around you are shown separately. The orange bar is your answer; the light marker is the current study benchmark where one is available.</p>
       <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:24px;">
         <thead><tr>
           <th align="left" style="padding:10px 8px;border-bottom:2px solid #c9470e;color:#e8dcc8;font-family:Arial,sans-serif;font-size:13px;">Theme</th>

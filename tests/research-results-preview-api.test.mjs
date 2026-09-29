@@ -40,8 +40,8 @@ try {
   const body = JSON.parse(send.options.body);
   check("labels the subject as a test", body.subject === "TEST: Your AI shift snapshot");
   check("labels the fictional preview in the email", /fictional responses/i.test(body.html));
-  check("contains the personalised summary", /Your response at a glance/.test(body.html));
-  check("contains the benchmark comparison", /Your emerging benchmark comparison/.test(body.html));
+  check("contains the participant-focused comparison", /How you compare with others/.test(body.html));
+  check("shows differences, similarities and useful questions", /Where you differ most[\s\S]*Where you are broadly similar[\s\S]*Questions to consider/.test(body.html));
   check("does not include a functional unsubscribe link", !/api\/research-unsubscribe/.test(body.html));
 
   console.log("\nALL CHECKS PASSED");

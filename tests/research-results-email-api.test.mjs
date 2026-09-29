@@ -85,26 +85,16 @@ try {
   const sendBody = JSON.parse(send.options.body);
   check("sends to the stored email", sendBody.to[0] === "alex@example.com");
   check("uses an idempotency key", send.options.headers["Idempotency-Key"] === "research-results-valid-token");
-  check("keeps contribution and conditions separate", /difference between them matters/i.test(sendBody.html));
-  check("leads with an immediate personal summary", sendBody.html.indexOf("Your response at a glance") < sendBody.html.indexOf("Your emerging benchmark comparison"));
-  check("shows the participant's most positive personal responses", /What you reported about your own practice[\s\S]*Working relationships[\s\S]*Speaking directly with colleagues/.test(sendBody.html));
-  check("adds an observational one-line personal headline", /One of your highest-rated personal-practice themes today was [\s\S]*: [\s\S]*\./.test(sendBody.html));
-  check("shows reported working-environment conditions", /What you reported about your working environment[\s\S]*Time and workload[\s\S]*Being able to use AI-saved time/.test(sendBody.html));
-  check("shows lower-rated surrounding conditions", /Lower-rated conditions in your answers[\s\S]*Working relationships/.test(sendBody.html));
-  check("shows the largest paired differences", /Differences within your paired answers[\s\S]*Working relationships[\s\S]*own action higher than the condition around you \(5 compared with 2\)/.test(sendBody.html));
-  check("provides tailored discussion questions", /Questions worth discussing[\s\S]*Where could direct conversation protect context/.test(sendBody.html));
-  check("does not present the personal summary as a diagnosis", /does not establish your behaviour, capability or the cause of any pattern[\s\S]*not a score, diagnosis or judgement of your ability/i.test(sendBody.html));
-  check("does not treat paired differences as organisation-wide evidence", /not evidence of its cause or of your organisation as a whole/i.test(sendBody.html));
+  check("leads with the participant benefit", /how your experience compares with other people[\s\S]*where your answers stand out[\s\S]*where they are similar/i.test(sendBody.html));
+  check("keeps contribution and conditions separate", /Your contribution[\s\S]*Conditions around you/i.test(sendBody.html));
+  check("shows the largest benchmark differences", /Where you differ most[\s\S]*Skill and craft[\s\S]*2\.0 higher than the current benchmark/.test(sendBody.html));
+  check("shows where answers are broadly similar", /Where you are broadly similar/.test(sendBody.html));
+  check("provides tailored reflection questions", /Questions to consider[\s\S]*Where does the time needed to check AI-assisted work/.test(sendBody.html));
+  check("does not present the comparison as a score or judgement", /point of comparison, not a score or judgement/i.test(sendBody.html));
+  check("does not claim to explain a difference", /do not explain why the difference exists/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
   check("includes the current study benchmark", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
-  check("warns that the early benchmark may fluctuate", /likely to fluctuate frequently during the early phase/i.test(sendBody.html));
   check("does not reveal the response count", !/eligible completed responses|\(n=\d+\)/i.test(sendBody.html));
-  check("shows lens-level benchmark cards", /Your contribution/.test(sendBody.html) && /Conditions around you/.test(sendBody.html));
-  check("shows a signed benchmark difference", /\+1\.0 above the benchmark/.test(sendBody.html));
-  check("shows concise benchmark highlights", /Benchmark highlights/.test(sendBody.html));
-  check("shows above and below contribution highlights", /Skill and craft[\s\S]*\+2\.0[\s\S]*Time and workload[\s\S]*-1\.0/.test(sendBody.html));
-  check("shows above and below conditions highlights", /Conditions around you[\s\S]*Time and workload[\s\S]*\+2\.0[\s\S]*Judgement[\s\S]*-1\.0/.test(sendBody.html));
-  check("qualifies the organisation comparison", /not an assessment of your whole organisation/i.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
   check("keeps the requested comparison separate from study emails", /requested comparison is separate from optional study emails/i.test(sendBody.html));
   check("includes a one-click study-email unsubscribe route", /https:\/\/www\.turbulentground\.com\/api\/research-unsubscribe\?t=valid-token/.test(sendBody.html));
@@ -120,22 +110,22 @@ try {
   const sends = calls.filter(call => call.url.includes("api.resend.com/emails"));
   const secondSendBody = JSON.parse(sends.at(-1).options.body);
   check("withholds the benchmark below fifteen eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
-  check("explains that the benchmark is unavailable without revealing the count", /A comparison benchmark is not available yet/i.test(secondSendBody.html) && !/Only 14|14 eligible/i.test(secondSendBody.html));
-  check("withholds highlights when the benchmark is unavailable", !/Benchmark highlights/.test(secondSendBody.html));
-  check("still provides personal value before a benchmark exists", /Your response at a glance/.test(secondSendBody.html) && /Questions worth discussing/.test(secondSendBody.html));
+  check("explains that the comparison is still building without revealing the count", /Your comparison is still building/i.test(secondSendBody.html) && !/Only 14|14 eligible/i.test(secondSendBody.html));
+  check("withholds comparisons when the benchmark is unavailable", !/Where you differ most|Where you are broadly similar/.test(secondSendBody.html));
+  check("still shows the participant's answers before a benchmark exists", /Your answers, theme by theme/.test(secondSendBody.html));
 
   const sparseHtml = buildEmailHtml("", {
     d1: { contribution: 5, conditions: 3 },
     d2: { contribution: "not_applicable", conditions: 3 },
   }, { domains: null }, "sparse-token");
-  check("uses an insufficient-data headline for sparse answers", /answered fewer than six personal-practice statements, so no headline theme is shown/.test(sparseHtml));
+  check("does not invent analysis for sparse answers", /Your comparison is still building/.test(sparseHtml));
 
   const midpointPairs = Object.fromEntries(Array.from({ length: 12 }, (_, index) => [
     `d${index + 1}`,
     { contribution: 3, conditions: 3 },
   ]));
   const midpointHtml = buildEmailHtml("", midpointPairs, { domains: null }, "midpoint-token");
-  check("uses an observational headline for midpoint-heavy answers", /None of your personal-practice responses was rated 4 or 5 today/.test(midpointHtml));
+  check("keeps midpoint answers visible without a benchmark", /Your answers, theme by theme/.test(midpointHtml));
   check("does not turn Not applicable into a score", !/Your answers suggest that not applicable/.test(sparseHtml));
   console.log("\nALL CHECKS PASSED");
 } finally {
