@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Turbulent Ground · The AI shift, seen from the ground</title>
-<meta name="description" content="Help build the clearest picture of how people are adapting to AI at work, and what it takes to get the best out of it. An independent research study.">
+<meta name="description" content="Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it. An independent research study.">
 <link rel="canonical" href="https://turbulentground.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://turbulentground.com/">
 <meta property="og:title" content="The AI shift, seen from the ground">
-<meta property="og:description" content="Help build the clearest picture of how people are adapting to AI at work, and what it takes to get the best out of it.">
+<meta property="og:description" content="Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it.">
 <meta property="og:image" content="https://turbulentground.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The AI shift, seen from the ground">
-<meta name="twitter:description" content="Help build the clearest picture of how people are adapting to AI at work, and what it takes to get the best out of it.">
+<meta name="twitter:description" content="Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it.">
 <meta name="twitter:image" content="https://turbulentground.com/og-image.png">
 <meta name="theme-color" content="#0b0907">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -208,7 +208,13 @@ h1 em, h2 em { font-style:italic; color:var(--orange-lt); }
 .promise { list-style:none; display:flex; justify-content:center; flex-wrap:wrap; gap:14px 30px; margin:8px 0 0; font-size:15px; color:var(--ink-mid); }
 .promise li { display:flex; align-items:center; gap:10px; }
 .promise .ico { color:var(--orange-lt); }
-.small { margin-top:30px; font-size:13px; color:var(--muted); }
+.small { margin-top:22px; font-size:13px; color:var(--muted); line-height:1.9; }
+.for { margin:-8px 0 22px; font-size:15px; color:var(--ink-mid); max-width:44ch; }
+.findings { margin:26px auto 0; max-width:52ch; font-size:16px; color:var(--ink-mid); }
+.byline { display:flex; align-items:center; gap:14px; justify-content:center; margin:22px auto 0; max-width:560px; text-align:left; }
+.byline p { font-size:14px; color:var(--ink-mid); line-height:1.5; }
+.byline strong { color:var(--ink); font-weight:500; }
+.byline .mono { flex:none; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; font-family:'Bebas Neue',sans-serif; letter-spacing:.06em; font-size:17px; color:var(--orange-lt); border:1px solid rgba(232,118,58,.55); background:rgba(217,87,28,.08); }
 .small a { color:var(--ink-mid); text-decoration:none; border-bottom:1px solid var(--border-dk); }
 .small a:hover { color:var(--orange-lt); }
 
@@ -376,10 +382,11 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
     <div class="wrap">
       <div class="copy">
         <h1 id="hero-title"><span class="line"><span>The AI shift,</span></span><span class="line"><span><em>seen from the ground.</em></span></span></h1>
-        <p class="lede">Help build the clearest picture of how people are adapting to AI at work, and what it takes to get the best out of it.</p>
+        <p class="lede">Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it.</p>
         <div class="ctas">
           <a href="/research" class="btn btn-primary" data-research-cta="hero">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
+        <p class="for">For product managers, designers, engineers, researchers and the leaders around them.</p>
         <ul class="facts">
           <li><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>24 statements</li>
           <li><svg class="ico" aria-hidden="true"><use href="#i-compass"/></svg>Independent</li>
@@ -452,7 +459,15 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
           <li><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Name kept apart from answers</li>
           <li><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg>14 days to finish</li>
         </ul>
-        <p class="small reveal" style="--d:.3s">Starts with a one-minute welcome video. <a href="/research/privacy">Study privacy notice</a>. Scenes are illustrative, not data.</p>
+        <p class="findings reveal" style="--d:.28s">Findings are published openly, including what the teams getting the best from AI are doing differently.</p>
+        <div class="byline reveal" style="--d:.32s">
+          <span class="mono" aria-hidden="true">GB</span>
+          <p><strong>An independent study by Graham Beale.</strong> 25 years leading product and design teams. Participant, Oxford &lsquo;Organising for AI&rsquo; programme.</p>
+        </div>
+        <p class="small reveal" style="--d:.36s">Starts with a one-minute welcome video. <a href="/research/privacy">Study privacy notice</a>. Scenes are illustrative, not data.<br><a href="/learnings/zero-humans-in-the-loop">Why I&rsquo;m asking: what happened when I let an AI team run this site</a></p>
+        <!-- Findings slot: stays hidden until the study passes its 30-completion
+             threshold, then shows real headline results. Never populate early. -->
+        <div class="findings-slot" id="findings-slot" hidden></div>
       </div>
     </div>
   </section>
@@ -810,10 +825,15 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   var last = performance.now(), running = true;
   document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(frame); } });
 
-  var tmp = [0,0,0], tmp4 = [0,0,0,0,1], B0 = null;
+  var tmp = [0,0,0], tmp4 = [0,0,0,0,1], B0 = null, frameEma = 1 / 60, stride = 1, strideAt = 0;
   function frame(now){
     if (!running) return;
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    // Adaptive quality: if frames are slow (older laptops, phones), draw a
+    // subset of dots, slightly larger; recover when frames speed up.
+    frameEma = frameEma * .95 + dt * .05;
+    if (frameEma > .034 && stride < 3 && now - strideAt > 1500) { stride++; strideAt = now; }
+    else if (frameEma < .02 && stride > 1 && now - strideAt > 4000) { stride--; strideAt = now; }
     var t = now / 1000, mob = isMobile();
     var isGlobe = scene === 'globe' || scene === 'earthrise';
     // Zoom transition: phase A (0..0.5) flies into the old scene, phase B
@@ -996,11 +1016,12 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       inner.addColorStop(0, 'rgba(40,28,18,1)'); inner.addColorStop(1, 'rgba(14,11,8,1)');
       ctx.fillStyle = inner; ctx.fillRect(OX - wHalfW, OY - wHalfH, wHalfW * 2, wHalfH * 2);
     }
-    for (i = 0; i < M; i++) {
+    var strideGrow = Math.sqrt(stride);
+    for (i = 0; i < M; i += stride) {
       if (pa[i] < 0.02) continue;
       var ck = ((pw[i] * 8 + .5) | 0) * 32 + ((pa[i] * 31 + .5) | 0);
       ctx.fillStyle = colCache[ck] || (colCache[ck] = col(((pw[i] * 8 + .5) | 0) / 8, 0, ((pa[i] * 31 + .5) | 0) / 31));
-      var sz = ps[i]; ctx.fillRect(px[i] - sz / 2, py[i] - sz / 2, sz, sz);
+      var sz = ps[i] * strideGrow; ctx.fillRect(px[i] - sz / 2, py[i] - sz / 2, sz, sz);
     }
     if (winClip) {
       ctx.restore();
