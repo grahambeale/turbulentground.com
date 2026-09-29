@@ -382,7 +382,7 @@ function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) 
     return `<section><h2 style="margin:28px 0 4px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">${escapeHtml(domain.name)}</h2>${rows}</section>`;
   }).join('');
   const hasBenchmark = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && Object.values(benchmark.domains || {}).some(d => Object.values(d).some(e => e?.n >= BENCHMARK_MIN_COHORT));
-  return `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
     <main style="max-width:680px;margin:0 auto;padding:32px 20px;">
       <p style="${textStyle}">${name ? 'Hello ' + escapeHtml(name) + ',' : 'Hello,'}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
@@ -437,7 +437,7 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
     ${summaryCards}
     ${highlights}` : `<h2 style="margin:32px 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:400;color:#e8dcc8;">Your emerging benchmark comparison</h2>
     <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#9e8e7c;">${benchmarkNote}</p>`;
-  return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
