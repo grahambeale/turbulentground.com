@@ -16,6 +16,7 @@ const pairs=Object.fromEntries(INSTRUMENTS[PAIRED_VERSION].map(d=>[d.key,{contri
 pairs.d1.conditions='not_applicable';pairs.d2.contribution='skip';delete pairs.d12.conditions;
 const bench={cohortSize:15,domains:Object.fromEntries(Object.keys(pairs).map(k=>[k,{contribution:{mean:3.1,n:15},conditions:{mean:2.2,n:14}}]))};
 const html=buildEmailHtml('<Synthetic>',pairs,bench,'fictional',PAIRED_VERSION);
+assert(!html.includes('Questionnaire version:'));assert(!html.includes(PAIRED_VERSION));
 for(const d of INSTRUMENTS[PAIRED_VERSION])for(const s of d.statements)assert(html.includes(s.text));
 assert(html.includes('&lt;Synthetic&gt;'));assert(!html.includes('<Synthetic>'));
 assert(html.includes('Benchmark: 3.1 / 5'));assert(!html.includes('Benchmark: 2.2 / 5'));

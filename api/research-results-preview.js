@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
   const previewNote = `<p style="padding:10px 12px;background:#3a241a;color:#ef7b45;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Test preview using fictional responses. No participant record was created or changed.</p>`;
   const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only", version)
-    .replace("Your AI shift response summary</h1>", `Your AI shift response summary</h1>${previewNote}`)
+    .replace("Your AI shift: a snapshot of your experience</h1>", `Your AI shift: a snapshot of your experience</h1>${previewNote}`)
     .replace(/<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison[\s\S]*?<\/p>/, "");
 
   const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       from: resendFrom,
       to: [email],
-      subject: "TEST: Your AI shift response summary",
+      subject: "TEST: Your AI shift snapshot",
       html,
     }),
   });

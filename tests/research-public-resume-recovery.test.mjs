@@ -51,6 +51,10 @@ assert(!JSON.stringify(res.body).includes(privateToken), "the private token must
 assert(emailCalls.length === 1, "one secure return-link email should be requested");
 assert(emailCalls[0].body.to[0] === "synthetic@example.test", "the return link must go only to the stored address");
 assert(emailCalls[0].body.html.includes(encodeURIComponent(privateToken)), "the email should contain the private return link");
+assert(emailCalls[0].body.subject === "Continue your Turbulent Ground survey", "the subject should make the next action clear");
+assert(emailCalls[0].body.html.includes("Pick up where you left off"), "the email should lead with a personal, useful message");
+assert(emailCalls[0].body.html.includes("Continue my survey"), "the secure return link should be presented as a clear button");
+assert(emailCalls[0].body.html.includes("background:#131110"), "the return email should use the Turbulent Ground visual style");
 assert(emailCalls[0].headers["Idempotency-Key"], "the recovery email must be idempotent");
 
 console.log("Research public resume recovery checks passed.");

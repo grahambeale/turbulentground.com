@@ -382,17 +382,15 @@ function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) 
     return `<section><h2 style="margin:28px 0 4px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">${escapeHtml(domain.name)}</h2>${rows}</section>`;
   }).join('');
   const hasBenchmark = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && Object.values(benchmark.domains || {}).some(d => Object.values(d).some(e => e?.n >= BENCHMARK_MIN_COHORT));
-  return `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift response summary</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
+  return `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
     <main style="max-width:680px;margin:0 auto;padding:32px 20px;">
       <p style="${textStyle}">${name ? 'Hello ' + escapeHtml(name) + ',' : 'Hello,'}</p>
-      <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
-      <p style="${textStyle}">These are your answers to the questionnaire you completed. Each statement is shown separately: pairs explore different aspects of work and are not combined into a contribution, conditions or overall score.</p>
-      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Questionnaire version: ${instrumentVersion}. Results preserve that version's exact questions and meanings.</p>
-      <p style="${textStyle}">${hasBenchmark ? 'Available comparisons use completed responses to the same question version. They describe the invited sample and may fluctuate as responses arrive. They are not workforce norms.' : 'Your summary shows your own answers only while comparison groups build. Earlier survey versions are kept separate because question wording, explanatory text and presentation changed.'}</p>
-      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">The scale runs from 1, strongly disagree, to 5, strongly agree. Not applicable and Prefer not to say remain separate choices. Higher or lower agreement is not automatically better or worse. These self-reported answers do not establish ability, organisational quality or causes.</p>
-      <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#9e8e7c;">Comparisons are calculated separately for each statement from at least 15 eligible answers to the same question version.</p>
+      <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
+      <p style="${textStyle}">Here’s a clear view of how AI is affecting your work, based on the answers you shared. Use it to spot where things feel supportive, where there may be friction, and what you might want to explore further.</p>
+      <p style="${textStyle}">${hasBenchmark ? 'Where a comparison is available, the light marker shows the current study benchmark. It is a useful point of reference, not a target or judgement.' : 'For now, this shows your own answers only. Your personal comparison is still building and will appear once enough comparable responses are available.'}</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">Scores run from 1 (strongly disagree) to 5 (strongly agree). There is no “good” score — this is a snapshot of your experience, not an assessment of your ability or organisation.</p>
       ${sections}
-      <p style="${textStyle}">Consider which answers you would like to explore further, and what context might help explain them.</p>
+      <p style="${textStyle}">As you read, look for answers that surprise you or feel especially important. Those are often the most useful places to start a conversation or make a change.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the invite-only Turbulent Ground research study.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </main></body></html>`;
@@ -442,8 +440,7 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
   return `<!doctype html><html><body style="margin:0;background:#131110;color:#e8dcc8;">
     <div style="max-width:680px;margin:0 auto;padding:40px 24px;">
       <p style="font-family:Arial,sans-serif;font-size:15px;color:#d0bea2;">${greeting}</p>
-      <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift response summary</h1>
-      <p style="color:#9e8e7c;font-family:Arial,sans-serif;font-size:12px;">Questionnaire version: ${escapeHtml(instrumentVersion)}. Comparisons use this question version only.</p>
+      <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
       <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;">This shows how you answered across the 12 themes. Your contribution and the conditions around you are kept separate because the difference between them matters.</p>
       ${participantSummary}
       ${benchmarkSection}
@@ -529,7 +526,7 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       from: resendFrom,
       to: [email],
-      subject: "Your AI shift response summary",
+      subject: "Your AI shift: your personal snapshot",
       html: buildEmailHtml(name, pairs, benchmark, token, instrumentVersion),
     }),
   });

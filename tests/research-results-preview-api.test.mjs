@@ -38,7 +38,7 @@ try {
   check("sends an authorised preview", res._status === 200 && res._body?.success === true);
   const send = calls.find(call => call.url.includes("api.resend.com/emails"));
   const body = JSON.parse(send.options.body);
-  check("labels the subject as a test", body.subject === "TEST: Your AI shift response summary");
+  check("labels the subject as a test", body.subject === "TEST: Your AI shift snapshot");
   check("labels the fictional preview in the email", /fictional responses/i.test(body.html));
   check("contains the personalised summary", /Your response at a glance/.test(body.html));
   check("contains the benchmark comparison", /Your emerging benchmark comparison/.test(body.html));
