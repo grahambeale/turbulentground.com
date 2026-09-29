@@ -32,8 +32,8 @@ check("omits the comparison panel and requests the email automatically when an a
   /if \(hasEmailOnFile\) \{[\s\S]*?form\.hidden = true;[\s\S]*?form\.requestSubmit\(\)/.test(page));
 check("replaces a completed comparison request with one compact confirmation",
   /results-email-confirmation[\s\S]*?Your comparison is on its way\./.test(page));
-check("opens the thank-you video in the portrait popup and leaves a replay link",
-  /id="outro-video-link"/.test(page) && /openVideo\('outro', outroVideoLink, true\)/.test(page) && /\.video-modal-panel video \{[^}]*aspect-ratio: 9 \/ 16;/.test(page));
+check("opens the thank-you video in the portrait popup, click-to-play",
+  /id="outro-video-link"/.test(page) && /openVideo\('outro', outroVideoLink\)/.test(page) && /\.video-modal-panel video \{[^}]*aspect-ratio: 9 \/ 16;/.test(page));
 check("sends the comparison and study-email choices separately",
   /\/api\/research-capture-email[\s\S]*?studyEmails: resultsStudyEmails\.checked[\s\S]*?\/api\/research-results-email/.test(page));
 check("requires an address when an email opt-in has no address on file",

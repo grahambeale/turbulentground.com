@@ -26,8 +26,9 @@ check("fetch('/research/privacy.html')", "privacy modal loads the maintained pri
 check("sessionStorage.setItem('tg-public-start-consent'", "public entry carries its recorded consent through the private redirect without showing a duplicate consent step");
 if (html.includes('<p class="eyebrow">Your experience of the AI shift</p>')) throw new Error('entry screen should not repeat the research eyebrow');
 if (html.includes('<h1>Before you start</h1>')) throw new Error('consent screen should not show the redundant before-you-start heading');
-if (!html.includes('id="intro-video-link"') || !html.includes('Watch the welcome video again')) throw new Error('consent screen should retain a simple welcome-video replay link');
-if (!html.includes("window.startIntroVideo") || !html.includes("openVideo('intro', trigger, true)")) throw new Error('intro video should open automatically and muted when the consent screen opens');
+if (!html.includes('id="intro-video-link"') || !html.includes('A quick message from Graham')) throw new Error('consent screen should retain a click-to-play welcome-video thumbnail');
+if (html.includes('window.startIntroVideo') || html.includes('window.startOutroVideo')) throw new Error('video should be click-to-play only, not opened automatically when a screen shows');
+if (!html.includes('id="video-modal-skip"')) throw new Error('video popup should offer a prominent way to skip it');
 if ((html.match(/href="\/research\/privacy"/g) || []).length > 1) throw new Error('privacy notice should not be repeated on the consent screen');
 check('.choice-grid { display: grid; grid-template-columns: 1fr; gap: 12px;', "profile choices are presented as a comfortably spaced vertical list");
 
