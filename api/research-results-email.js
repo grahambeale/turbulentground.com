@@ -9,6 +9,7 @@
 
 import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION, PREVIOUS_PAIRED_VERSION } from './_research-instruments.js';
 import { BENCHMARK_MIN_COHORT, computeStatementBenchmark, benchmarkProvenance } from './_research-benchmarks.js';
+import { resolveReferralShareForParticipant } from '../lib/research-phase31/referral-issue.js';
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
 const IDENTITY_TABLE_ID = "tblwpricYYzx4rmiR";
@@ -430,7 +431,26 @@ function legacyComparisonSummary(pairs, benchmark) {
   </section>`;
 }
 
-function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) {
+// Same section as research/index.html's #referral-sharing ("Help me hear
+// more perspectives on AI at work"), reusing its exact privacy wording
+// word for word so the guarantee stays identical between the web page
+// and the email. Placed after the participant's own results/benchmark
+// content and before the unsubscribe/legal footer in both templates
+// below — their own value first, then the ask, matching the web
+// thank-you screen's sequencing. Renders nothing if no shareUrl was
+// resolved (sharing disabled, participant ineligible, or the referral
+// service was unavailable — the results themselves must still send).
+function referralShareSection(shareUrl) {
+  if (!shareUrl) return '';
+  return `<section style="margin-top:28px;padding:20px;background:#1c1916;border:1px solid #3a332d;">
+    <h2 style="margin:0 0 10px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">Help me hear more perspectives on AI at work</h2>
+    <p style="margin:0 0 14px;color:#d0bea2;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">Share this link and anyone who opens it can add their own experience to the study &mdash; the more perspectives we have, the more useful the findings are for everyone.</p>
+    <p style="margin:0 0 14px;"><a href="${escapeHtml(shareUrl)}" style="color:#ef7b45;font-family:Arial,sans-serif;font-size:16px;font-weight:700;word-break:break-all;">${escapeHtml(shareUrl)}</a></p>
+    <p style="margin:0;color:#9e8e7c;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;"><strong style="color:#d0bea2;">The link does not reveal anything about you.</strong><br>It contains a random referral code, not your name, email, answers or results.</p>
+  </section>`;
+}
+
+function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion, shareUrl) {
   const textStyle = 'font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;';
   const sections = INSTRUMENTS[instrumentVersion].map(domain => {
     const rows = domain.statements.map(statement => {
@@ -457,15 +477,16 @@ function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion) 
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">Scores run from 1 (strongly disagree) to 5 (strongly agree). There is no “good” score — this is a snapshot of your experience, not an assessment of your ability or organisation.</p>
       ${sections}
       <p style="${textStyle}">As you read, look for answers that surprise you or feel especially important. Those are often the most useful places to start a conversation or make a change.</p>
+      ${referralShareSection(shareUrl)}
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the Turbulent Ground research survey.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </main></body></html>`;
 }
 
-export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion = LEGACY_VERSION) {
+export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion = LEGACY_VERSION, shareUrl = '') {
   if (!INSTRUMENTS[instrumentVersion]) throw new Error('Unknown questionnaire version');
   if (instrumentVersion === PAIRED_VERSION || instrumentVersion === PREVIOUS_PAIRED_VERSION) {
-    return buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion);
+    return buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion, shareUrl);
   }
   const rows = DOMAINS.map(([key, label]) => {
     const pair = pairs[key] || {};
@@ -497,6 +518,7 @@ export function buildEmailHtml(name, pairs, benchmark, token, instrumentVersion 
         </tr></thead><tbody>${rows}</tbody>
       </table>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;margin-top:24px;">The response scale runs from 1, strongly disagree, to 5, strongly agree. These results are descriptive and should not be treated as a psychological assessment.</p>
+      ${referralShareSection(shareUrl)}
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">You received this because you requested your summary after completing the Turbulent Ground research survey.</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison is separate from optional study emails. If you agreed to future emails, you can <a href="https://www.turbulentground.com/api/research-unsubscribe?t=${encodeURIComponent(token)}" style="color:#ef7b45;">unsubscribe at any time</a>.</p>
     </div></body></html>`;
@@ -560,6 +582,26 @@ export default async function handler(req, res) {
   if (instrumentVersion === LEGACY_VERSION && benchmark.cohortSize < BENCHMARK_MIN_COHORT) benchmark.domains = null;
 
   const name = identity.fields[IDENTITY_FIELD.name] || "";
+
+  // Same referral link the web thank-you screen offers, resolved through
+  // the same shared logic. Sharing must never block the results email
+  // itself sending, so any failure here is swallowed and the email goes
+  // out without the section rather than not going out at all.
+  let shareUrl = "";
+  if (process.env.RESEARCH_SHARING_UI_ENABLED === "true" && process.env.RESEARCH_REFERRAL_ISSUE_ENABLED === "true") {
+    const referralSecret = process.env.RESEARCH_REFERRAL_SECRET;
+    if (referralSecret && referralSecret.length >= 32) {
+      try {
+        const referral = await resolveReferralShareForParticipant({
+          identity, response: responseRecord, airtableToken, referralSecret,
+        });
+        if (referral) shareUrl = `https://www.turbulentground.com${referral.sharePath}`;
+      } catch (error) {
+        console.error("Results email referral resolution failed:", error.message);
+      }
+    }
+  }
+
   const emailResponse = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -571,7 +613,7 @@ export default async function handler(req, res) {
       from: resendFrom,
       to: [email],
       subject: "Your AI shift: your personal snapshot",
-      html: buildEmailHtml(name, pairs, benchmark, token, instrumentVersion),
+      html: buildEmailHtml(name, pairs, benchmark, token, instrumentVersion, shareUrl),
     }),
   });
   if (!emailResponse.ok) {

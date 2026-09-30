@@ -67,8 +67,16 @@ export default async function handler(req, res) {
   const resendFrom = process.env.RESEND_FROM;
   if (!resendKey || !resendFrom) return res.status(500).json({ error: "Email is not configured" });
 
+  // A fictional-but-correctly-shaped example code, same pattern
+  // research/referral-sharing.js already uses for its own UI preview mode
+  // (window.__TG_COMPLETION_PREVIEW__) — this endpoint's contract is "no
+  // participant record read or written", so it must never call
+  // resolveReferralShareForParticipant, which would try to look up and
+  // create a real Airtable referral record for a token that doesn't exist.
+  const PREVIEW_SHARE_URL = "https://www.turbulentground.com/research?r=K7M4PX";
+
   const previewNote = `<p style="padding:10px 12px;background:#3a241a;color:#ef7b45;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Test preview using fictional responses. No participant record was created or changed.</p>`;
-  const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only", version)
+  const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only", version, PREVIEW_SHARE_URL)
     .replace("Your AI shift: a snapshot of your experience</h1>", `Your AI shift: a snapshot of your experience</h1>${previewNote}`)
     .replace(/<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">This requested comparison[\s\S]*?<\/p>/, "");
 
