@@ -1,5 +1,13 @@
 # Turbulent Ground research project: on-demand agent workflow
 
+> **Phase 4 compatibility notice — 30 September 2026.** This protocol is a
+> historical and transitional input for the former standalone research lane.
+> New product changes use `operations/work-state.json` and
+> `operations/workflow.md` as the canonical lease and workflow. Do not claim a
+> new research lease for Phase 4 work. An already-active legacy run may finish
+> only its recorded checkpoint and must then hand off through the shared
+> workflow. Do not rewrite or delete the historical research record.
+
 **Version:** 1.0
 
 **Applies to:** the invite-only research study and its participant experience

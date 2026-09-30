@@ -1,0 +1,13 @@
+{
+  "_comment": "Exclusive Phase 4 product-change lease. Read operations/workflow.md before changing this file.",
+  "schema_version": 1,
+  "active_run": null,
+  "runner": null,
+  "work_item": null,
+  "phase": null,
+  "started_at": null,
+  "lease_expires": null,
+  "last_checkpoint": null,
+  "airtable_record_id": null,
+  "openspec_change": null
+}

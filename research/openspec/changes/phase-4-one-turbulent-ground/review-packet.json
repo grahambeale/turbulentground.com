@@ -1,0 +1,14 @@
+{
+  "revision": 1,
+  "status": "Awaiting Graham's specification decision",
+  "feedback_id": "FB-20260930-PHASE4",
+  "airtable_record_id": "rec7mPoyuHoPNDl8P",
+  "created_at": "2026-09-30T18:57:09Z",
+  "approval_effect": "Approval authorises design, architecture, route inventory and migration planning only. It does not authorise implementation or production release.",
+  "files": {
+    "evidence-snapshot.md": "9e7725e554f93a610509e7f21166ca8880bf0487ccf589db8f0bfc56e058994b",
+    "proposal.md": "e1ecf368232b6f454031be4d1b561871738e2547854a84a8ba6efa6ec4e65ad3",
+    "specs/one-turbulent-ground/spec.md": "97d9f0c5158076eb9b27ede4852632dc3c1472d1a1e3d65386f7ffcec3b9dcfa",
+    "review.md": "076c94bd23eb4d1f98fbbf4479fb3bbc83e8538158293c1478b18b80a33f288a"
+  }
+}

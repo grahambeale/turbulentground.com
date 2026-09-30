@@ -1,0 +1,19 @@
+{
+  "status": "approved",
+  "approver": "Graham Beale",
+  "approved_at": "2026-09-30T20:02:00Z",
+  "decision_quote": "approve Release 1 revision 1 to begin local implementation.",
+  "decision_source": "Direct Graham user message immediately following presentation of the Release 1 revision 1 review packet",
+  "revision": 1,
+  "files": {
+    "release-1-governance-plan.md": "a4cb048fba38ecf014e2865eb5350437b706ad3d4162aeba14f4fa603fd9347e",
+    "release-1-review.md": "b62ab51e1375a7964424c714a4b4223e2946deddc9e5a2466480561a92f16e52",
+    "design-architecture-approval.json": "5af4fd22bf098b97b85afe136c9758ab3a282e16fc58ce6ec3756ae9cb8b68b6"
+  },
+  "approval_effect": "Authorises local implementation of the listed Release 1 governance files and preparation of an Airtable schema-change sub-packet.",
+  "airtable_schema_mutation_approved": false,
+  "commit_approved": false,
+  "push_approved": false,
+  "preview_approved": false,
+  "production_approved": false
+}

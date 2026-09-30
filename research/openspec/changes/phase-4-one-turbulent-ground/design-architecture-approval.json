@@ -1,0 +1,18 @@
+{
+  "status": "approved",
+  "approver": "Graham Beale",
+  "approved_at": "2026-09-30T19:55:00Z",
+  "decision_quote": "proceed",
+  "decision_source": "Direct Graham user message immediately following presentation of Phase 4 design and architecture revision 2",
+  "revision": 2,
+  "packet_sha256": "39cc508ea1a792a9f45e237dc95482ec0e6aa285f550b6b278fc5f014b209566",
+  "files": {
+    "route-inventory.md": "bcd32a11cf6282aea9b7bc232c72a152e2ebd73394996f9f2eb5ed6aaff01606",
+    "design.md": "32717e9370459e2dc773624020b7444615a6e9e4b351ff5d939697cbcd8578a6",
+    "architecture.md": "57dbf2c2e9dc5a3fcc3107641e878dca4d24d99c0ab5b628cd1180345aa5d61b",
+    "design-architecture-review.md": "31a643d47f313b501b0890c1abee1ab99da6bb110e95dc66a0f7b4a0f3775239"
+  },
+  "approval_effect": "Authorises preparation of the Release 1 governance implementation packet only.",
+  "implementation_approved": false,
+  "production_approved": false
+}

@@ -1,0 +1,18 @@
+{
+  "revision": 2,
+  "status": "Awaiting Graham's design and architecture revision 2 decision",
+  "parent_specification_revision": 1,
+  "parent_feedback_id": "FB-20260930-PHASE4",
+  "feedback_id": "FB-20260930-PHASE4-DESIGN1",
+  "airtable_record_id": "recB4UkJTaDzk1A7X",
+  "created_at": "2026-09-30T19:27:23Z",
+  "updated_at": "2026-09-30T19:47:00Z",
+  "basis": "Revision 1 plus Graham's review amendments on privacy, About, invitations, admin information architecture and Writing retirement.",
+  "approval_effect": "Approval authorises preparation of the Release 1 governance implementation packet only. It does not authorise code changes, Airtable schema mutation or production release.",
+  "files": {
+    "route-inventory.md": "bcd32a11cf6282aea9b7bc232c72a152e2ebd73394996f9f2eb5ed6aaff01606",
+    "design.md": "32717e9370459e2dc773624020b7444615a6e9e4b351ff5d939697cbcd8578a6",
+    "architecture.md": "57dbf2c2e9dc5a3fcc3107641e878dca4d24d99c0ab5b628cd1180345aa5d61b",
+    "design-architecture-review.md": "31a643d47f313b501b0890c1abee1ab99da6bb110e95dc66a0f7b4a0f3775239"
+  }
+}

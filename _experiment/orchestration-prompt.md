@@ -1,5 +1,13 @@
 # TurbulentGround — AI Product Team Orchestration Prompt
 
+> **Phase 4 compatibility notice — 30 September 2026.** This protocol is a
+> historical and transitional input for the former main-site sprint system.
+> New product changes use `operations/work-state.json` and
+> `operations/workflow.md` as the canonical lease and workflow. Do not claim a
+> new sprint for Phase 4 work. An already-active legacy run may finish only its
+> recorded checkpoint and must then hand off through the shared workflow. Do
+> not rewrite or delete the historical sprint record.
+
 **Version:** 3.18
 **Last updated:** 26 August 2026
 **Applies from:** Sprint 18

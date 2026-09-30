@@ -1,0 +1,37 @@
+{
+  "revision": 1,
+  "status": "Local implementation complete; commit, push and release unapproved",
+  "feedback_id": "FB-20260930-PHASE4-REL1-GOV",
+  "airtable_record_id": "recsT57vF8yTdGAPD",
+  "implemented_at": "2026-09-30T20:10:00Z",
+  "mutable_lease_note": "operations/work-state.json is intentionally excluded from the immutable hashes because its run fields are cleared at handoff. Its schema and null resting state are verified separately.",
+  "files": {
+    "PHASE-4.md": "60539670704620ed1a5e2417e48d72085d30a6ab9a67cfaa9ba805e7e6f9ca24",
+    "operations/workflow.md": "a9d418d11a492ac5b9973e07f08b7271711332145df0606e2d9b1277abc2f8b9",
+    "operations/decision-log.md": "ebe3b115f0ec8bfdbcf12daacfef3aada0a4720a5fb511b99a081a5e103581a6",
+    "operations/backlog.md": "22ec1a4c14d625f5f1e2e3d07125e9a7ca88221561985243394779cb78a5453c",
+    "operations/handoffs/README.md": "40b6ea9d4fd37ba3e73cdfafa5710e301e8f8a183fa97d0c80920525c14caa73",
+    "AGENTS.md": "133372d1b6891a5d07f5ae74fee190f2cfadb146855a1f39f35abf61aae359e3",
+    "CLAUDE.md": "77d90a7a25c9a039e4fb97d1f2ea9cc9ffd3102fc22d3a0c35142dbea628425d",
+    "_experiment/orchestration-prompt.md": "2bbe76e7770d41edea6a4e1cb6af12073cba5420c7d70d34cd9284873296d6b9",
+    "research/agent-workflow.md": "0f859c34acdd3f2ede298f2183c45c728dd0f0410b3000c699e7cfec95fed0ef",
+    "release-1-implementation-approval.json": "6887902faf02521d490c527c4942e05f57bacfeb237bfe4f90c4e23e1a7e4898",
+    "airtable-schema-change.md": "2b456b377ba17ecafe8ff80513d7cab187ab3d701d99c4ad53d836a4e039b19e",
+    "release-1-implementation-review.md": "4dc2d1933a54683a28f676e2fd4dc7c9c625fd695e3688c9c679b5dbaa3e4721"
+  },
+  "verification": {
+    "json": "passed",
+    "paths": "passed",
+    "lease_cases": "passed",
+    "openspec_strict": "passed",
+    "diff_check": "passed",
+    "fresh_codex_discovery": "passed",
+    "fresh_claude_discovery": "passed",
+    "airtable_schema_read": "passed",
+    "airtable_schema_mutation": "not performed"
+  },
+  "commit_approved": false,
+  "push_approved": false,
+  "preview_approved": false,
+  "production_approved": false
+}

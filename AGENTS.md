@@ -1,38 +1,16 @@
-# TurbulentGround runner bootstrap
+# Turbulent Ground runner bootstrap
 
-First determine which work lane the request belongs to.
+Before acting on any product request:
 
-## Research project lane
+1. Read `operations/work-state.json` first.
+2. Read `PHASE-4.md` and `operations/workflow.md` in full.
+3. Read the relevant Airtable and OpenSpec item before claiming authority.
+4. Inspect the shared checkout for overlapping work.
+5. Follow the shared lease, approval, implementation and release gates exactly.
 
-Use this lane when the request is exclusively about the invite-only research
-project: `research/**`, `api/research-*.js`, research-specific tests, study
-emails or media, the Research Project Feedback table, or the participant
-experience.
+`operations/workflow.md` is the single source of truth for new work. The former
+`_experiment/` and `research/` workflows are compatibility evidence only unless
+the shared workflow explicitly directs a legacy continuation.
 
-1. Read `research/work-state.json` first.
-2. Read `research/agent-workflow.md` in full and follow it as the single source
-   of truth for the research project.
-3. Do not claim, update or wait for a main-site sprint. Research work is
-   initiated on demand, not by sprint cadence.
-4. Do not modify `_experiment/sprint-state.json` or write research work into
-   the main-site sprint logs.
-
-## Main-site lane
-
-For all other work, including the Care Capital diagnostic, learnings library,
-homepage and site-wide systems:
-
-1. Read `_experiment/sprint-state.json` first.
-2. Read `_experiment/orchestration-prompt.md` in full.
-3. Read every additional input required by that protocol.
-4. Follow the shared sprint protocol exactly; it is the single source of truth.
-5. Use `_experiment/sprint-state.json` as the sole source of sprint and session state.
-
-If a request genuinely spans both lanes, separate it into independently
-reviewable work items. Do not let a research change silently alter the wider
-site or let a main-site sprint absorb research-project work.
-
-For both lanes, work in the shared `/Users/graham/turbulentground` checkout,
-check for overlapping changes before writing, complete the relevant capability
-preflight, never fabricate data, and never commit changes authored by another
-active session.
+Never fabricate unavailable data, expose participant information, infer release
+approval, or commit changes authored by another active session.

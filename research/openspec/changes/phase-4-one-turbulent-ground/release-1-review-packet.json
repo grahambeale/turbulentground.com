@@ -1,0 +1,14 @@
+{
+  "revision": 1,
+  "status": "Awaiting Graham's Release 1 governance implementation decision",
+  "parent_feedback_id": "FB-20260930-PHASE4-DESIGN1",
+  "feedback_id": "FB-20260930-PHASE4-REL1-GOV",
+  "airtable_record_id": "recsT57vF8yTdGAPD",
+  "created_at": "2026-09-30T19:55:00Z",
+  "approval_effect": "Approval permits local implementation of the listed governance files and preparation of an Airtable schema-change sub-packet. It does not permit schema mutation, commit, push, preview, deployment or production release.",
+  "files": {
+    "release-1-governance-plan.md": "a4cb048fba38ecf014e2865eb5350437b706ad3d4162aeba14f4fa603fd9347e",
+    "release-1-review.md": "b62ab51e1375a7964424c714a4b4223e2946deddc9e5a2466480561a92f16e52",
+    "design-architecture-approval.json": "5af4fd22bf098b97b85afe136c9758ab3a282e16fc58ce6ec3756ae9cb8b68b6"
+  }
+}

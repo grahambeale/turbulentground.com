@@ -1,0 +1,19 @@
+{
+  "status": "approved",
+  "approver": "Graham Beale",
+  "approved_at": "2026-09-30T19:23:19Z",
+  "decision_quote": "ok approved",
+  "decision_source": "Direct Graham user message in the Codex task immediately following presentation of Phase 4: One Turbulent Ground OpenSpec revision 1",
+  "review_answers": "Revision 1 approved without amendments for route inventory, design and architecture planning only.",
+  "revision": 1,
+  "packet_sha256": "16a6777ea3f447202c2d97644bff4c954fac33f6f23ed025cdae8b896c4bde38",
+  "airtable_review_notes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "files": {
+    "evidence-snapshot.md": "9e7725e554f93a610509e7f21166ca8880bf0487ccf589db8f0bfc56e058994b",
+    "proposal.md": "e1ecf368232b6f454031be4d1b561871738e2547854a84a8ba6efa6ec4e65ad3",
+    "specs/one-turbulent-ground/spec.md": "97d9f0c5158076eb9b27ede4852632dc3c1472d1a1e3d65386f7ffcec3b9dcfa",
+    "review.md": "076c94bd23eb4d1f98fbbf4479fb3bbc83e8538158293c1478b18b80a33f288a"
+  },
+  "implementation_approved": false,
+  "production_approved": false
+}
