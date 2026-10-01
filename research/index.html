@@ -1234,17 +1234,17 @@ Thank you for being a part of it.</div>
   function openPrivacy() {
     modal.showModal();
     if (loaded) return;
-    fetch('/research/privacy.html')
+    fetch('/privacy.html')
       .then(function (response) { if (!response.ok) throw new Error('Privacy notice unavailable'); return response.text(); })
       .then(function (html) {
         var parsed = new DOMParser().parseFromString(html, 'text/html');
-        var main = parsed.querySelector('main');
-        if (!main) throw new Error('Privacy notice unavailable');
-        content.innerHTML = main.innerHTML;
+        var participation = parsed.querySelector('#participation');
+        if (!participation) throw new Error('Privacy notice unavailable');
+        content.innerHTML = participation.innerHTML;
         loaded = true;
       })
       .catch(function () {
-        content.innerHTML = '<p>The privacy notice could not be loaded here. <a href="/research/privacy">Open the privacy notice on this page</a>.</p>';
+        content.innerHTML = '<p>The privacy notice could not be loaded here. <a href="/privacy#participation">Open the participation privacy information</a>.</p>';
       });
   }
 

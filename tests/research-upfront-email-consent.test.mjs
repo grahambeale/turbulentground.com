@@ -1,8 +1,7 @@
 import fs from "node:fs";
 
 const page = fs.readFileSync(new URL("../research/index.html", import.meta.url), "utf8");
-const privacyHtml = fs.readFileSync(new URL("../research/privacy.html", import.meta.url), "utf8");
-const privacyMd = fs.readFileSync(new URL("../research/privacy.md", import.meta.url), "utf8");
+const privacyHtml = fs.readFileSync(new URL("../privacy.html", import.meta.url), "utf8");
 
 function check(label, condition) {
   if (!condition) throw new Error(`FAIL  ${label}`);
@@ -41,10 +40,8 @@ check("requires an address when an email opt-in has no address on file",
 check("persists the email and consent before opening the context questions",
   /emailSave\.then\([\s\S]*?\/api\/research-save-progress[\s\S]*?Research: Consent Completed[\s\S]*?showScreen\('screen-context'\)/.test(page));
 check("privacy notice describes the upfront choice as separate and optional",
-  /separate, optional checkbox on the same screen/.test(privacyHtml) &&
-  /separate, optional checkbox on the same screen/.test(privacyMd));
+  /separate, optional checkbox on the same screen/.test(privacyHtml));
 check("privacy notice explains the second opportunity to review the preference",
-  /a second optional checkbox lets you review or change that email preference/.test(privacyHtml) &&
-  /a second optional checkbox lets you review or change that email preference/.test(privacyMd));
+  /a second optional checkbox lets you review or change that email preference/.test(privacyHtml));
 
 console.log("\nALL CHECKS PASSED");

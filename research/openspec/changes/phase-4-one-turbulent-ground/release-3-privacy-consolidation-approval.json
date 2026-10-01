@@ -1,0 +1,15 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "release": 3,
+  "revision": 1,
+  "approval_quote": "proceed",
+  "authority": {
+    "local_implementation": true,
+    "verified_preview": true,
+    "production_release": false
+  },
+  "approved_at": "2026-10-01T19:30:51Z",
+  "plan_sha256": "9409a2216a748f25d9edf407835a4c1eb407f64c5b8d27ef40ef3991d3dd19aa",
+  "review_sha256": "229b392ceda67ae0c61eca080be74ec0415be3a7c282b5e35d47976a671f5284",
+  "airtable_record_id": "recSFQpoaa9Yr34iq"
+}

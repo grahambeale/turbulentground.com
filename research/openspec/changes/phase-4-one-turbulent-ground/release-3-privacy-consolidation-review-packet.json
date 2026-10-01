@@ -1,0 +1,20 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "release": "Release 3 privacy consolidation",
+  "revision": 1,
+  "airtable_feedback_id": "FB-20261001-PHASE4-REL3-PRIVACY",
+  "airtable_record_id": "recSFQpoaa9Yr34iq",
+  "decision": "pending",
+  "implementation_authority": false,
+  "production_authority": false,
+  "plan": {
+    "path": "release-3-privacy-consolidation-plan.md",
+    "sha256": "9409a2216a748f25d9edf407835a4c1eb407f64c5b8d27ef40ef3991d3dd19aa"
+  },
+  "review": {
+    "path": "release-3-privacy-consolidation-review.md",
+    "sha256": "229b392ceda67ae0c61eca080be74ec0415be3a7c282b5e35d47976a671f5284"
+  },
+  "prepared_at": "2026-10-01T19:16:00Z",
+  "prepared_by": "Codex"
+}

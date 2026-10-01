@@ -3,8 +3,7 @@
 import fs from "node:fs";
 
 const html = fs.readFileSync(new URL("../research/index.html", import.meta.url), "utf8");
-const privacyHtml = fs.readFileSync(new URL("../research/privacy.html", import.meta.url), "utf8");
-const privacyMd = fs.readFileSync(new URL("../research/privacy.md", import.meta.url), "utf8");
+const privacyHtml = fs.readFileSync(new URL("../privacy.html", import.meta.url), "utf8");
 
 check('id="screen-public-start"', "public entry screen is present");
 check('id="public-start-name"', "public entry requires a name field");
@@ -26,7 +25,8 @@ check("you have 14 days to complete the survey", "entry screen leads with the be
 check("delete your answers and personal details to protect your privacy", "entry screen explains deletion as a privacy safeguard");
 check('data-open-privacy', "entry screen opens the privacy notice without leaving the survey");
 check('id="privacy-modal"', "privacy notice has a large in-page modal");
-check("fetch('/research/privacy.html')", "privacy modal loads the maintained privacy notice");
+check("fetch('/privacy.html')", "privacy modal loads the maintained privacy notice");
+check("parsed.querySelector('#participation')", "privacy modal extracts the participation layer");
 check("sessionStorage.setItem('tg-public-start-consent'", "public entry carries its recorded consent through the private redirect without showing a duplicate consent step");
 if (html.includes('<p class="eyebrow">Your experience of the AI shift</p>')) throw new Error('entry screen should not repeat the research eyebrow');
 if (html.includes('<h1>Before you start</h1>')) throw new Error('consent screen should not show the redundant before-you-start heading');
@@ -36,7 +36,7 @@ if (!html.includes('id="video-modal-skip"')) throw new Error('video popup should
 if ((html.match(/href="\/research\/privacy"/g) || []).length > 1) throw new Error('privacy notice should not be repeated on the consent screen');
 check('.choice-grid { display: grid; grid-template-columns: 1fr; gap: 12px;', "profile choices are presented as a comfortably spaced vertical list");
 
-for (const [name, text] of [["privacy HTML", privacyHtml], ["privacy Markdown", privacyMd]]) {
+for (const [name, text] of [["privacy HTML", privacyHtml]]) {
   if (!text.includes("public study page")) throw new Error(`${name} must describe public participation`);
   if (!text.includes("after 14 days")) throw new Error(`${name} must state incomplete-response deletion timing`);
 }

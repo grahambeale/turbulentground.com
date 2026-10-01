@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Privacy notice for the Turbulent Ground website: what the site collects, why, where it goes and your rights.">
 <link rel="canonical" href="https://turbulentground.com/privacy">
 <title>Privacy notice | Turbulent Ground</title>
@@ -130,7 +131,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 }
 @media(max-width:720px) { .nav-links { display:none; } .nav-toggle { display:flex; } }
 /* NAV_CSS_END */
-  main { margin: 46px auto 110px; width: min(100% - 40px, 760px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 104px; }
+  main { margin: 46px auto 110px; width: min(100% - 40px, 800px); }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 8vw, 62px); font-weight: 300; line-height: 1.05; margin-bottom: 22px; }
   h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin: 54px 0 16px; }
   p { color: var(--ink-mid); margin-bottom: 18px; }
@@ -146,6 +148,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   th { background: var(--surface); color: var(--ink); font-weight: 500; }
   tr:last-child td { border-bottom: 0; }
   .updated { border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; margin-top: 58px; padding-top: 20px; }
+  .privacy-summary { font-size: 1.08rem; max-width: 700px; }
+  .privacy-contents { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 28px 0 18px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  .privacy-contents strong { flex-basis: 100%; }
+  .privacy-section { scroll-margin-top: 104px; }
+  .privacy-section > h2:first-child { margin-top: 64px; }
+  .data-list { display: grid; gap: 12px; margin: 24px 0 30px; }
+  .data-item { border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; background: rgba(38,33,28,.42); }
+  .data-item dt { color: var(--ink); font-weight: 500; }
+  .data-item dd { color: var(--ink-mid); margin-top: 6px; }
+  .data-item .basis { color: var(--muted); font-size: .92rem; margin-top: 8px; }
   @media (max-width: 520px) { main { margin-top: 24px; } h2 { margin-top: 44px; } }
   @media print {
     :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
@@ -227,53 +239,133 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 <!-- NAV_END -->
 <main>
   <h1>Privacy notice</h1>
-  <p>This notice covers the Turbulent Ground website. If you take part in the AI shift research study, the <a href="/research/privacy">study privacy notice</a> also applies and explains the study in full.</p>
+  <p class="privacy-summary">One notice explains how I use information across Turbulent Ground, including when you browse the site, send feedback or take part in the AI shift research.</p>
 
-  <h2>Who is responsible for your data</h2>
-  <p>Turbulent Ground is run by me, <strong>Graham Beale</strong>. It is not a company or a separate legal entity. I am the data controller, the person legally responsible for how your information is collected and used.</p>
-  <p>ICO registration reference: <strong>ZC232927</strong>. You can check the public register at <a href="https://ico.org.uk/register">ico.org.uk/register</a>.</p>
-  <p>For anything about your information, email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a>.</p>
+  <nav class="privacy-contents" aria-label="Privacy notice sections">
+    <strong>On this page</strong>
+    <a href="#website">Using the website</a>
+    <a href="#participation">Taking part</a>
+    <a href="#services">Services and AI</a>
+    <a href="#retention">How long I keep data</a>
+    <a href="#rights">Your rights</a>
+  </nav>
 
-  <h2>What this site collects, and why</h2>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>What</th><th>Why</th><th>Legal basis</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Anonymous usage statistics</strong> from Plausible Analytics: pages viewed, referring site, broad location from your IP address (not stored), device type, and site events such as button clicks or page errors</td><td>To understand how the site is used and to spot problems</td><td>Legitimate interests</td></tr>
-        <tr><td><strong>Feedback you send</strong> with the feedback button: your message, the address of the page you were on and the time you sent it</td><td>To fix problems and improve the site</td><td>Legitimate interests</td></tr>
-        <tr><td><strong>Diagnostic submissions</strong> (the Care Capital diagnostic, which is no longer promoted on this site): your work email, optional name and team name, your 25 answers and scores, optional role, organisation size, sector and country, consent choices, and any tracked-link source</td><td>To send results you asked for and produce aggregate analysis</td><td>Consent</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="important">
-    <p>Plausible does not use cookies and does not track you across sites. This site sets no advertising or tracking cookies.</p>
-  </div>
-  <p>Please don't include personal details in feedback. If you do, I will treat them as described here and delete anything that isn't needed.</p>
+  <section class="privacy-section" id="controller">
+    <h2>Who is responsible for your data</h2>
+    <p>Turbulent Ground is run by me, <strong>Graham Beale</strong>. It is not a company or a separate legal entity. I am the data controller, the person legally responsible for how your information is collected and used.</p>
+    <p>ICO registration reference: <strong>ZC232927</strong>. You can check the public register at <a href="https://ico.org.uk/register">ico.org.uk/register</a>.</p>
+    <p>For general privacy questions, email <a href="mailto:privacy@turbulentground.com">privacy@turbulentground.com</a>. For anything about the research or your participation, email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a>.</p>
+  </section>
 
-  <h2>Diagnostic data</h2>
-  <p>If you submitted the diagnostic, your email domain was used to group responses by organisation. No organisation-level result is calculated until at least three submissions exist for that domain, and consumer email domains (such as Gmail or Outlook) are never grouped. You can withdraw consent at any time by emailing me.</p>
+  <section class="privacy-section" id="website">
+    <h2>Using the website</h2>
+    <dl class="data-list">
+      <div class="data-item"><dt>Anonymous usage statistics</dt><dd>Plausible Analytics records pages viewed, referring site, broad location derived from your IP address but not stored, device type, and site events such as button clicks or page errors. I use this to understand how the site is used and spot problems.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+      <div class="data-item"><dt>Feedback you send</dt><dd>The feedback tool records your message, the page address and the time you sent it so I can fix problems and improve the experience. Please do not include personal details; if you do, I will delete anything that is not needed.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+      <div class="data-item"><dt>Basic website and server information</dt><dd>Request times, device or browser information and security logs help me operate and secure the website.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+    </dl>
+    <div class="important"><p>Plausible does not use cookies and does not track you across sites. This site sets no advertising or tracking cookies.</p></div>
+  </section>
 
-  <h2>Where your data goes</h2>
-  <ul>
-    <li><strong>Vercel</strong> hosts the site and processes request logs for a short period.</li>
-    <li><strong>Plausible Analytics</strong> (EU-hosted) processes anonymous usage statistics.</li>
-    <li><strong>Airtable</strong> stores feedback and diagnostic submissions. Airtable's servers are in the United States and transfers are covered by its data processing agreement and the UK International Data Transfer Agreement framework.</li>
-    <li><strong>Resend</strong> sends any results emails you requested.</li>
-  </ul>
-  <p>I do not sell your data or share it with anyone else for their own purposes.</p>
+  <section class="privacy-section" id="participation">
+    <h2>Taking part in the AI shift research</h2>
+    <p>This research is for people working in or alongside product development teams who are experiencing the AI shift first-hand. You may take part after a direct invitation, through a referral or through the public study page. You must confirm that you are 18 or over before starting.</p>
+    <p>The aim is to understand how AI is changing people's work, and the personal and organisational conditions that help them use it with judgement, agency and care.</p>
+    <p>I may have your name and email because I know you through my professional network, because someone introduced or recommended you, because you provided them after receiving an invitation, or because you entered them on the public study page.</p>
 
-  <h2>How long I keep it</h2>
-  <ul>
-    <li>Feedback: until the issue it raises is dealt with, and no longer than two years.</li>
-    <li>Diagnostic submissions: three years from submission, or until you ask me to delete them, whichever comes first.</li>
-    <li>Plausible statistics are aggregate and contain no personal data.</li>
-  </ul>
+    <h2>What I ask you to do</h2>
+    <ul>
+      <li>Optionally describe your role, professional discipline, product responsibility and organisation size.</li>
+      <li>Answer 24 statements about your own contribution and the conditions around you.</li>
+      <li>Optionally add context to selected answers and a final comment in your own words.</li>
+      <li>Optionally receive an emailed comparison of your answers with the current study benchmark.</li>
+      <li>Optionally receive occasional study emails, no more than once every 30 days.</li>
+    </ul>
 
-  <h2>Your rights, and how to use them</h2>
-  <p>Under UK GDPR you can ask to access, correct or delete your data, restrict or object to how it is used, receive it in a portable format, and withdraw consent at any time without affecting what happened before. Email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a> and I will respond within one month.</p>
-  <p>If you are unhappy with how I have handled your information, you can complain to the Information Commissioner's Office at <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>.</p>
+    <h2>What I collect, and why</h2>
+    <dl class="data-list">
+      <div class="data-item"><dt>Your name, email address, unique return or invitation token, invitation date and participation status</dt><dd>To invite or register participants, control access, prevent duplicate responses and administer the research.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+      <div class="data-item"><dt>Your email address and email preferences</dt><dd>To send a comparison you request and, if you choose, occasional follow-up questions and findings.</dd><dd class="basis"><strong>Lawful basis:</strong> consent.</dd></div>
+      <div class="data-item"><dt>Your answers to the 24 statements</dt><dd>To conduct the research, create your comparison and calculate anonymised, aggregated benchmarks and findings.</dd><dd class="basis"><strong>Lawful basis:</strong> consent.</dd></div>
+      <div class="data-item"><dt>Optional profile details, answer context and final comment</dt><dd>To understand how different kinds of work experience the AI shift and what sits behind each answer.</dd><dd class="basis"><strong>Lawful basis:</strong> consent.</dd></div>
+      <div class="data-item"><dt>Start and completion times, answered pairs and benchmark eligibility</dt><dd>To administer the research, calculate the benchmark fairly and understand whether the survey is asking too much.</dd><dd class="basis"><strong>Lawful basis:</strong> consent and legitimate interests.</dd></div>
+      <div class="data-item"><dt>Optional unsubscribe or experience feedback</dt><dd>To understand why people leave, improve communications and the participant experience, and respond where appropriate.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+      <div class="data-item"><dt>Random referral code and referral events</dt><dd>To understand which recruitment routes bring eligible responses. The code does not contain your name, email, answers or results.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
+    </dl>
+    <p>You do not have to take part. Profile questions, answer context and the final comment are optional, and every statement offers “Prefer not to say” and “Not applicable”.</p>
+    <p>Where I rely on legitimate interests, those interests are administering the research, keeping the survey secure, preventing duplicate submissions and maintaining a reliable website. I limit this processing to what is reasonably necessary and give you the right to object below.</p>
+    <p>Please do <strong>not</strong> include information about your physical or mental health, alleged wrongdoing, trade-union membership or other sensitive personal information. Do not identify a colleague or anyone else by name. If you include this unexpectedly, I will remove it from the research dataset where reasonably possible and will not intentionally use it in the analysis.</p>
 
-  <p class="updated"><strong>Last updated:</strong> 29 September 2026</p>
+    <h2>Consent, and what each part means</h2>
+    <p>Before the survey, taking part and allowing your responses to contribute to anonymised, aggregated findings are presented as one required agreement because creating those findings is the purpose of the research. A separate, optional checkbox on the same screen lets you choose whether to receive occasional study emails. It is not selected in advance and is not required to complete the research. When requesting your comparison after the survey, a second optional checkbox lets you review or change that email preference. You can also separately say whether you are open to being quoted by name.</p>
+    <ol>
+      <li><strong>Taking part.</strong> Answering the survey and allowing your responses to be analysed and contribute to anonymised, aggregated research findings and benchmarks.</li>
+      <li><strong>Receiving occasional study emails.</strong> These may include findings, follow-up questions and opportunities to contribute. I will email no more than once every 30 days. You can unsubscribe at any time and still take part.</li>
+      <li><strong>Receiving your comparison.</strong> After completing the research, you can separately ask me to email your answers and, when enough eligible responses exist, compare them with the current benchmark.</li>
+      <li><strong>Being quoted by name.</strong> I will never do this without asking you separately, after the fact, about that specific quote.</li>
+    </ol>
+    <p>Saying no to a comparison, study emails or being quoted by name does not affect your participation. Your responses still count.</p>
+    <p>You can withdraw consent by emailing me. I will stop using and delete or anonymise the personal data covered by that consent. Information already irreversibly anonymised, combined into aggregate statistics or published without identifying you is no longer personal data and cannot be separated back out.</p>
+
+    <h2>Your personal comparison and the benchmark</h2>
+    <p>If you request it, your comparison shows your answers across 12 themes. It keeps “your contribution” and “conditions around you” separate and may show how each compares with the mean of eligible completed responses.</p>
+    <p>The benchmark is shown only when enough eligible completed responses are available. It can fluctuate while the research grows. The comparison is descriptive, not a psychological assessment, and is not used to make decisions about your employment or access to anything.</p>
+
+    <h2>How your response is linked to you</h2>
+    <p>Your secure return or invitation link contains a unique token. It links your identity record to your response, controls access, prevents duplicate submissions and lets me send a requested comparison. Your response is therefore <strong>pseudonymous, not anonymous</strong>, while I retain that link.</p>
+    <p>I store identity and contact details separately from survey responses in Airtable. Access is limited to me and the service providers needed to run the research. When analysing response content, I work from the response dataset without names or email addresses wherever reasonably possible.</p>
+
+    <h2>Referrals</h2>
+    <p>After completing the research, you can optionally share a personal referral link. This is never required to finish the survey or receive your comparison, and I issue the link only once your own response is complete and eligible.</p>
+    <p>The link contains a random referral code, not your name, email, answers or identity. It never gives another person access to your response. If somebody starts through your link, I record the connection between the two entries so I can understand which recruitment routes bring eligible responses. It links two entries, not two people's answers.</p>
+  </section>
+
+  <section class="privacy-section" id="historical-diagnostic">
+    <h2>Earlier Care Capital diagnostic responses</h2>
+    <p>The Care Capital diagnostic is no longer promoted, but I still honour the privacy promises made to people who used it. A submission may include a work email, optional name and team name, 25 answers and scores, optional role, organisation size, sector and country, consent choices and any tracked-link source. I use this with consent to send requested results and produce aggregate analysis.</p>
+    <p>Email domains were used to group responses by organisation. No organisation-level result is calculated until at least three submissions exist for that domain, and consumer domains such as Gmail or Outlook are never grouped.</p>
+  </section>
+
+  <section class="privacy-section" id="services">
+    <h2>Where your data goes, including AI</h2>
+    <p>I do not sell your data or share it with anyone else for their own purposes. The main services involved are:</p>
+    <ul>
+      <li><strong>Vercel</strong> hosts the website and server functions and processes short-lived request and security logs.</li>
+      <li><strong>Plausible Analytics</strong>, hosted in the EU, processes anonymous usage statistics.</li>
+      <li><strong>Airtable</strong> stores feedback, consent records, identity records and responses, with research identity and response records kept separately.</li>
+      <li><strong>Resend</strong> sends secure return links, requested comparisons, results and study emails.</li>
+      <li><strong>OpenAI and Anthropic</strong> may help me review research design, organise pseudonymous responses and identify themes. I do not intentionally provide names or email addresses together with response content. AI output assists rather than makes decisions about you, and I review findings myself.</li>
+    </ul>
+    <p>Some suppliers process data in the United States or other countries outside the UK. Where UK data protection law requires it, restricted transfers are covered by an adequacy regulation or contractual safeguards such as the UK International Data Transfer Addendum or International Data Transfer Agreement. Email me if you would like more information about safeguards relevant to your data.</p>
+  </section>
+
+  <section class="privacy-section" id="retention">
+    <h2>How long I keep it</h2>
+    <ul>
+      <li><strong>Incomplete public research responses:</strong> up to 14 days. I send one reminder after seven days, then automatically delete the incomplete response and connected contact details after 14 days.</li>
+      <li><strong>Completed research participation:</strong> identifiable invitation, contact, consent and response records for up to 24 months after completion, unless you withdraw sooner. I then delete them or irreversibly remove the link to you. Anonymised aggregate statistics and published findings may be kept indefinitely.</li>
+      <li><strong>Feedback:</strong> until the issue is dealt with, and no longer than two years.</li>
+      <li><strong>Earlier diagnostic submissions:</strong> three years from submission, or until you ask me to delete them, whichever comes first.</li>
+      <li><strong>Suppression records:</strong> if you unsubscribe or ask not to be invited again, I may keep the minimum information needed to respect that request.</li>
+      <li><strong>Website and supplier logs:</strong> the shorter operational periods set by those services. Plausible statistics are aggregate and contain no personal data.</li>
+    </ul>
+  </section>
+
+  <section class="privacy-section" id="rights">
+    <h2>Your rights, and how to use them</h2>
+    <ul>
+      <li><strong>Access:</strong> ask for a copy of the personal information I hold about you.</li>
+      <li><strong>Correction:</strong> ask me to correct inaccurate or incomplete information.</li>
+      <li><strong>Erasure or restriction:</strong> ask me to delete your personal information or limit how I use it, where the law gives you that right.</li>
+      <li><strong>Portability:</strong> ask for information you provided in a commonly used electronic format, where this right applies.</li>
+      <li><strong>Withdraw consent:</strong> withdraw consent for research use, the diagnostic or study emails at any time, without affecting processing already carried out lawfully.</li>
+    </ul>
+    <div class="important"><p><strong>Your right to object:</strong> where I rely on legitimate interests, you can object to that use of your information. You can always object to direct marketing.</p></div>
+    <p>To unsubscribe from study emails but keep your response in the research, use the unsubscribe link in any study email or contact me with the subject “Unsubscribe from study emails”. To ask me not to invite you again, contact me and I will keep only the minimum suppression record needed to respect that choice.</p>
+    <p>Email <a href="mailto:graham@turbulentground.com?subject=Data%20protection%20request">graham@turbulentground.com</a> and I will respond within one month. If you are not satisfied, you can complain to the <a href="https://ico.org.uk/make-a-complaint/data-protection-complaints/data-protection-complaints/" rel="noopener">Information Commissioner's Office</a>.</p>
+  </section>
+
+  <p class="updated"><strong>Last updated:</strong> 1 October 2026</p>
 </main>
 <!-- NAV_JS_START -->
 <script>

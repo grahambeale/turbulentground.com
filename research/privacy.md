@@ -1,3 +1,7 @@
+# Archived participation privacy source
+
+> This file is compatibility evidence only. The maintained privacy notice is [`/privacy`](../privacy.html), with research-specific information at [`#participation`](../privacy.html#participation). Tests and participant interfaces must use that canonical source.
+
 # Privacy notice: Graham Beale's AI shift research
 
 ---
