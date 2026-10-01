@@ -376,6 +376,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', placeAnchoredSection);
   else placeAnchoredSection();
+  window.addEventListener('load', placeAnchoredSection);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeAnchoredSection);
   window.addEventListener('hashchange', placeAnchoredSection);
 }());
 </script>
