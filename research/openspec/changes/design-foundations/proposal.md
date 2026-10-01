@@ -1,7 +1,7 @@
 # Design foundations: shared tokens and body type scale
 
-**Revision:** 1
-**Prepared:** 1 October 2026
+**Revision:** 2
+**Prepared:** 1 October 2026 (revision 2 adds theme-ready requirements, same day)
 **Airtable:** not yet created (intake required before implementation)
 **Status:** Proposed. Awaiting Graham's approval of this exact packet.
 **Evidence:** `design-system/2026-10-01-token-audit.md` (claude.ai project), audit of `main` at `ab7156b`
@@ -51,6 +51,7 @@ Recorded as inputs to this packet. They are not an approval of the packet.
 | Body text size | 17px |
 | Display typeface | Cormorant Garamond sitewide |
 | Homepage palette fork | Adopt sitewide |
+| Light mode | Build the token system theme-ready now; do not ship a light mode. Can be dropped later. |
 
 Not yet decided: whether Care Capital and the diagnostic move from Outfit to
 DM Sans now or are left until their evidence-led retirement (Phase 4 says
@@ -73,6 +74,28 @@ Body roles replacing the 36 current combinations:
 | Small | 15px | 1.6 | 400 |
 | Meta | 13px | 1.5 | 400 |
 
+## Theme-ready requirements (revision 2)
+
+The site stays dark by default. These requirements keep a future light mode
+to a second set of token values rather than a second migration.
+
+1. **Semantic names.** Tokens describe a job (`--on-accent`, `--accent-glow`,
+   `--bg-translucent`, `--scrim`), not a colour.
+2. **No raw colour in page CSS**, including translucent `rgba()` variants of
+   cream, orange and black. These map to `--overlay-1/2`, `--accent-tint`,
+   `--accent-glow`, `--accent-shadow`, `--scrim` and `--border-emphasis`.
+   Layered and gradient backgrounds are covered by this rule.
+3. **Every colour token has a light value** in `[data-theme="light"]`.
+4. **Automated check for both themes:** `scripts/audit/check-contrast.mjs`
+   fails the build if a colour token lacks a light value or any required
+   text, button, focus or accent pair falls below WCAG 2.2 AA in either
+   theme. Current result: 44 of 44 checks pass, 23 colour tokens.
+5. **`color-scheme`** is declared per theme so form controls and scrollbars
+   follow it.
+
+Exceptions allowed in page CSS: SVG fills inside the logo, and pure
+black/white alpha values used only in `mask-image` gradients.
+
 ## Affected people
 
 All site visitors; participants in the survey runtime (type changes only,
@@ -85,7 +108,12 @@ to tokens.
 - layout and composition changes beyond type and colour values;
 - the Writing page (being retired under Phase 4);
 - routes, APIs and the Release 2 shell;
-- a build-system migration (Eleventy or similar); a separate proposal.
+- a build-system migration (Eleventy or similar); a separate proposal;
+- shipping a light mode: no toggle, no `prefers-color-scheme` switching, no
+  light variants of the logo or hero imagery. `data-theme="light"` stays
+  limited to the privacy notices. Shipping it needs its own proposal and
+  evidence of demand (strongest candidates: the survey on mobile, and long
+  articles).
 
 ## Sequencing
 
@@ -98,6 +126,12 @@ edits, this change:
 2. fixes the two contrast failures as a small separate item, which can go
    inside or after Release 2 by agreement;
 3. migrates the participation runtime only after Release 2 is released.
+
+## Cost of revision 2
+
+Roughly 10 to 15% more work per page migration, mostly mapping glow, border
+and overlay values to tokens. Dropping the requirement later means deleting
+the light block and the theme-ready check; nothing else depends on it.
 
 ## Rollback
 

@@ -6,7 +6,9 @@ as separate decisions.
 
 ## Step 1: tokens file and learnings template (11 articles)
 
-- [ ] Add `styles/tokens.css` (draft in this branch).
+- [ ] Add `styles/tokens.css` (draft in this branch, revision 2: both themes).
+- [ ] Add `scripts/audit/check-contrast.mjs` to `npm run build` (fails on a
+      missing light value or a contrast failure in either theme).
 - [ ] `learnings/_article-template.html`: link `/styles/tokens.css` before
       the inline `<style>`; delete the inline `:root`; set
       `html { font-size: 100% }`; map text to roles:
@@ -32,7 +34,10 @@ home, participation runtime (after Release 2 ships), Care Capital and
 diagnostic (pending the Outfit decision).
 
 For each: link tokens, remove local `:root` and px root size, map text to
-the four roles, replace heading font with `--font-display`, re-run the audit.
+the four roles, replace heading font with `--font-display`, replace every
+raw colour and `rgba()` value with a semantic token, re-run the audit.
+Check the migrated page renders correctly with `data-theme="light"` set
+(visual sanity check only; light is not shipped on that page).
 
 **Risk:** the participation runtime is built on an 18px root. Moving it to
 100% shrinks every rem value by about 11% unless the values are re-based.
@@ -47,7 +52,9 @@ Re-base explicitly, then compare screenshots of every survey state.
       - no colour literals outside `styles/tokens.css` (allowlist SVG fills);
       - no `font-family` other than token variables;
       - no `font-size` in px outside tokens;
-      - no `:root` blocks outside `styles/tokens.css`.
+      - no `:root` blocks outside `styles/tokens.css`;
+      - colour tokens without a light value (already enforced by
+        `check-contrast.mjs`).
 - [ ] Add a Playwright check that fails if any public page sets a px
       root font size or computes body text outside the four roles.
 
@@ -55,4 +62,6 @@ Re-base explicitly, then compare screenshots of every survey state.
 
 - Every public page links `tokens.css` and has no local `:root`.
 - The audit reports 4 body styles, 1 body typeface, 1 display typeface.
+- Every migrated page renders without raw colour values and passes a
+  light-theme sanity check.
 - The build fails on a new raw colour, font or size value.
