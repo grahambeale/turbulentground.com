@@ -367,6 +367,18 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 
   <p class="updated"><strong>Last updated:</strong> 1 October 2026</p>
 </main>
+<script>
+(function () {
+  function placeAnchoredSection() {
+    if (!location.hash) return;
+    var target = document.getElementById(location.hash.slice(1));
+    if (target) requestAnimationFrame(function () { target.scrollIntoView({ block: 'start' }); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', placeAnchoredSection);
+  else placeAnchoredSection();
+  window.addEventListener('hashchange', placeAnchoredSection);
+}());
+</script>
 <!-- NAV_JS_START -->
 <script>
 (function(){

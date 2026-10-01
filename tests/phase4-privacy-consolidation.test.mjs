@@ -19,6 +19,7 @@ check('canonical notice stays out of search indexes', /name="robots" content="no
 check('canonical notice has the stable participation anchor', /<section class="privacy-section" id="participation">/.test(root));
 check('canonical notice has accessible in-page navigation', /aria-label="Privacy notice sections"/.test(root) && /href="#participation"/.test(root));
 check('anchors account for the fixed masthead', /scroll-margin-top: 104px/.test(root));
+check('compatibility navigation actively positions the requested section', /target\.scrollIntoView\(\{ block: 'start' \}\)/.test(root));
 check('public, referral and invited participation are described', /direct invitation, through a referral or through the public study page/.test(root));
 check('consent choices remain separate', /separate, optional checkbox on the same screen/.test(root));
 check('retention promises remain explicit', /up to 14 days/.test(root) && /up to 24 months/.test(root) && /three years from submission/.test(root));
