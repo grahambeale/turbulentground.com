@@ -5,7 +5,7 @@ const read = path => readFileSync(new URL(`../${path}`, import.meta.url), "utf8"
 const config = JSON.parse(read("vercel.json"));
 const rewrite = config.rewrites.find(item => item.source === "/take-part");
 
-assert.deepEqual(rewrite, { source: "/take-part", destination: "/research/index.html" });
+assert.deepEqual(rewrite, { source: "/take-part", destination: "/research" });
 
 const participant = read("research/index.html");
 assert.match(participant, /<title>Take part \| Turbulent Ground<\/title>/);

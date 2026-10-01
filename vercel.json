@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/take-part",
-      "destination": "/research/index.html"
+      "destination": "/research"
     },
     {
       "source": "/diagnostic",
