@@ -16,10 +16,12 @@ function check(label, condition) {
 
 console.log('phase4-privacy-consolidation.test.mjs');
 check('canonical notice stays out of search indexes', /name="robots" content="noindex, nofollow"/.test(root));
-check('canonical notice has the stable participation anchor', /<section class="privacy-section" id="participation">/.test(root));
-check('canonical notice has accessible in-page navigation', /aria-label="Privacy notice sections"/.test(root) && /href="#participation"/.test(root));
-check('section navigation uses referral-style visual tabs without hiding notice content', /class="privacy-contents-tabs"/.test(root) && /box-shadow: inset 0 3px 0 var\(--orange-light\)/.test(root) && !/role="tab"/.test(root));
-check('section navigation exposes and updates its current location', /aria-current/.test(root) && /setCurrentSection/.test(root));
+check('canonical notice has the stable participation anchor', /<section class="privacy-section privacy-panel" id="participation"/.test(root));
+check('canonical notice has accessible content tabs', /role="tablist"/.test(root) && /role="tab"/.test(root) && /role="tabpanel"/.test(root) && /aria-controls="participation"/.test(root));
+check('section navigation uses the referral-style selected state', /class="privacy-contents-tabs"/.test(root) && /box-shadow: inset 0 3px 0 var\(--orange-light\)/.test(root));
+check('tabs switch panels in place and preserve direct-link state', /activateTab/.test(root) && /panel\.hidden/.test(root) && /history\.replaceState/.test(root));
+check('tabs support standard keyboard navigation', /ArrowRight/.test(root) && /ArrowLeft/.test(root) && /Home/.test(root) && /End/.test(root));
+check('printing restores every privacy panel', /\.privacy-panel\[hidden\] \{ display: block; \}/.test(root));
 check('reduced-motion visitors do not get smooth scrolling', /prefers-reduced-motion: reduce/.test(root) && /scroll-behavior: auto/.test(root));
 check('anchors account for the fixed masthead', /scroll-margin-top: 104px/.test(root));
 check('compatibility navigation actively positions the requested section', /target\.scrollIntoView\(\{ block: 'start' \}\)/.test(root));

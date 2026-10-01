@@ -153,9 +153,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .privacy-contents strong { display: block; margin-bottom: 10px; font-size: .88rem; letter-spacing: .06em; text-transform: uppercase; }
   .privacy-contents-tabs { display: flex; gap: 3px; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; }
   .privacy-contents-tabs::-webkit-scrollbar { display: none; }
-  .privacy-contents a { position: relative; flex: 0 0 auto; padding: 13px 10px 12px; border: 1px solid transparent; border-bottom: 0; border-radius: 9px 9px 0 0; color: var(--muted); font-size: .9rem; text-decoration: none; white-space: nowrap; transition: color .18s ease, background .18s ease, border-color .18s ease; }
-  .privacy-contents a:hover { color: var(--ink); background: rgba(38,33,28,.48); }
-  .privacy-contents a[aria-current="location"] { color: var(--ink); background: var(--surface); border-color: var(--border); box-shadow: inset 0 3px 0 var(--orange-light); }
+  .privacy-contents button { position: relative; flex: 0 0 auto; padding: 13px 10px 12px; border: 1px solid transparent; border-bottom: 0; border-radius: 9px 9px 0 0; color: var(--muted); background: transparent; font: 400 .9rem/1.4 'DM Sans', sans-serif; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease; }
+  .privacy-contents button:hover { color: var(--ink); background: rgba(38,33,28,.48); }
+  .privacy-contents button[aria-selected="true"] { color: var(--ink); background: var(--surface); border-color: var(--border); box-shadow: inset 0 3px 0 var(--orange-light); }
+  .privacy-panel[hidden] { display: none; }
   .privacy-section { scroll-margin-top: 104px; }
   .privacy-section > h2:first-child { margin-top: 64px; }
   .data-list { display: grid; gap: 12px; margin: 24px 0 30px; }
@@ -164,10 +165,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .data-item dd { color: var(--ink-mid); margin-top: 6px; }
   .data-item .basis { color: var(--muted); font-size: .92rem; margin-top: 8px; }
   @media (max-width: 520px) { main { margin-top: 24px; } h2 { margin-top: 44px; } .privacy-contents-tabs { margin-right: -20px; padding-right: 20px; } }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .privacy-contents a { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .privacy-contents button { transition: none; } }
   @media print {
     :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
-    .nav, #feedback-launch { display: none; } body { padding-top: 0; } main { margin: 0 auto; width: 100%; } a { color: inherit; }
+    .nav, #feedback-launch, .privacy-contents { display: none; } body { padding-top: 0; } main { margin: 0 auto; width: 100%; } a { color: inherit; }
+    .privacy-panel[hidden] { display: block; }
   }
 /* FEEDBACK_CSS_START */
 /* Main-site feedback widget: same look and behaviour as the Phase 3
@@ -247,17 +249,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   <h1>Privacy notice</h1>
   <p class="privacy-summary">One notice explains how I use information across Turbulent Ground, including when you browse the site, send feedback or take part in the AI shift research.</p>
 
-  <nav class="privacy-contents" aria-label="Privacy notice sections">
-    <strong>On this page</strong>
-    <div class="privacy-contents-tabs">
-      <a href="#website">Using the website</a>
-      <a href="#participation">Taking part</a>
-      <a href="#services">Services and AI</a>
-      <a href="#retention">How long I keep data</a>
-      <a href="#rights">Your rights</a>
-    </div>
-  </nav>
-
   <section class="privacy-section" id="controller">
     <h2>Who is responsible for your data</h2>
     <p>Turbulent Ground is run by me, <strong>Graham Beale</strong>. It is not a company or a separate legal entity. I am the data controller, the person legally responsible for how your information is collected and used.</p>
@@ -265,7 +256,18 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     <p>For general privacy questions, email <a href="mailto:privacy@turbulentground.com">privacy@turbulentground.com</a>. For anything about the research or your participation, email <a href="mailto:graham@turbulentground.com">graham@turbulentground.com</a>.</p>
   </section>
 
-  <section class="privacy-section" id="website">
+  <div class="privacy-contents">
+    <strong id="privacy-tabs-label">Privacy topics</strong>
+    <div class="privacy-contents-tabs" role="tablist" aria-labelledby="privacy-tabs-label">
+      <button type="button" role="tab" id="tab-website" aria-controls="website" aria-selected="true" tabindex="0">Using the website</button>
+      <button type="button" role="tab" id="tab-participation" aria-controls="participation" aria-selected="false" tabindex="-1">Taking part</button>
+      <button type="button" role="tab" id="tab-services" aria-controls="services" aria-selected="false" tabindex="-1">Services and AI</button>
+      <button type="button" role="tab" id="tab-retention" aria-controls="retention" aria-selected="false" tabindex="-1">How long I keep data</button>
+      <button type="button" role="tab" id="tab-rights" aria-controls="rights" aria-selected="false" tabindex="-1">Your rights</button>
+    </div>
+  </div>
+
+  <section class="privacy-section privacy-panel" id="website" role="tabpanel" aria-labelledby="tab-website">
     <h2>Using the website</h2>
     <dl class="data-list">
       <div class="data-item"><dt>Anonymous usage statistics</dt><dd>Plausible Analytics records pages viewed, referring site, broad location derived from your IP address but not stored, device type, and site events such as button clicks or page errors. I use this to understand how the site is used and spot problems.</dd><dd class="basis"><strong>Lawful basis:</strong> legitimate interests.</dd></div>
@@ -275,7 +277,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     <div class="important"><p>Plausible does not use cookies and does not track you across sites. This site sets no advertising or tracking cookies.</p></div>
   </section>
 
-  <section class="privacy-section" id="participation">
+  <section class="privacy-section privacy-panel" id="participation" role="tabpanel" aria-labelledby="tab-participation">
     <h2>Taking part in the AI shift research</h2>
     <p>This research is for people working in or alongside product development teams who are experiencing the AI shift first-hand. You may take part after a direct invitation, through a referral or through the public study page. You must confirm that you are 18 or over before starting.</p>
     <p>The aim is to understand how AI is changing people's work, and the personal and organisational conditions that help them use it with judgement, agency and care.</p>
@@ -326,15 +328,14 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     <h2>Referrals</h2>
     <p>After completing the research, you can optionally share a personal referral link. This is never required to finish the survey or receive your comparison, and I issue the link only once your own response is complete and eligible.</p>
     <p>The link contains a random referral code, not your name, email, answers or identity. It never gives another person access to your response. If somebody starts through your link, I record the connection between the two entries so I can understand which recruitment routes bring eligible responses. It links two entries, not two people's answers.</p>
-  </section>
-
   <section class="privacy-section" id="historical-diagnostic">
     <h2>Earlier Care Capital diagnostic responses</h2>
     <p>The Care Capital diagnostic is no longer promoted, but I still honour the privacy promises made to people who used it. A submission may include a work email, optional name and team name, 25 answers and scores, optional role, organisation size, sector and country, consent choices and any tracked-link source. I use this with consent to send requested results and produce aggregate analysis.</p>
     <p>Email domains were used to group responses by organisation. No organisation-level result is calculated until at least three submissions exist for that domain, and consumer domains such as Gmail or Outlook are never grouped.</p>
   </section>
+  </section>
 
-  <section class="privacy-section" id="services">
+  <section class="privacy-section privacy-panel" id="services" role="tabpanel" aria-labelledby="tab-services">
     <h2>Where your data goes, including AI</h2>
     <p>I do not sell your data or share it with anyone else for their own purposes. The main services involved are:</p>
     <ul>
@@ -347,7 +348,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     <p>Some suppliers process data in the United States or other countries outside the UK. Where UK data protection law requires it, restricted transfers are covered by an adequacy regulation or contractual safeguards such as the UK International Data Transfer Addendum or International Data Transfer Agreement. Email me if you would like more information about safeguards relevant to your data.</p>
   </section>
 
-  <section class="privacy-section" id="retention">
+  <section class="privacy-section privacy-panel" id="retention" role="tabpanel" aria-labelledby="tab-retention">
     <h2>How long I keep it</h2>
     <ul>
       <li><strong>Incomplete public research responses:</strong> up to 14 days. I send one reminder after seven days, then automatically delete the incomplete response and connected contact details after 14 days.</li>
@@ -359,7 +360,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     </ul>
   </section>
 
-  <section class="privacy-section" id="rights">
+  <section class="privacy-section privacy-panel" id="rights" role="tabpanel" aria-labelledby="tab-rights">
     <h2>Your rights, and how to use them</h2>
     <ul>
       <li><strong>Access:</strong> ask for a copy of the personal information I hold about you.</li>
@@ -377,46 +378,44 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 </main>
 <script>
 (function () {
-  var contentsLinks = Array.prototype.slice.call(document.querySelectorAll('.privacy-contents a[href^="#"]'));
-  var ticking = false;
-  function setCurrentSection(id) {
-    contentsLinks.forEach(function (link) {
-      if (link.hash === '#' + id) link.setAttribute('aria-current', 'location');
-      else link.removeAttribute('aria-current');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.privacy-panel[role="tabpanel"]'));
+  function activateTab(id, focus, updateUrl) {
+    var selected = tabs.find(function (tab) { return tab.getAttribute('aria-controls') === id; }) || tabs[0];
+    tabs.forEach(function (tab) {
+      var active = tab === selected;
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.tabIndex = active ? 0 : -1;
     });
-  }
-  function syncCurrentSection() {
-    ticking = false;
-    var current = contentsLinks.length ? contentsLinks[0].hash.slice(1) : '';
-    var threshold = Math.max(140, window.innerHeight * .32);
-    contentsLinks.forEach(function (link) {
-      var target = document.getElementById(link.hash.slice(1));
-      if (target && target.getBoundingClientRect().top <= threshold) current = target.id;
-    });
-    if (current) setCurrentSection(current);
-  }
-  function scheduleCurrentSection() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(syncCurrentSection);
-    }
+    panels.forEach(function (panel) { panel.hidden = panel.id !== selected.getAttribute('aria-controls'); });
+    if (updateUrl && history.replaceState) history.replaceState(null, '', '#' + selected.getAttribute('aria-controls'));
+    if (focus) selected.focus();
   }
   function placeAnchoredSection() {
-    if (!location.hash) { scheduleCurrentSection(); return; }
+    var id = location.hash.slice(1);
+    if (id === 'historical-diagnostic') id = 'participation';
+    activateTab(id || 'website', false, false);
     var target = document.getElementById(location.hash.slice(1));
     if (target) requestAnimationFrame(function () {
       target.scrollIntoView({ block: 'start' });
-      setCurrentSection(target.id);
     });
   }
-  contentsLinks.forEach(function (link) {
-    link.addEventListener('click', function () { setCurrentSection(link.hash.slice(1)); });
+  tabs.forEach(function (tab, index) {
+    tab.addEventListener('click', function () { activateTab(tab.getAttribute('aria-controls'), false, true); });
+    tab.addEventListener('keydown', function (event) {
+      var next = index;
+      if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      activateTab(tabs[next].getAttribute('aria-controls'), true, true);
+    });
   });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', placeAnchoredSection);
   else placeAnchoredSection();
   window.addEventListener('load', placeAnchoredSection);
-  window.addEventListener('scroll', scheduleCurrentSection, { passive: true });
-  window.addEventListener('resize', scheduleCurrentSection);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeAnchoredSection);
   window.addEventListener('hashchange', placeAnchoredSection);
 }());
