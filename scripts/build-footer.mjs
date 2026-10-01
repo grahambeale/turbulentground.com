@@ -42,7 +42,7 @@ const BEALE_NOTE =
 // team's experiment) plus the research-recruitment CTA in its link row.
 const HOME_FOOTER_CONFIG = {
   links: [
-    { href: '/research', label: 'The study', dataResearchCta: 'footer' },
+    { href: '/take-part', label: 'The study', dataResearchCta: 'footer' },
     { href: '/learnings', label: 'Learnings' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
     { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
@@ -54,7 +54,7 @@ const HOME_FOOTER_CONFIG = {
 
 const WRITING_FOOTER_CONFIG = {
   links: [
-    { href: '/research', label: 'The study' },
+    { href: '/take-part', label: 'The study' },
     { href: 'writing.html', label: 'Writing' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'LinkedIn', external: true },
     { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
@@ -67,7 +67,7 @@ const WRITING_FOOTER_CONFIG = {
 // link) and the same note.
 const SECONDARY_PAGE_FOOTER_CONFIG = {
   links: [
-    { href: '/research', label: 'The study' },
+    { href: '/take-part', label: 'The study' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'LinkedIn', external: true },
     { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
     { href: 'privacy.html', label: 'Privacy' },
@@ -78,7 +78,7 @@ const SECONDARY_PAGE_FOOTER_CONFIG = {
 // Individual learnings articles: link back to /learnings itself.
 const LEARNINGS_ARTICLE_FOOTER_CONFIG = {
   links: [
-    { href: '/research', label: 'The study' },
+    { href: '/take-part', label: 'The study' },
     { href: '/learnings', label: 'Learnings' },
     { href: 'https://linkedin.com/in/grahambeale', label: 'LinkedIn', external: true },
     { href: '/privacy', label: 'Privacy' },
@@ -89,7 +89,7 @@ const LEARNINGS_ARTICLE_FOOTER_CONFIG = {
 // The learnings index itself doesn't link back to /learnings.
 const LEARNINGS_INDEX_FOOTER_CONFIG = {
   links: [
-    { href: '/research', label: 'The study' },
+    { href: '/take-part', label: 'The study' },
     { href: 'https://linkedin.com/in/grahambeale', label: 'LinkedIn', external: true },
     { href: '/privacy', label: 'Privacy' },
   ],

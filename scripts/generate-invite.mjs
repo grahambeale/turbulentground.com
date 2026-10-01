@@ -110,7 +110,7 @@ const data = await res.json();
 const recordId = data.records[0].id;
 
 const base = process.env.RESEARCH_BASE_URL || env.RESEARCH_BASE_URL || "https://turbulentground.com";
-const url = `${base}/research?t=${token}`;
+const url = `${base}/take-part?t=${token}`;
 
 console.log(`Identity record created: ${recordId}`);
 console.log(`Invite URL: ${url}`);

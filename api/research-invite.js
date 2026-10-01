@@ -153,7 +153,7 @@ export default async function handler(req, res) {
   }
 
   return res.status(201).json({
-    inviteUrl: `${RESEARCH_BASE_URL}/research?t=${token}`,
+    inviteUrl: `${RESEARCH_BASE_URL}/take-part?t=${token}`,
     hasEmail: Boolean(email),
   });
 }

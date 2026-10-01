@@ -1,0 +1,13 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "work_item": "FB-20261001-PHASE4-REL2-CUTOVER",
+  "release": 2,
+  "revision": 1,
+  "prepared_at": "2026-10-01T09:00:00Z",
+  "decision": "Pending",
+  "approval_effect": "Authorises local implementation on a dedicated codex branch and preparation of a verified preview only. Does not authorise main, production release, participant contact, privacy/admin consolidation, content migration or legacy cleanup.",
+  "files": {
+    "release-2-route-shell-plan.md": "0458d566490b6608847ee4f35cd3cfcc36991b83b9fd2417573d9e039af9c7d4",
+    "release-2-route-shell-review.md": "a9f6c824d882c1959318379e16e7cb5c8f5ffdac1673224b8455d6d273bf3e7e"
+  }
+}

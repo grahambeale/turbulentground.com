@@ -73,7 +73,7 @@ export default async function handler(req, res) {
   // participant record read or written", so it must never call
   // resolveReferralShareForParticipant, which would try to look up and
   // create a real Airtable referral record for a token that doesn't exist.
-  const PREVIEW_SHARE_URL = "https://www.turbulentground.com/research?r=K7M4PX";
+  const PREVIEW_SHARE_URL = "https://www.turbulentground.com/take-part?r=K7M4PX";
 
   const previewNote = `<p style="padding:10px 12px;background:#3a241a;color:#ef7b45;font-family:Arial,sans-serif;font-size:13px;font-weight:700;">Test preview using fictional responses. No participant record was created or changed.</p>`;
   const html = buildEmailHtml("Graham", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "preview-only", version, PREVIEW_SHARE_URL)

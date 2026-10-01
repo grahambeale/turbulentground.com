@@ -39,7 +39,7 @@ global.fetch = async (url, options = {}) => {
 res = response();
 await issue({ method: "POST", body: { token: "private-token" } }, res);
 assert(res.code === 201, "eligible completed participant should receive a referral ID");
-assert(/^\/research\?r=[A-Za-z0-9_-]{20,64}$/.test(res.body.sharePath), "share URL should contain only a public referral ID");
+assert(/^\/take-part\?r=[A-Za-z0-9_-]{20,64}$/.test(res.body.sharePath), "share URL should contain only a public referral ID");
 assert(!res.body.sharePath.includes("private-token"), "share URL must never expose the private token");
 const createBody = JSON.parse(calls[3].options.body);
 assert(createBody.records[0].fields.fldgZjeCrX8WJDfSJ[0] === "recIdentity", "referral should link privately to its owner");
@@ -57,7 +57,7 @@ global.fetch = async () => {
 };
 res = response();
 await issue({ method: "POST", body: { token: "private-token" } }, res);
-assert(res.code === 200 && res.body.sharePath === "/research?r=stablePublicReferral99", "repeat issue should retrieve the stable ID");
+assert(res.code === 200 && res.body.sharePath === "/take-part?r=stablePublicReferral99", "repeat issue should retrieve the stable ID");
 
 process.env.RESEARCH_REFERRAL_RESOLVE_ENABLED = "true";
 global.fetch = async () => ok({ records: [{ id: "recReferral", fields: { fld8XFaGgrsGKkABg: "active" } }] });

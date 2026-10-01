@@ -382,7 +382,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   </a>
   <div class="nav-links">
     <a href="/learnings" class="nav-link">Learnings</a>
-    <div class="nav-btn-wrap"><a href="/research" class="nav-btn">Take part &rarr;</a></div>
+    <div class="nav-btn-wrap"><a href="/take-part" class="nav-btn">Take part &rarr;</a></div>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
@@ -390,7 +390,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 </nav>
 <div class="mobile-menu" id="mobile-menu">
   <a href="/learnings">Learnings</a>
-  <a href="/research" class="mobile-menu-btn">Take part &rarr;</a>
+  <a href="/take-part" class="mobile-menu-btn">Take part &rarr;</a>
 </div>
 <!-- NAV_END -->
 
@@ -411,7 +411,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         <h1 id="hero-title"><span class="line"><span>The AI shift,</span></span><span class="line"><span><em>seen from the ground.</em></span></span></h1>
         <p class="lede">Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it.</p>
         <div class="ctas">
-          <a href="/research" class="btn btn-primary" data-research-cta="hero">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a href="/take-part" class="btn btn-primary" data-research-cta="hero">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <p class="for">For product managers, designers, engineers, researchers and the leaders around them.</p>
         <ul class="facts">
@@ -479,7 +479,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
         <h2 id="join-title" class="reveal">What does it look like <em>from where you are?</em></h2>
         <p class="lede reveal" style="--d:.08s">What&rsquo;s working, what isn&rsquo;t, and what would help. Every response sharpens the picture of what good looks like.</p>
         <div class="ctas reveal" style="--d:.16s">
-          <a href="/research" class="btn btn-primary btn-lg" data-research-cta="final">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a href="/take-part" class="btn btn-primary btn-lg" data-research-cta="final">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <!-- Live progress towards the pre-registered 30-completion milestone.
              Hidden unless the live count loads; never shows a stale number. -->
@@ -512,7 +512,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 <footer>
   <span class="footer-brand">TURBULENT GROUND</span>
   <div class="footer-links">
-    <a href="/research" class="footer-link" data-research-cta="footer">The study</a>
+    <a href="/take-part" class="footer-link" data-research-cta="footer">The study</a>
     <a href="/learnings" class="footer-link">Learnings</a>
     <a href="https://www.linkedin.com/in/grahambeale/" class="footer-link" target="_blank" rel="noopener">Graham&rsquo;s LinkedIn</a>
     <a href="https://www.youtube.com/@TurbulentGround" class="footer-link" target="_blank" rel="noopener">YouTube</a>
@@ -522,7 +522,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 </footer>
 <!-- FOOTER_END -->
 
-<a href="/research" class="btn btn-primary float-cta" id="float-cta" data-research-cta="floating" tabindex="-1" aria-hidden="true">Go on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+<a href="/take-part" class="btn btn-primary float-cta" id="float-cta" data-research-cta="floating" tabindex="-1" aria-hidden="true">Go on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
 
 <script>
 /* ───────────────────────────────────────────────────────────────────
@@ -541,7 +541,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   document.body.classList.add('is-loaded');
 
   /* ── CTA tracking ──────────────────────────────────────────── */
-  document.querySelectorAll('a[href="/research"]').forEach(function(a){
+  document.querySelectorAll('a[href="/take-part"]').forEach(function(a){
     a.addEventListener('click', function(){
       try { plausible('Homepage Research CTA Clicked', { props: { position: a.getAttribute('data-research-cta') || 'nav' } }); } catch(e){}
     });

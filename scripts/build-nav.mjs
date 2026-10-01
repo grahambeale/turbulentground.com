@@ -53,7 +53,7 @@ const DEFAULT_NAV_CONFIG = {
   ],
   // Diagnostic orphaned 29 Sep 2026 (Graham's decision): the site-wide CTA
   // now recruits to the Phase 3 research study instead.
-  cta: { href: '/research', label: 'Take part &rarr;' },
+  cta: { href: '/take-part', label: 'Take part &rarr;' },
 };
 
 // Stripped config for the three research pages: no links anywhere except
@@ -80,7 +80,7 @@ const HOME_NAV_CONFIG = {
   links: [
     { href: '/learnings', label: 'Learnings' },
   ],
-  cta: { href: '/research', label: 'Take part &rarr;' },
+  cta: { href: '/take-part', label: 'Take part &rarr;' },
 };
 
 const TARGET_FILES = [

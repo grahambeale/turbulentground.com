@@ -1,0 +1,15 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "release": "Release 2 revision 1",
+  "decision": "approved_for_local_implementation_and_verified_preview",
+  "approved_by": "Graham Beale",
+  "approval_statement": "approve and proceed",
+  "approved_at": "2026-10-01T11:35:50Z",
+  "approved_plan_sha256": "0458d566490b6608847ee4f35cd3cfcc36991b83b9fd2417573d9e039af9c7d4",
+  "approved_review_sha256": "a9f6c824d882c1959318379e16e7cb5c8f5ffdac1673224b8455d6d273bf3e7e",
+  "authority": {
+    "local_implementation": true,
+    "verified_preview": true,
+    "production_release": false
+  }
+}

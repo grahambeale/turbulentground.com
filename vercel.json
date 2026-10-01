@@ -11,6 +11,10 @@
   ],
   "rewrites": [
     {
+      "source": "/take-part",
+      "destination": "/research/index.html"
+    },
+    {
       "source": "/diagnostic",
       "destination": "/diagnostic/index.html"
     },

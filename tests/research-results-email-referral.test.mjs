@@ -28,7 +28,7 @@ const SAMPLE_PAIRS = Object.fromEntries(
   Array.from({ length: 12 }, (_, i) => [`d${i + 1}`, { contribution: 4, conditions: 3 }])
 );
 const SAMPLE_BENCHMARK = { domains: null, cohortSize: 0 };
-const SHARE_URL = "https://www.turbulentground.com/research?r=K7M4PX";
+const SHARE_URL = "https://www.turbulentground.com/take-part?r=K7M4PX";
 
 const withShare = buildEmailHtml("Alex", SAMPLE_PAIRS, SAMPLE_BENCHMARK, "tok", PAIRED_VERSION, SHARE_URL);
 check("includes the exact referral heading", withShare.includes("Help me hear more perspectives on AI at work"));
@@ -103,8 +103,8 @@ try {
 
   const send = calls.find(call => call.url.includes("api.resend.com/emails"));
   const sendBody = JSON.parse(send.options.body);
-  check("sent email contains a genuine referral link", /https:\/\/www\.turbulentground\.com\/research\?r=[A-Za-z0-9_-]{20,}/.test(sendBody.html));
-  check("sent email does not leak the private token in the referral link", !sendBody.html.includes("/research?r=valid-token"));
+  check("sent email contains a genuine referral link", /https:\/\/www\.turbulentground\.com\/take-part\?r=[A-Za-z0-9_-]{20,}/.test(sendBody.html));
+  check("sent email does not leak the private token in the referral link", !sendBody.html.includes("/take-part?r=valid-token"));
 
   const referralCreate = calls.find(call => call.url.includes("tblXBzl8mQal543xw") && call.options.method === "PATCH");
   check("issues the referral through the same upsert used by the web flow", referralCreate?.options && JSON.parse(referralCreate.options.body).performUpsert.fieldsToMergeOn[0] === "fldhsVcyzGsgcIZXU");

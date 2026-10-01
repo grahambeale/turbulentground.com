@@ -73,7 +73,7 @@ assert(fields.fldAU2mJzl7jwcCWz === "started", "lifecycle must start as started"
 const duration = Date.parse(fields.fldj4eidGJYUhVeUQ) - Date.parse(fields.fldBUlgc1HW9JKJqo);
 assert(duration === 14 * 86400000, "expiry must be fixed at exactly 14 days");
 assert(Date.parse(fields.fldBUlgc1HW9JKJqo) >= before, "consent timestamp must be server generated");
-assert(/^\/research\?t=/.test(res.body.resumePath), "response should contain a private return path");
+assert(/^\/take-part\?t=/.test(res.body.resumePath), "response should contain a private return path");
 const acquisition = writes[1].records[0].fields;
 assert(acquisition.fldD7AXUyBI6heSeI === "direct", "unreferred start should lock direct attribution");
 assert(acquisition.fldqU9bCJH5V4m4Lx[0] === "recSynthetic", "acquisition should link to the created identity");
