@@ -1,0 +1,97 @@
+/* Turbulent Ground design tokens
+ *
+ * Single source of truth for colour, type, spacing and radius.
+ * Status: DRAFT for the design-foundations OpenSpec packet. Not yet linked
+ * from any page. See research/openspec/changes/design-foundations/.
+ *
+ * Rules:
+ * - Pages must not redefine these names in their own :root.
+ * - Colour, font-family and font-size values belong here, not in page CSS.
+ * - Every text/background pair listed in the contrast table must stay at or
+ *   above WCAG 2.2 AA. Change a value only with the table re-verified.
+ */
+
+:root {
+  /* ── Colour: dark theme (default). Homepage palette adopted sitewide,
+        Graham's decision 2026-10-01. ─────────────────────────────── */
+  --bg:          #0b0907;  /* page background */
+  --bg-2:        #131110;  /* alternate section background */
+  --bg-warm:     #1c1915;  /* raised panel */
+  --surface:     #26211c;  /* card, input */
+  --ink:         #efe5d3;  /* headings, emphasis */
+  --ink-mid:     #cdbd9f;  /* body text */
+  --muted:       #a8977f;  /* secondary text, meta */
+  --orange:      #d9571c;  /* brand accent: borders, rules, large text, icons */
+  --orange-lt:   #e8763a;  /* links and accent text on dark */
+  --orange-btn:  #b84215;  /* filled controls with white text */
+  --orange-hover:#a23a13;
+  --on-accent:   #ffffff;  /* text on --orange-btn only */
+  --border:      rgba(232, 220, 200, 0.10);
+  --border-strong: rgba(232, 220, 200, 0.18);
+
+  /* Contrast (verified 2026-10-01, ratio against --bg / --surface):
+   *   --ink        15.9 / 12.8
+   *   --ink-mid    10.8 /  8.6
+   *   --muted       7.0 /  5.6
+   *   --orange-lt   6.7 /  5.4
+   *   --orange      5.1 /  4.1   (NOT for normal-size text on --surface)
+   *   --on-accent on --orange-btn 5.5; on --orange 3.9 (large text only)
+   */
+
+  /* ── Typography ─────────────────────────────────────────────── */
+  --font-body:     'DM Sans', system-ui, sans-serif;
+  --font-display:  'Cormorant Garamond', Georgia, serif;
+  --font-wordmark: 'Bebas Neue', 'DM Sans', sans-serif;
+
+  /* Body roles: Graham's decisions 2026-10-01, 400 weight, 17px body. */
+  --text-lead:   clamp(1.125rem, 1rem + 0.6vw, 1.25rem);   /* 18 → 20px */
+  --text-body:   clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);  /* 16 → 17px */
+  --text-small:  0.9375rem;                                 /* 15px */
+  --text-meta:   0.8125rem;                                 /* 13px */
+
+  --leading-lead:  1.55;
+  --leading-body:  1.7;
+  --leading-small: 1.6;
+  --leading-meta:  1.5;
+
+  --weight-body:   400;
+  --weight-strong: 500;
+
+  /* Display roles (headings). Cormorant Garamond sitewide. */
+  --text-h1: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);
+  --text-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --leading-display: 1.15;
+  --weight-display: 400;
+
+  /* ── Spacing (4px base) ─────────────────────────────────────── */
+  --space-1: 0.25rem;  --space-2: 0.5rem;  --space-3: 0.75rem;
+  --space-4: 1rem;     --space-5: 1.5rem;  --space-6: 2rem;
+  --space-7: 3rem;     --space-8: 4rem;    --space-9: 6rem;
+
+  /* ── Radius and measure ─────────────────────────────────────── */
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-pill: 999px;
+  --measure: 66ch;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ── Light theme: privacy notices. Use <html data-theme="light">. ── */
+[data-theme="light"] {
+  --bg:        #ffffff;
+  --bg-2:      #f4f1ec;
+  --bg-warm:   #f4f1ec;
+  --surface:   #f4f1ec;
+  --ink:       #171310;   /* 18.5 on white */
+  --ink-mid:   #342d27;   /* 13.5 on white */
+  --muted:     #665d55;   /*  6.4 on white */
+  --orange-lt: #a23a13;   /* links on light: 6.7 on white, 5.9 on #f4f1ec */
+  --border:    #d8d0c7;
+  --border-strong: #bfb5aa;
+}
+
+/* ── Base text roles. Pages opt in with these classes or element rules. ── */
+.t-lead  { font-size: var(--text-lead);  line-height: var(--leading-lead);  font-weight: var(--weight-body); }
+.t-body  { font-size: var(--text-body);  line-height: var(--leading-body);  font-weight: var(--weight-body); }
+.t-small { font-size: var(--text-small); line-height: var(--leading-small); font-weight: var(--weight-body); }
+.t-meta  { font-size: var(--text-meta);  line-height: var(--leading-meta);  font-weight: var(--weight-body); }
