@@ -1,5 +1,7 @@
---- a/learnings/_article-template.html	2026-10-01 22:56:25.550455426 +0100
-+++ b/learnings/_article-template.html	2026-10-01 23:24:12.316392715 +0100
+diff --git a/learnings/_article-template.html b/learnings/_article-template.html
+index 227935f..c9b9265 100644
+--- a/learnings/_article-template.html
++++ b/learnings/_article-template.html
 @@ -15,14 +15,11 @@
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

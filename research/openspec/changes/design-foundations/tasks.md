@@ -4,7 +4,12 @@ Each step needs the workflow gates in `operations/workflow.md`: lease,
 Airtable record, exact approval, then preview approval and release approval
 as separate decisions.
 
-## Step 1: tokens file and learnings template (11 articles)
+## Step 1: tokens file and learnings template (template plus 10 articles)
+
+`step1-article-template.patch` is rebased onto `main` at `ed4b349` and is
+deliberately **not applied** on the proposal branch. Apply it only when this
+step is approved. See "Step 1 patch" in `proposal.md` for the checks already
+run on it.
 
 - [ ] Add `styles/tokens.css` (draft in this branch, revision 2: both themes).
 - [ ] Add `scripts/audit/check-contrast.mjs` to `npm run build` (fails on a
@@ -14,14 +19,16 @@ as separate decisions.
       `html { font-size: 100% }`; map text to roles:
       `article p` → body, `.cold-open` and `.cta-hook-a` → small,
       `.byline-*` and `.disclosure-note` → meta.
-- [ ] `npm run build`; confirm all 11 articles regenerate.
+- [ ] `npm run build`; confirm the template and all 10 articles regenerate.
 - [ ] Verify computed styles: `article p` 17px / 1.7 / 400 at 1440px and
       about 16px at 390px; no undefined custom properties.
       Prototype result (local, not deployed): 17px / 1.70 / 400 at 1440,
       16.2px / 1.70 / 400 at 390. Before: 16px / 1.80 / 400.
 - [ ] axe and visual check at 320, 390 and 1440px; no horizontal overflow.
 
-## Step 2: contrast fixes (small, can ride with or after Release 2)
+## Step 2: contrast fixes (separate item: `FB-20261002-CONTRAST-ORANGE-BTN`)
+
+Tracked and released on its own branch, independent of this packet.
 
 - [ ] `.scale-btn[aria-pressed="true"]`: background `--orange-btn`.
 - [ ] `.skip-link`: background `--orange-btn`.
