@@ -8,7 +8,10 @@ conflict about DM Serif Display, and the step 1 patch rebased onto current
 `main`. Graham approves the packet as it stands on this branch.
 **Airtable:** `FB-20261002-DESIGN-FOUNDATIONS` (intake created 2 October 2026,
 Graham's decision: Pending)
-**Status:** Proposed. Awaiting Graham's approval of this exact packet.
+**Status:** Specification approved by Graham on 2 October 2026. Implementation
+approved: step 1 (article template) first, then the homepage headings as a
+separate step. **Production release is not approved** and is a separate
+decision for each step.
 **Evidence:** `design-system/2026-10-01-token-audit.md` (claude.ai project), audit of `main` at `ab7156b`
 
 ## Problem (observed)
@@ -100,7 +103,13 @@ decision):
 3. **Revisit the decision.** Choose DM Serif Display as the single display
    typeface instead. This changes every article and page heading.
 
-Until Graham chooses, nothing in this packet changes the homepage.
+**Decision (Graham, 2 October 2026): option 1, follow the decision.** Migrate
+the homepage `h1` and `h2` from DM Serif Display to Cormorant Garamond, testing
+weights 500 and 600 for legibility over the canvas, and remove DM Serif Display
+from the `.tg-dialog__title` font stack. This is done as its own step on its
+own branch (`design-foundations-homepage-headings`, built on top of step 1) so
+that it has its own preview and its own release decision. Step 1 does not
+change the homepage.
 
 ## Proposed solution
 
@@ -180,12 +189,14 @@ Roughly 10 to 15% more work per page migration, mostly mapping glow, border
 and overlay values to tokens. Dropping the requirement later means deleting
 the light block and the theme-ready check; nothing else depends on it.
 
-## Step 1 patch: kept unapplied, rebased onto current `main`
+## Step 1 patch: applied on this branch, 2 October 2026
 
 `step1-article-template.patch` in this folder migrates
-`learnings/_article-template.html` to the tokens. It is **not applied** on this
-branch. Approving this packet does not apply it; step 1 still needs the
-workflow gates in `tasks.md`.
+`learnings/_article-template.html` to the tokens. Graham approved implementation
+on 2 October 2026 and the patch is now applied on this branch (commit
+`05c356c`), with the 10 articles regenerated. The patch file is kept here as the
+record of what step 1 changed. It remains unreleased: nothing on this branch is
+on `main` or in production.
 
 Rebased 2 October 2026 onto `main` at `ed4b349`. The original was written
 against `ab7156b`, before the shared footer partial, the nav and feedback
