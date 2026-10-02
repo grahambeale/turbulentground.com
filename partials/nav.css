@@ -128,6 +128,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
 }
+/* Narrow desktop and tablet (721-900px): with About, the full bar needs about
+   820px. Tighten the side padding and let the logo give way (its strapline
+   truncates) instead of pushing the links off the right edge. */
+@media(min-width:721px) and (max-width:900px) {
+  .nav, .nav.scrolled { padding-left:24px; padding-right:24px; gap:16px; }
+  .nav-logo { flex:1 1 auto; min-width:0; }
+  .nav-logo-text { min-width:0; }
+  .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .nav-links { gap:20px; flex-shrink:0; }
+}
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
