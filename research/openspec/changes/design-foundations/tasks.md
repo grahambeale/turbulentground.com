@@ -108,6 +108,30 @@ Re-base explicitly, then compare screenshots of every survey state.
 - [ ] Add a Playwright check that fails if any public page sets a px
       root font size or computes body text outside the four roles.
 
+## Step 1c: phone article layout (2 Oct 2026, Graham's review)
+
+Below 640px only, in `learnings/_article-template.html`:
+
+- Article body text is 18px (was 16.2px at 390px). From 641px up it is
+  unchanged (16 to 17px by the token). This is a phone-specific exception
+  to the 1 Oct "17px" decision, requested by Graham on 2 Oct.
+- Hero-to-title gap roughly halved at 390px: 113px to 55px (page-wrap top
+  padding 80px to 28px, eyebrow margin 16px to 10px). H1 bottom margin
+  20px to 14px, byline row margin and padding 48/32px to 28/20px,
+  disclosure note 40px to 32px, h2 margins 48/20px to 36/16px.
+- Measured production vs step-1 preview at 390px: the spacing (80px top
+  padding, 16/20/48/32px margins) and the nav problem are identical on
+  production, so they are PRE-EXISTING, not step-1 regressions. Step 1's
+  only phone differences are body text 16px/1.8 (production) to
+  16.2px/1.7, root size 15px to 16px and the darker background.
+- The round button beside the byline on previews is Vercel's own preview
+  toolbar (`vercel-live-feedback`), not site code; it does not appear on
+  production. The site's own feedback tab (fixed, bottom-left, 48px wide)
+  is the same on production and overlaps the left edge of body text when
+  it scrolls underneath. Not changed here: needs a design decision.
+- Screenshots at 390px in `evidence/`: production, step-1 preview before
+  this change, and after.
+
 ## Done when
 
 - Every public page links `tokens.css` and has no local `:root`.
