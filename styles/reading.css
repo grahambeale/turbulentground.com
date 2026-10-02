@@ -59,3 +59,19 @@
   /* Inline two-column grids stack on phones (class="stack-sm"). */
   body .stack-sm { grid-template-columns: 1fr !important; gap: 32px !important; }
 }
+
+/* ── CTA rule (Graham, 2 Oct 2026) ───────────────────────────────────
+   Every call to action fits on ONE line at 320px. Desktop keeps the long label
+   (.cta-long); at 640px and below the button shows the short label (.cta-short)
+   and the line "Put your experience on the record" (.cta-lead) sits above it.
+   Button text is 18px (the floor) with about 12px 20px padding. Markup:
+     <p class="cta-lead">Put your experience on the record</p>
+     <a class="btn ..."><span class="cta-long">...</span><span class="cta-short">Take part · 10 min</span></a> */
+.cta-short, .cta-lead { display: none; }
+@media (max-width: 640px) {
+  .cta-long { display: none; }
+  .cta-short { display: inline; }
+  .cta-lead { display: block; font-size: 18px; line-height: 1.4; color: var(--ink-mid, #c8b89a); margin: 0 0 12px; }
+  /* !important: pages set their own button sizes and wrapping (e.g. body.reading-page .btn-primary) */
+  .cta-btn, .btn.cta-btn { font-size: 18px !important; padding: 12px 20px !important; white-space: nowrap !important; max-width: 100%; }
+}

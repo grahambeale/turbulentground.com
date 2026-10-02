@@ -38,18 +38,17 @@ const root = path.resolve(__dirname, '..');
 const BEALE_NOTE =
   'Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.';
 
-// Homepage: its own note (mentions this page was written outside the AI
-// team's experiment) plus the research-recruitment CTA in its link row.
+// Homepage: trimmed (Graham, 2 Oct 2026) to one closing line, three links,
+// "Independent / ICO registered" and the copyright line. The research-recruitment
+// link that carried data-research-cta="footer" is gone with the longer link row.
 const HOME_FOOTER_CONFIG = {
   links: [
-    { href: '/take-part', label: 'The study', dataResearchCta: 'footer' },
-    { href: '/learnings', label: 'Learnings' },
-    { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
-    { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
+    { href: '/about', label: 'About' },
     { href: '/privacy', label: 'Privacy' },
+    { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
   ],
   note:
-    'Run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Much of this site is built by an AI product team as a live experiment, <a href="/learnings/zero-humans-in-the-loop">read about it</a>. This homepage was written and built outside that experiment.',
+    'Run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Much of this site is built by an AI product team as a live experiment.<br>Independent &middot; ICO registered<br>&copy; 2026 Turbulent Ground',
 };
 
 const WRITING_FOOTER_CONFIG = {
