@@ -11,6 +11,7 @@ lighthouse-report.html
 *.bak
 playwright-report/
 test-results/
+private-beta/
 .env
 .env
 _experiment/*
@@ -19,3 +20,5 @@ _experiment/*
 !_experiment/plausible-api-integration.md
 gsc-token.json
 !_experiment/fetch-search-data.py
+.vercel
+.env*
