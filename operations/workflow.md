@@ -115,6 +115,19 @@ previewed and reported at the time of approval. Before releasing, confirm the
 branch head still matches that commit. If it has changed, the approval lapses:
 stop and request approval again, quoting the new head.
 
+An approval survives a rebase onto a moved base if, and only if, all three hold:
+
+1. the change set is patch-identical to the approved head: `git range-diff` of the
+   approved commits against the rebased commits shows every commit as unchanged
+   (`=`), with no content change, including no conflict resolution that alters a line;
+2. the pre-push hook passes on the new head; and
+3. the report to Graham quotes both heads, the approved head and the rebased head,
+   and says the change set was proven identical.
+
+Any content change, however small, still lapses the approval: stop and request
+approval again, quoting the new head. A conflict that needed a manual edit counts as
+a content change unless `git range-diff` still shows the commit unchanged.
+
 ### 7. Close and release the lease
 
 Update Airtable status, decisions, evidence, URLs, blocker and next action.
