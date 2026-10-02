@@ -165,15 +165,14 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .message-copy-row { align-items: center; display: flex; gap: 10px; margin-top: 10px; }
   .message-copy-row button { border-radius: 8px; flex: 0 0 auto; }
   .privacy-note { color: var(--muted); font-size: 0.86rem; margin-top: 28px; }
-  .operations-links { display: flex; flex-wrap: wrap; gap: 12px 22px; margin: 22px 0 0; }
-  .operations-links a { color: var(--orange-light); text-underline-offset: 4px; }
   @media (max-width: 520px) {
     main { margin-top: 24px; }
     .invite-row { flex-direction: column; }
   }
 </style>
+<link rel="stylesheet" href="/admin/admin-nav.css">
 </head>
-<body>
+<body class="admin-shell">
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
   <a href="/" class="nav-logo">
@@ -194,8 +193,20 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
       <span class="nav-strapline">Helping product teams navigate the AI shift, together.</span>
     </div>
   </a>
-
+  <div class="nav-links">
+    <a href="/admin" class="nav-link">Admin home</a>
+    <a href="/admin/invitations" class="nav-link active" aria-current="page">Invitations</a>
+    <a href="/research/admin-tools" class="nav-link">Results &amp; feedback</a>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/admin">Admin home</a>
+  <a href="/admin/invitations" class="active" aria-current="page">Invitations</a>
+  <a href="/research/admin-tools">Results &amp; feedback</a>
+</div>
 <!-- NAV_END -->
 <main>
   <p class="eyebrow">Protected operations</p>
@@ -268,10 +279,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   </section>
 
   <p class="privacy-note">Unless you choose to remember it, the access key stays in this browser tab only. Invite details are sent directly to the protected invitation service.</p>
-  <nav class="operations-links" aria-label="Protected operations">
-    <a href="/admin">Admin home</a>
-    <a href="/research/admin-tools">Results preview and feedback tools</a>
-  </nav>
 </main>
 <script>
 (function () {

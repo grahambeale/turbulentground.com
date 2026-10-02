@@ -1,0 +1,25 @@
+/* Admin-only responsive adjustment for the shared Turbulent Ground masthead. */
+@media (max-width: 720px) {
+  .admin-shell .nav,
+  .admin-shell .nav.scrolled {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .admin-shell .nav-logo {
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .admin-shell .nav-logo-mark {
+    width: 32px;
+  }
+
+  .admin-shell .nav-wordmark {
+    font-size: 18px;
+  }
+
+  .admin-shell .nav-strapline {
+    display: none;
+  }
+}

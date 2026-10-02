@@ -71,6 +71,23 @@ const RESEARCH_NAV_CONFIG = {
   cta: null,
 };
 
+// First-party operational pages use the same shared desktop and mobile
+// navigation pattern as the public site, but with admin destinations. The CMS
+// at /admin keeps its own application shell; this navigation only links to it.
+function adminNavConfig(currentHref) {
+  return {
+    logoHref: '/',
+    strapline: STRAPLINE,
+    currentHref,
+    links: [
+      { href: '/admin', label: 'Admin home' },
+      { href: '/admin/invitations', label: 'Invitations' },
+      { href: '/research/admin-tools', label: 'Results &amp; feedback' },
+    ],
+    cta: null,
+  };
+}
+
 // Homepage (Phase 3 public launch, 29 Sep 2026): the homepage's job is to
 // recruit to the research study, so its nav CTA points there. Every other
 // main-site page keeps the diagnostic CTA.
@@ -109,8 +126,8 @@ const TARGET_FILES = [
 const NAV_CONFIG = {
   'index.html': HOME_NAV_CONFIG,
   'research/index.html': RESEARCH_NAV_CONFIG,
-  'admin/invitations/index.html': RESEARCH_NAV_CONFIG,
-  'research/admin-tools.html': RESEARCH_NAV_CONFIG,
+  'admin/invitations/index.html': adminNavConfig('/admin/invitations'),
+  'research/admin-tools.html': adminNavConfig('/research/admin-tools'),
   'research/privacy.html': RESEARCH_NAV_CONFIG,
 };
 
@@ -146,7 +163,10 @@ function renderNav(config) {
   let mobileMenu = '';
   if (config.links && config.links.length) {
     const linkEls = config.links
-      .map((l) => `<a href="${escapeHtml(l.href)}" class="nav-link">${l.label}</a>`)
+      .map((l) => {
+        const current = l.href === config.currentHref ? ' active" aria-current="page' : '';
+        return `<a href="${escapeHtml(l.href)}" class="nav-link${current}">${l.label}</a>`;
+      })
       .join('\n    ');
     const ctaEl = config.cta
       ? `\n    <div class="nav-btn-wrap"><a href="${escapeHtml(config.cta.href)}" class="nav-btn">${config.cta.label}</a></div>`
@@ -156,7 +176,10 @@ function renderNav(config) {
       `  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">\n` +
       `    <span></span><span></span><span></span>\n  </button>`;
 
-    const mobileLinks = config.links.map((l) => `  <a href="${escapeHtml(l.href)}">${l.label}</a>`).join('\n');
+    const mobileLinks = config.links.map((l) => {
+      const current = l.href === config.currentHref ? ' class="active" aria-current="page"' : '';
+      return `  <a href="${escapeHtml(l.href)}"${current}>${l.label}</a>`;
+    }).join('\n');
     const mobileCta = config.cta
       ? `\n  <a href="${escapeHtml(config.cta.href)}" class="mobile-menu-btn">${config.cta.label}</a>`
       : '';
