@@ -15,14 +15,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px;
-    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
-    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
-    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
-  }
-  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px; }
+  html { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 100%; }
+  body { font-size: var(--text-small); line-height: var(--leading-small); }
   body { min-height: 100vh; }
 /* NAV_CSS_START */
 /* NAV_CSS_END */
@@ -30,22 +28,22 @@
   @media (max-width: 640px) {
     .hero-image { max-height: 220px; }
   }
-  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: var(--text-small); line-height: var(--leading-small); color: var(--ink-mid); margin-bottom: 32px; }
   .cold-open strong { color: var(--ink); }
   .cold-open a { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
   .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
   .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
-  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a { color: var(--ink-mid); font-size: var(--text-small); margin-bottom: 0; }
   .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
   .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
-  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
-  .byline-meta { color: var(--muted); font-size: 13px; }
-  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .byline-name { color: var(--ink-mid); font-size: var(--text-meta); font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: var(--text-meta); }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: var(--text-meta); color: var(--muted); margin-bottom: 40px; line-height: var(--leading-meta); }
   .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
-  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: var(--text-body); line-height: var(--leading-body); font-weight: var(--weight-body); }
   article a { color: var(--orange-lt); text-decoration: none; }
   article a:hover { text-decoration: underline; }
   article strong { color: var(--ink); font-weight: 500; }
