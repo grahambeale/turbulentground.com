@@ -66,6 +66,7 @@ window.plausible = window.plausible || function () {
      fails if any other screen changes. */
   @media (max-width: 640px) {
     body:has(#screen-public-start.active) { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
+    body:has(#screen-public-start.active) .nav-strapline { display: none; }   /* 13px header text: nothing under 18px on the intro */
     #screen-public-start .video-thumb-label, #screen-public-start .transcript-toggle summary { font-size: var(--read-tap); max-width: none; }
     #screen-public-start .transcript-body { font-size: var(--read-size); line-height: var(--read-leading); }
     #screen-public-start .check-row .required-tag { font-size: var(--read-support); }
