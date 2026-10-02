@@ -53,6 +53,7 @@ body {
 ::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
 
 /* ── Nav ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) { .item-cta.cta-btn { padding: 4px 0 0; } }
 /* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
@@ -155,9 +156,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
   :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
@@ -182,7 +183,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-toggle { flex-shrink:0; }
 }
 @media(max-width:640px) {
-  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
   body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
 }
 @media(max-width:480px) {
@@ -500,7 +500,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="item-title">The AI shift study</div>
           <div class="item-desc">An independent study of how AI is changing work in product teams, told by the people doing it. 24 statements, a personal summary at the end.</div>
         </div>
-        <a href="/take-part" class="item-cta">Put your experience on the record &rarr;</a>
+        <div>
+          <p class="cta-lead">Put your experience on the record</p>
+          <a href="/take-part" class="item-cta cta-btn"><span class="cta-long">Put your experience on the record</span><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
+        </div>
       </div>
 
       <div class="item">

@@ -124,9 +124,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
   :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
@@ -151,7 +151,6 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-toggle { flex-shrink:0; }
 }
 @media(max-width:640px) {
-  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
   body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
 }
 @media(max-width:480px) {
@@ -185,6 +184,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
   .cta-hook-a { color: var(--ink-mid); font-size: var(--text-small); margin-bottom: 0; }
   .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
+  .cta-hook-btn { display: none; }
+  @media (max-width: 640px) { .cta-hook-a .cta-link { display: none; } .cta-hook-btn { display: inline-flex; align-items: center; gap: 8px; color: #fff; background: var(--orange-btn, #b84215); font-weight: 500; border-radius: 40px; text-decoration: none; } }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
@@ -375,7 +376,9 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 
   <div class="cta-hook">
     <p class="cta-hook-q">What does the AI shift look like from where you are?</p>
-    <p class="cta-hook-a">I'm running an independent study of how AI is changing work in product teams, told by the people doing it. <a href="/take-part">Put your experience on the record &rarr;</a></p>
+    <p class="cta-hook-a">I'm running an independent study of how AI is changing work in product teams, told by the people doing it. <a href="/take-part" class="cta-link"><span class="cta-long">Put your experience on the record &rarr;</span></a></p>
+    <p class="cta-lead">Put your experience on the record</p>
+    <a href="/take-part" class="cta-hook-btn cta-btn"><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
   </div>
   </article>
 </div>
