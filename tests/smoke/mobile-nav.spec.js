@@ -18,7 +18,7 @@ const PAGES = [
   ['/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html'],
 ];
 
-for (const width of [320, 375, 390]) {
+for (const width of [320, 375, 390, 480, 481, 720]) {
   for (const [clean, file] of PAGES) {
     test(`nav fits at ${width}px: ${clean}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
@@ -29,7 +29,9 @@ for (const width of [320, 375, 390]) {
         const toggle = document.querySelector('.nav-toggle');
         const toggleShown = !!toggle && getComputedStyle(toggle).display !== 'none';
         const wm = /** @type {HTMLElement} */ (document.querySelector('.nav-wordmark'));
+        const strap = document.querySelector('.nav-strapline');
         return {
+          strapShown: !!strap && getComputedStyle(strap).display !== 'none',
           vw: window.innerWidth,
           scrollW: document.documentElement.scrollWidth,
           logo: r(document.querySelector('.nav-logo')),
@@ -41,6 +43,7 @@ for (const width of [320, 375, 390]) {
       expect(m.scrollW, 'page must not scroll sideways').toBeLessThanOrEqual(m.vw);
       expect(m.wordmark.right, 'wordmark must be on screen').toBeLessThanOrEqual(m.vw);
       expect(m.wordmarkClipped).toBe(false);
+      if (width <= 480) expect(m.strapShown, 'strapline is hidden at 480px and below').toBe(false);
       if (m.toggle) {
         expect(m.toggle.right, 'menu button must be on screen').toBeLessThanOrEqual(m.vw);
         expect(m.logo.right, 'logo must not overlap the menu button').toBeLessThanOrEqual(m.toggle.left + 1);
