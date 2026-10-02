@@ -19,6 +19,7 @@ check('canonical notice stays out of search indexes', /name="robots" content="no
 check('canonical notice has the stable participation anchor', /<section class="privacy-section privacy-panel" id="participation"/.test(root));
 check('canonical notice has accessible content tabs', /role="tablist"/.test(root) && /role="tab"/.test(root) && /role="tabpanel"/.test(root) && /aria-controls="participation"/.test(root));
 check('section navigation uses the referral-style selected state', /class="privacy-contents-tabs"/.test(root) && /border-color: var\(--orange-light\)/.test(root) && /border-top-width: 4px/.test(root));
+check('inactive tab hover stays clear of the orange rule', /button:not\(\[aria-selected="true"\]\) \{[^}]*margin-bottom: 2px;[^}]*padding-bottom: 10px/.test(root));
 check('selected tab opens into the dark panel without a bottom line', /margin-bottom: -1px/.test(root) && /\.privacy-contents-tabs \{[^}]*border-bottom: 0;[^}]*linear-gradient\(var\(--orange-light\)/.test(root) && /button\[aria-selected="true"\]::after[^}]*bottom: 0;[^}]*background: var\(--bg\)/.test(root) && /\.privacy-panel \{[^}]*background: var\(--bg\)/.test(root));
 check('tabs switch panels in place and preserve direct-link state', /activateTab/.test(root) && /panel\.hidden/.test(root) && /history\.replaceState/.test(root));
 check('tabs support standard keyboard navigation', /ArrowRight/.test(root) && /ArrowLeft/.test(root) && /Home/.test(root) && /End/.test(root));

@@ -154,6 +154,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .privacy-contents-tabs { display: flex; gap: 3px; overflow-x: auto; border-bottom: 0; background: linear-gradient(var(--orange-light), var(--orange-light)) left bottom / 100% 1px no-repeat; scrollbar-width: none; }
   .privacy-contents-tabs::-webkit-scrollbar { display: none; }
   .privacy-contents button { position: relative; flex: 0 0 auto; padding: 13px 10px 12px; border: 1px solid transparent; border-bottom: 0; border-radius: 9px 9px 0 0; color: var(--muted); background: transparent; font: 400 .9rem/1.4 'DM Sans', sans-serif; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease; }
+  .privacy-contents button:not([aria-selected="true"]) { margin-bottom: 2px; padding-bottom: 10px; }
   .privacy-contents button:hover { color: var(--ink); background: rgba(38,33,28,.48); }
   .privacy-contents button[aria-selected="true"] { z-index: 1; margin-bottom: -1px; padding: 10px 10px 13px; color: var(--ink); background: var(--bg); border-color: var(--orange-light); border-top-width: 4px; border-bottom: 0; box-shadow: none; }
   .privacy-contents button[aria-selected="true"]::after { content: ""; position: absolute; z-index: 2; left: -1px; right: -1px; bottom: 0; height: 2px; background: var(--bg); }
