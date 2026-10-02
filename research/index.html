@@ -58,13 +58,19 @@ window.plausible = window.plausible || function () {
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; padding-top: 92px; }
+  /* Phones: ONLY the start screen (the /take-part intro) follows the type scale
+     (styles/reading.css). Every other screen (consent, context, the 24 statements,
+     results) is the research instrument and stays exactly as it was until the
+     methodology-reviewed proposal research/openspec/changes/survey-mobile-type-scale
+     is approved: do not widen these selectors. tests/smoke/survey-frozen.spec.js
+     fails if any other screen changes. */
   @media (max-width: 640px) {
-    body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
-    body.reading-page .video-thumb-label, body.reading-page .transcript-toggle summary { font-size: var(--read-tap); max-width: none; }
-    body .reading-copy .transcript-body { font-size: var(--read-size); line-height: var(--read-leading); }
-    body.reading-page .check-row .required-tag { font-size: var(--read-support); }
-    body.reading-page .btn { font-size: var(--read-tap); }
-    body.reading-page .check-row label { font-size: var(--read-tap); }   /* tappable consent text */
+    body:has(#screen-public-start.active) { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
+    #screen-public-start .video-thumb-label, #screen-public-start .transcript-toggle summary { font-size: var(--read-tap); max-width: none; }
+    #screen-public-start .transcript-body { font-size: var(--read-size); line-height: var(--read-leading); }
+    #screen-public-start .check-row .required-tag { font-size: var(--read-support); }
+    #screen-public-start .btn { font-size: var(--read-tap); }
+    #screen-public-start .check-row label { font-size: var(--read-tap); }   /* tappable consent text */
   }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
@@ -832,7 +838,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .statement-context-continue:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
-<body class="reading-page">
+<body>
 
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
