@@ -174,6 +174,16 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
 }
+/* Narrow desktop and tablet (721-900px): with About, the full bar needs about
+   820px. Tighten the side padding and let the logo give way (its strapline
+   truncates) instead of pushing the links off the right edge. */
+@media(min-width:721px) and (max-width:900px) {
+  .nav, .nav.scrolled { padding-left:24px; padding-right:24px; gap:16px; }
+  .nav-logo { flex:1 1 auto; min-width:0; }
+  .nav-logo-text { min-width:0; }
+  .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .nav-links { gap:20px; flex-shrink:0; }
+}
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
@@ -417,6 +427,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   </a>
   <div class="nav-links">
     <a href="/learnings" class="nav-link">Learnings</a>
+    <a href="/about" class="nav-link">About</a>
     <div class="nav-btn-wrap"><a href="/take-part" class="nav-btn">Take part &rarr;</a></div>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -425,6 +436,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 </nav>
 <div class="mobile-menu" id="mobile-menu">
   <a href="/learnings">Learnings</a>
+  <a href="/about">About</a>
   <a href="/take-part" class="mobile-menu-btn">Take part &rarr;</a>
 </div>
 <!-- NAV_END -->

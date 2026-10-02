@@ -41,7 +41,7 @@ const root = path.resolve(__dirname, '..');
 const STRAPLINE = 'Helping product teams navigate the AI shift, together.';
 
 // Default config: the full main-site nav, exactly as it's always looked —
-// Home, Learnings, the diagnostic CTA, a clickable logo — plus the
+// Home, Learnings, About, the Take part CTA, a clickable logo — plus the
 // site-wide strapline. Every file in TARGET_FILES gets this unless it
 // has its own entry below.
 const DEFAULT_NAV_CONFIG = {
@@ -50,6 +50,7 @@ const DEFAULT_NAV_CONFIG = {
   links: [
     { href: '/', label: 'Home' },
     { href: '/learnings', label: 'Learnings' },
+    { href: '/about', label: 'About' },
   ],
   // Diagnostic orphaned 29 Sep 2026 (Graham's decision): the site-wide CTA
   // now recruits to the Phase 3 research study instead.
@@ -96,6 +97,7 @@ const HOME_NAV_CONFIG = {
   strapline: STRAPLINE,
   links: [
     { href: '/learnings', label: 'Learnings' },
+    { href: '/about', label: 'About' },
   ],
   cta: { href: '/take-part', label: 'Take part &rarr;' },
 };
