@@ -72,6 +72,7 @@
   .cta-long { display: none; }
   .cta-short { display: inline; }
   .cta-lead { display: block; font-size: 18px; line-height: 1.4; color: var(--ink-mid, #c8b89a); margin: 0 0 12px; }
+  * + .cta-lead { margin-top: 20px; }   /* space above the line when something precedes it */
   /* !important: pages set their own button sizes and wrapping (e.g. body.reading-page .btn-primary) */
   .cta-btn, .btn.cta-btn { font-size: 18px !important; padding: 12px 20px !important; white-space: nowrap !important; max-width: 100%; }
 }
