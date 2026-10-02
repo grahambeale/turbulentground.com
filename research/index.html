@@ -37,6 +37,7 @@ window.plausible = window.plausible || function () {
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,circle,close,code,domain,flare,group,groups,manage_accounts,more_horiz,palette,person,public,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
 <link rel="stylesheet" href="/research/referral-sharing.css">
+<link rel="stylesheet" href="/styles/tokens.css">
 <style>
   /* ── Typography scale ──────────────────────────────────────────────
      Bumped up from the original build after a real walkthrough flagged
@@ -57,6 +58,7 @@ window.plausible = window.plausible || function () {
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; padding-top: 92px; }
+  @media (max-width: 640px) { body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); } }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
   /* NAV_CSS_START */
@@ -166,6 +168,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   margin-top:28px;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -853,7 +856,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 
   <!-- ============ SCREEN 0a: PUBLIC START ============ -->
   <section class="screen" id="screen-public-start">
-    <div class="public-start-wrap">
+    <div class="public-start-wrap reading-copy">
       <h1>Welcome</h1>
       <div class="intro-video-block">
         <div class="video-thumb">

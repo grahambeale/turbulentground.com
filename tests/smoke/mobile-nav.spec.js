@@ -107,3 +107,52 @@ for (const width of [320, 375, 390, 480, 720]) {
     }
   }
 }
+
+/**
+ * Reading comfort below 640px (Graham, 2 Oct 2026): body copy is at least 18px
+ * with a line-height of at most 1.65, on the article template, /privacy,
+ * /learnings, /about and the /take-part intro.
+ */
+const READ_PAGES = [
+  ['article', '/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html', '.reading-copy p'],
+  ['privacy', '/privacy', '/privacy.html', '.reading-copy p'],
+  ['learnings', '/learnings', '/learnings/index.html', '.reading-copy .intro'],
+  ['about', '/about', '/about.html', '.narrative p'],
+  ['take-part', `/take-part?preview=public-start&pk=${reviewKey}`, `/research/index.html?preview=public-start&pk=${reviewKey}`, '#screen-public-start p'],
+];
+for (const width of [320, 390, 640]) {
+  for (const [name, clean, file, sel] of READ_PAGES) {
+    test(`body text is >=18px with line-height <=1.65 at ${width}px: ${name}`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
+      const page = await context.newPage();
+      await page.goto(html ? file : clean);
+      const m = await page.evaluate((sel) => {
+        const el = [...document.querySelectorAll(sel)].find((e) => e instanceof HTMLElement && e.offsetParent && (e.textContent || '').trim().length > 40);
+        if (!el) return null;
+        const cs = getComputedStyle(el);
+        const fs = parseFloat(cs.fontSize);
+        return { fs, ratio: cs.lineHeight === 'normal' ? 1.2 : parseFloat(cs.lineHeight) / fs };
+      }, sel);
+      expect(m, `a visible paragraph matching ${sel}`).not.toBeNull();
+      expect(m.fs, 'font size').toBeGreaterThanOrEqual(18);
+      expect(m.ratio, 'line-height / font-size').toBeLessThanOrEqual(1.65);
+      await context.close();
+    });
+  }
+}
+
+// At 720px and below the article hero starts below the transparent header, so the
+// header's rule never crosses the picture or its baked-in masthead text.
+for (const width of [320, 390, 640, 720]) {
+  test(`article hero starts below the header at ${width}px`, async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
+    const page = await context.newPage();
+    await page.goto(html ? '/learnings/zero-humans-in-the-loop.html' : '/learnings/zero-humans-in-the-loop');
+    const m = await page.evaluate(() => ({
+      navBottom: document.querySelector('.nav').getBoundingClientRect().bottom,
+      heroTop: document.querySelector('.hero-image').getBoundingClientRect().top,
+    }));
+    expect(m.heroTop, `hero top ${m.heroTop} vs header bottom ${m.navBottom}`).toBeGreaterThanOrEqual(m.navBottom - 1);
+    await context.close();
+  });
+}
