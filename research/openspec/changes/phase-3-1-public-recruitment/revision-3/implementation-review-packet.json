@@ -1,0 +1,10 @@
+{
+  "specification_revision": 3,
+  "status": "V1 prototype accepted; detailed implementation package awaiting Graham review",
+  "approval_record": "implementation-proposal-approval.json",
+  "files": {
+    "implementation-proposal.md": "f2e735d707c3ac466a560b4ff4604985fb6808e821b7dedf6faa87c0f761d05b",
+    "tasks.md": "0a7d80449cf486113b8a3c2567769c092b119c55271d082bff27099f9b7d9575"
+  },
+  "approval_effect": "Authorises schema/policy planning and a synthetic sharing prototype on a dedicated branch. Does not authorise Airtable schema mutation, live data writes, reminders, public endpoints, participant contact or release."
+}

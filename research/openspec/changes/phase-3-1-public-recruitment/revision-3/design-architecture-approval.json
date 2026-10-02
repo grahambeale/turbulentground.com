@@ -1,0 +1,13 @@
+{
+  "specification_revision": 3,
+  "decision": "Approved",
+  "approval_statement": "Approved",
+  "approved_by": "Graham Beale",
+  "source": "Direct conversation",
+  "approved_at": "2026-09-25T22:31:32Z",
+  "approved_files": {
+    "design-review.md": "78d1c02c962d1d21f0813c3aaede8e28d932fb3c91e144b1083df7394827458f",
+    "architecture-review.md": "abfcc36c3241b4e2eefde1819f454cb52212fef17b7efbc2a76154ad59771c11"
+  },
+  "effect": "Authorises an implementation proposal and prototype review. Does not authorise implementation, participant contact or release."
+}

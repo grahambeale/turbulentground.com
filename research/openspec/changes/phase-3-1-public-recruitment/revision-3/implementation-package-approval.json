@@ -1,0 +1,11 @@
+{
+  "specification_revision": 3,
+  "decision": "Approved to proceed iteratively",
+  "approved_at": "2026-09-26T22:58:44Z",
+  "approved_by": "Graham",
+  "source": "Direct conversation",
+  "exact_statement": "ok happy to proceed - its hard to absorb all the details but lets move ahead, I can adjust and optimse as we go along",
+  "review_packet": "implementation-package-review-packet.json",
+  "approval_effect": "Authorises the reviewed Airtable schema migration and a disabled, synthetic-first implementation on a dedicated branch. It does not authorise real participant reminders or deletions, public activation, participant contact or production release.",
+  "delivery_principle": "Proceed in small reversible stages and return participant-facing or consequential decisions for review."
+}

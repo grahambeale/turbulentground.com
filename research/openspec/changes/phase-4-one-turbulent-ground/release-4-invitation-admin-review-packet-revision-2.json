@@ -1,0 +1,30 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "release": "Release 4A invitation administration",
+  "revision": 2,
+  "airtable_feedback_id": "FB-20261002-PHASE4-REL4-INVITATIONS",
+  "airtable_record_id": "recgzHIuIzBqkRPo3",
+  "decision": "approved",
+  "implementation_authority": true,
+  "production_authority": false,
+  "plan": {
+    "path": "release-4-invitation-admin-plan-revision-2.md",
+    "sha256": "2db3beca0bec86278fc2e5fcd066b0f16e7bc2f9508a01cfbb3a19b764e712d3"
+  },
+  "review": {
+    "path": "release-4-invitation-admin-review-revision-2.md",
+    "sha256": "030ca8f977fc6031a958fdc99c28e05ac64545f795eeeae9ce6b3d09b48b3167"
+  },
+  "prepared_at": "2026-10-02T13:54:56Z",
+  "prepared_by": "Codex",
+  "approved_at": "2026-10-02T14:10:23Z",
+  "approved_by": "Graham Beale",
+  "approval_quote": "approve",
+  "implementation": {
+    "commit": "25bad00fab54ef21bf2b987afc010fb5cd6b54f7",
+    "branch": "codex/phase4-release4a-invitations",
+    "preview_deployment": "dpl_2iDmrBzdKct4R2rmdt5y3CqsjqBn",
+    "preview_url": "https://turbulentground-64vkenvqg-grahambeale.vercel.app/admin/invitations",
+    "verified": true
+  }
+}

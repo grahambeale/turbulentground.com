@@ -1,0 +1,13 @@
+{
+  "revision": 2,
+  "status": "Superseded by revision 3 review packet",
+  "basis": "Revision 1 plus the approved or deferred D01-D14 Airtable decisions recorded by 25 September 2026",
+  "files": {
+    "../evidence-snapshot.md": "4e9993ffd43b97e2518b791279e7b4f294ff528109e4d32657a39b914e9300e2",
+    "../proposal.md": "06bf3291250f327d2093a22649be5f15e969e1a4b6f06aeae60191567771fe7e",
+    "../specs/public-recruitment-referral/spec.md": "bb496d9d2c2e14f0dc7904227028f6f6da1f67598475a73c560cdf12258493f4",
+    "decision-register.md": "79cd5bcc36833d54feb29361b6ccc4d4e5f493b371ddcbe94ee5e10c88664df8",
+    "spec-amendment.md": "7fe807960150179932d71dfeb6636e4076c90e8c900d357f35bcf622a6d342bd"
+  },
+  "approval_effect": "Approval authorises the next design and architecture review only; it does not authorise implementation or release."
+}

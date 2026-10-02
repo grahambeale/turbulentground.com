@@ -1,0 +1,15 @@
+{
+  "specification_revision": 3,
+  "decision": "Approved",
+  "approved_at": "2026-09-26T22:20:37Z",
+  "approved_by": "Graham",
+  "source": "Direct conversation",
+  "exact_statement": "approved",
+  "approved_files": {
+    "implementation-proposal.md": "f2e735d707c3ac466a560b4ff4604985fb6808e821b7dedf6faa87c0f761d05b",
+    "tasks.md": "0a7d80449cf486113b8a3c2567769c092b119c55271d082bff27099f9b7d9575",
+    "design-review.md": "78d1c02c962d1d21f0813c3aaede8e28d932fb3c91e144b1083df7394827458f",
+    "architecture-review.md": "abfcc36c3241b4e2eefde1819f454cb52212fef17b7efbc2a76154ad59771c11"
+  },
+  "effect": "Authorises schema and policy planning plus a synthetic post-completion sharing prototype on a dedicated branch. Does not authorise Airtable schema mutation, live participant-data writes, reminders, public endpoints, participant contact or production release."
+}
