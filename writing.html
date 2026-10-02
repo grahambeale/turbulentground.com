@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 :root { /* nav inset: see partials/nav.css */ --page-gutter:20px;
   --bg:        #131110;
@@ -340,13 +341,13 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
-/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
-   on phones; links are tappable so 20px. */
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
 @media (max-width:640px) {
-  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
-  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
-  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
-  body.reading-page .footer-links { gap:10px 22px; }
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
 }
 /* FOOTER_CSS_END */
 
@@ -397,6 +398,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px, body 20px at 1.55 (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .phase-nav-label, body.reading-page .phase-nav-count, body.reading-page .phase-label,
+  body.reading-page .post-phase-tag, body.reading-page .post-num { font-size:var(--read-support); line-height:1.5; }
+  body.reading-page .phase-nav-title { font-size:var(--read-heading-min); }
+  body.reading-page .phase-desc, body.reading-page .post-desc { font-size:var(--read-size); line-height:var(--read-leading); }
+  body.reading-page .post-title { font-size:var(--read-heading-min); line-height:1.25; }
+  body.reading-page .btn-ghost, body.reading-page .btn-primary { font-size:var(--read-tap); white-space:normal; text-align:center; max-width:100%; }
+}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -425,7 +435,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- Nav -->
 <!-- NAV_START -->
@@ -710,7 +720,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <!-- Closing CTA -->
 <section style="background:var(--bg-warm);border-top:1px solid var(--border);">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+    <div class="stack-sm" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
       <div>
         <p style="font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--orange-lt);margin-bottom:14px;">Follow the argument</p>
         <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);color:var(--ink);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:16px;">

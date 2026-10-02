@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 /* ── Tokens ──────────────────────────────────────────────────────────── */
 :root {
@@ -382,13 +383,13 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
-/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
-   on phones; links are tappable so 20px. */
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
 @media (max-width:640px) {
-  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
-  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
-  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
-  body.reading-page .footer-links { gap:10px 22px; }
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
 }
 /* FOOTER_CSS_END */
 
@@ -455,6 +456,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px, body 20px at 1.55 (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .eyebrow, body.reading-page .col-label, body.reading-page .condition-num,
+  body.reading-page .condition-chevron { font-size:var(--read-support); line-height:1.5; }
+  body.reading-page .btn { font-size:var(--read-tap); white-space:normal; text-align:center; justify-content:center; max-width:100%; }
+  body.reading-page li, body.reading-page main p:not([class]):not([style*="font-size"]) { font-size:var(--read-size); line-height:var(--read-leading); }
+  /* The call-to-action card's grid column was sized by its widest unbroken content and pushed the page sideways. */
+  body.reading-page .cta-card { grid-template-columns:minmax(0,1fr); }
+  body.reading-page .cta-card > * { min-width:0; }
+  body.reading-page .cta-card .btn { width:100%; box-sizing:border-box; white-space:normal !important; }   /* an inline nowrap made the label spill out of the pill */
+}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -483,7 +495,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- ── Nav ─────────────────────────────────────────────────────────── -->
 <!-- NAV_START -->
@@ -543,7 +555,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg))"></div>
   </div>
 
-  <div class="container" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;width:100%;">
+  <div class="container stack-sm" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;width:100%;">
 
     <!-- Left: argument -->
     <div>
@@ -601,7 +613,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         </div>
 
         <!-- Mini stat row -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--border-n);padding-top:24px;">
+        <div class="stack-sm" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--border-n);padding-top:24px;">
           <div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--orange-lt);line-height:1;">5</div>
             <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;">Conditions</div>
@@ -624,7 +636,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <!-- ── Why it matters ───────────────────────────────────────────────── -->
 <section>
   <div class="container--narrow">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
+    <div class="stack-sm" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
       <div>
         <p class="eyebrow">The argument</p>
         <h2 class="display display-md" style="margin-bottom:0;">
@@ -646,7 +658,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <!-- ── Five conditions ──────────────────────────────────────────────── -->
 <section id="conditions">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px;">
+    <div class="stack-sm" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px;">
       <div>
         <p class="eyebrow">The five conditions</p>
         <h2 class="display display-md">What Care Capital measures.</h2>

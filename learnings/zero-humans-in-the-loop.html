@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px; }
@@ -202,8 +203,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
   /* Phones: the transparent header would sit over the hero image and cut across
      its baked-in masthead text, so the page starts below the header at 720px and
-     under. Reading comfort (18px, 1.6, 1em gaps) comes from .reading-copy in
-     tokens.css; the page-specific spacing below tightens the title block. */
+     under. Reading comfort (20px, 1.55, 1em gaps) comes from .reading-copy in
+     reading.css; the page-specific spacing below tightens the title block. */
   @media (max-width: 720px) {
     body { padding-top: var(--nav-h, 73px); }
   }
@@ -235,13 +236,13 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
-/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
-   on phones; links are tappable so 20px. */
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
 @media (max-width:640px) {
-  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
-  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
-  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
-  body.reading-page .footer-links { gap:10px 22px; }
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
 }
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */

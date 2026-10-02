@@ -178,3 +178,6 @@
   .cta-lead { display: block; font-size: 18px; line-height: 1.4; color: var(--ink-mid, #c8b89a); margin: 0 0 12px; }
   .cta-btn, .btn.cta-btn { font-size: 18px; padding: 12px 20px; white-space: nowrap; max-width: 100%; }
 }
+
+/* The phone type scale (body 20px, nothing under 18px, below 640px) lives in
+   styles/reading.css so a page can take it without taking these colour tokens. */

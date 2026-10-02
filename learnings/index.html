@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:780px;
@@ -223,13 +224,13 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
-/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
-   on phones; links are tappable so 20px. */
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
 @media (max-width:640px) {
-  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
-  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
-  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
-  body.reading-page .footer-links { gap:10px 22px; }
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
 }
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
