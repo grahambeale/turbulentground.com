@@ -2,3 +2,33 @@ learnings/_research/
 
 # Internal specifications and approval evidence: kept in git, not served by the site.
 research/openspec/
+
+# Interim (FB-20261002-SERVED-FILES, option (a)): files that neither the build nor the
+# API functions need, so they are not served. Vercel removes ignored files from the
+# checkout BEFORE the build, so never list a build or function input here: scripts/,
+# partials/, lib/, api/, content/, learnings/_article-template.html, vercel.json and
+# every page. The target is option (b), a public/ allowlist output directory.
+/tests/
+/operations/
+/_experiment/
+/.claude/
+/.github/
+/CLAUDE.md
+/AGENTS.md
+/PHASE-4.md
+/design-qa.md
+/playwright.config.js
+/learnings-index-and-nav.patch
+/CNAME
+/.gitignore
+/.vercelignore
+/research/AGENTS.md
+/research/agent-workflow.md
+/research/privacy.md
+/research/question-rationale-and-hypotheses.md
+/research/feedback-agent/
+/research/versions/
+/research/work-state.json
+/research/ux-review-assets/
+/research/invite/
+/research/.gitkeep
