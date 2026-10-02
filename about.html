@@ -181,6 +181,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -198,7 +202,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -326,6 +330,14 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
+   on phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
+  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
+  body.reading-page .footer-links { gap:10px 22px; }
+}
 /* FOOTER_CSS_END */
 
 @media(max-width:640px) {
@@ -374,6 +386,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px (tokens in styles/tokens.css). */
+@media (max-width:640px) {
+  body.reading-page .hero-sub, body.reading-page .section-lead, body.reading-page .item-desc { font-size:var(--read-size); line-height:var(--read-leading); }
+  body.reading-page .hero-link, body.reading-page .item-cta { font-size:var(--read-tap); }
+  body.reading-page .section-eyebrow { font-size:var(--read-support); }
+  body.reading-page .item-title { font-size:var(--read-heading-min); }
+}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -402,7 +421,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- Nav -->
 <!-- NAV_START -->

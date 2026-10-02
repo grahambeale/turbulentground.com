@@ -152,6 +152,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -169,7 +173,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
   html { scroll-behavior: smooth; scroll-padding-top: 104px; }
@@ -209,6 +213,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .data-item dt { color: var(--ink); font-weight: 500; }
   .data-item dd { color: var(--ink-mid); margin-top: 6px; }
   .data-item .basis { color: var(--muted); font-size: .92rem; margin-top: 8px; }
+  @media (max-width: 640px) {
+    .privacy-contents strong { font-size: var(--read-support); }
+    .privacy-contents button { font-size: var(--read-tap); }
+    body .reading-copy dt { font-size: var(--read-heading-min); line-height: 1.25; }
+    body .reading-copy dd.basis, body .reading-copy dd.basis strong { font-size: var(--read-support); }
+  }
   @media (max-width: 640px) { body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); } main { margin-top: 0; } .privacy-section > h2:first-child { margin-top: var(--read-h2-top, 1.75em); } .privacy-panel h2:first-child { margin-top: 0; } }
   @media (max-width: 520px) { main { margin-top: 0; } h2 { margin-top: 44px; } .privacy-contents-tabs { margin-right: -20px; padding-right: 20px; } .privacy-panel { padding: 34px 0 14px; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .privacy-contents button { transition: none; } }
@@ -255,7 +265,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 </head>
-<body>
+<body class="reading-page">
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
   <a href="/" class="nav-logo">

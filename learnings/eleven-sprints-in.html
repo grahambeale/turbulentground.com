@@ -150,6 +150,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -167,7 +171,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; object-position: center; display: block; }
@@ -204,7 +208,11 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   }
   @media (max-width: 640px) {
     .page-wrap { padding-top: var(--read-page-top, 28px); }
+    .eyebrow, .byline-name, .byline-meta { font-size: var(--read-support); }
     .eyebrow { margin-bottom: 10px; }
+    .byline-row { flex-wrap: wrap; gap: 2px 12px; }
+    .disclosure-note, .disclosure-note strong { font-size: var(--read-support); line-height: var(--read-leading); }
+    .cold-open { font-size: var(--read-size); line-height: var(--read-leading); }
     h1 { margin-bottom: 14px; }
     .byline-row { margin-bottom: 28px; padding-bottom: 20px; }
     .disclosure-note { margin-bottom: 32px; }
@@ -226,6 +234,14 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
+   on phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
+  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
+  body.reading-page .footer-links { gap:10px 22px; }
+}
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
 /* Main-site feedback widget: same look and behaviour as the Phase 3
@@ -293,7 +309,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
