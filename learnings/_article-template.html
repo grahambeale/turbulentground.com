@@ -49,6 +49,18 @@
   article strong { color: var(--ink); font-weight: 500; }
   article em { color: var(--muted); font-style: italic; }
   article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
+  /* Phones (Graham, 2 Oct 2026): 18px body text, and roughly half the hero-to-title
+     gap (80px top padding + 16px eyebrow margin -> 28px + 10px) with the
+     heading and byline margins tightened to match. */
+  @media (max-width: 640px) {
+    article p { font-size: 1.125rem; }
+    .page-wrap { padding-top: 28px; }
+    .eyebrow { margin-bottom: 10px; }
+    h1 { margin-bottom: 14px; }
+    .byline-row { margin-bottom: 28px; padding-bottom: 20px; }
+    .disclosure-note { margin-bottom: 32px; }
+    article h2 { margin: 36px 0 16px; }
+  }
 /* FOOTER_CSS_START */
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
