@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
+  :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px;
     --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
     --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
     --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
@@ -136,8 +136,17 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
      48px side padding make it wider than the screen and push the menu button
      off the right edge. The strapline truncates instead. */
-  .nav, .nav.scrolled { padding-left:20px; padding-right:20px; gap:12px; }
-  .nav-logo { flex:1 1 auto; min-width:0; gap:12px; }
+  /* The nav's side inset follows the page's own content gutter, so the logo mark
+     and the menu button line up with the content below in both the default and
+     scrolled states. Pages set --page-gutter (and --page-max when their content
+     is a centred column); the defaults suit a plain 24px gutter. Percentages in
+     padding are relative to the viewport width, which excludes any scrollbar. */
+  .nav { --nav-inset: calc((100% - min(100%, var(--page-max, 100%))) / 2 + var(--page-gutter, 24px)); }
+  .nav, .nav.scrolled { padding-left:var(--nav-inset); padding-right:var(--nav-inset); gap:12px; }
+  .nav-logo { flex:1 1 auto; min-width:0; gap:12px; transition:gap 0.4s cubic-bezier(0.4,0,0.2,1); }
+  /* When the mark collapses on scroll, close its gap too, or the wordmark stays
+     indented by 12px from the content edge. */
+  .nav.scrolled .nav-logo { gap:0; }
   .nav-logo-text { min-width:0; }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }

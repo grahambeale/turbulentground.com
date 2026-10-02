@@ -1,5 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Mobile navigation must stay usable at phone widths. Added after the shared
@@ -50,5 +52,58 @@ for (const width of [320, 375, 390, 480, 481, 720]) {
       }
       await context.close();
     });
+  }
+}
+
+/**
+ * Alignment: the nav's left edge (logo mark when the header is full, wordmark
+ * when it has compacted on scroll) and its menu button's right edge must line
+ * up with the page's content edges, in both states. Added after the compacted
+ * header's logo stayed indented from the content (the collapsed mark left its
+ * gap behind) and the nav gutter did not follow each page's own gutter.
+ */
+// The no-record review mode shows the real start screen without the API.
+const reviewKey = /RESTRAINED_PREVIEW_KEY\s*=\s*'([0-9a-f]+)'/.exec(
+  fs.readFileSync(path.join(__dirname, '..', '..', 'research', 'index.html'), 'utf8')
+)[1];
+const ALIGN_PAGES = [
+  ['home', '/', '/index.html', '.hero h1'],
+  ['article', '/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html', 'article h1, h1'],
+  ['take-part', `/take-part?preview=public-start&pk=${reviewKey}`, `/research/index.html?preview=public-start&pk=${reviewKey}`, '#screen-public-start h1'],
+  ['privacy', '/privacy', '/privacy.html', 'h1'],
+  ['learnings', '/learnings', '/learnings/index.html', 'h1'],
+];
+
+for (const width of [320, 375, 390, 480, 720]) {
+  for (const [name, clean, file, anchor] of ALIGN_PAGES) {
+    for (const state of ['default', 'scrolled']) {
+      test(`nav aligns with content at ${width}px (${state}): ${name}`, async ({ browser }) => {
+        const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
+        const page = await context.newPage();
+        await page.goto(html ? file : clean);
+        await page.waitForSelector(anchor, { state: 'visible' });
+        if (state === 'scrolled') {
+          await page.evaluate(() => { document.body.style.minHeight = '3000px'; window.scrollTo(0, 600); });
+          await page.waitForFunction(() => document.querySelector('.nav')?.classList.contains('scrolled'));
+          await page.waitForTimeout(700); // let the header's 0.4s compaction finish
+        }
+        const m = await page.evaluate(({ anchor, state }) => {
+          const r = (e) => e.getBoundingClientRect();
+          const content = r(document.querySelector(anchor));
+          const logoEdge = state === 'scrolled'
+            ? r(document.querySelector('.nav-wordmark')).left
+            : r(document.querySelector('.nav-logo-mark svg')).left;
+          const bars = document.querySelector('.nav-toggle span');
+          const toggle = document.querySelector('.nav-toggle');
+          const toggleShown = !!toggle && getComputedStyle(toggle).display !== 'none';
+          return { contentLeft: content.left, contentRight: content.right, logoEdge, barsRight: toggleShown && bars ? r(bars).right : null };
+        }, { anchor, state });
+        expect(Math.abs(m.logoEdge - m.contentLeft), `logo left ${m.logoEdge} vs content left ${m.contentLeft}`).toBeLessThanOrEqual(1);
+        if (m.barsRight !== null) {
+          expect(Math.abs(m.barsRight - m.contentRight), `menu right ${m.barsRight} vs content right ${m.contentRight}`).toBeLessThanOrEqual(1);
+        }
+        await context.close();
+      });
+    }
   }
 }
