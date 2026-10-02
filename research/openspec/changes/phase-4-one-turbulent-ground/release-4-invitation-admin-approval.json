@@ -1,0 +1,15 @@
+{
+  "change": "phase-4-one-turbulent-ground",
+  "release": "Release 4A invitation administration",
+  "revision": 1,
+  "approval_quote": "approved",
+  "authority": {
+    "local_implementation": true,
+    "verified_preview": true,
+    "production_release": false
+  },
+  "approved_at": "2026-10-02T13:06:16Z",
+  "plan_sha256": "655f520cb4df711eb56deaac638d63e380ee0155122d7717f77e40710fe5db3d",
+  "review_sha256": "a2467af6b57c303e1e1add24b8b16f2f862f5196310cd87c328b51c3aad40e83",
+  "airtable_record_id": "recgzHIuIzBqkRPo3"
+}

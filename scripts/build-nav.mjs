@@ -6,7 +6,7 @@
 //   node scripts/build-nav.mjs
 //
 // One shared pattern, configured per page — not two diverging copies. This
-// exists because the research pages (research/index.html, research/admin.html,
+// exists because the research pages (research/index.html, research/admin-tools.html,
 // research/privacy.html) originally got their own hand-authored, stripped-down
 // nav (no links, non-clickable logo, a strapline) duplicated three times
 // rather than sourced from partials/nav.*, and it visibly drifted from the
@@ -101,14 +101,16 @@ const TARGET_FILES = [
   'learnings/seven-copies-of-the-rules.html',
   'learnings/signals-added-to-the-pile.html',
   'research/index.html',
-  'research/admin.html',
+  'admin/invitations/index.html',
+  'research/admin-tools.html',
   'research/privacy.html',
 ];
 
 const NAV_CONFIG = {
   'index.html': HOME_NAV_CONFIG,
   'research/index.html': RESEARCH_NAV_CONFIG,
-  'research/admin.html': RESEARCH_NAV_CONFIG,
+  'admin/invitations/index.html': RESEARCH_NAV_CONFIG,
+  'research/admin-tools.html': RESEARCH_NAV_CONFIG,
   'research/privacy.html': RESEARCH_NAV_CONFIG,
 };
 

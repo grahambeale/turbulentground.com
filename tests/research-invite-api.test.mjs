@@ -63,7 +63,7 @@ console.log("research-invite-api.test.mjs — testing owner-only invite generati
   const res = mockRes();
   await handler(req, res);
   check("creates an invite with the correct key", res._status === 201, JSON.stringify(res._body));
-  check("returns a production research URL", /^https:\/\/www\.turbulentground\.com\/research\?t=[0-9a-f-]+$/.test(res._body?.inviteUrl || ""), res._body?.inviteUrl);
+  check("returns the canonical production participant URL", /^https:\/\/www\.turbulentground\.com\/take-part\?t=[0-9a-f-]+$/.test(res._body?.inviteUrl || ""), res._body?.inviteUrl);
   check("reports that an email was saved", res._body?.hasEmail === true);
   check("writes exactly once to the Identity table", airtableCalls.length === 1);
   const payload = JSON.parse(airtableCalls[0].options.body);

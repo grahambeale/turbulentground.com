@@ -57,6 +57,11 @@
   ],
   "redirects": [
     {
+      "source": "/research/admin",
+      "destination": "/admin/invitations",
+      "permanent": false
+    },
+    {
       "source": "/zero-humans-in-the-loop",
       "destination": "/learnings/zero-humans-in-the-loop",
       "permanent": true
@@ -130,7 +135,24 @@
       "headers": [
         {
           "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/research/admin(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }
