@@ -1,0 +1,23 @@
+{
+  "specification_revision": 3,
+  "status": "Approved to proceed iteratively",
+  "approval_record": "implementation-package-approval.json",
+  "prepared_at": "2026-09-26T22:36:40Z",
+  "prototype": {
+    "decision": "Accepted as V1 in direct conversation",
+    "commit": "c7a9046569103761645b605a840e157ddd3a96ef",
+    "branch": "codex/phase-3-1-sharing-prototype"
+  },
+  "files": {
+    "schema-plan.md": "e183066631df0fe48f27a38fea1fb86d666409020d89289a358a252da5f3ea63",
+    "privacy-consent-copy.md": "987e6b4dcc80eb29768702bf2451a7952eb621de7f8ae587da16be1756abfaa0",
+    "retention-reminder-plan.md": "3823dc88e1b015ae6b42bc003c270a84d08b64a3b9bee9047f9e0d8d02097db6",
+    "security-and-abuse-controls.md": "4e185430bd8cfa43d6a724b12bd223aa5047fdc19dc2970bf31e6b5422a36d19",
+    "staged-build-plan.md": "b7f1e361ffd269d0cb9731765b116c1ef99715cd5591c5547fb01a9d2efaa170",
+    "acceptance-test-plan.md": "4e191c628f598b391107a2d76d040f516df92bcf27d5fbf1d3d8e7857e465d8a",
+    "implementation-package-review.md": "8c8ee23b5a7f5be89006b02496feee8af062a1b420654a9b88689d309c1d895b",
+    "retention-window-amendment.md": "6983162997bf4a1088ac44dc86faf099be4db700420ab82f6928bd7673782181",
+    "deletion-transparency-amendment.md": "6ef87941a8f951e8aca9de988b511a83bb04845c94c8487072d6e07ec7d88aa7"
+  },
+  "approval_effect": "Authorises a disabled, synthetic-first implementation and the reviewed Airtable schema migration on a dedicated branch. Does not authorise real participant reminders or deletions, public activation, participant contact or production release."
+}

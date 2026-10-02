@@ -1,0 +1,10 @@
+{
+  "revision": 1,
+  "status": "Superseded by revision 2 review packet",
+  "files": {
+    "evidence-snapshot.md": "4e9993ffd43b97e2518b791279e7b4f294ff528109e4d32657a39b914e9300e2",
+    "proposal.md": "06bf3291250f327d2093a22649be5f15e969e1a4b6f06aeae60191567771fe7e",
+    "specs/public-recruitment-referral/spec.md": "bb496d9d2c2e14f0dc7904227028f6f6da1f67598475a73c560cdf12258493f4",
+    "review.md": "a04d2e97b06f2ac46bce7529b8ac29cbbcc69b055695f251e3622b16112a2b49"
+  }
+}

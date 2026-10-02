@@ -1,0 +1,15 @@
+{
+  "revision": 3,
+  "decision": "Approved",
+  "approval_statement": "Approved",
+  "approved_by": "Graham Beale",
+  "source": "Direct conversation",
+  "approved_at": "2026-09-25T22:16:38Z",
+  "approved_files": {
+    "../revision-2/decision-register.md": "79cd5bcc36833d54feb29361b6ccc4d4e5f493b371ddcbe94ee5e10c88664df8",
+    "../revision-2/spec-amendment.md": "7fe807960150179932d71dfeb6636e4076c90e8c900d357f35bcf622a6d342bd",
+    "decision-register.md": "14c001c07f694181afee3f2b2adf4ad897fd13820a96768c1429a4283d4af960",
+    "spec-amendment.md": "27c510499dc287106350a632c60ce6f1b20d78e1b553cca5fa2e2a1d05b4c314"
+  },
+  "effect": "Authorises design and architecture review only. Does not authorise implementation, participant contact or release."
+}
