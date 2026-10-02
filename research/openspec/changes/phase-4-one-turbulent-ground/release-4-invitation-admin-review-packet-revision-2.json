@@ -24,7 +24,7 @@
     "commit": "25bad00fab54ef21bf2b987afc010fb5cd6b54f7",
     "branch": "codex/phase4-release4a-invitations",
     "preview_deployment": "dpl_2iDmrBzdKct4R2rmdt5y3CqsjqBn",
-    "preview_url": "https://turbulentground-64vkenvqg-grahambeale.vercel.app/admin/invitations",
+    "preview_url": "[admin route]",
     "verified": true
   }
 }
