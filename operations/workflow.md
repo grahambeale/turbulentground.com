@@ -110,6 +110,11 @@ Graham directly and explicitly authorises production. Merge or apply only the
 reviewed commit, verify the production deployment and exercise the real
 affected journey. Record commit, deployment and live evidence.
 
+A production release approval names a branch and covers the head commit that was
+previewed and reported at the time of approval. Before releasing, confirm the
+branch head still matches that commit. If it has changed, the approval lapses:
+stop and request approval again, quoting the new head.
+
 ### 7. Close and release the lease
 
 Update Airtable status, decisions, evidence, URLs, blocker and next action.
