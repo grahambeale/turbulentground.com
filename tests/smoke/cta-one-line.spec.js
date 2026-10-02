@@ -9,6 +9,24 @@ const { test, expect } = require('@playwright/test');
  * The survey itself (after the start screen) is frozen and not covered here.
  */
 const html = !!process.env.SMOKE_HTML_EXT;
+
+/**
+ * Navigate and retry if a stylesheet failed to load. The local static servers used by
+ * the smoke run can reset a connection under load (ERR_CONNECTION_RESET on
+ * reading.css); the page then renders unstyled and these layout checks fail for a reason
+ * that is not the site. A failed stylesheet request is retried, never counted as a result.
+ */
+async function gotoStyled(page, target) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    let styleFailed = false;
+    const onFail = (req) => { if (req.resourceType() === 'stylesheet') styleFailed = true; };
+    page.on('requestfailed', onFail);
+    await page.goto(target);
+    page.off('requestfailed', onFail);
+    if (!styleFailed) return;
+  }
+  throw new Error('stylesheet kept failing to load: ' + target);
+}
 const PAGES = [
   ['/', '/index.html'],
   ['/care-capital', '/care-capital.html'],
@@ -25,7 +43,7 @@ for (const width of [320, 375, 390]) {
     test(`CTAs stay on one line at ${width}px: ${clean}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
       const page = await context.newPage();
-      await page.goto(html ? file : clean);
+      await gotoStyled(page, html ? file : clean);
       const toggle = page.locator('.nav-toggle');
       if (await toggle.isVisible()) await toggle.click();
       const found = await page.evaluate((sel) => {

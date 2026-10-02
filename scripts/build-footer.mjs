@@ -38,17 +38,17 @@ const root = path.resolve(__dirname, '..');
 const BEALE_NOTE =
   'Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.';
 
-// Homepage: trimmed (Graham, 2 Oct 2026) to one closing line, three links,
-// "Independent / ICO registered" and the copyright line. The research-recruitment
-// link that carried data-research-cta="footer" is gone with the longer link row.
+// Homepage: trimmed (Graham, 2 Oct 2026, final wording) to a closing line, three
+// links and one final line. It no longer mentions the AI experiment; that
+// disclosure lives on the AI-built pages (articles, /about, /learnings).
 const HOME_FOOTER_CONFIG = {
+  lead: 'Run by Graham Beale.',
   links: [
     { href: '/about', label: 'About' },
     { href: '/privacy', label: 'Privacy' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
   ],
-  note:
-    'Run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Much of this site is built by an AI product team as a live experiment.<br>Independent &middot; ICO registered<br>&copy; 2026 Turbulent Ground',
+  note: '<span class="footer-part">Independent &middot; ICO registered</span><span class="footer-sep"> &middot; </span><span class="footer-part">&copy; 2026 Turbulent Ground</span>',
 };
 
 const WRITING_FOOTER_CONFIG = {
@@ -137,7 +137,9 @@ function renderFooter(config) {
     })
     .join('\n');
 
+  const lead = config.lead ? `  <span class="footer-lead">${config.lead}</span>\n` : '';
   return footerTemplate
+    .replace('{{LEAD}}', lead)
     .replace('{{LINKS}}', links)
     .replace('{{NOTE}}', config.note)
     .trimEnd();
