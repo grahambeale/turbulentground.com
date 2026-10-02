@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
 <style>
   /* Same format as the Phase 3 study notice (research/privacy.html). */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -130,6 +131,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   margin-top:28px;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -207,7 +209,8 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .data-item dt { color: var(--ink); font-weight: 500; }
   .data-item dd { color: var(--ink-mid); margin-top: 6px; }
   .data-item .basis { color: var(--muted); font-size: .92rem; margin-top: 8px; }
-  @media (max-width: 520px) { main { margin-top: 24px; } h2 { margin-top: 44px; } .privacy-contents-tabs { margin-right: -20px; padding-right: 20px; } .privacy-panel { padding: 34px 0 14px; } }
+  @media (max-width: 640px) { body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); } main { margin-top: 0; } .privacy-section > h2:first-child { margin-top: var(--read-h2-top, 1.75em); } .privacy-panel h2:first-child { margin-top: 0; } }
+  @media (max-width: 520px) { main { margin-top: 0; } h2 { margin-top: 44px; } .privacy-contents-tabs { margin-right: -20px; padding-right: 20px; } .privacy-panel { padding: 34px 0 14px; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .privacy-contents button { transition: none; } }
   @media print {
     :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
@@ -290,7 +293,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   <a href="/take-part" class="mobile-menu-btn">Take part &rarr;</a>
 </div>
 <!-- NAV_END -->
-<main>
+<main class="reading-copy">
   <h1>Privacy notice</h1>
   <p class="privacy-summary">One notice explains how I use information across Turbulent Ground, including when you browse the site, send feedback or take part in the AI shift research.</p>
 

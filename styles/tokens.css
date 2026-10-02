@@ -136,3 +136,23 @@
 .t-body  { font-size: var(--text-body);  line-height: var(--leading-body);  font-weight: var(--weight-body); }
 .t-small { font-size: var(--text-small); line-height: var(--leading-small); font-weight: var(--weight-body); }
 .t-meta  { font-size: var(--text-meta);  line-height: var(--leading-meta);  font-weight: var(--weight-body); }
+
+/* ── Reading on phones (Graham, 2 Oct 2026) ──────────────────────────
+   Below 640px long-form copy is 18px at 1.6 with 1em paragraph gaps, and h2s
+   open up 1.75em above and 0.5em below. Pages opt in with class="reading-copy"
+   on the container; 641px and up is untouched. Sizes are px, not rem, because
+   pages set different root sizes. Pages also use --read-page-top and --nav-h. */
+@media (max-width: 640px) {
+  :root {
+    --read-size: 18px;
+    --read-leading: 1.6;
+    --read-para: 1em;
+    --read-h2-top: 1.75em;
+    --read-h2-bottom: 0.5em;
+    --read-page-top: 28px;      /* gap between the header or hero and the first content */
+  }
+  body .reading-copy p,
+  body .reading-copy li { font-size: var(--read-size); line-height: var(--read-leading); }
+  body .reading-copy p { margin-bottom: var(--read-para); }
+  body .reading-copy h2 { margin-top: var(--read-h2-top); margin-bottom: var(--read-h2-bottom); }
+}

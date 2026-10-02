@@ -129,6 +129,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   margin-top:28px;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -194,17 +195,19 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   article strong { color: var(--ink); font-weight: 500; }
   article em { color: var(--muted); font-style: italic; }
   article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
-  /* Phones (Graham, 2 Oct 2026): 18px body text, and roughly half the hero-to-title
-     gap (80px top padding + 16px eyebrow margin -> 28px + 10px) with the
-     heading and byline margins tightened to match. */
+  /* Phones: the transparent header would sit over the hero image and cut across
+     its baked-in masthead text, so the page starts below the header at 720px and
+     under. Reading comfort (18px, 1.6, 1em gaps) comes from .reading-copy in
+     tokens.css; the page-specific spacing below tightens the title block. */
+  @media (max-width: 720px) {
+    body { padding-top: var(--nav-h, 73px); }
+  }
   @media (max-width: 640px) {
-    article p { font-size: 1.125rem; }
-    .page-wrap { padding-top: 28px; }
+    .page-wrap { padding-top: var(--read-page-top, 28px); }
     .eyebrow { margin-bottom: 10px; }
     h1 { margin-bottom: 14px; }
     .byline-row { margin-bottom: 28px; padding-bottom: 20px; }
     .disclosure-note { margin-bottom: 32px; }
-    article h2 { margin: 36px 0 16px; }
   }
 /* FOOTER_CSS_START */
 /* Shared site footer. Uses var() fallback chains (--ink/--ink-mid falling
@@ -344,7 +347,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
     <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
   </div>
 
-  <article>
+  <article class="reading-copy">
 <p>For eleven sprints I said nothing. From sprint twelve I started logging observations, not instructions, just things I&#39;d noticed, in a file the team reads before it does its own thinking. It can accept, reject or defer each one, and it has to say why.</p>
 <div class="cold-open">
 <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>

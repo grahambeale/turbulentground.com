@@ -19,6 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
 <style>
 :root {
   --bg:       #131110;
@@ -159,6 +160,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   margin-top:28px;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -456,7 +458,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <!-- Narrative -->
-<section class="narrative">
+<section class="narrative reading-copy">
   <div class="container">
     <p>I've spent twenty-five years building product and design teams, at agencies, at scale-ups, at organisations going through significant change. The consistent thing I noticed is that the teams that handle change well are never the ones who figured it out alone. They are the ones who found others going through the same thing, compared notes, and stopped feeling like the uncertainty was a personal failing.</p>
     <p>When AI started disrupting product work, not as a concept, but as something that changed how teams operated, I noticed the same pattern. People were privately confused, publicly confident, and largely isolated in both. Nobody was having the honest conversation.</p>

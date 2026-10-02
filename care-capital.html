@@ -197,6 +197,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   margin-top:28px;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the

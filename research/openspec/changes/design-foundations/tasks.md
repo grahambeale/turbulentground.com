@@ -132,6 +132,32 @@ Below 640px only, in `learnings/_article-template.html`:
 - Screenshots at 390px in `evidence/`: production, step-1 preview before
   this change, and after.
 
+## Step 1d: mobile reading (2 Oct 2026, Graham's phone review)
+
+Supersedes the phone values in Step 1c. Single change, below 640px unless noted;
+641px and up is unchanged (verified 16.8px/1.7 on articles, privacy 18.4px/1.75).
+
+- Shared tokens in `styles/tokens.css`: `--read-size` 18px, `--read-leading` 1.6,
+  `--read-para` 1em, `--read-h2-top` 1.75em, `--read-h2-bottom` 0.5em,
+  `--read-page-top` 28px, applied through `class="reading-copy"`. Pages that did not
+  yet link `tokens.css` (privacy, about, learnings index, take-part) now link it;
+  their own `:root` colours still win, nothing else in it affects them.
+  Sizes are px, not rem, because pages set different root sizes (15, 17, 18px).
+- Applied to the article template, /privacy, /learnings (intro and card
+  summaries), /about (narrative) and the /take-part intro. Page-top padding is
+  28px (header 73px + 28px on pages with a fixed header over plain content);
+  hero-to-eyebrow gap is 28px on articles.
+- Header over the hero (720px and below): the page now starts below the header
+  (`--nav-h`, 73px). Chosen over a solid header because a solid bar would still
+  cover the top ~70px of a 204px hero, a third of the picture, and that is where
+  the baked-in masthead text sits; moving the hero down loses no picture. Cost:
+  73px of vertical space above the fold on phones.
+- Smoke tests (`tests/smoke/mobile-nav.spec.js`): body text >= 18px and
+  line-height <= 1.65 on the five pages at 320/390/640px, and hero top >= header
+  bottom on the article at 320/390/640/720px. 19 tests; all fail on production,
+  all pass here (99/99 in the file).
+- Evidence (390px, production before vs this branch after): `evidence/`.
+
 ## Done when
 
 - Every public page links `tokens.css` and has no local `:root`.
