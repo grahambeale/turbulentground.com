@@ -138,21 +138,28 @@
 .t-meta  { font-size: var(--text-meta);  line-height: var(--leading-meta);  font-weight: var(--weight-body); }
 
 /* ── Reading on phones (Graham, 2 Oct 2026) ──────────────────────────
-   Below 640px long-form copy is 18px at 1.6 with 1em paragraph gaps, and h2s
-   open up 1.75em above and 0.5em below. Pages opt in with class="reading-copy"
-   on the container; 641px and up is untouched. Sizes are px, not rem, because
-   pages set different root sizes. Pages also use --read-page-top and --nav-h. */
+   Below 640px NO visible text is under 18px. Body text and card summaries are
+   20px at 1.55; tappable text (links, buttons, tabs, card titles) is at least
+   20px; supporting text (dates, bylines, labels, eyebrows) is at least 18px;
+   headings stay larger than body. Pages opt in with class="reading-copy" on the
+   content and class="reading-page" on <body>; 641px and up is untouched.
+   Sizes are px, not rem, because pages set different root sizes. */
 @media (max-width: 640px) {
   :root {
-    --read-size: 18px;
-    --read-leading: 1.6;
+    --read-size: 20px;          /* body text, card summaries */
+    --read-leading: 1.55;
+    --read-support: 18px;       /* dates, bylines, labels, eyebrows, notes */
+    --read-tap: 20px;           /* links, buttons, tabs, card titles: 20px or larger */
+    --read-heading-min: 24px;   /* card titles and other small headings stay above body */
     --read-para: 1em;
     --read-h2-top: 1.75em;
     --read-h2-bottom: 0.5em;
     --read-page-top: 28px;      /* gap between the header or hero and the first content */
   }
   body .reading-copy p,
-  body .reading-copy li { font-size: var(--read-size); line-height: var(--read-leading); }
+  body .reading-copy li,
+  body .reading-copy dd,
+  body .reading-copy dt { font-size: var(--read-size); line-height: var(--read-leading); }
   body .reading-copy p { margin-bottom: var(--read-para); }
   body .reading-copy h2 { margin-top: var(--read-h2-top); margin-bottom: var(--read-h2-bottom); }
 }

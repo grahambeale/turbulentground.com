@@ -58,7 +58,11 @@
   }
   @media (max-width: 640px) {
     .page-wrap { padding-top: var(--read-page-top, 28px); }
+    .eyebrow, .byline-name, .byline-meta { font-size: var(--read-support); }
     .eyebrow { margin-bottom: 10px; }
+    .byline-row { flex-wrap: wrap; gap: 2px 12px; }
+    .disclosure-note, .disclosure-note strong { font-size: var(--read-support); line-height: var(--read-leading); }
+    .cold-open { font-size: var(--read-size); line-height: var(--read-leading); }
     h1 { margin-bottom: 14px; }
     .byline-row { margin-bottom: 28px; padding-bottom: 20px; }
     .disclosure-note { margin-bottom: 32px; }
@@ -98,7 +102,7 @@
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- NAV_START -->
 <!-- NAV_END -->

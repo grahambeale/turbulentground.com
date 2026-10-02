@@ -158,6 +158,47 @@ Supersedes the phone values in Step 1c. Single change, below 640px unless noted;
   all pass here (99/99 in the file).
 - Evidence (390px, production before vs this branch after): `evidence/`.
 
+## Step 1e: mobile type scale and take-part evidence (2 Oct 2026, Graham's review)
+
+Graham's rule: below 640px no visible text is under 18px, on the article template,
+/privacy, /learnings, /about and the /take-part intro. 641px and up unchanged
+(0 differing elements at 641, 800 and 1280px against the previous head).
+
+Shared tokens (`styles/tokens.css`, applied with `body.reading-page` and
+`.reading-copy`): `--read-size` 20px (body text, card summaries) at
+`--read-leading` 1.55; `--read-tap` 20px (links, buttons, tabs, consent
+labels); `--read-support` 18px (dates, bylines, labels, eyebrows, notes);
+`--read-heading-min` 24px (card titles stay above body).
+
+Changed at 390px (before is the previous step 1d head; production was smaller
+still), each `px / line-height`:
+- Article: eyebrow 11 -> 18; byline name 14 -> 18; byline meta 13 -> 18;
+  disclosure note 13 -> 18; body p 16/1.8 -> 20/1.55; links 16 -> 20; CTA hook
+  question 20/1.8 -> 20/1.55, answer 15 -> 20.
+- Privacy: summary 18.4 -> 20; p 17/1.75 -> 20/1.55; tab label 15 -> 18; the
+  five tabs 15.3 -> 20; card titles (dt) 17 -> 24 at 1.25; card text (dd) 17 -> 20;
+  "Lawful basis" lines 15.6 -> 18; updated line 15.3 -> 20.
+- Learnings: eyebrow 11 -> 18; intro 16 -> 20; dates 12 -> 18; card titles
+  22 -> 24 at 1.25; card summaries 14 -> 20.
+- About: hero sub 17 -> 20; hero links 15 -> 20; narrative p 17/1.85 -> 20/1.55;
+  section eyebrow 10 -> 18; lead 16 -> 20; card titles 19 -> 24; card text
+  14 -> 20; card links 13 -> 20.
+- Take-part start: video label 11.7 -> 20; transcript toggle 14.4 -> 20;
+  transcript 16.2 -> 20; note 16.2 -> 20; inline link 16.2 -> 20; consent labels
+  18 -> 20; "Required" 14 -> 18; start button 18 -> 20.
+- Shared footer (reading pages): brand 16 -> 18; note 12 -> 20 (it holds links);
+  links 13 -> 20. Nav: wordmark floor 18px at 380px and below (was 17); strapline
+  hidden up to 640px on these pages (was 480px); mobile-menu button 16 -> 20.
+- Characters per line at 390px: median 31-35 (range 28-36), at 320px 22-27.
+  Short for 20px text in a 24px gutter; the trade-off of the 20px rule.
+- Smoke tests: body >= 20px and line-height <= 1.65; no visible text under
+  18px at 320/390/480/640px on the five pages (every privacy tab, the open
+  transcript, the open mobile menu) and on all ten articles; 124 pass here, the
+  36 new type tests fail on production.
+- Take-part start screen at 390px, rendered from this branch with the entry check
+  mocked in the browser only (nothing enabled on any deployment): `evidence/1e-*`.
+- Active privacy tab: no bottom stroke (pixel test added; see the Airtable note).
+
 ## Done when
 
 - Every public page links `tokens.css` and has no local `:root`.

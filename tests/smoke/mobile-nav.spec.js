@@ -109,7 +109,7 @@ for (const width of [320, 375, 390, 480, 720]) {
 }
 
 /**
- * Reading comfort below 640px (Graham, 2 Oct 2026): body copy is at least 18px
+ * Reading comfort below 640px (Graham, 2 Oct 2026): body copy is at least 20px
  * with a line-height of at most 1.65, on the article template, /privacy,
  * /learnings, /about and the /take-part intro.
  */
@@ -122,7 +122,7 @@ const READ_PAGES = [
 ];
 for (const width of [320, 390, 640]) {
   for (const [name, clean, file, sel] of READ_PAGES) {
-    test(`body text is >=18px with line-height <=1.65 at ${width}px: ${name}`, async ({ browser }) => {
+    test(`body text is >=20px with line-height <=1.65 at ${width}px: ${name}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
       const page = await context.newPage();
       await page.goto(html ? file : clean);
@@ -134,7 +134,7 @@ for (const width of [320, 390, 640]) {
         return { fs, ratio: cs.lineHeight === 'normal' ? 1.2 : parseFloat(cs.lineHeight) / fs };
       }, sel);
       expect(m, `a visible paragraph matching ${sel}`).not.toBeNull();
-      expect(m.fs, 'font size').toBeGreaterThanOrEqual(18);
+      expect(m.fs, 'font size').toBeGreaterThanOrEqual(20);
       expect(m.ratio, 'line-height / font-size').toBeLessThanOrEqual(1.65);
       await context.close();
     });
@@ -156,3 +156,93 @@ for (const width of [320, 390, 640, 720]) {
     await context.close();
   });
 }
+
+/**
+ * Graham's rule (2 Oct 2026): below 640px NO visible text is under 18px on the
+ * article template, /privacy, /learnings, /about and the /take-part intro.
+ * Counts every visible text node, plus text inputs and buttons that show text,
+ * in each page's states (every privacy tab, the open transcript, the open mobile
+ * menu). Text that is hidden (zero size, opacity 0, clipped, aria-hidden decoration)
+ * is ignored.
+ */
+const scanSmallText = (floor) => {
+  const out = [];
+  const label = (e) => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (typeof e.className === 'string' && e.className.trim() ? '.' + e.className.trim().split(/\s+/)[0] : '');
+  const visible = (e) => {
+    const r = e.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return false;
+    const cs = getComputedStyle(e);
+    if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) return false;
+    for (let a = e.parentElement; a && a !== document.body; a = a.parentElement) {
+      const ac = getComputedStyle(a);
+      if (ac.display === 'none' || ac.visibility === 'hidden' || parseFloat(ac.opacity) === 0) return false;
+      if (ac.overflow !== 'visible' || ac.overflowX !== 'visible') {
+        const ar = a.getBoundingClientRect();
+        if (ar.width < 1 || ar.height < 1) return false;
+      }
+    }
+    return !e.closest('[hidden]');
+  };
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let t = walker.nextNode(); t; t = walker.nextNode()) {
+    const text = (t.textContent || '').trim();
+    const e = t.parentElement;
+    if (!text || !e || e.closest('script,style,noscript,svg,.feedback-sr') || !visible(e)) continue;
+    const fs = parseFloat(getComputedStyle(e).fontSize);
+    if (fs < floor) out.push(`${label(e)} ${fs.toFixed(1)}px "${text.slice(0, 30)}"`);
+  }
+  document.querySelectorAll('input[type=text],input[type=email],input[type=search],input:not([type]),textarea,select,button').forEach((e) => {
+    if (!visible(e) || (e.tagName === 'BUTTON' && !(e.textContent || '').trim()) || e.closest('#feedback-launch')) return;
+    const fs = parseFloat(getComputedStyle(e).fontSize);
+    if (fs < floor) out.push(`CONTROL ${label(e)} ${fs.toFixed(1)}px`);
+  });
+  return out;
+};
+
+for (const width of [320, 390, 480, 640]) {
+  for (const [name, clean, file] of READ_PAGES) {
+    test(`no visible text under 18px at ${width}px: ${name}`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true });
+      const page = await context.newPage();
+      await page.goto(html ? file : clean);
+      await page.waitForTimeout(400);
+      const found = [];
+      if (name === 'privacy') {
+        const n = await page.locator('.privacy-contents button').count();
+        for (let i = 0; i < n; i++) {
+          await page.evaluate((i) => {
+            document.documentElement.style.scrollBehavior = 'auto';
+            /** @type {HTMLElement} */ (document.querySelectorAll('.privacy-contents button')[i]).click();
+          }, i);
+          await page.waitForTimeout(120);
+          found.push(...(await page.evaluate(scanSmallText, 18)).map((x) => `[tab ${i}] ${x}`));
+        }
+      } else {
+        if (name === 'take-part') await page.evaluate(() => { const d = document.querySelector('.transcript-toggle'); if (d) /** @type {HTMLDetailsElement} */ (d).open = true; });
+        found.push(...(await page.evaluate(scanSmallText, 18)));
+      }
+      if (name === 'article') {
+        await page.evaluate(() => /** @type {HTMLElement} */ (document.querySelector('.nav-toggle')).click());
+        await page.waitForTimeout(500);
+        found.push(...(await page.evaluate(scanSmallText, 18)).map((x) => `[menu open] ${x}`));
+      }
+      expect(found, 'visible text under 18px').toEqual([]);
+      await context.close();
+    });
+  }
+}
+
+const ARTICLES = ['analytics-data-mean-what-you-think', 'chatgpt-starts-this-week', 'eleven-sprints-in', 'how-does-an-ai-team-miss-a-failure-this-big', 'make-my-ai-team-take-risks', 'seven-copies-of-the-rules', 'signals-added-to-the-pile', 'the-silent-veto', 'what-zero-intervention-actually-means', 'zero-humans-in-the-loop'];
+test('no visible text under 18px at 390px: all ten articles', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 900 }, isMobile: true, hasTouch: true });
+  const found = [];
+  for (const slug of ARTICLES) {
+    const page = await context.newPage();
+    await page.goto(`/learnings/${slug}${html ? '.html' : ''}`);
+    await page.waitForTimeout(250);
+    found.push(...(await page.evaluate(scanSmallText, 18)).map((x) => `[${slug}] ${x}`));
+    await page.close();
+  }
+  expect(found, 'visible text under 18px').toEqual([]);
+  await context.close();
+});

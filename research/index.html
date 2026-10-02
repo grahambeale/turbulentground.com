@@ -58,7 +58,14 @@ window.plausible = window.plausible || function () {
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; padding-top: 92px; }
-  @media (max-width: 640px) { body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); } }
+  @media (max-width: 640px) {
+    body { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
+    body.reading-page .video-thumb-label, body.reading-page .transcript-toggle summary { font-size: var(--read-tap); max-width: none; }
+    body .reading-copy .transcript-body { font-size: var(--read-size); line-height: var(--read-leading); }
+    body.reading-page .check-row .required-tag { font-size: var(--read-support); }
+    body.reading-page .btn { font-size: var(--read-tap); }
+    body.reading-page .check-row label { font-size: var(--read-tap); }   /* tappable consent text */
+  }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
   /* NAV_CSS_START */
@@ -189,6 +196,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -206,7 +217,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -821,7 +832,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .statement-context-continue:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">

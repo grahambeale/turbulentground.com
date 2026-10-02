@@ -14,3 +14,11 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
+   on phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
+  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
+  body.reading-page .footer-links { gap:10px 22px; }
+}

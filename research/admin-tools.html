@@ -150,6 +150,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .mobile-menu .mobile-menu-btn { font-size:20px; }   /* tappable: 20px or larger */
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -167,7 +171,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
   main { width: min(100% - 40px, 620px); margin: 48px auto 100px; }
