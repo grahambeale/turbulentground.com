@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -196,9 +197,15 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --warning-bg: #fff7f0; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
     .nav { display: none; } body { padding-top: 0; } main { margin: 0 auto; width: 100%; } a { color: inherit; }
   }
+/* Phones: this compatibility page redirects to /privacy#participation; its no-script
+   fallback follows the same type scale (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .eyebrow { font-size:var(--read-support); }
+  body.reading-page th, body.reading-page td { font-size:var(--read-support); line-height:1.5; }
+}
 </style>
 </head>
-<body>
+<body class="reading-page">
 <noscript><p style="padding:24px"><a href="/privacy#participation">Open the participation privacy information</a>.</p></noscript>
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
@@ -223,7 +230,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   
 </nav>
 <!-- NAV_END -->
-<main>
+<main class="reading-copy">
   <p class="eyebrow">Graham Beale's AI shift research</p>
   <h1>Privacy notice</h1>
 

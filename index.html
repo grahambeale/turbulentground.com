@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 :root { /* nav inset: see partials/nav.css */ --page-gutter:22px;
   --bg:#0b0907; --bg-2:#131110;
@@ -292,13 +293,13 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
-/* Reading pages (body.reading-page, see styles/tokens.css): nothing under 18px
-   on phones; links are tappable so 20px. */
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
 @media (max-width:640px) {
-  body.reading-page .footer-brand { font-size:var(--read-support, 18px); }
-  body.reading-page .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
-  body.reading-page .footer-link { font-size:var(--read-tap, 20px); }
-  body.reading-page .footer-links { gap:10px 22px; }
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
 }
 /* FOOTER_CSS_END */
 
@@ -367,6 +368,25 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px, body 20px at 1.55; the large scene headings are unchanged.
+   Tokens in styles/reading.css. */
+@media (max-width:640px) {
+  body.reading-page .skip-link, body.reading-page .btn, body.reading-page .float-cta { font-size:var(--read-tap); }
+  body.reading-page .btn { white-space:normal; text-align:center; justify-content:center; max-width:100%; }
+  body.reading-page .lede, body.reading-page .for, body.reading-page .who, body.reading-page .findings,
+  body.reading-page .progress p, body.reading-page .byline p, body.reading-page .promise { font-size:var(--read-size); line-height:var(--read-leading); }
+  body.reading-page .facts, body.reading-page .scroll-cue, body.reading-page .byline .mono, body.reading-page .tile { font-size:var(--read-support); }
+  body.reading-page .small { font-size:var(--read-tap); line-height:var(--read-leading); }
+  /* Tiles: columns may shrink below their content (they overflowed at 320px); one column on narrow phones. */
+  body.reading-page .tiles { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  body.reading-page .tile { overflow-wrap:anywhere; }
+  /* The floating button stays on one line, and the tile grids leave room for it. */
+  body.reading-page .float-cta { white-space:nowrap; }
+  body.reading-page #pressure .tiles, body.reading-page #people .tiles, body.reading-page #desk .tiles { margin-bottom:130px; }
+  /* The 'Scroll' cue (decorative) collided with the hero facts once they reached 18px. */
+  body.reading-page .scroll-cue { display:none; }
+}
+@media (max-width:480px) { body.reading-page .tiles { grid-template-columns:minmax(0,1fr); } }
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -388,7 +408,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
