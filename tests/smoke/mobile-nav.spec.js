@@ -246,3 +246,21 @@ test('no visible text under 18px at 390px: all ten articles', async ({ browser }
   expect(found, 'visible text under 18px').toEqual([]);
   await context.close();
 });
+
+/**
+ * The bigger phone type must never make a page scroll sideways (the 20px card
+ * link on /about once did at 320px). Same pages as the type-scale tests.
+ */
+for (const width of [320, 360, 390]) {
+  for (const [name, clean, file] of READ_PAGES) {
+    test(`no sideways scroll at ${width}px: ${name}`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
+      const page = await context.newPage();
+      await page.goto(html ? file : clean);
+      await page.waitForTimeout(400);
+      const m = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+      expect(m.sw, 'scrollWidth vs viewport').toBeLessThanOrEqual(m.cw);
+      await context.close();
+    });
+  }
+}
