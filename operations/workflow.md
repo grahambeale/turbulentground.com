@@ -144,6 +144,16 @@ a bypass is a push that must not happen. If the hook itself is wrong, fix the ho
 own change. Production smoke runs (`SMOKE_TEST_BASE_URL=https://www.turbulentground.com
 npx playwright test`) remain a separate post-release check.
 
+### Verification crawls
+
+Throttle every crawl or hash check against production or a preview: one request at a
+time or small concurrency (4 at most) with a delay of about 1 second between requests,
+and pause between batches of roughly 100 requests. Bursts trip Vercel's Security
+Checkpoint (a 403 with `x-vercel-mitigated: challenge`), which blocks that IP or browser
+session for several minutes and makes later results look like failures. If a 403 carries
+that header, it is the checkpoint and not the site: wait, slow down, and re-check from
+the authenticated browser pane or the Vercel connector rather than recording a failure.
+
 ## Shared lease rules
 
 - Only one product-change lease may be active.
