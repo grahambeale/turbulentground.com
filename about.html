@@ -390,6 +390,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media (max-width:640px) {
   body.reading-page .hero-sub, body.reading-page .section-lead, body.reading-page .item-desc { font-size:var(--read-size); line-height:var(--read-leading); }
   body.reading-page .hero-link, body.reading-page .item-cta { font-size:var(--read-tap); }
+  body.reading-page .item-cta { white-space:normal; }   /* nowrap made the card links wider than a 320px screen */
   body.reading-page .section-eyebrow { font-size:var(--read-support); }
   body.reading-page .item-title { font-size:var(--read-heading-min); }
 }
