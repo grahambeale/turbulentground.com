@@ -51,7 +51,7 @@ window.plausible = window.plausible || function () {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
-    --orange: #d9571c; --orange-lt: #e8763a; --orange-hover: #a23a13;
+    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
     --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
     --border: rgba(232,220,200,0.08);
   }
@@ -345,7 +345,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     transition: all 0.15s;
   }
   .scale-btn:hover { border-color: var(--orange-lt); color: var(--ink); }
-  .scale-btn[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .scale-btn[aria-pressed="true"] { background: var(--orange-btn); color: #fff; border-color: var(--orange-btn); }
   /* The selected response settles first, then the current question leaves
      across the viewport as the next one arrives. */
   .likert-transitions .scale-btn,
