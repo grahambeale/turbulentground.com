@@ -121,6 +121,29 @@ Update Airtable status, decisions, evidence, URLs, blocker and next action.
 Append the durable outcome to `operations/decision-log.md`. Clear every mutable
 field in `operations/work-state.json` to `null` as the final state action.
 
+## Push discipline and the pre-push hook
+
+Never push with a failing test; command chains must stop on first failure (set -e or &&).
+
+A hook enforces it. `scripts/hooks/pre-push` is committed to the repository and runs, for
+the exact commit being pushed (in a throwaway worktree, so uncommitted changes and the
+checked-out branch do not matter): `npm run build` (it fails if that changes any tracked
+file, meaning the generated pages are stale), `npm test`, and the Playwright smoke suite in
+`tests/smoke` (except `diagnostic.spec.js`, which drives the live site) against that commit
+served locally. Any failure blocks the push. Deleting a remote branch is not tested. It
+takes a few minutes, which is the point.
+
+Install it once in every clone (it covers all of that clone's worktrees):
+
+    sh scripts/hooks/install.sh
+
+That sets `core.hooksPath` to `scripts/hooks`. Check with `git config core.hooksPath`. It
+needs `node_modules` in the clone (`npm ci`), Playwright's browsers (`npx playwright
+install chromium`) and `python3`. Do not bypass it with `--no-verify`: a push that needs
+a bypass is a push that must not happen. If the hook itself is wrong, fix the hook in its
+own change. Production smoke runs (`SMOKE_TEST_BASE_URL=https://www.turbulentground.com
+npx playwright test`) remain a separate post-release check.
+
 ## Shared lease rules
 
 - Only one product-change lease may be active.

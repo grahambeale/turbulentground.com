@@ -1,0 +1,74 @@
+#!/bin/sh
+# pre-push: never push with a failing test (operations/workflow.md, "Push discipline").
+#
+# For every commit about to be pushed this checks out that exact commit into a
+# throwaway worktree and runs, stopping at the first failure:
+#   1. npm run build, and fails if it changes any tracked file (generated pages
+#      out of date: run npm run build and commit the result)
+#   2. npm test
+#   3. the Playwright smoke suite (tests/smoke, except diagnostic.spec.js, which
+#      drives the live site) against that commit served locally
+# Any failure blocks the push. Deleting a remote branch is not tested.
+#
+# Install once per clone:  sh scripts/hooks/install.sh
+set -eu
+
+zero=0000000000000000000000000000000000000000
+root=$(git rev-parse --show-toplevel)
+tmp=""
+server_pid=""
+
+cleanup() {
+  [ -n "$server_pid" ] && kill "$server_pid" 2>/dev/null || true
+  cd "$root"
+  if [ -n "$tmp" ] && [ -d "$tmp" ]; then
+    git -C "$root" worktree remove --force "$tmp/wt" >/dev/null 2>&1 || true
+    rm -rf "$tmp"
+    git -C "$root" worktree prune
+  fi
+}
+trap cleanup EXIT INT TERM
+
+fail() { printf '\n[pre-push] BLOCKED: %s\n' "$1" >&2; exit 1; }
+
+# Commits being pushed: the second field of each "<ref> <sha> <remote ref> <remote sha>" line.
+shas=$(awk -v z="$zero" '$2 != z { print $2 }' | sort -u)
+[ -n "$shas" ] || exit 0   # only deletions
+
+[ -d "$root/node_modules" ] || fail "no node_modules in $root; run npm ci first"
+
+for sha in $shas; do
+  short=$(git rev-parse --short "$sha")
+  printf '\n[pre-push] testing %s (build, npm test, smoke suite)\n' "$short"
+  tmp=$(mktemp -d "${TMPDIR:-/tmp}/prepush.XXXXXX")
+  git -C "$root" worktree add -q --detach "$tmp/wt" "$sha"
+  wt="$tmp/wt"
+  ln -s "$root/node_modules" "$wt/node_modules"
+  cd "$wt"
+
+  npm run build >"$tmp/build.log" 2>&1 || { cat "$tmp/build.log" >&2; fail "npm run build failed for $short"; }
+  stale=$(git status --porcelain -- . ':!node_modules')
+  [ -z "$stale" ] || { printf '%s\n' "$stale" >&2; fail "npm run build changes tracked files for $short: generated pages are out of date. Run npm run build and commit the result."; }
+
+  npm test >"$tmp/test.log" 2>&1 || { tail -40 "$tmp/test.log" >&2; fail "npm test failed for $short"; }
+  printf '[pre-push] npm test passed\n'
+
+  specs=$(ls tests/smoke/*.spec.js 2>/dev/null | grep -v 'diagnostic\.spec\.js' || true)
+  if [ -n "$specs" ]; then
+    port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
+    python3 -m http.server "$port" --bind 127.0.0.1 >/dev/null 2>&1 &
+    server_pid=$!
+    sleep 1
+    # shellcheck disable=SC2086
+    SMOKE_TEST_BASE_URL="http://127.0.0.1:$port" SMOKE_HTML_EXT=1 npx playwright test $specs --reporter=line >"$tmp/smoke.log" 2>&1 \
+      || { tail -60 "$tmp/smoke.log" >&2; fail "smoke suite failed for $short"; }
+    printf '[pre-push] smoke suite passed: %s\n' "$(tail -1 "$tmp/smoke.log")"
+    kill "$server_pid" 2>/dev/null || true; server_pid=""
+  fi
+
+  cd "$root"
+  git -C "$root" worktree remove --force "$tmp/wt" >/dev/null 2>&1 || true
+  rm -rf "$tmp"
+  tmp=""
+done
+printf '\n[pre-push] all checks passed\n'
