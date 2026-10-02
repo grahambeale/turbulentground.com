@@ -10,6 +10,9 @@ const { test, expect } = require('@playwright/test');
  */
 const html = !!process.env.SMOKE_HTML_EXT;
 const PAGES = [
+  ['/', '/index.html'],
+  ['/care-capital', '/care-capital.html'],
+  ['/writing', '/writing.html'],
   ['/about', '/about.html'],
   ['/privacy', '/privacy.html'],
   ['/learnings', '/learnings/index.html'],

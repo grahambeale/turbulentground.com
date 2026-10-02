@@ -137,47 +137,6 @@
 .t-small { font-size: var(--text-small); line-height: var(--leading-small); font-weight: var(--weight-body); }
 .t-meta  { font-size: var(--text-meta);  line-height: var(--leading-meta);  font-weight: var(--weight-body); }
 
-/* ── Reading on phones (Graham, 2 Oct 2026) ──────────────────────────
-   Below 640px NO visible text is under 18px. Body text and card summaries are
-   20px at 1.55; tappable text (links, buttons, tabs, card titles) is at least
-   20px; supporting text (dates, bylines, labels, eyebrows) is at least 18px;
-   headings stay larger than body. Pages opt in with class="reading-copy" on the
-   content and class="reading-page" on <body>; 641px and up is untouched.
-   Sizes are px, not rem, because pages set different root sizes. */
-@media (max-width: 640px) {
-  :root {
-    --read-size: 20px;          /* body text, card summaries */
-    --read-leading: 1.55;
-    --read-support: 18px;       /* dates, bylines, labels, eyebrows, notes */
-    --read-tap: 20px;           /* links, buttons, tabs, card titles: 20px or larger */
-    --read-heading-min: 24px;   /* card titles and other small headings stay above body */
-    --read-para: 1em;
-    --read-h2-top: 1.75em;
-    --read-h2-bottom: 0.5em;
-    --read-page-top: 28px;      /* gap between the header or hero and the first content */
-  }
-  body .reading-copy p,
-  body .reading-copy li,
-  body .reading-copy dd,
-  body .reading-copy dt { font-size: var(--read-size); line-height: var(--read-leading); }
-  body .reading-copy p { margin-bottom: var(--read-para); }
-  body .reading-copy h2 { margin-top: var(--read-h2-top); margin-bottom: var(--read-h2-bottom); }
-}
-
-/* ── CTA rule (Graham, 2 Oct 2026) ───────────────────────────────────
-   Every call to action fits on ONE line at 320px. Desktop keeps the long label
-   (.cta-long); at 640px and below the button shows the short label (.cta-short)
-   and the line "Put your experience on the record" (.cta-lead) sits above it.
-   Button text is 18px (the floor) with about 12px 20px padding. Markup:
-     <p class="cta-lead">Put your experience on the record</p>
-     <a class="btn ..."><span class="cta-long">...</span><span class="cta-short">Take part · 10 min</span></a> */
-.cta-short, .cta-lead { display: none; }
-@media (max-width: 640px) {
-  .cta-long { display: none; }
-  .cta-short { display: inline; }
-  .cta-lead { display: block; font-size: 18px; line-height: 1.4; color: var(--ink-mid, #c8b89a); margin: 0 0 12px; }
-  .cta-btn, .btn.cta-btn { font-size: 18px; padding: 12px 20px; white-space: nowrap; max-width: 100%; }
-}
-
 /* The phone type scale (body 20px, nothing under 18px, below 640px) lives in
-   styles/reading.css so a page can take it without taking these colour tokens. */
+   styles/reading.css so a page can take it without taking these colour tokens; the
+   CTA rule (one line at 320px, short labels) lives there too. */
