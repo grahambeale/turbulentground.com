@@ -32,7 +32,7 @@ collections:
       - { label: "Meta description", name: "description", widget: "text", hint: "Used for search results and the article's structured data." }
       - { label: "Social share title", name: "ogTitle", widget: "string", hint: "Shown when this article is shared on LinkedIn/Twitter/etc. Can be the same as the title." }
       - { label: "Social share description", name: "ogDescription", widget: "text" }
-      - { label: "Social share image", name: "ogImage", widget: "string", default: "og-image.png", hint: "Filename only, relative to learnings/ — usually og-image.png." }
+      - { label: "Social share image", name: "ogImage", widget: "string", default: "https://www.turbulentground.com/og-image.png", hint: "Full https://www.turbulentground.com/... URL of the image, usually the default. The build checks the file exists and fails if it does not." }
       - { label: "Hero image", name: "heroImage", widget: "string", hint: "Path relative to learnings/, e.g. images/eleven-sprints-in.png." }
       - { label: "Hero image alt text", name: "heroAlt", widget: "text" }
       - { label: "Hero image position", name: "heroImagePosition", widget: "select", required: false, options: ["center", "top", "bottom"], default: "center", hint: "Only change this if the hero image looks cropped wrong — e.g. \"top\" if the important part of the image sits near the top." }

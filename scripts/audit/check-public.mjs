@@ -58,6 +58,15 @@ export function checkPublic({ rootDir = root, publicDir = path.join(rootDir, 'pu
     referencedTexts.push(text);
     const base = f.endsWith('.html') ? baseHref(text) : null;
     for (const m of text.matchAll(/https?:\/\/[^\s"'<>)`]+/g)) externals.add(m[0].replace(/[.,;]+$/, ''));
+    // Social images are absolute URLs on our own host (scrapers need that); they must still exist in public/.
+    if (f.endsWith('.html')) {
+      for (const m of text.matchAll(/<meta\b[^>]*(?:property|name)\s*=\s*['"](?:og:image|twitter:image)['"][^>]*content\s*=\s*(['"])(.*?)\1/gi)) {
+        let u; try { u = new URL(m[2]); } catch { errors.push(`SOCIAL IMAGE in ${f} is not an absolute URL: ${m[2]}`); continue; }
+        if (!['turbulentground.com', 'www.turbulentground.com'].includes(u.hostname)) continue;
+        if (u.protocol !== 'https:') errors.push(`SOCIAL IMAGE in ${f} is not https: ${m[2]}`);
+        else if (!resolveReference(u.pathname, f, { has, vercel, apiFiles, base: null }).ok) errors.push(`BROKEN SOCIAL IMAGE in ${f}: ${m[2]} (not in public/)`);
+      }
+    }
     for (const { ref, kind, suffix } of extractReferences(f, text)) {
       if (ignore.some((i) => i.ref === ref && globToRegExp(i.from).test(f))) continue;
       if (kind === 'dynamic') {   // a built path: some file under the directory with that extension must be in public/

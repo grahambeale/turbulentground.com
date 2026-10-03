@@ -179,11 +179,5 @@
       "CNAME"
     ]
   },
-  "ignoreReferences": [
-    {
-      "ref": "og-image.png",
-      "from": "learnings/*.html",
-      "reason": "KNOWN PRE-EXISTING ISSUE, not changed here (public pages must stay byte-identical): the articles set og:image to the relative path og-image.png, which resolves to /learnings/og-image.png (404 on production). Logged in Airtable as FB-20261003-OG-IMAGE-RELATIVE."
-    }
-  ]
+  "ignoreReferences": []
 }

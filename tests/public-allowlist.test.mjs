@@ -147,6 +147,17 @@ test('REGRESSION: git hook environment (GIT_DIR) must not leak into the temp-dir
   done(proj); done(decoy);
 });
 
+test('FAILS when an own-host og:image does not exist in public/ (and when it is not absolute)', () => {
+  const page = (c) => `<html><head><meta property="og:image" content="${c}"></head><body></body></html>`;
+  const ok = project({ ...SITE, 'about.html': page('https://www.turbulentground.com/favicon.png') }, ALLOW, VERCEL);
+  assert.deepEqual(run(ok).errors, []);
+  const missing = project({ ...SITE, 'about.html': page('https://www.turbulentground.com/img/nope.png') }, ALLOW, VERCEL);
+  assert.ok(run(missing).errors.some((e) => e.startsWith('BROKEN SOCIAL IMAGE') && e.includes('nope.png')));
+  const relative = project({ ...SITE, 'about.html': page('og-image.png') }, ALLOW, VERCEL);
+  assert.ok(run(relative).errors.some((e) => e.startsWith('SOCIAL IMAGE') && e.includes('not an absolute URL')));
+  for (const d of [ok, missing, relative]) done(d);
+});
+
 test('FAILS on an /api/ call with no function', () => {
   const d = project({ ...SITE, 'index.html': '<script>fetch("/api/missing-route")</script>' }, ALLOW, VERCEL);
   assert.ok(run(d).errors.some((e) => e.includes('/api/missing-route')));

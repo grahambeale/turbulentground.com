@@ -20,7 +20,9 @@
 //   description      — meta description + JSON-LD description
 //   ogTitle          — og:title (can differ slightly from title)
 //   ogDescription    — og:description (can differ from description)
-//   ogImage          — og:image, relative to learnings/ (e.g. og-image.png)
+//   ogImage          — og:image. Written as the full URL https://www.turbulentground.com/og-image.png; a bare
+//                      filename or site path is accepted and resolved to that form (scripts/og-image.mjs), and the
+//                      build fails if the file does not exist
 //   heroImage        — hero <img> src, relative to learnings/
 //   heroAlt          — hero <img> alt text
 //   eyebrow          — small label above the headline (e.g. "The Experiment")
@@ -35,6 +37,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { marked } from 'marked';
 import { load as yamlLoad } from 'js-yaml';
+import { resolveOgImage } from './og-image.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -94,7 +97,7 @@ function render(fields, bodyHtml) {
     .replaceAll('{{DESCRIPTION}}', htmlAttrEscape(fields.description))
     .replaceAll('{{OG_TITLE}}', htmlAttrEscape(fields.ogTitle))
     .replaceAll('{{OG_DESCRIPTION}}', htmlAttrEscape(fields.ogDescription))
-    .replaceAll('{{OG_IMAGE}}', htmlAttrEscape(fields.ogImage))
+    .replaceAll('{{OG_IMAGE}}', htmlAttrEscape(resolveOgImage(fields.ogImage, root)))
     .replaceAll('{{HERO_IMAGE}}', htmlAttrEscape(fields.heroImage))
     .replaceAll('{{HERO_IMAGE_POSITION}}', fields.heroImagePosition || 'center')
     .replaceAll('{{HERO_ALT}}', htmlAttrEscape(fields.heroAlt))
