@@ -184,14 +184,23 @@ export function apiFileSet(root) {
 
 export { baseHref };
 
+/**
+ * Environment for child git processes with every GIT_* variable removed. A git hook (the pre-push hook runs the
+ * build) is started with GIT_DIR and friends set; a child `git init` or `git check-ignore` in a temp directory
+ * would then act on the REAL repository (it once flipped core.bare to true in the shared repo config).
+ */
+export function cleanGitEnv(env = process.env) {
+  return Object.fromEntries(Object.entries(env).filter(([k]) => !k.startsWith('GIT_')));
+}
+
 /** Paths .vercelignore already hides (Vercel removes them before the build). Evaluated with git's ignore rules in an empty repo. */
 export function vercelIgnored(rootDir, files) {
   if (!existsSync(path.join(rootDir, '.vercelignore'))) return new Set();
   const tmp = mkdtempSync(path.join(tmpdir(), 'vi-'));
   try {
-    execFileSync('git', ['init', '-q', tmp]);
+    execFileSync('git', ['init', '-q', tmp], { env: cleanGitEnv() });
     copyFileSync(path.join(rootDir, '.vercelignore'), path.join(tmp, '.gitignore'));
-    const out = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: tmp, input: files.join('\n'), encoding: 'utf8' });
+    const out = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: tmp, input: files.join('\n'), encoding: 'utf8', env: cleanGitEnv() });
     return new Set(out.split('\n').filter(Boolean));
   } catch (e) {
     if (e.status === 1) return new Set();   // nothing ignored

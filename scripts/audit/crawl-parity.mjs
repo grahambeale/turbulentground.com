@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadAllowlist, expandAllowlist, loadVercel, vercelIgnored } from '../public-lib.mjs';
+import { loadAllowlist, expandAllowlist, loadVercel, vercelIgnored, cleanGitEnv } from '../public-lib.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const TOOLBAR_RE = /<script async data-explicit-opt-in="true"[^>]*><\/script>\s*$/;
@@ -42,7 +42,7 @@ export function buildRouteManifest(rootDir = root) {
   const vercel = loadVercel(rootDir);
   const { files: pub } = expandAllowlist(rootDir, allowlist, { preview: false });
   const { files: withPreview } = expandAllowlist(rootDir, allowlist, { preview: true });
-  const tracked = execFileSync('git', ['ls-files'], { cwd: rootDir, encoding: 'utf8' }).split('\n').filter(Boolean);
+  const tracked = execFileSync('git', ['ls-files'], { cwd: rootDir, encoding: 'utf8', env: cleanGitEnv() }).split('\n').filter(Boolean);
   const routes = [];
   for (const rel of pub.keys()) for (const r of routesForFile(rel, vercel)) routes.push({ route: r, file: rel, kind: 'public' });
   for (const rel of withPreview.keys()) if (!pub.has(rel)) for (const r of routesForFile(rel, vercel)) routes.push({ route: r, file: rel, kind: 'previewOnly' });
