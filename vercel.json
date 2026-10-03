@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "buildCommand": "npm run build",
-  "outputDirectory": ".",
+  "outputDirectory": "public",
   "crons": [
     {
       "path": "/api/research-incomplete-cron",

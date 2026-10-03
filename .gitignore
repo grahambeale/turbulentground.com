@@ -22,3 +22,4 @@ gsc-token.json
 !_experiment/fetch-search-data.py
 .vercel
 .env*
+public/

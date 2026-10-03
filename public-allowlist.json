@@ -1,0 +1,188 @@
+{
+  "$comment": "The public site, as an allowlist. scripts/build-public.mjs copies exactly these files into public/ and vercel.json deploys that directory, so a new file is private until it is added here. Not served itself. Patterns: * matches within one path segment. A group marked dynamic lists assets that are only referenced from JavaScript or runtime code; check-public fails if one of them is no longer referenced anywhere. See research/openspec/changes/public-allowlist-output/.",
+  "version": 1,
+  "public": [
+    {
+      "reason": "Site pages",
+      "paths": [
+        "index.html",
+        "about.html",
+        "care-capital.html",
+        "privacy.html",
+        "writing.html"
+      ]
+    },
+    {
+      "reason": "Site-wide assets and crawler files",
+      "paths": [
+        "favicon.png",
+        "og-image.png",
+        "research-social-preview-2026.png",
+        "hero-terrain.png",
+        "hero-terrain.webp",
+        "hero-terrain-mobile.webp",
+        "sitemap.xml",
+        "BingSiteAuth.xml"
+      ]
+    },
+    {
+      "reason": "Shared stylesheets linked from the pages",
+      "paths": [
+        "styles/tokens.css",
+        "styles/reading.css"
+      ]
+    },
+    {
+      "reason": "Diagnostic tool",
+      "paths": [
+        "diagnostic/index.html"
+      ]
+    },
+    {
+      "reason": "Decap CMS and the owner invitation pages",
+      "paths": [
+        "admin/index.html",
+        "admin/invitations/index.html",
+        "admin/admin-nav.css"
+      ]
+    },
+    {
+      "reason": "Decap CMS configuration, fetched at runtime by the CMS script from /admin/config.yml",
+      "paths": [
+        "admin/config.yml"
+      ],
+      "dynamic": true,
+      "referencedFrom": "admin/index.html (<base href=\"/admin/\"> and Decap's relative config.yml fetch)"
+    },
+    {
+      "reason": "Learnings index and articles",
+      "paths": [
+        "learnings/index.html",
+        "learnings/analytics-data-mean-what-you-think.html",
+        "learnings/chatgpt-starts-this-week.html",
+        "learnings/eleven-sprints-in.html",
+        "learnings/how-does-an-ai-team-miss-a-failure-this-big.html",
+        "learnings/make-my-ai-team-take-risks.html",
+        "learnings/seven-copies-of-the-rules.html",
+        "learnings/signals-added-to-the-pile.html",
+        "learnings/the-silent-veto.html",
+        "learnings/what-zero-intervention-actually-means.html",
+        "learnings/zero-humans-in-the-loop.html"
+      ]
+    },
+    {
+      "reason": "Article images",
+      "paths": [
+        "learnings/images/*.png"
+      ]
+    },
+    {
+      "reason": "Research study pages",
+      "paths": [
+        "research/index.html",
+        "research/privacy.html"
+      ]
+    },
+    {
+      "reason": "Owner pages for the study",
+      "paths": [
+        "research/admin.html",
+        "research/admin-tools.html"
+      ]
+    },
+    {
+      "reason": "Study widgets linked from research/index.html",
+      "paths": [
+        "research/feedback-widget.css",
+        "research/feedback-widget.js",
+        "research/referral-sharing.css",
+        "research/referral-sharing.js"
+      ]
+    },
+    {
+      "reason": "Participants whose saved progress is on the v3 instrument are redirected here by research/index.html; a live participant route, not a review page",
+      "paths": [
+        "research/legacy-v3.html"
+      ],
+      "dynamic": true,
+      "referencedFrom": "research/index.html (window.location.replace in the token lookup)"
+    },
+    {
+      "reason": "Intro and outro videos and posters: referenced only from a script block in research/index.html",
+      "paths": [
+        "research/media/research-intro.mp4",
+        "research/media/research-outro.mp4",
+        "research/media/intro-poster.jpg",
+        "research/media/outro-poster.jpg"
+      ],
+      "dynamic": true,
+      "referencedFrom": "research/index.html (script block)"
+    }
+  ],
+  "previewOnly": {
+    "$comment": "Research review and preview pages (Graham, 3 Oct 2026, D1; 12 pages: research/legacy-v3.html is NOT one of them, see the public group): served on preview deployments only (VERCEL_ENV=preview), with noindex added to the copies; 404 on production. Never listed here: the four build inputs partials/feedback.html, partials/footer.html, partials/nav.html and learnings/_article-template.html, which are never served.",
+    "paths": [
+      "research/benchmark-preview.html",
+      "research/benchmark-preview/available.html",
+      "research/benchmark-preview/building.html",
+      "research/benchmark-preview/partial.html",
+      "research/lifecycle-email-preview.html",
+      "research/purpose-preview.html",
+      "research/referral-sharing-preview.html",
+      "research/results-preview-v3.html",
+      "research/results-preview-v4.html",
+      "research/results-preview-v4-own.html",
+      "research/return-link-email-preview.html",
+      "research/ux-review.html"
+    ]
+  },
+  "forbidden": {
+    "$comment": "Nothing under these prefixes, and no file with these extensions or names, may ever appear in public/.",
+    "prefixes": [
+      "tests/",
+      "scripts/",
+      "lib/",
+      "content/",
+      "partials/",
+      "operations/",
+      "_experiment/",
+      ".claude/",
+      ".github/",
+      "node_modules/",
+      "research/openspec/",
+      "research/feedback-agent/",
+      "research/versions/",
+      "api/",
+      ".git/"
+    ],
+    "extensions": [
+      ".md",
+      ".mjs",
+      ".cjs",
+      ".py",
+      ".sh",
+      ".patch",
+      ".bak",
+      ".map",
+      ".env"
+    ],
+    "names": [
+      "package.json",
+      "package-lock.json",
+      "vercel.json",
+      ".vercelignore",
+      ".gitignore",
+      "public-allowlist.json",
+      "playwright.config.js",
+      ".env.example",
+      "CNAME"
+    ]
+  },
+  "ignoreReferences": [
+    {
+      "ref": "og-image.png",
+      "from": "learnings/*.html",
+      "reason": "KNOWN PRE-EXISTING ISSUE, not changed here (public pages must stay byte-identical): the articles set og:image to the relative path og-image.png, which resolves to /learnings/og-image.png (404 on production). Logged in Airtable as FB-20261003-OG-IMAGE-RELATIVE."
+    }
+  ]
+}
