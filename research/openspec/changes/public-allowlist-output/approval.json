@@ -1,0 +1,24 @@
+{
+  "change": "public-allowlist-output",
+  "airtable": "FB-20261002-SERVED-FILES (recb5cq3Kxa7Sqt43)",
+  "decision": "Approved: specification and implementation. Production release NOT approved.",
+  "quote": "approve specification and implementation (no release): public-allowlist-output (9f54e18), D1 preview-only with noindex, D2 keep, D3 keep as second layer, D4 approve",
+  "source": "Graham, chat message in the Claude desktop Code session, 3 Oct 2026",
+  "recorded_at": "2026-10-03T01:46:06Z",
+  "recorded_by": "Claude (transcribed; not generated)",
+  "revision": "9f54e18d (docs/openspec-public-allowlist head at the time of approval)",
+  "file_sha256": {
+    "proposal.md": "b5e8bd7ba67086a51972f6b023ae53ec25dde906c2b0ff95cb16c678d9865230",
+    "design.md": "3e61ed3f8a12e0717bad560f93fb848816e2359c3147c1f1cc8574730a5dd4d0",
+    "tasks.md": "f98d309ae869d1fba6f481efd95d29d5c0cd888bd45ba16f41c8f44cbeec2b96",
+    "evidence-snapshot.md": "c5e530840bc30b6b728699a4f6f17da3d7ca9f42c03eefe4c6681bbe8d13f067"
+  },
+  "decisions": {
+    "D1": "The 13 research review pages are served on preview deployments only, with noindex. The 4 build inputs (3 partials and the article template) are never served.",
+    "D2": "Keep writing.html in the allowlist.",
+    "D3": "Keep the interim .vercelignore entries as a second layer (do not delete them after release).",
+    "D4": "Approved: the throttled crawl rule for the parity check, with previews checked from the authenticated browser or Vercel connector."
+  },
+  "not_approved": ["production release", "merging to main", "changing any Vercel project setting other than the outputDirectory in vercel.json"],
+  "release_gate": "A separate 'approve production release: BRANCH (HEAD)' naming the previewed head, released through scripts/release.sh"
+}
