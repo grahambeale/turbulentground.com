@@ -1,0 +1,17 @@
+{
+  "change": "survey-mobile-type-scale",
+  "airtable": "FB-20261002-SURVEY-TYPE-PROPOSAL (reciTrQAKanORkpzg)",
+  "decision": "Approved: specification and implementation, including the presentationVersion and viewport-bucket schema change (Airtable fields, research-submit, research-save-progress) and the privacy notice row. Production release NOT approved.",
+  "quote": "approve specification and implementation (no release): survey-mobile-type-scale rev 2 (7783efe), including the presentationVersion and viewport-bucket schema change (Airtable field, research-submit, research-save-progress) and the privacy notice row. Decisions: response area not restyled; legitimate interests only; buckets phone <640, tablet 640–1023, desktop ≥1024. Release timing: after the 30th completion or 14 days from today, whichever first, with release approval still required.",
+  "source": "Graham, chat message in the Claude desktop Code session, 3 Oct 2026",
+  "recorded_by": "Claude (transcribed; not generated)",
+  "revision": "7783efe66dec16f95c13d2eb699e4b563abf74dd",
+  "file_sha256": { "proposal.md": "e183eae911cc7590a26941eb091bc1ba59c1e333eb7654bdbd280b3781bde418" },
+  "decisions": {
+    "response_area": "Not restyled: 1-5 buttons, scale end labels and Not applicable keep their current sizes and proportions; Not applicable stays one line.",
+    "lawful_basis": "Legitimate interests only for the new privacy notice row.",
+    "viewport_buckets": "phone below 640px, tablet 640 to 1023px, desktop 1024px and up.",
+    "release_timing": "After the 30th completion or 14 days from 3 Oct 2026 (that is, by 17 Oct 2026), whichever comes first, with a release approval still required."
+  },
+  "not_approved": ["production release of the restyle", "production release of the tag, schema and notice (separate release approval)"]
+}
