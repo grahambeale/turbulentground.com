@@ -170,6 +170,10 @@ the authenticated browser pane or the Vercel connector rather than recording a f
 ## Shared lease rules
 
 - Only one product-change lease may be active.
+- Take the lease for any session that pushes to the remote or writes to Airtable,
+  including investigations, doc-only changes and review-branch refreshes. Read-only
+  work that touches neither needs no lease. Claim it before the first push or
+  Airtable write, keep `phase` and `last_checkpoint` current, and clear it last.
 - Lease expiry is authoritative; do not use an additional informal timeout.
 - A runner may describe only actions it observed or performed.
 - Update `phase` and `last_checkpoint` at meaningful handoffs.
