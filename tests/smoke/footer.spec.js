@@ -62,13 +62,15 @@ for (const width of [320, 375, 390]) {
   });
 }
 
-for (const [clean, file] of [
+const DISCLOSURE_PAGES = [
   ['/about', '/about.html'],
-  ['/writing', '/writing.html'],
   ['/care-capital', '/care-capital.html'],
   ['/learnings', '/learnings/index.html'],
   ['/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html'],
-]) {
+];
+if (html) DISCLOSURE_PAGES.push(['/writing', '/writing.html']);   // production redirects /writing to LinkedIn
+
+for (const [clean, file] of DISCLOSURE_PAGES) {
   test(`AI-experiment disclosure stays in the footer: ${clean}`, async ({ page }) => {
     await page.goto(url(clean, file));
     await expect(page.locator('footer .footer-note')).toContainText('AI product team from Sprint 1');
