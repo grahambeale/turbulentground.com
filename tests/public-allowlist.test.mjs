@@ -112,6 +112,14 @@ test('built paths (string concatenation and template literals) must have files u
   for (const d of [concat, tmpl, ok]) done(d);
 });
 
+test('FAILS when .vercelignore hides an allowlisted file (Vercel would remove it before the build)', () => {
+  const d = project(SITE, ALLOW, VERCEL);
+  writeFileSync(path.join(d, '.vercelignore'), '/img/\n');
+  const r = run(d);
+  assert.ok(r.errors.some((e) => e.startsWith('HIDDEN BY .vercelignore') && e.includes('img/a.png')), r.errors.join('\n'));
+  done(d);
+});
+
 test('FAILS on an /api/ call with no function', () => {
   const d = project({ ...SITE, 'index.html': '<script>fetch("/api/missing-route")</script>' }, ALLOW, VERCEL);
   assert.ok(run(d).errors.some((e) => e.includes('/api/missing-route')));

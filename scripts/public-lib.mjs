@@ -1,6 +1,8 @@
 // Shared by scripts/build-public.mjs, scripts/audit/check-public.mjs and tests/public-allowlist.test.mjs.
 // See research/openspec/changes/public-allowlist-output/ (approved 3 Oct 2026, no release yet).
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync, mkdtempSync, copyFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
 export const SKIP_DIRS = new Set(['node_modules', '.git', 'public', 'test-results', 'playwright-report', '.vercel']);
@@ -181,3 +183,18 @@ export function apiFileSet(root) {
 }
 
 export { baseHref };
+
+/** Paths .vercelignore already hides (Vercel removes them before the build). Evaluated with git's ignore rules in an empty repo. */
+export function vercelIgnored(rootDir, files) {
+  if (!existsSync(path.join(rootDir, '.vercelignore'))) return new Set();
+  const tmp = mkdtempSync(path.join(tmpdir(), 'vi-'));
+  try {
+    execFileSync('git', ['init', '-q', tmp]);
+    copyFileSync(path.join(rootDir, '.vercelignore'), path.join(tmp, '.gitignore'));
+    const out = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: tmp, input: files.join('\n'), encoding: 'utf8' });
+    return new Set(out.split('\n').filter(Boolean));
+  } catch (e) {
+    if (e.status === 1) return new Set();   // nothing ignored
+    throw e;
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+}

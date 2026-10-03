@@ -15,7 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   globToRegExp, loadAllowlist, expandAllowlist, includePreview, walk, forbiddenReason,
-  extractReferences, resolveReference, loadVercel, apiFileSet, baseHref,
+  extractReferences, resolveReference, loadVercel, apiFileSet, baseHref, vercelIgnored,
 } from '../public-lib.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -32,6 +32,12 @@ export function checkPublic({ rootDir = root, publicDir = path.join(rootDir, 'pu
   // 1 exactness
   for (const f of expected.keys()) if (!actual.has(f)) errors.push(`MISSING from public/: ${f}`);
   for (const f of actual) if (!expected.has(f)) errors.push(`EXTRA in public/ (not in the allowlist${preview ? '' : ' for the production variant'}): ${f}`);
+
+  // 1b .vercelignore must not hide an allowlisted file: Vercel removes ignored files BEFORE the build, so the
+  // allowlist entry would match nothing there and the deploy would fail. Needs git; skipped where it is absent (Vercel).
+  try {
+    for (const f of vercelIgnored(rootDir, [...expected.keys()])) errors.push(`HIDDEN BY .vercelignore but allowlisted: ${f} (Vercel removes it before the build; remove the .vercelignore entry)`);
+  } catch { /* git not available: the Vercel build itself fails closed instead */ }
 
   // 2 forbidden paths
   for (const f of actual) {

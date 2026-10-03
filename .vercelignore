@@ -29,6 +29,9 @@ research/openspec/
 /research/feedback-agent/
 /research/versions/
 /research/work-state.json
-/research/ux-review-assets/
 /research/invite/
 /research/.gitkeep
+
+# NOT listed on purpose: /research/ux-review-assets/. research/ux-review.html builds its image URLs from that
+# folder and it is allowlisted (preview-only) in public-allowlist.json. Vercel removes ignored files BEFORE the
+# build, so hiding an allowlisted file fails the build (scripts/audit/check-public.mjs checks this locally).
