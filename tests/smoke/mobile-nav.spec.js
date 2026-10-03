@@ -396,7 +396,7 @@ const TEMPLATES = ['learnings/_article-template.html', 'partials/feedback.html',
 
 test('every HTML page is covered, exempt, deferred or a template (and the exemptions are recorded in reading.css)', async () => {
   const root = path.join(__dirname, '..', '..');
-  const skip = new Set(['node_modules', '.git', 'test-results', '.vercel', 'openspec']);
+  const skip = new Set(['node_modules', '.git', 'test-results', '.vercel', 'openspec', 'public']);   // public/ is build output (a copy of these pages)
   /** @type {string[]} */
   const found = [];
   const walkDir = (dir) => {

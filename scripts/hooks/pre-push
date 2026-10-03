@@ -53,10 +53,19 @@ for sha in $shas; do
   npm test >"$tmp/test.log" 2>&1 || { tail -40 "$tmp/test.log" >&2; fail "npm test failed for $short"; }
   printf '[pre-push] npm test passed\n'
 
+  # public/ is what Vercel deploys (vercel.json outputDirectory). The build above made the production
+  # variant and checked it. Also prove the preview variant (adds the research review pages), then
+  # rebuild the production variant, which is what the smoke suite below must see.
+  VERCEL_ENV=preview node scripts/build-public.mjs >"$tmp/public.log" 2>&1 && VERCEL_ENV=preview node scripts/audit/check-public.mjs >>"$tmp/public.log" 2>&1 \
+    || { tail -40 "$tmp/public.log" >&2; fail "public/ preview variant failed for $short"; }
+  node scripts/build-public.mjs >"$tmp/public.log" 2>&1 && node scripts/audit/check-public.mjs >>"$tmp/public.log" 2>&1 \
+    || { tail -40 "$tmp/public.log" >&2; fail "public/ production variant failed for $short"; }
+  printf '[pre-push] public/ allowlist checks passed (production and preview variants)\n'
+
   specs=$(ls tests/smoke/*.spec.js 2>/dev/null | grep -v 'diagnostic\.spec\.js' || true)
   if [ -n "$specs" ]; then
     port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
-    python3 scripts/hooks/serve.py "$port" >/dev/null 2>&1 &
+    python3 scripts/hooks/serve.py "$port" public >/dev/null 2>&1 &
     server_pid=$!
     sleep 1
     # shellcheck disable=SC2086
