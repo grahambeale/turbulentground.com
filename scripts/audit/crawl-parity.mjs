@@ -14,6 +14,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { mkdtempSync, copyFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllowlist, expandAllowlist, loadVercel } from '../public-lib.mjs';
@@ -36,6 +38,20 @@ export function routesForFile(rel, vercel) {
   return [...routes];
 }
 
+/** Paths .vercelignore already hides (Vercel removes them before the build). Evaluated with git's ignore rules in an empty repo. */
+export function vercelIgnored(rootDir, files) {
+  const tmp = mkdtempSync(path.join(tmpdir(), 'vi-'));
+  try {
+    execFileSync('git', ['init', '-q', tmp]);
+    copyFileSync(path.join(rootDir, '.vercelignore'), path.join(tmp, '.gitignore'));
+    const out = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: tmp, input: files.join('\n'), encoding: 'utf8' });
+    return new Set(out.split('\n').filter(Boolean));
+  } catch (e) {
+    if (e.status === 1) return new Set();   // nothing ignored
+    throw e;
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+}
+
 /** Manifest skeleton from the repo: public routes, preview-only routes, and routes that must 404. */
 export function buildRouteManifest(rootDir = root) {
   const allowlist = loadAllowlist(rootDir);
@@ -47,9 +63,10 @@ export function buildRouteManifest(rootDir = root) {
   for (const rel of pub.keys()) for (const r of routesForFile(rel, vercel)) routes.push({ route: r, file: rel, kind: 'public' });
   for (const rel of withPreview.keys()) if (!pub.has(rel)) for (const r of routesForFile(rel, vercel)) routes.push({ route: r, file: rel, kind: 'previewOnly' });
   const served = new Set(withPreview.keys());
+  const hidden = vercelIgnored(rootDir, tracked);   // already 404 through the second layer; not what this change newly hides
   const WITHHELD = new Set(['package.json', 'package-lock.json', '.env.example']);   // Vercel already 404s these
   for (const rel of tracked) {
-    if (served.has(rel) || rel.startsWith('api/') || WITHHELD.has(rel)) continue;
+    if (served.has(rel) || rel.startsWith('api/') || WITHHELD.has(rel) || hidden.has(rel)) continue;
     // Only files that production could have served matter; ignored-by-.vercelignore files are 404 already but cheap to check.
     for (const r of routesForFile(rel, vercel)) routes.push({ route: r, file: rel, kind: 'absent' });
   }
@@ -136,7 +153,7 @@ async function main() {
     });
     const bad = routes.filter((r) => r.kind === 'public' && r.expect.status >= 300);
     if (bad.length) console.error('WARNING: public routes that are not 2xx on the baseline:', bad.map((b) => `${b.route} ${b.expect.status}`).join(', '));
-    writeFileSync(out, JSON.stringify({ recordedFrom: base, recordedAt: new Date().toISOString(), note: 'public = expected bytes; previewOnly = 200 on previews, 404 on production; absent = must 404 after the migration (200 on the baseline site).', routes }, null, 2) + '\n');
+    writeFileSync(out, JSON.stringify({ recordedFrom: base, recordedAt: new Date().toISOString(), note: 'public = expected bytes; previewOnly = 200 on previews, 404 on production; absent = served on the baseline site but must 404 after the migration (files .vercelignore already hides are not listed).', routes }, null, 2) + '\n');
     console.log(`[parity] recorded ${routes.length} route(s) from ${base} to ${out}`);
     return;
   }
