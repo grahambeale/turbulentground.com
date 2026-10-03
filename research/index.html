@@ -569,6 +569,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .error-msg.visible { display: block; }
 
   .loading-wrap { text-align: center; padding: 90px 0; color: var(--muted); }
+  .disabled-home-link { color: var(--orange-lt); }
   .public-start-wrap { max-width: 680px; margin: 0 auto; }
   .public-start-wrap .intro { margin-bottom: 18px; }
   .public-start-fields { display: grid; gap: 18px; margin: 28px 0 12px; }
@@ -928,6 +929,23 @@ So thank you for being a part of it.</div>
     <div class="loading-wrap">
       <h1>This link isn't valid.</h1>
       <p>Please check the link you were sent, or contact Graham directly if you think this is a mistake.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 0b2: ENTRY SWITCHED OFF ============ -->
+  <!-- Shown when /api/research-public-start says enabled:false. Previews (*.vercel.app) never
+       have the switch on, so they get their own wording; production gets a plain notice. -->
+  <section class="screen" id="screen-disabled">
+    <div class="loading-wrap">
+      <div id="disabled-preview" hidden>
+        <h1>Preview build: survey entry is switched off here.</h1>
+        <p>It works on the live site.</p>
+      </div>
+      <div id="disabled-live" hidden>
+        <h1>The study isn't taking new responses right now.</h1>
+        <p>Thank you for your interest.</p>
+        <p><a class="disabled-home-link" href="/">Back to the homepage</a></p>
+      </div>
     </div>
   </section>
 
@@ -1648,7 +1666,17 @@ Thank you for being a part of it.</div>
   } else if (!token) {
     fetch('/api/research-public-start')
       .then(function (res) { return res.json(); })
-      .then(function (data) { showScreen(data && data.enabled === true ? 'screen-public-start' : 'screen-invalid'); })
+      .then(function (data) {
+        if (data && data.enabled === true) { showScreen('screen-public-start'); return; }
+        if (data && data.enabled === false) {
+          var onPreview = /\.vercel\.app$/i.test(location.hostname);
+          document.getElementById('disabled-preview').hidden = !onPreview;
+          document.getElementById('disabled-live').hidden = onPreview;
+          showScreen('screen-disabled');
+          return;
+        }
+        showScreen('screen-invalid');
+      })
       .catch(function () { showScreen('screen-invalid'); });
   } else {
     fetch('/api/research-lookup?t=' + encodeURIComponent(token))
