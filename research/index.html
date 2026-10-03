@@ -37,6 +37,8 @@ window.plausible = window.plausible || function () {
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,analytics,apartment,calendar_month,category,check_circle,circle,close,code,domain,flare,group,groups,manage_accounts,more_horiz,palette,person,public,search,settings,trending_up,visibility_off,view_kanban,work_off&amp;display=block" rel="stylesheet">
 <link rel="stylesheet" href="/research/referral-sharing.css">
+<link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   /* ── Typography scale ──────────────────────────────────────────────
      Bumped up from the original build after a real walkthrough flagged
@@ -57,6 +59,21 @@ window.plausible = window.plausible || function () {
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; padding-top: 92px; }
+  /* Phones: ONLY the start screen (the /take-part intro) follows the type scale
+     (styles/reading.css). Every other screen (consent, context, the 24 statements,
+     results) is the research instrument and stays exactly as it was until the
+     methodology-reviewed proposal research/openspec/changes/survey-mobile-type-scale
+     is approved: do not widen these selectors. tests/smoke/survey-frozen.spec.js
+     fails if any other screen changes. */
+  @media (max-width: 640px) {
+    body:has(#screen-public-start.active) { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
+    body:has(#screen-public-start.active) .nav-strapline { display: none; }   /* 13px header text: nothing under 18px on the intro */
+    #screen-public-start .video-thumb-label, #screen-public-start .transcript-toggle summary { font-size: var(--read-tap); max-width: none; }
+    #screen-public-start .transcript-body { font-size: var(--read-size); line-height: var(--read-leading); }
+    #screen-public-start .check-row .required-tag { font-size: var(--read-support); }
+    #screen-public-start .btn { font-size: var(--read-tap); }
+    #screen-public-start .check-row label { font-size: var(--read-tap); }   /* tappable consent text */
+  }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 
   /* NAV_CSS_START */
@@ -161,11 +178,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -186,6 +204,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -203,7 +224,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -853,7 +874,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 
   <!-- ============ SCREEN 0a: PUBLIC START ============ -->
   <section class="screen" id="screen-public-start">
-    <div class="public-start-wrap">
+    <div class="public-start-wrap reading-copy">
       <h1>Welcome</h1>
       <div class="intro-video-block">
         <div class="video-thumb">

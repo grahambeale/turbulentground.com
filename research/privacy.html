@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -125,11 +126,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -150,6 +152,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -167,7 +172,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
   main { margin: 46px auto 110px; width: min(100% - 40px, 760px); }
@@ -192,9 +197,15 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     :root { --bg: #fff; --bg-warm: #fff; --surface: #f4f1ec; --warning-bg: #fff7f0; --ink: #171310; --ink-mid: #342d27; --muted: #665d55; --border: #d8d0c7; }
     .nav { display: none; } body { padding-top: 0; } main { margin: 0 auto; width: 100%; } a { color: inherit; }
   }
+/* Phones: this compatibility page redirects to /privacy#participation; its no-script
+   fallback follows the same type scale (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .eyebrow { font-size:var(--read-support); }
+  body.reading-page th, body.reading-page td { font-size:var(--read-support); line-height:1.5; }
+}
 </style>
 </head>
-<body>
+<body class="reading-page">
 <noscript><p style="padding:24px"><a href="/privacy#participation">Open the participation privacy information</a>.</p></noscript>
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
@@ -219,7 +230,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   
 </nav>
 <!-- NAV_END -->
-<main>
+<main class="reading-copy">
   <p class="eyebrow">Graham Beale's AI shift research</p>
   <h1>Privacy notice</h1>
 

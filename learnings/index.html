@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:780px;
@@ -124,11 +126,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -149,6 +152,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -166,7 +172,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -174,16 +180,27 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 300; color: var(--ink); line-height: 1.15; margin-bottom: 16px; }
   .intro { color: var(--ink-mid); font-size: 16px; max-width: 560px; margin-bottom: 56px; }
+  @media (max-width: 640px) { .page-wrap { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); } .intro { margin-bottom: 36px; } body .reading-copy .eyebrow, body .reading-copy .article-date { font-size: var(--read-support); line-height: 1.5; } body .reading-copy .article-title { font-size: 28px; line-height: 1.15; } body .reading-copy .article-read { font-size: var(--read-tap); margin-top: 14px; } .article-card { padding-left: 12px; padding-right: 12px; margin-left: -12px; margin-right: -12px; } body .reading-copy .article-summary { font-size: var(--read-size); line-height: var(--read-leading); } }
 
-  .article-card { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--surface); text-decoration: none; }
-  .article-card:first-of-type { padding-top: 0; }
+  /* The whole card is the link. Title is the clear first read (Cormorant 600, --ink, well above the
+     summary); "Read ->" and the hover, focus and pressed states make it look clickable. */
+  .article-card { display: flex; gap: 24px; padding: 28px 16px; margin: 0 -16px; border-bottom: 1px solid var(--surface); border-radius: 10px; text-decoration: none; color: inherit; transition: background-color 0.2s; }
+  .article-card:first-of-type { padding-top: 28px; }
   .article-thumb { width: 160px; height: 110px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: var(--surface); }
   .article-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
   .article-body { flex: 1; min-width: 0; }
   .article-date { font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.02em; }
-  .article-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--ink); line-height: 1.25; margin-bottom: 8px; transition: color 0.2s; }
-  .article-card:hover .article-title { color: var(--orange-lt); }
+  .article-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; color: var(--ink); line-height: 1.15; margin-bottom: 10px; transition: color 0.2s; }
   .article-summary { color: var(--ink-mid); font-size: 14px; line-height: 1.6; }
+  .article-read { margin-top: 12px; font-size: 15px; font-weight: 500; color: var(--orange-lt); letter-spacing: 0.01em; }
+  .article-read span { display: inline-block; transition: transform 0.2s; }
+  .article-card:hover { background: var(--bg-warm); }
+  .article-card:hover .article-title { color: var(--orange-lt); }
+  .article-card:hover .article-read span { transform: translateX(4px); }
+  .article-card:focus-visible { outline: 2px solid var(--orange-lt); outline-offset: 2px; background: var(--bg-warm); }
+  .article-card:focus-visible .article-title { color: var(--orange-lt); }
+  .article-card:active { background: var(--surface); }
+  .article-card:active .article-title { color: var(--orange-hover-text, #f0925f); }
 
   @media (max-width: 560px) {
     .article-card { flex-direction: column; }
@@ -207,6 +224,28 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
 /* Main-site feedback widget: same look and behaviour as the Phase 3
@@ -246,7 +285,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
@@ -285,7 +324,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
   <a href="/take-part" class="mobile-menu-btn">Take part &rarr;</a>
 </div>
 <!-- NAV_END -->
-<main>
+<main class="reading-copy">
 
 <div class="page-wrap">
   <p class="eyebrow">The Experiment</p>
@@ -298,6 +337,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 1&ndash;17</p>
       <p class="article-title">I'm Going to Make My AI Team Take Risks. I Don't Know If It Can.</p>
       <p class="article-summary">Seventeen sprints in, the team has never taken a risk or removed anything. Both failures trace back to the same evidence-first rule.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -307,6 +347,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 15&ndash;17</p>
       <p class="article-title">Team Claude Is Getting Reinforcements. ChatGPT Starts This Week.</p>
       <p class="article-summary">Daily cadence needs token redundancy, so ChatGPT joins as a second runner on the same protocol and sprint state.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -316,6 +357,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 12&ndash;15</p>
       <p class="article-title">Seven Copies of the Rules, and I Made Every One of Them</p>
       <p class="article-summary">The file governing the AI team existed in seven divergent places, and none of them was authoritative.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -325,6 +367,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 12&ndash;13</p>
       <p class="article-title">I Finally Started Telling the Team Things. It Added Them to the Pile.</p>
       <p class="article-summary">Ten signals went into the team. Four were narrowed, six were deferred, and two sessions shipped the same fix independently.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -334,6 +377,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprint 11</p>
       <p class="article-title">Eleven Sprints In: Why a Fully Automated Product Team, Run on Cagan&rsquo;s Rules, Doesn&rsquo;t Work</p>
       <p class="article-summary">Eleven sprints in, and I think what I've actually built is a ticket factory. It takes in objectives and produces tickets, twice a week, forever &mdash; but almost none of it moves a single number that matters.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -343,6 +387,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 5&ndash;7</p>
       <p class="article-title">How Does an AI Team Miss a Failure This Big?</p>
       <p class="article-summary">Three sprints of a 100% bounce rate turned out to be a tracking artefact hiding something worse: the submit button had been silently dead the whole time, and four QA reviews never caught it.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -352,6 +397,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 2&ndash;5</p>
       <p class="article-title">The Rule That Could Make or Break This Experiment &mdash; So Far, Silent</p>
       <p class="article-summary">This experiment has a circuit breaker built into it. Five sprints in, it has never once fired &mdash; and that turns out to be a more interesting finding than if it had.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -361,6 +407,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 1&ndash;5</p>
       <p class="article-title">Five Sprints In: What &ldquo;Zero Human Intervention&rdquo; Actually Means</p>
       <p class="article-summary">The honest version of what "autonomous" has meant so far: which sprints were self-triggered, why every deploy still needed a manual fix, and the free analytics tool that sat silent for weeks next to a paid one nobody knew was already running.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -370,6 +417,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">Sprints 4&ndash;5</p>
       <p class="article-title">Does Your Analytics Data Mean What You Think It Means?</p>
       <p class="article-summary">Four sprints running, the team hit two different bugs. Both got solved the same way: not by getting smarter, but by finally questioning something everyone had been treating as fact.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 
@@ -379,6 +427,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
       <p class="article-date">The premise</p>
       <p class="article-title">I'm Letting AI Run a Product Team, With Zero Humans in the Loop</p>
       <p class="article-summary">Five AI agents run a real product team against this live site, following Marty Cagan's empowered model. Here's why I'm testing the exact opposite of my own Care Capital thesis, and what I'm actually watching for.</p>
+      <p class="article-read" aria-hidden="true">Read <span>&rarr;</span></p>
     </div>
   </a>
 

@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 /* ── Tokens ──────────────────────────────────────────────────────────── */
 :root {
@@ -192,11 +193,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -217,6 +219,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -234,7 +239,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -378,6 +383,28 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}
 /* FOOTER_CSS_END */
 
 /* ── Topo bg ─────────────────────────────────────────────────────────── */
@@ -443,6 +470,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px, body 20px at 1.55 (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .eyebrow, body.reading-page .col-label, body.reading-page .condition-num,
+  body.reading-page .condition-chevron { font-size:var(--read-support); line-height:1.5; }
+  body.reading-page .btn { font-size:var(--read-tap); white-space:normal; text-align:center; justify-content:center; max-width:100%; }
+  body.reading-page li, body.reading-page main p:not([class]):not([style*="font-size"]) { font-size:var(--read-size); line-height:var(--read-leading); }
+  /* The call-to-action card's grid column was sized by its widest unbroken content and pushed the page sideways. */
+  body.reading-page .cta-card { grid-template-columns:minmax(0,1fr); }
+  body.reading-page .cta-card > * { min-width:0; }
+  body.reading-page .cta-card .btn { width:100%; box-sizing:border-box; white-space:normal !important; }   /* an inline nowrap made the label spill out of the pill */
+}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -471,7 +509,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- ── Nav ─────────────────────────────────────────────────────────── -->
 <!-- NAV_START -->
@@ -531,7 +569,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg))"></div>
   </div>
 
-  <div class="container" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;width:100%;">
+  <div class="container stack-sm" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;width:100%;">
 
     <!-- Left: argument -->
     <div>
@@ -548,8 +586,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         Without those foundations, it accelerates the wrong things faster. With higher confidence. And less visibility of the problem.
       </p>
       <div class="fade-up fade-up-4" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <a href="/take-part" class="btn btn-primary">Take part in the study &rarr;</a>
-        <a href="#conditions" class="btn btn-ghost">See the five conditions &darr;</a>
+        <a href="/take-part" class="btn btn-primary cta-btn"><span class="cta-long">Take part in the study</span><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
+        <a href="#conditions" class="btn btn-ghost cta-btn"><span class="cta-long">See the five conditions</span><span class="cta-short">The five conditions</span> &darr;</a>
       </div>
     </div>
 
@@ -589,7 +627,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         </div>
 
         <!-- Mini stat row -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--border-n);padding-top:24px;">
+        <div class="stack-sm" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--border-n);padding-top:24px;">
           <div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--orange-lt);line-height:1;">5</div>
             <div style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;">Conditions</div>
@@ -612,7 +650,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <!-- ── Why it matters ───────────────────────────────────────────────── -->
 <section>
   <div class="container--narrow">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
+    <div class="stack-sm" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
       <div>
         <p class="eyebrow">The argument</p>
         <h2 class="display display-md" style="margin-bottom:0;">
@@ -634,7 +672,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <!-- ── Five conditions ──────────────────────────────────────────────── -->
 <section id="conditions">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px;">
+    <div class="stack-sm" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px;">
       <div>
         <p class="eyebrow">The five conditions</p>
         <h2 class="display display-md">What Care Capital measures.</h2>
@@ -842,7 +880,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         </p>
       </div>
       <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;">
-        <a href="/take-part" class="btn btn-primary" style="white-space:nowrap;">Put your experience on the record &rarr;</a>
+        <p class="cta-lead">Put your experience on the record</p>
+        <a href="/take-part" class="btn btn-primary cta-btn" style="white-space:nowrap;"><span class="cta-long">Put your experience on the record</span><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
         <span style="font-size:12px;color:var(--dim);">Independent &middot; ICO registered</span>
       </div>
     </div>

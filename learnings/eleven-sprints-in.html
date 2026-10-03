@@ -15,14 +15,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px;
-    --bg: #131110; --bg-dark: #0e0b08; --bg-warm: #1c1915; --surface: #26211c;
-    --orange: #d9571c; --orange-btn: #b84215; --orange-lt: #e8763a; --orange-hover: #a23a13;
-    --ink: #e8dcc8; --ink-mid: #c8b89a; --muted: #9e8e7c;
-  }
-  html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+  :root { /* nav inset: see partials/nav.css */ --page-gutter:24px; --page-max:680px; }
+  html { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 100%; }
+  body { font-size: var(--text-small); line-height: var(--leading-small); }
   body { min-height: 100vh; }
 /* NAV_CSS_START */
 .nav {
@@ -126,11 +125,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -151,6 +151,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -168,34 +171,54 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
   .hero-image { width: 100%; max-height: 620px; object-fit: cover; object-position: center; display: block; }
   @media (max-width: 640px) {
     .hero-image { max-height: 220px; }
   }
-  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 14px; color: var(--ink-mid); margin-bottom: 32px; }
+  .cold-open { background: var(--surface); border-left: 3px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: var(--text-small); line-height: var(--leading-small); color: var(--ink-mid); margin-bottom: 32px; }
   .cold-open strong { color: var(--ink); }
   .cold-open a { color: var(--orange-lt); text-decoration: underline; text-underline-offset: 2px; }
   .cta-hook { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 10px; padding: 22px 24px; margin: 40px 0; }
   .cta-hook-q { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px; font-style: italic; }
-  .cta-hook-a { color: var(--ink-mid); font-size: 15px; margin-bottom: 0; }
+  .cta-hook-a { color: var(--ink-mid); font-size: var(--text-small); margin-bottom: 0; }
   .cta-hook-a a { color: var(--orange-lt); font-weight: 500; }
+  .cta-hook-btn { display: none; }
+  @media (max-width: 640px) { .cta-hook-a .cta-link { display: none; } .cta-hook-btn { display: inline-flex; align-items: center; gap: 8px; color: #fff; background: var(--orange-btn, #b84215); font-weight: 500; border-radius: 40px; text-decoration: none; } }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
   .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 44px); font-weight: 300; color: var(--ink); line-height: 1.2; margin-bottom: 20px; }
   .byline-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--surface); }
-  .byline-name { color: var(--ink-mid); font-size: 14px; font-weight: 500; }
-  .byline-meta { color: var(--muted); font-size: 13px; }
-  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+  .byline-name { color: var(--ink-mid); font-size: var(--text-meta); font-weight: 500; }
+  .byline-meta { color: var(--muted); font-size: var(--text-meta); }
+  .disclosure-note { background: var(--bg-warm); border: 1px solid var(--surface); border-radius: 8px; padding: 14px 18px; font-size: var(--text-meta); color: var(--muted); margin-bottom: 40px; line-height: var(--leading-meta); }
   .disclosure-note strong { color: var(--ink-mid); font-weight: 500; }
-  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: 16px; line-height: 1.8; }
+  article p { color: var(--ink-mid); margin-bottom: 22px; font-size: var(--text-body); line-height: var(--leading-body); font-weight: var(--weight-body); }
   article a { color: var(--orange-lt); text-decoration: none; }
   article a:hover { text-decoration: underline; }
   article strong { color: var(--ink); font-weight: 500; }
   article em { color: var(--muted); font-style: italic; }
   article h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin: 48px 0 20px; }
+  /* Phones: the transparent header would sit over the hero image and cut across
+     its baked-in masthead text, so the page starts below the header at 720px and
+     under. Reading comfort (20px, 1.55, 1em gaps) comes from .reading-copy in
+     reading.css; the page-specific spacing below tightens the title block. */
+  @media (max-width: 720px) {
+    body { padding-top: var(--nav-h, 73px); }
+  }
+  @media (max-width: 640px) {
+    .page-wrap { padding-top: var(--read-page-top, 28px); }
+    .eyebrow, .byline-name, .byline-meta { font-size: var(--read-support); }
+    .eyebrow { margin-bottom: 10px; }
+    .byline-row { flex-wrap: wrap; gap: 2px 12px; }
+    .disclosure-note, .disclosure-note strong { font-size: var(--read-support); line-height: var(--read-leading); }
+    .cold-open { font-size: var(--read-size); line-height: var(--read-leading); }
+    h1 { margin-bottom: 14px; }
+    .byline-row { margin-bottom: 28px; padding-bottom: 20px; }
+    .disclosure-note { margin-bottom: 32px; }
+  }
 /* FOOTER_CSS_START */
 /* Shared site footer. Uses var() fallback chains (--ink/--ink-mid falling
    back to --cream, then a literal) because not every page defines the
@@ -213,6 +236,28 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}
 /* FOOTER_CSS_END */
 /* FEEDBACK_CSS_START */
 /* Main-site feedback widget: same look and behaviour as the Phase 3
@@ -280,7 +325,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- NAV_START -->
 <nav class="nav" id="main-nav">
@@ -334,7 +379,7 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
     <strong>Written by Graham Beale, not by the AI team.</strong> This article is commissioned/human-authored content, distinct from the product decisions the AI team makes autonomously on this site.
   </div>
 
-  <article>
+  <article class="reading-copy">
 <p>Eleven sprints into TurbulentGround.com, and I think I&#39;ve landed on the actual conclusion, even though it&#39;s not the one I set out looking for. The evidence points one way: a fully automated product team, run under Marty Cagan&#39;s empowered product model, doesn&#39;t work. Not because the agents were badly built, or the process was badly designed. Because Cagan&#39;s model was written for humans, and the thing it actually depends on, judgement, leadership, the willingness to take an unproven bet is exactly what an agent playing a role doesn&#39;t have.</p>
 <div class="cold-open">
 <p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
@@ -357,7 +402,9 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 
   <div class="cta-hook">
     <p class="cta-hook-q">What does the AI shift look like from where you are?</p>
-    <p class="cta-hook-a">I'm running an independent study of how AI is changing work in product teams, told by the people doing it. <a href="/take-part">Put your experience on the record &rarr;</a></p>
+    <p class="cta-hook-a">I'm running an independent study of how AI is changing work in product teams, told by the people doing it. <a href="/take-part" class="cta-link"><span class="cta-long">Put your experience on the record &rarr;</span></a></p>
+    <p class="cta-lead">Put your experience on the record</p>
+    <a href="/take-part" class="cta-hook-btn cta-btn"><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
   </div>
   </article>
 </div>

@@ -38,18 +38,17 @@ const root = path.resolve(__dirname, '..');
 const BEALE_NOTE =
   'Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.';
 
-// Homepage: its own note (mentions this page was written outside the AI
-// team's experiment) plus the research-recruitment CTA in its link row.
+// Homepage: trimmed (Graham, 2 Oct 2026, final wording) to a closing line, three
+// links and one final line. It no longer mentions the AI experiment; that
+// disclosure lives on the AI-built pages (articles, /about, /learnings).
 const HOME_FOOTER_CONFIG = {
+  lead: 'Run by Graham Beale.',
   links: [
-    { href: '/take-part', label: 'The study', dataResearchCta: 'footer' },
-    { href: '/learnings', label: 'Learnings' },
-    { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
-    { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
+    { href: '/about', label: 'About' },
     { href: '/privacy', label: 'Privacy' },
+    { href: 'https://www.linkedin.com/in/grahambeale/', label: 'Graham&rsquo;s LinkedIn', external: true },
   ],
-  note:
-    'Run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Much of this site is built by an AI product team as a live experiment, <a href="/learnings/zero-humans-in-the-loop">read about it</a>. This homepage was written and built outside that experiment.',
+  note: '<span class="footer-part">Independent &middot; ICO registered</span><span class="footer-sep"> &middot; </span><span class="footer-part">&copy; 2026 Turbulent Ground</span>',
 };
 
 const WRITING_FOOTER_CONFIG = {
@@ -138,7 +137,9 @@ function renderFooter(config) {
     })
     .join('\n');
 
+  const lead = config.lead ? `  <span class="footer-lead">${config.lead}</span>\n` : '';
   return footerTemplate
+    .replace('{{LEAD}}', lead)
     .replace('{{LINKS}}', links)
     .replace('{{NOTE}}', config.note)
     .trimEnd();

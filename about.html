@@ -19,6 +19,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/tokens.css">
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 :root {
   --bg:       #131110;
@@ -52,6 +54,7 @@ body {
 ::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
 
 /* ── Nav ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) { .item-cta.cta-btn { padding: 4px 0 0 !important; } }
 /* NAV_CSS_START */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
@@ -154,11 +157,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -179,6 +183,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -196,7 +203,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -324,6 +331,28 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}
 /* FOOTER_CSS_END */
 
 @media(max-width:640px) {
@@ -372,6 +401,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px (tokens in styles/reading.css). */
+@media (max-width:640px) {
+  body.reading-page .hero-sub, body.reading-page .section-lead, body.reading-page .item-desc { font-size:var(--read-size); line-height:var(--read-leading); }
+  body.reading-page .hero-link, body.reading-page .item-cta { font-size:var(--read-tap); }
+  body.reading-page .item-cta { white-space:normal; }   /* nowrap made the card links wider than a 320px screen */
+  body.reading-page .section-eyebrow { font-size:var(--read-support); }
+  body.reading-page .item-title { font-size:var(--read-heading-min); }
+}
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -400,7 +437,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 
 <!-- Nav -->
 <!-- NAV_START -->
@@ -456,7 +493,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <!-- Narrative -->
-<section class="narrative">
+<section class="narrative reading-copy">
   <div class="container">
     <p>I've spent twenty-five years building product and design teams, at agencies, at scale-ups, at organisations going through significant change. The consistent thing I noticed is that the teams that handle change well are never the ones who figured it out alone. They are the ones who found others going through the same thing, compared notes, and stopped feeling like the uncertainty was a personal failing.</p>
     <p>When AI started disrupting product work, not as a concept, but as something that changed how teams operated, I noticed the same pattern. People were privately confused, publicly confident, and largely isolated in both. Nobody was having the honest conversation.</p>
@@ -478,7 +515,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="item-title">The AI shift study</div>
           <div class="item-desc">An independent study of how AI is changing work in product teams, told by the people doing it. 24 statements, a personal summary at the end.</div>
         </div>
-        <a href="/take-part" class="item-cta">Put your experience on the record &rarr;</a>
+        <div>
+          <p class="cta-lead">Put your experience on the record</p>
+          <a href="/take-part" class="item-cta cta-btn"><span class="cta-long">Put your experience on the record</span><span class="cta-short">Take part &middot; 10 min</span> &rarr;</a>
+        </div>
       </div>
 
       <div class="item">

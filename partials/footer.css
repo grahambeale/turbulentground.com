@@ -14,3 +14,25 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}

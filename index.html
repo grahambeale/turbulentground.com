@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/styles/reading.css">
 <style>
 :root { /* nav inset: see partials/nav.css */ --page-gutter:22px;
   --bg:#0b0907; --bg-2:#131110;
@@ -145,11 +146,12 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 .mobile-menu a.active { color:var(--orange-lt); }
 .mobile-menu a:hover { color:var(--orange-lt); }
 .mobile-menu .mobile-menu-btn {
-  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:500;
-  color:#fff; background:#b84215; padding:14px 30px; border-radius:40px;
-  margin-top:28px;
+  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:500;
+  color:#fff; background:#b84215; padding:12px 20px; border-radius:40px;
+  margin-top:28px; white-space:nowrap;
 }
 @media(max-width:720px) {
+  :root { --nav-h: 73px; }   /* 72px bar + 1px rule: pages start their content below it */
   .nav-links { display:none; }
   .nav-toggle { display:flex; }
   /* The logo block must be allowed to shrink, or the nowrap strapline plus the
@@ -170,6 +172,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   .nav-strapline { overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .nav-toggle { flex-shrink:0; }
 }
+@media(max-width:640px) {
+  body.reading-page .nav-strapline { display:none; }   /* 13px text: nothing under 18px on these pages */
+}
 @media(max-width:480px) {
   /* Too narrow for the strapline to read: hide it rather than truncate it. */
   .nav-strapline { display:none; }
@@ -187,7 +192,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
 @media(max-width:380px) {
   .nav-logo-mark { width:32px; }
   .nav-logo-mark svg { width:32px; height:32px; }
-  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:17px; letter-spacing:0.14em; }
+  .nav-wordmark, .nav.scrolled .nav-wordmark { font-size:18px; letter-spacing:0.14em; }   /* never under 18px */
 }
 /* NAV_CSS_END */
 
@@ -288,6 +293,28 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
    viewport on narrow screens; this keeps the footer's own bottom padding
    wide enough that its links never sit under it. */
 @media (max-width:900px) { footer { padding:28px 22px 96px; } }
+/* Every page with the shared footer (see styles/reading.css): nothing under 18px on
+   phones; links are tappable so 20px. */
+@media (max-width:640px) {
+  footer .footer-brand { font-size:var(--read-support, 18px); }
+  footer .footer-note { font-size:var(--read-tap, 20px); line-height:1.5; }   /* holds links, so tappable size */
+  footer .footer-link { font-size:var(--read-tap, 20px); }
+  footer .footer-links { gap:10px 22px; }
+}
+/* Trimmed footer (homepage): brand, closing line, links, final line, one row each. */
+footer:has(.footer-lead) { flex-direction:column; align-items:flex-start; gap:12px; }
+.footer-lead { font-size:14px; color:var(--ink-mid, var(--cream, #cdbd9f)); }
+@media (max-width:640px) {
+  footer .footer-lead { font-size:var(--read-support, 18px); line-height:1.4; }
+  footer:has(.footer-lead) .footer-note { font-size:var(--read-support, 18px); line-height:1.4; }   /* no links in it: 18px */
+}
+/* At 480px and below nothing here fits beside anything else at 18px+: one item per row,
+   so every row is a single line at 320px. */
+@media (max-width:480px) {
+  footer:has(.footer-lead) .footer-links { flex-direction:column; gap:8px; }
+  footer:has(.footer-lead) .footer-part { display:block; }
+  footer:has(.footer-lead) .footer-sep { display:none; }
+}
 /* FOOTER_CSS_END */
 
 .rail-nav { position:fixed; left:12px; top:50%; transform:translateY(-50%); z-index:20; transition:opacity .4s ease; }
@@ -355,6 +382,25 @@ footer { position:relative; z-index:1; background:var(--bg); border-top:1px soli
 @media(max-width:600px){#feedback-launch{top:auto;bottom:calc(24px + env(safe-area-inset-bottom))}.tg-dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);border-radius:14px}.tg-dialog__body{padding:28px 22px 24px}.tg-dialog__close{right:12px;top:12px}.tg-dialog__textarea{min-height:30dvh}.tg-dialog__actions{margin-top:14px}.tg-dialog__button--primary{width:100%}}
 @media (prefers-reduced-motion: reduce){#feedback-launch,.tg-dialog__textarea{transition:none}}
 /* FEEDBACK_CSS_END */
+/* Phones: nothing under 18px, body 20px at 1.55; the large scene headings are unchanged.
+   Tokens in styles/reading.css. */
+@media (max-width:640px) {
+  body.reading-page .skip-link, body.reading-page .btn, body.reading-page .float-cta { font-size:var(--read-tap); }
+  body.reading-page .btn { white-space:normal; text-align:center; justify-content:center; max-width:100%; }
+  body.reading-page .lede, body.reading-page .for, body.reading-page .who, body.reading-page .findings,
+  body.reading-page .progress p, body.reading-page .byline p, body.reading-page .promise { font-size:var(--read-size); line-height:var(--read-leading); }
+  body.reading-page .facts, body.reading-page .scroll-cue, body.reading-page .byline .mono, body.reading-page .tile { font-size:var(--read-support); }
+  body.reading-page .small { font-size:var(--read-tap); line-height:var(--read-leading); }
+  /* Tiles: columns may shrink below their content (they overflowed at 320px); one column on narrow phones. */
+  body.reading-page .tiles { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  body.reading-page .tile { overflow-wrap:anywhere; }
+  /* The floating button stays on one line, and the tile grids leave room for it. */
+  body.reading-page .float-cta { white-space:nowrap; }
+  body.reading-page #pressure .tiles, body.reading-page #people .tiles, body.reading-page #desk .tiles { margin-bottom:130px; }
+  /* The 'Scroll' cue (decorative) collided with the hero facts once they reached 18px. */
+  body.reading-page .scroll-cue { display:none; }
+}
+@media (max-width:480px) { body.reading-page .tiles { grid-template-columns:minmax(0,1fr); } }
 </style>
 <script defer data-domain="turbulentground.com" src="https://plausible.io/js/script.js"></script>
 <script>
@@ -376,7 +422,7 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 })();
 </script>
 </head>
-<body>
+<body class="reading-page">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -457,8 +503,9 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       <div class="copy">
         <h1 id="hero-title"><span class="line"><span>The AI shift,</span></span><span class="line"><span><em>seen from the ground.</em></span></span></h1>
         <p class="lede">Help build the clearest picture of how people in and around product teams are adapting to AI, and what it takes to get the best out of it.</p>
+        <p class="cta-lead">Put your experience on the record</p>
         <div class="ctas">
-          <a href="/take-part" class="btn btn-primary" data-research-cta="hero">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a href="/take-part" class="btn btn-primary cta-btn" data-research-cta="hero"><span class="cta-long">Put your experience on the record</span><span class="cta-short">Take part &middot; 10 min</span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <p class="for">For product managers, designers, engineers, researchers and the leaders around them.</p>
         <ul class="facts">
@@ -525,8 +572,9 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
       <div class="copy">
         <h2 id="join-title" class="reveal">What does it look like <em>from where you are?</em></h2>
         <p class="lede reveal" style="--d:.08s">What&rsquo;s working, what isn&rsquo;t, and what would help. Every response sharpens the picture of what good looks like.</p>
+        <p class="cta-lead reveal" style="--d:.16s">Put your experience on the record</p>
         <div class="ctas reveal" style="--d:.16s">
-          <a href="/take-part" class="btn btn-primary btn-lg" data-research-cta="final">Put your experience on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a href="/take-part" class="btn btn-primary btn-lg cta-btn" data-research-cta="final"><span class="cta-long">Put your experience on the record</span><span class="cta-short">Take part &middot; 10 min</span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <!-- Live progress towards the pre-registered 30-completion milestone.
              Hidden unless the live count loads; never shows a stale number. -->
@@ -558,18 +606,17 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
 <!-- FOOTER_START -->
 <footer>
   <span class="footer-brand">TURBULENT GROUND</span>
+  <span class="footer-lead">Run by Graham Beale.</span>
   <div class="footer-links">
-    <a href="/take-part" class="footer-link" data-research-cta="footer">The study</a>
-    <a href="/learnings" class="footer-link">Learnings</a>
-    <a href="https://www.linkedin.com/in/grahambeale/" class="footer-link" target="_blank" rel="noopener">Graham&rsquo;s LinkedIn</a>
-    <a href="https://www.youtube.com/@TurbulentGround" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+    <a href="/about" class="footer-link">About</a>
     <a href="/privacy" class="footer-link">Privacy</a>
+    <a href="https://www.linkedin.com/in/grahambeale/" class="footer-link" target="_blank" rel="noopener">Graham&rsquo;s LinkedIn</a>
   </div>
-  <span class="footer-note">Run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Much of this site is built by an AI product team as a live experiment, <a href="/learnings/zero-humans-in-the-loop">read about it</a>. This homepage was written and built outside that experiment.</span>
+  <span class="footer-note"><span class="footer-part">Independent &middot; ICO registered</span><span class="footer-sep"> &middot; </span><span class="footer-part">&copy; 2026 Turbulent Ground</span></span>
 </footer>
 <!-- FOOTER_END -->
 
-<a href="/take-part" class="btn btn-primary float-cta" id="float-cta" data-research-cta="floating" tabindex="-1" aria-hidden="true">Go on the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+<a href="/take-part" class="btn btn-primary float-cta cta-btn" id="float-cta" data-research-cta="floating" tabindex="-1" aria-hidden="true"><span class="cta-long">Go on the record</span><span class="cta-short">Take part &middot; 10 min</span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
 
 <script>
 /* ───────────────────────────────────────────────────────────────────
