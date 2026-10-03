@@ -14,11 +14,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, copyFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadAllowlist, expandAllowlist, loadVercel } from '../public-lib.mjs';
+import { loadAllowlist, expandAllowlist, loadVercel, vercelIgnored } from '../public-lib.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const TOOLBAR_RE = /<script async data-explicit-opt-in="true"[^>]*><\/script>\s*$/;
@@ -36,20 +34,6 @@ export function routesForFile(rel, vercel) {
     if (dest === '/' + rel || dest === clean) routes.add(r.source);
   }
   return [...routes];
-}
-
-/** Paths .vercelignore already hides (Vercel removes them before the build). Evaluated with git's ignore rules in an empty repo. */
-export function vercelIgnored(rootDir, files) {
-  const tmp = mkdtempSync(path.join(tmpdir(), 'vi-'));
-  try {
-    execFileSync('git', ['init', '-q', tmp]);
-    copyFileSync(path.join(rootDir, '.vercelignore'), path.join(tmp, '.gitignore'));
-    const out = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: tmp, input: files.join('\n'), encoding: 'utf8' });
-    return new Set(out.split('\n').filter(Boolean));
-  } catch (e) {
-    if (e.status === 1) return new Set();   // nothing ignored
-    throw e;
-  } finally { rmSync(tmp, { recursive: true, force: true }); }
 }
 
 /** Manifest skeleton from the repo: public routes, preview-only routes, and routes that must 404. */
