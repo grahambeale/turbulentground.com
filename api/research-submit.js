@@ -73,7 +73,31 @@ const FIELD = {
   instrumentVersion: "fldHJ4KNzMbpzdob6",
   rationaleVersion: "fldW2IulhhJHIdIjV",
   submissionOrigin: "fld7t6e21yjvQmTTh",
+  presentationVersionStart: "fldDOjXS90Ao2zovS",
+  presentationVersionSubmit: "fldg9KDdCS7PSkkC1",
+  viewportBucketStart: "fldblUdGZUNC9rCrK",
+  viewportBucketSubmit: "fldxS9VRq6umbVL1u",
+  mixedPresentation: "fldD0D5WlmcyCqVwE",
 };
+
+
+// ---- Presentation tag (research/openspec/changes/survey-mobile-type-scale, approved 3 Oct 2026) ----
+// Which layout a participant saw, and a coarse viewport bucket, recorded at the START (first save) and at SUBMIT, so
+// a restyle can be analysed without assuming who saw what. Duplicated in api/research-save-progress.js and
+// api/research-submit.js on purpose (standalone routes: see the note at the top of save-progress).
+// The page declares its version in CSS (--presentation-version) so the value cannot drift from the styles it describes.
+// Clients that predate the tag send nothing: nothing is stored (unknown), and that is not an error.
+const PRESENTATION_VERSIONS = new Set(["baseline-2026-10", "phone-type-scale-2026-10"]);
+const VIEWPORT_BUCKETS = new Set(["phone", "tablet", "desktop"]);   // <640, 640-1023, >=1024 px; never the exact width
+
+function readPresentation(data) {
+  if (data.presentation === undefined) return { value: null };
+  const p = data.presentation;
+  if (typeof p !== "object" || p === null || Array.isArray(p)) return { error: "presentation must be an object" };
+  if (!PRESENTATION_VERSIONS.has(p.version)) return { error: "Unsupported presentation version." };
+  if (!VIEWPORT_BUCKETS.has(p.viewportBucket)) return { error: "Unsupported viewport bucket." };
+  return { value: { version: p.version, viewportBucket: p.viewportBucket } };
+}
 
 // Legacy clients omit version; their answers retain the legacy instrument.
 const LEGACY_VERSION = "phase3-v3-2026-09-08";
@@ -206,6 +230,9 @@ export default async function handler(req, res) {
 
   const { pairsAnswered, meetsCompletionFloor } = computeCompletion(pairResponses);
 
+  const presentation = readPresentation(data);
+  if (presentation.error) return res.status(400).json({ error: presentation.error });
+
   const requestedVersion = data.instrumentVersion === undefined ? LEGACY_VERSION : data.instrumentVersion;
   if (!SUPPORTED_VERSIONS.has(requestedVersion)) {
     return res.status(400).json({ error: "Unsupported questionnaire version. Please reopen your invite." });
@@ -265,6 +292,23 @@ export default async function handler(req, res) {
     [FIELD.rationaleVersion]: requestedRationale,
   };
   if (isPublic) fields[FIELD.submissionOrigin] = "public_self_service";
+
+  if (presentation.value) {
+    fields[FIELD.presentationVersionSubmit] = presentation.value.version;
+    fields[FIELD.viewportBucketSubmit] = presentation.value.viewportBucket;
+    const startVersion = existingResponse && existingResponse.fields[FIELD.presentationVersionStart];
+    if (!existingResponse) {
+      // Submitted without an earlier save: the start and the submit are the same page load, so the start values equal the submit values.
+      fields[FIELD.presentationVersionStart] = presentation.value.version;
+      fields[FIELD.viewportBucketStart] = presentation.value.viewportBucket;
+      fields[FIELD.mixedPresentation] = false;
+    } else if (startVersion) {
+      // Mixed session: started under one layout and submitted under another (a page loaded before a release, or a
+      // saved session resumed after one). Flagged here, on the server, from the stored start value; never from the client.
+      fields[FIELD.mixedPresentation] = startVersion !== presentation.value.version;
+    }
+    // else: the response was started before the tag existed. Start is unknown, so mixed is left unset.
+  }
 
   if (typeof data.startedAt === "string" && data.startedAt) {
     fields[FIELD.startedAt] = data.startedAt;

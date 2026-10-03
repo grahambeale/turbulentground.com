@@ -40,6 +40,9 @@ window.plausible = window.plausible || function () {
 <link rel="stylesheet" href="/styles/tokens.css">
 <link rel="stylesheet" href="/styles/reading.css">
 <style>
+  /* Presentation tag (survey-mobile-type-scale, approved 3 Oct 2026). The survey records this value at the start and at
+     submit, so it is declared HERE, next to the styles it describes, and read back by script. A restyle changes this value. */
+  :root { --presentation-version: baseline-2026-10; }
   /* ── Typography scale ──────────────────────────────────────────────
      Bumped up from the original build after a real walkthrough flagged
      the whole page as too small to read comfortably. Base moved
@@ -1568,6 +1571,16 @@ Thank you for being a part of it.</div>
   var HELP_OPEN_LABEL = 'Hide example';
   var RATIONALE_VERSION = 'phase3-rationale-v1.0-2026-08-28';
 
+  // Layout version (from the CSS above) and a coarse viewport bucket for the response record: phone below 640px,
+  // tablet 640 to 1023px, desktop 1024px and up. Never the exact width, the device model or anything else.
+  function presentationInfo() {
+    var v = '';
+    try { v = getComputedStyle(document.documentElement).getPropertyValue('--presentation-version').replace(/["'\s]/g, ''); } catch (e) { /* unknown */ }
+    if (!v) return undefined;
+    var w = window.innerWidth;
+    return { version: v, viewportBucket: w < 640 ? 'phone' : (w < 1024 ? 'tablet' : 'desktop') };
+  }
+
   // pairResponses[domainKey] = { contribution: 1-5|'skip'|'not_applicable', conditions: 1-5|'skip'|'not_applicable', contribution_context?: string, conditions_context?: string }
   // Keys are only ever added once a statement is actually answered/skipped
   // by the respondent — never pre-populated, per the "omit unshown domains"
@@ -1896,7 +1909,8 @@ Thank you for being a part of it.</div>
       pairResponses: pairResponses,
       sectionReached: currentStatementIndex,
       instrumentVersion: INSTRUMENT_VERSION,
-      rationaleVersion: RATIONALE_VERSION
+      rationaleVersion: RATIONALE_VERSION,
+      presentation: presentationInfo()
     };
   }
 
@@ -2384,6 +2398,7 @@ Thank you for being a part of it.</div>
       token: token,
       instrumentVersion: INSTRUMENT_VERSION,
       rationaleVersion: RATIONALE_VERSION,
+      presentation: presentationInfo(),
       consent: consent,
       startedAt: startedAt,
       pairResponses: pairResponses,
