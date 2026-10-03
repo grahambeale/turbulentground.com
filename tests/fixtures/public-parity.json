@@ -461,8 +461,8 @@
       "expect": {
         "status": 200,
         "contentType": "text/html",
-        "length": 145854,
-        "sha256": "cce6bfb9711a6e51dd17bff851039084176e35d9e4aa7d296491c4edc1e69dae"
+        "length": 148420,
+        "sha256": "7b248c83fbea402e57b0cac79f51ba6a848cead1a1d188873809b0c7e83ded09"
       }
     },
     {
@@ -472,8 +472,8 @@
       "expect": {
         "status": 200,
         "contentType": "text/html",
-        "length": 145854,
-        "sha256": "cce6bfb9711a6e51dd17bff851039084176e35d9e4aa7d296491c4edc1e69dae"
+        "length": 148420,
+        "sha256": "7b248c83fbea402e57b0cac79f51ba6a848cead1a1d188873809b0c7e83ded09"
       }
     },
     {

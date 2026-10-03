@@ -62,12 +62,11 @@ window.plausible = window.plausible || function () {
   }
   html { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.7; }
   body { min-height: 100vh; padding-top: 92px; }
-  /* Phones: ONLY the start screen (the /take-part intro) follows the type scale
-     (styles/reading.css). Every other screen (consent, context, the 24 statements,
-     results) is the research instrument and stays exactly as it was until the
-     methodology-reviewed proposal research/openspec/changes/survey-mobile-type-scale
-     is approved: do not widen these selectors. tests/smoke/survey-frozen.spec.js
-     fails if any other screen changes. */
+  /* Phones: the start screen (the /take-part intro) follows the type scale (styles/reading.css) through the rules in
+     this block. The survey screens (consent, context, the 24 statements, results) follow it through the SEPARATE
+     block below ("Survey phone type scale"), approved 3 Oct 2026 in research/openspec/changes/survey-mobile-type-scale
+     (revision 2), with ONE exception: the response area is never restyled. tests/smoke/survey-frozen.spec.js freezes
+     every measurement against tests/smoke/survey-baseline.json; tests/smoke/survey-phone-scale.spec.js checks the rule. */
   @media (max-width: 640px) {
     body:has(#screen-public-start.active) { padding-top: calc(var(--nav-h, 73px) + var(--read-page-top, 28px)); }
     body:has(#screen-public-start.active) .nav-strapline { display: none; }   /* 13px header text: nothing under 18px on the intro */
@@ -76,6 +75,38 @@ window.plausible = window.plausible || function () {
     #screen-public-start .check-row .required-tag { font-size: var(--read-support); }
     #screen-public-start .btn { font-size: var(--read-tap); }
     #screen-public-start .check-row label { font-size: var(--read-tap); }   /* tappable consent text */
+  }
+
+  /* ── Survey phone type scale (research/openspec/changes/survey-mobile-type-scale, rev 2, approved 3 Oct 2026) ──
+     Below 640px, on the consent, context, statement, final and completion screens: body text 20px at 1.55, tappable
+     text 20px, supporting text 18px, headings and statement text unchanged (already larger). Desktop and tablet
+     (640px and up) are untouched.
+     RESPONSE AREA EXCEPTION: the 1-5 buttons (.scale-btn), the scale end labels (.scale-labels) and the skip
+     buttons (.scale-skip: "Not applicable" and "Prefer not to say") are NOT restyled and keep their current sizes
+     and proportions; "Not applicable" stays on one line. They are deliberately under 18px. Do not add selectors for them.
+     The declared presentation version changes only where this layout applies (the survey records it with every response). */
+  @media (max-width: 639.98px) {
+    :root { --presentation-version: phone-type-scale-2026-10; }
+    /* tappable text: 20px */
+    #screen-consent .video-thumb-label, #screen-done .video-thumb-label,
+    #screen-consent .transcript-toggle summary, #screen-done .transcript-toggle summary,
+    #screen-consent .check-row label, #screen-done .check-row label,
+    #screen-context .choice-option label,
+    #screen-context .survey-back, #screen-pairs .survey-back,
+    #screen-pairs .statement-help-toggle,
+    #screen-consent .btn, #screen-context .btn, #screen-pairs .statement-context-continue, #footer-bar .btn,
+    #screen-done .btn, #screen-done .referral-more-toggle { font-size: var(--read-tap); max-width: none; }
+    /* body text: 20px at 1.55 */
+    #screen-consent .transcript-body, #screen-done .transcript-body,
+    #screen-done .referral-sharing > p, #screen-done .stay-involved > p,
+    #open-comment-fieldset .field > label,
+    #screen-pairs .statement-help { font-size: var(--read-size); line-height: var(--read-leading); }
+    /* supporting text: 18px */
+    #screen-consent .required-tag, #screen-context .optional-tag, #open-comment-fieldset .optional-tag,
+    .journey-remaining span, #screen-done .referral-privacy, #screen-done .referral-privacy strong { font-size: var(--read-support); }
+    /* the "?" icon grows with its label so the glyph stays inside the circle */
+    #screen-pairs .context-icon { flex: 0 0 26px; width: 26px; height: 26px; font-size: var(--read-support); }
+    #screen-pairs .statement-help-toggle { gap: 10px; }
   }
   :focus-visible { outline: 3px solid #ffb37a; outline-offset: 2px; border-radius: 2px; }
 

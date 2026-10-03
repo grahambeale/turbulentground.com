@@ -7,10 +7,14 @@ const path = require('path');
  * The research survey after the start screen (consent, context, the 24 statements,
  * results/completion) is a measurement instrument. Its presentation changes only
  * through a methodology-reviewed proposal (research/openspec/changes/
- * survey-mobile-type-scale). This test freezes it below 640px: every measured text
- * size, line-height and response-control size, and the page's top padding, must equal
- * tests/smoke/survey-baseline.json, captured from main (4d7ad1c) before the phone type
- * scale work. The start screen is deliberately NOT frozen (it is the /take-part intro).
+ * survey-mobile-type-scale). This test freezes it: every measured text size,
+ * line-height and response-control size, and the page's top padding, must equal
+ * tests/smoke/survey-baseline.json. The baseline was captured from main (4d7ad1c) and
+ * REGENERATED on 3 Oct 2026 for the approved phone type scale (revision 2): below 640px
+ * the 116 measurements that changed are the non-response-area text moved to the 20/18
+ * rule; the 640px entries and the whole response area (1-5 buttons, scale end labels,
+ * Not applicable) are byte-for-byte what they were. The start screen is deliberately NOT
+ * frozen (it is the /take-part intro).
  *
  * To change the survey on purpose, get the proposal approved, then regenerate the
  * baseline in the same commit and say so in the commit message.
