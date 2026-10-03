@@ -182,6 +182,21 @@ a bypass is a push that must not happen. If the hook itself is wrong, fix the ho
 own change. Production smoke runs (`SMOKE_TEST_BASE_URL=https://www.turbulentground.com
 npx playwright test`) remain a separate post-release check.
 
+### What is deployed: the `public/` allowlist
+
+Vercel deploys `public/`, not the repository root (`vercel.json` `outputDirectory`). `public/` is built
+by `scripts/build-public.mjs` from `public-allowlist.json` and contains only the files listed there, so
+**a new file is private until it is added to the allowlist**. To publish a new page or asset, add it to
+`public-allowlist.json` (a JavaScript-only asset also needs `"dynamic": true` and `"referencedFrom"`).
+The research review pages in the `previewOnly` group are included only when `VERCEL_ENV` is exactly
+`preview`, with `noindex`. `scripts/audit/check-public.mjs` runs in `npm run build` and fails the build
+if `public/` is not exactly the allowlist, a forbidden path is in it, any local reference in HTML, CSS
+or JavaScript (including built paths) does not resolve, a dynamic entry is stale, or `.vercelignore`
+hides an allowlisted file (Vercel removes ignored files before the build, so never list a build input
+or an allowlisted file there). The pre-push hook proves both variants (production and preview) and
+serves `public/` for the smoke suite; `npm run serve` builds and serves `public/` locally. The
+crawl-and-hash parity tool is `scripts/audit/crawl-parity.mjs` (throttled, see Verification crawls).
+
 ### Verification crawls
 
 Throttle every crawl or hash check against production or a preview: one request at a
