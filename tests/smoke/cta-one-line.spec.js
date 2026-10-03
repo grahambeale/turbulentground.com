@@ -30,13 +30,14 @@ async function gotoStyled(page, target) {
 const PAGES = [
   ['/', '/index.html'],
   ['/care-capital', '/care-capital.html'],
-  ['/writing', '/writing.html'],
   ['/about', '/about.html'],
   ['/privacy', '/privacy.html'],
   ['/learnings', '/learnings/index.html'],
   ['/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html'],
 ];
 const CTA = 'a.btn, a.btn-primary, a.btn-ghost, a.item-cta, a.float-cta, a.cta-btn, .cta-row a, .mobile-menu-btn';
+
+if (html) PAGES.push(['/writing', '/writing.html']);   // production redirects /writing to LinkedIn
 
 for (const width of [320, 375, 390]) {
   for (const [clean, file] of PAGES) {
