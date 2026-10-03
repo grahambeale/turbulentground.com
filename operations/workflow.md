@@ -128,6 +128,31 @@ Any content change, however small, still lapses the approval: stop and request
 approval again, quoting the new head. A conflict that needed a manual edit counts as
 a content change unless `git range-diff` still shows the commit unchanged.
 
+#### Releases go through `scripts/release.sh` only
+
+Production releases are made with `scripts/release.sh BRANCH APPROVED_HEAD`, where both come from
+Graham's approval ("approve production release: BRANCH (HEAD)"). It is the only sanctioned release
+path: do not push to `main` by hand, with `git push`, from a script of your own, or with
+`--no-verify`. The script, in order and stopping everything at the first failure:
+
+1. takes the work-state lease (and refuses if another run holds it);
+2. verifies `origin/BRANCH` is exactly the approved head, otherwise the approval has lapsed;
+3. rebases onto `origin/main` in a throwaway worktree;
+4. requires `git patch-id` equality between the approved commits and the rebased commits, the same
+   content in the same order (a conflict, a merge commit or any difference aborts with a message);
+5. pushes to `main` through the pre-push hook;
+6. waits for the Vercel production deployment of the pushed commit;
+7. runs the relevant smoke specs against production, one at a time and throttled
+   (see Verification crawls);
+8. releases the lease.
+
+Use `--dry-run` to do steps 1 to 4 only. If it stops after the push (the deployment fails, or a
+production spec fails), the commit is already on `main`: do not push again; fix the cause and run
+`scripts/release.sh --verify-only MAIN_SHA`. The report to Graham quotes the approved head and the
+released head and says the patch-ids matched. `--specs a,b` overrides the automatic spec choice.
+It needs `gh` (authenticated), `python3`, `node_modules` in the shared checkout and
+`core.hooksPath=scripts/hooks`.
+
 ### 7. Close and release the lease
 
 Update Airtable status, decisions, evidence, URLs, blocker and next action.
