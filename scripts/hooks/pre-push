@@ -29,6 +29,14 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# Guard: a push must never change the repository config (an earlier build step once flipped core.bare
+# through the hook's inherited GIT_DIR). Compare before and after; restore and fail if it changed.
+cfg_before=$(git config --local --list | sort | md5 2>/dev/null || git config --local --list | sort | md5sum)
+guard_config() {
+  cfg_after=$(git config --local --list | sort | md5 2>/dev/null || git config --local --list | sort | md5sum)
+  [ "$cfg_before" = "$cfg_after" ] || fail "the repository's git config changed during the push checks (for example core.bare). A build or test step ran git against the real repository; fix that step. Check: git config --local --list"
+}
+
 fail() { printf '\n[pre-push] BLOCKED: %s\n' "$1" >&2; exit 1; }
 
 # Commits being pushed: the second field of each "<ref> <sha> <remote ref> <remote sha>" line.
@@ -80,4 +88,5 @@ for sha in $shas; do
   rm -rf "$tmp"
   tmp=""
 done
+guard_config
 printf '\n[pre-push] all checks passed\n'
