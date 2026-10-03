@@ -35,11 +35,10 @@ export function buildPublic({ rootDir = root, outDir = path.join(rootDir, 'publi
     mkdirSync(path.dirname(dest), { recursive: true });
     if (meta.group === 'previewOnly' && rel.endsWith('.html')) {
       writeFileSync(dest, withNoindex(readFileSync(path.join(rootDir, rel), 'utf8')));
-      previewCount++;
     } else {
       copyFileSync(path.join(rootDir, rel), dest);
-      publicCount++;
     }
+    if (meta.group === 'previewOnly') previewCount++; else publicCount++;
   }
   return { publicCount, previewCount, preview };
 }

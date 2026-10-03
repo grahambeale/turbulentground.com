@@ -120,7 +120,7 @@
     }
   ],
   "previewOnly": {
-    "$comment": "Research review and preview pages (Graham, 3 Oct 2026, D1; 12 pages: research/legacy-v3.html is NOT one of them, see the public group): served on preview deployments only (VERCEL_ENV=preview), with noindex added to the copies; 404 on production. Never listed here: the four build inputs partials/feedback.html, partials/footer.html, partials/nav.html and learnings/_article-template.html, which are never served.",
+    "$comment": "Research review and preview pages (Graham, 3 Oct 2026, D1; 12 pages: research/legacy-v3.html is NOT one of them, see the public group): served on preview deployments only (VERCEL_ENV=preview), with noindex added to the copies; 404 on production. Never listed here: the four build inputs partials/feedback.html, partials/footer.html, partials/nav.html and learnings/_article-template.html, which are never served. research/ux-review-assets/*.png are the screenshots research/ux-review.html builds its image URLs from ('/research/ux-review-assets/' + id + '.png'); they are preview-only like the page. (The 2 Oct interim .vercelignore already hid them on production, so that page's images have been 404 there since.)",
     "paths": [
       "research/benchmark-preview.html",
       "research/benchmark-preview/available.html",
@@ -133,7 +133,8 @@
       "research/results-preview-v4.html",
       "research/results-preview-v4-own.html",
       "research/return-link-email-preview.html",
-      "research/ux-review.html"
+      "research/ux-review.html",
+      "research/ux-review-assets/*.png"
     ]
   },
   "forbidden": {

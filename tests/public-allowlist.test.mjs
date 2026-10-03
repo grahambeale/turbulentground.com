@@ -101,6 +101,17 @@ test('JS-only assets: found in script strings, FAIL when missing, and a stale dy
   done(unlisted);
 });
 
+test('built paths (string concatenation and template literals) must have files under the directory', () => {
+  const concat = project({ ...SITE, 'about.html': '<script>function src(id){ return \'/gallery/\' + id + \'.png\'; }</script>' }, ALLOW, VERCEL);
+  assert.ok(run(concat).errors.some((e) => e.includes('/gallery/') && e.includes('built path')), 'concatenated path with no files must fail');
+  const tmpl = project({ ...SITE, 'about.html': '<script>var u = `/gallery/${id}.png`;</script>' }, ALLOW, VERCEL);
+  assert.ok(run(tmpl).errors.some((e) => e.includes('/gallery/') && e.includes('built path')), 'template-literal path with no files must fail');
+  const ok = project({ ...SITE, 'gallery/a.png': 'x', 'about.html': '<script>function src(id){ return \'/gallery/\' + id + \'.png\'; }</script>' },
+    { public: [...ALLOW.public, { reason: 'gallery', paths: ['gallery/*.png'] }] }, VERCEL);
+  assert.deepEqual(run(ok).errors, []);
+  for (const d of [concat, tmpl, ok]) done(d);
+});
+
 test('FAILS on an /api/ call with no function', () => {
   const d = project({ ...SITE, 'index.html': '<script>fetch("/api/missing-route")</script>' }, ALLOW, VERCEL);
   assert.ok(run(d).errors.some((e) => e.includes('/api/missing-route')));
