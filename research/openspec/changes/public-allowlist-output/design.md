@@ -1,6 +1,6 @@
 # Design — public/ allowlist output
 
-Status: **PROPOSAL ONLY.** Nothing here is built.
+Status: **PROPOSAL ONLY (historical: approved 3 Oct 2026, see approval.json and amendments).** Nothing here is built.
 
 ## Mechanism
 
