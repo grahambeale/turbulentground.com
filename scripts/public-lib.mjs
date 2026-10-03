@@ -92,6 +92,11 @@ export function extractReferences(file, text) {
   const pushJs = (js) => {
     const code = stripComments(js);
     for (const m of code.matchAll(JS_API_RE)) refs.push({ ref: m[2], kind: 'api' });
+    // Built paths: '/dir/' + id + '.png'  and  `/dir/${id}.png`. The directory must contain at least one matching file.
+    const CONCAT = new RegExp(`(['"])(\\/[A-Za-z0-9_@%~+\\-./]*\\/)\\1\\s*\\+[^;\\n]*?\\+\\s*(['"])(\\.[A-Za-z0-9]{2,5})\\3`, 'g');
+    for (const m of code.matchAll(CONCAT)) if (!m[2].startsWith('/api/')) refs.push({ ref: m[2], kind: 'dynamic', suffix: m[4] });
+    const TEMPLATE = new RegExp('`(\\/[A-Za-z0-9_@%~+\\-./]*\\/)\\$\\{[^}]*\\}([A-Za-z0-9_@%~+\\-./]*(\\.[A-Za-z0-9]{2,5}))`', 'g');
+    for (const m of code.matchAll(TEMPLATE)) if (!m[1].startsWith('/api/')) refs.push({ ref: m[1], kind: 'dynamic', suffix: m[3] });
     for (const m of code.matchAll(JS_PATH_RE)) {
       const r = m[2];
       // a quoted value inside a CSS selector string, e.g. a[href$="diagnostic/index.html"], is not a URL reference

@@ -52,8 +52,13 @@ export function checkPublic({ rootDir = root, publicDir = path.join(rootDir, 'pu
     referencedTexts.push(text);
     const base = f.endsWith('.html') ? baseHref(text) : null;
     for (const m of text.matchAll(/https?:\/\/[^\s"'<>)`]+/g)) externals.add(m[0].replace(/[.,;]+$/, ''));
-    for (const { ref, kind } of extractReferences(f, text)) {
+    for (const { ref, kind, suffix } of extractReferences(f, text)) {
       if (ignore.some((i) => i.ref === ref && globToRegExp(i.from).test(f))) continue;
+      if (kind === 'dynamic') {   // a built path: some file under the directory with that extension must be in public/
+        const prefix = ref.slice(1);
+        if (![...actual].some((a) => a.startsWith(prefix) && a.endsWith(suffix))) errors.push(`BROKEN REFERENCE in ${f}: ${ref}<built>${suffix} (built path; no ${suffix} file under ${ref} in public/)`);
+        continue;
+      }
       const res = resolveReference(ref, f, { has, vercel, apiFiles, base });
       if (res.ok) { if (!res.how.includes(' ') && has(res.how)) referencedPaths.add(res.how); continue; }
       errors.push(`BROKEN REFERENCE in ${f}: ${ref} (${kind}; ${res.how})`);

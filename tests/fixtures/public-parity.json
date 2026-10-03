@@ -1,6 +1,6 @@
 {
   "recordedFrom": "https://www.turbulentground.com",
-  "recordedAt": "2026-10-03T01:58:35.518Z",
+  "recordedAt": "2026-10-03T02:04:40.466Z",
   "note": "public = expected bytes; previewOnly = 200 on previews, 404 on production; absent = served on the baseline site but must 404 after the migration (files .vercelignore already hides are not listed).",
   "routes": [
     {
@@ -666,6 +666,41 @@
     {
       "route": "/research/ux-review",
       "file": "research/ux-review.html",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/completion.png",
+      "file": "research/ux-review-assets/completion.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/consent.png",
+      "file": "research/ux-review-assets/consent.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/entry.png",
+      "file": "research/ux-review-assets/entry.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/final-question.png",
+      "file": "research/ux-review-assets/final-question.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/profile.png",
+      "file": "research/ux-review-assets/profile.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/questions.png",
+      "file": "research/ux-review-assets/questions.png",
+      "kind": "previewOnly"
+    },
+    {
+      "route": "/research/ux-review-assets/submit.png",
+      "file": "research/ux-review-assets/submit.png",
       "kind": "previewOnly"
     },
     {
