@@ -123,11 +123,14 @@ test('FAILS when .vercelignore hides an allowlisted file (Vercel would remove it
 test('REGRESSION: git hook environment (GIT_DIR) must not leak into the temp-dir git commands', async () => {
   // The pre-push hook runs the build with GIT_DIR set. `git init` / `git check-ignore` in a temp directory then acted on
   // the real repository and set core.bare=true in its config. Simulate with a decoy repository.
+  // These git calls themselves must run with a clean environment: npm test runs inside the pre-push hook, where GIT_DIR is
+  // set, and a bare `git init` here would re-initialise the REAL repository (this test once did exactly that).
   const { execFileSync } = await import('node:child_process');
   const { vercelIgnored, cleanGitEnv } = await import('../scripts/public-lib.mjs');
+  const git = (args) => execFileSync('git', args, { encoding: 'utf8', env: cleanGitEnv() });
   const decoy = mkdtempSync(path.join(tmpdir(), 'decoy-'));
-  execFileSync('git', ['init', '-q', decoy]);
-  const before = execFileSync('git', ['-C', decoy, 'config', '--local', '--list'], { encoding: 'utf8' });
+  git(['init', '-q', decoy]);
+  const before = git(['-C', decoy, 'config', '--local', '--list']);
   const proj = project({ 'a.html': 'x', 'secret/b.txt': 'x' }, { public: [{ reason: 'x', paths: ['a.html'] }] });
   writeFileSync(path.join(proj, '.vercelignore'), '/secret/\n');
   const saved = { GIT_DIR: process.env.GIT_DIR, GIT_WORK_TREE: process.env.GIT_WORK_TREE };
@@ -139,7 +142,7 @@ test('REGRESSION: git hook environment (GIT_DIR) must not leak into the temp-dir
   } finally {
     for (const [k, v] of Object.entries(saved)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
   }
-  const after = execFileSync('git', ['-C', decoy, 'config', '--local', '--list'], { encoding: 'utf8' });
+  const after = git(['-C', decoy, 'config', '--local', '--list']);
   assert.equal(after, before, 'the decoy repository config must be untouched');
   done(proj); done(decoy);
 });
