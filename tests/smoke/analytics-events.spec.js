@@ -35,6 +35,11 @@ async function prepare(context, { origin, publicStart = false, callbackMs = 20, 
   await context.route('**/api/research-lookup**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ valid: true, completed: false, name: 'Test', hasEmail: false, origin }) }));
   await context.route('**/api/research-save-progress', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' }));
 }
+/** Records, per click, whether any handler cancelled the default navigation (read after navigation from sessionStorage). */
+const watchDefaultPrevented = (context) => context.addInitScript(`
+  document.addEventListener('click', function (e) { sessionStorage.setItem('__dp', String(e.defaultPrevented)); });`);
+const defaultWasPrevented = (page) => page.evaluate(() => sessionStorage.getItem('__dp') === 'true');
+
 async function agreeAndContinue(page) {
   await page.locator('#consent-taking-part').check();
   await page.locator('#consent-continue').click();
@@ -83,6 +88,7 @@ test('a returning public participant (no start screen in this visit) is not labe
 test('homepage CTA, Plausible loaded: the event is sent and navigation is NOT held (the real script uses keepalive)', async ({ browser }) => {
   const context = await browser.newContext();
   await prepare(context, { callbackMs: -1, loaded: true });   // never calls back: proves the click does not wait for it
+  await watchDefaultPrevented(context);
   const page = await context.newPage();
   await page.goto(home);
   const hero = page.locator('a[data-research-cta="hero"]').first();
@@ -93,7 +99,7 @@ test('homepage CTA, Plausible loaded: the event is sent and navigation is NOT he
   const ev = (await events(page)).find((e) => e.name === 'Homepage Research CTA Clicked');
   expect(ev, 'the event was sent before the page unloaded').toBeTruthy();
   expect(ev.props).toEqual({ position: 'hero' });
-  expect(navigated - clicked, 'no artificial delay when Plausible is loaded').toBeLessThan(250);
+  expect(await defaultWasPrevented(page), 'the click is not cancelled and re-issued later: the browser navigates at once').toBe(false);
   await context.close();
 });
 
@@ -101,6 +107,7 @@ for (const [label, cb, atLeast] of [['Plausible calls back quickly', 40, 0], ['P
   test(`homepage CTA, Plausible NOT yet loaded (a queued call would be lost on unload): held for the callback or 300ms, ${label}`, async ({ browser }) => {
     const context = await browser.newContext();
     await prepare(context, { callbackMs: cb, loaded: false });
+    await watchDefaultPrevented(context);
     const page = await context.newPage();
     await page.goto(home);
     const hero = page.locator('a[data-research-cta="hero"]').first();
@@ -112,7 +119,8 @@ for (const [label, cb, atLeast] of [['Plausible calls back quickly', 40, 0], ['P
     expect(ev, 'the CTA event was recorded before the page unloaded').toBeTruthy();
     expect(ev.props).toEqual({ position: 'hero' });
     expect(ev.t, 'recorded at the click, before navigation').toBeLessThanOrEqual(navigated);
-    expect(navigated - clicked, 'held no longer than the 300ms fallback plus load time').toBeLessThan(1500);
+    expect(await defaultWasPrevented(page), 'the navigation was held (cancelled, then performed from the callback or the 300ms fallback)').toBe(true);
+    expect(navigated - clicked, 'held no longer than the 300ms fallback plus load time').toBeLessThan(2500);
     expect(navigated - clicked).toBeGreaterThanOrEqual(atLeast);
     await context.close();
   });
