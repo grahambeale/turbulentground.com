@@ -1637,9 +1637,12 @@ Thank you for being a part of it.</div>
     document.querySelectorAll('.screen').forEach(function (el) { el.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
     document.getElementById('footer-bar').style.display = (id === 'screen-pairs' && currentStatementIndex >= TOTAL_STATEMENTS) ? 'flex' : 'none';
-    if (id === 'screen-consent' || id === 'screen-context' || id === 'screen-pairs') {
-      trackResearchEvent('Research: Invite Validated');
-    }
+    // Funnel events by ROUTE (Plausible's sequential "Study completion" funnel needs them in order):
+    //   invitation: Invite Validated (fired when the token is validated, below) -> Consent Completed -> ...
+    //   public:     Public Start Viewed (here) -> Consent Completed -> ...
+    // 'Research: Invite Validated' is NOT fired from here: showScreen('screen-context') runs after Consent Completed on
+    // the public route, which put that event out of order and labelled public participants as invited.
+    if (id === 'screen-public-start') trackResearchEvent('Research: Public Start Viewed');
     window.scrollTo(0, 0);
   }
 
@@ -1709,6 +1712,9 @@ Thank you for being a part of it.</div>
           showScreen('screen-completed');
           return;
         }
+        // Invitation route only, before consent or resume. A public self-service participant arrives here too (after
+        // the public start screen), but must not be counted as invited: they were counted at 'Public Start Viewed'.
+        if (data.origin !== 'public_self_service') trackResearchEvent('Research: Invite Validated');
         hasEmailOnFile = data.hasEmail === true;
         var name = (typeof data.name === 'string') ? data.name.trim() : '';
         var greetingEl = document.getElementById('consent-greeting');

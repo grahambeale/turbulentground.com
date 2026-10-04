@@ -184,5 +184,6 @@ export default async function handler(req, res) {
     console.error("Responses lookup for resume failed (non-fatal):", err.message);
   }
 
-  return res.status(200).json({ valid: true, name, hasEmail, completed, savedState });
+  // origin lets the page label analytics events by route (invitation vs public self-service); it carries no personal data.
+  return res.status(200).json({ valid: true, name, hasEmail, completed, savedState, origin: isPublic ? "public_self_service" : "owner_invite" });
 }

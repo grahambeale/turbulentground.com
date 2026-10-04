@@ -635,9 +635,23 @@ window.plausible = window.plausible || function(){ (window.plausible.q = window.
   document.body.classList.add('is-loaded');
 
   /* ── CTA tracking ──────────────────────────────────────────── */
+  // Does this click lose its analytics event on navigation? The real Plausible script sends with fetch(..., {keepalive:true}),
+  // which survives the page unloading, so once it has loaded (it sets plausible.l and plausible.v) we send and navigate
+  // straight away. The risk is a click BEFORE the deferred script has loaded: plausible() then only queues the call and
+  // unloading would drop it. In that case only, we hold an ordinary same-tab navigation until Plausible's callback fires
+  // (it flushes the queue) or 300ms, whichever is first. New-tab and modified clicks never unload this page, so they are
+  // never held. The event name and its 'position' prop are unchanged.
   document.querySelectorAll('a[href="/take-part"]').forEach(function(a){
-    a.addEventListener('click', function(){
-      try { plausible('Homepage Research CTA Clicked', { props: { position: a.getAttribute('data-research-cta') || 'nav' } }); } catch(e){}
+    a.addEventListener('click', function(e){
+      var props = { position: a.getAttribute('data-research-cta') || 'nav' };
+      var loaded = typeof plausible === 'function' && (plausible.l === true || typeof plausible.v === 'number');
+      var sameTab = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && !a.target && !e.defaultPrevented;
+      if (loaded || !sameTab) { try { plausible('Homepage Research CTA Clicked', { props: props }); } catch(x){} return; }
+      e.preventDefault();
+      var gone = false, timer;
+      function go(){ if (gone) return; gone = true; clearTimeout(timer); window.location.href = a.href; }
+      timer = setTimeout(go, 300);
+      try { plausible('Homepage Research CTA Clicked', { props: props, callback: go }); } catch(x){ go(); }
     });
   });
 
