@@ -92,6 +92,17 @@
       }
     },
     {
+      "route": "/research-social-preview-2026-og.jpg",
+      "file": "research-social-preview-2026-og.jpg",
+      "kind": "public",
+      "expect": {
+        "status": 200,
+        "contentType": "image/jpeg",
+        "length": 148145,
+        "sha256": "bd403216de8c1658c22ff7466bb304637f116ece7963f2b9fbfe8723e0f7c6bb"
+      }
+    },
+    {
       "route": "/hero-terrain.png",
       "file": "hero-terrain.png",
       "kind": "public",
