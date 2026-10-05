@@ -9,18 +9,31 @@
 <script>
 // Token handling: read + strip from the visible URL as the very first
 // thing that runs, before anything is painted, so it never sits in the
-// address bar or gets captured in a screenshot. Stored in memory only
-// (module-level var below) for the life of this page load.
+// address bar or gets captured in a screenshot. Held in memory for the
+// page load and mirrored to sessionStorage (this tab only; never
+// localStorage, never the URL) so a reload, a phone browser restoring a
+// background tab, or reopening from tab history can carry on: a token-less
+// load resumes from it. Review previews (?preview=) never use it. Cleared
+// on submit, on the completed screen and when a token is rejected.
+window.__TG_TOKEN_KEY__ = 'tg-research-token';
 window.__TG_TOKEN__ = (function () {
   var params = new URLSearchParams(window.location.search);
   var t = params.get('t') || '';
+  var stored = '';
+  try {
+    if (t) sessionStorage.setItem(window.__TG_TOKEN_KEY__, t);
+    else if (!params.get('preview')) stored = sessionStorage.getItem(window.__TG_TOKEN_KEY__) || '';
+  } catch (_) { /* storage blocked: in-memory only, as before */ }
   if (window.history && window.history.replaceState) {
     var url = new URL(window.location.href);
     url.searchParams.delete('t');
     window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
   }
-  return t;
+  return t || stored;
 })();
+window.__TG_FORGET_TOKEN__ = function () {
+  try { sessionStorage.removeItem(window.__TG_TOKEN_KEY__); } catch (_) { /* nothing stored */ }
+};
 </script>
 <script>
 // Queue privacy-safe research journey events until Plausible's deferred
@@ -924,6 +937,7 @@ So thank you for being a part of it.</div>
         <div style="margin-top:28px;"><button type="submit" class="btn" id="public-start-submit">Start the survey</button></div>
         <p class="public-start-status" id="public-start-status" role="status" aria-live="polite"></p>
       </form>
+      <p class="public-start-note">Already started? Enter the same email address and I’ll send your link again.</p>
     </div>
   </section>
 
@@ -1642,6 +1656,7 @@ Thank you for being a part of it.</div>
     //   public:     Public Start Viewed (here) -> Consent Completed -> ...
     // 'Research: Invite Validated' is NOT fired from here: showScreen('screen-context') runs after Consent Completed on
     // the public route, which put that event out of order and labelled public participants as invited.
+    if (id === 'screen-completed' || id === 'screen-done') window.__TG_FORGET_TOKEN__();
     if (id === 'screen-public-start') trackResearchEvent('Research: Public Start Viewed');
     window.scrollTo(0, 0);
   }
@@ -1699,6 +1714,7 @@ Thank you for being a part of it.</div>
       .then(function (res) { return res.json(); })
       .then(function (data) {
         if (!data || data.valid !== true) {
+          window.__TG_FORGET_TOKEN__();   // rejected by the server (a network failure keeps it, so a retry works)
           showScreen('screen-invalid');
           return;
         }
