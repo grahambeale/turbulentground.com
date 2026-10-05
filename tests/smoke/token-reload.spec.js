@@ -161,7 +161,7 @@ test('the public start screen tells people who already started how to carry on',
   const page = await context.newPage();
   await stub(context, { valid: true });
   await page.goto(survey);
-  await expect(page.locator('#screen-public-start')).toContainText('Already started? Enter the same email address and I’ll send your link again.');
+  await expect(page.locator('#screen-public-start')).toContainText('Started earlier today? Enter the same email address and I’ll send your link again.');
   await context.close();
 });
 
