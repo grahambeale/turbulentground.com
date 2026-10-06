@@ -863,6 +863,40 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
   @media (prefers-reduced-motion: reduce) { .paired-progress-fill { transition: none; } }
   @media (max-width: 720px) { #screen-pairs .journey-progress { top: 64px; } }
   .statement-context-continue:disabled { opacity: .45; cursor: default; }
+
+  /* ---- Type roles: start screen and thank-you screen, wider than the phone layout only ----
+     Page title 44px; section heading 28px; Body 18px/1.6/400; Small 15px; primary buttons at Body size.
+     Starts at 641px: the phone rules above run up to and including 640px (mobile-nav.spec.js holds 20px body there),
+     and the survey's phone presentation is frozen (survey-frozen.spec.js), so nothing below changes. DM Sans 600 is not
+     loaded, so "bold" lead-ins and the legend use 500. */
+  @media (min-width: 641px) {
+    #screen-public-start h1, #screen-done h1 { font-size: 44px; }
+    #screen-done h2 { font-size: 28px; }
+
+    #screen-public-start .video-thumb-label, #screen-done .video-thumb-label,
+    #screen-public-start .transcript-body, #screen-done .transcript-body,
+    #screen-public-start .public-start-note, #screen-public-start .privacy-open,
+    #screen-public-start .public-start-field label, #screen-public-start .public-start-field input,
+    #screen-public-start .check-row label, #screen-done .check-row label,
+    #screen-public-start .public-start-status, #screen-done .results-email-status,
+    #screen-done .results-email p, #screen-done .referral-sharing p, #screen-done .referral-privacy,
+    #screen-done .referral-link-value, #screen-done .referral-field, #screen-done .referral-mode legend,
+    #screen-done #results-email-input, #screen-done .referral-panel input, #screen-done .referral-panel textarea,
+    #screen-done .referral-mode-option strong {
+      font-size: 18px; line-height: 1.6; font-weight: 400;
+    }
+    #screen-done .referral-recipient-preview { font-size: 18px !important; line-height: 1.6; }
+    #screen-done .referral-mode legend, #screen-done .referral-mode-option strong, #screen-done .referral-privacy strong { font-weight: 500; }
+    #screen-done .referral-privacy strong { font-size: inherit; }
+
+    #screen-public-start summary, #screen-done summary, #screen-done #referral-more-toggle,
+    #screen-public-start .required-tag, #screen-public-start .optional-tag,
+    #screen-done .optional-tag, #screen-done .referral-platform, #screen-done .btn.secondary {
+      font-size: 15px; line-height: 1.6;
+    }
+    #screen-public-start .btn:not(.secondary), #screen-done .btn:not(.secondary) { font-size: 18px; }
+    #screen-done #stay-involved-form h2 .optional-tag { font-size: inherit; line-height: inherit; color: var(--muted); }
+  }
 </style>
 </head>
 <body>
@@ -1195,7 +1229,7 @@ Thank you for being a part of it.</div>
           <symbol id="referral-icon-whatsapp" viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 17.8a7.8 7.8 0 0 1-4-1.1l-.3-.2-3.2.8.9-3.1-.2-.3A7.8 7.8 0 1 1 12 19.8Zm4.3-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1a6.4 6.4 0 0 1-3.2-2.8c-.2-.3.2-.5.6-1 .1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.9 4.2 1.8.7 2.5.8 3.4.7 1-.2 2.8-1.2 3.2-2.3.4-1.1.4-2 .3-2.2-.1-.2-.2-.2-.4-.3Z"/></symbol>
         </defs></svg>
         <h2 id="referral-sharing-title">Help me hear more perspectives on AI at work</h2>
-        <p>Share this link and anyone who opens it can add their own experience to the study &mdash; the more perspectives we have, the more useful the findings are for everyone.</p>
+        <p>Share this link and anyone who opens it can add their own experience to the study. The more perspectives there are, the more useful the findings are for everyone.</p>
         <div class="referral-link-row"><div class="referral-link-value" id="referral-link-value" aria-label="Your personal invitation link"></div><button class="btn" type="button" id="referral-copy-link">Copy link</button></div>
         <div class="referral-privacy"><strong>The link does not reveal anything about you.</strong><br>It contains a random referral code, not your name, email, answers or results.</div>
         <button class="referral-more-toggle" type="button" id="referral-more-toggle" aria-expanded="false" aria-controls="referral-more-options">More ways to share</button>
