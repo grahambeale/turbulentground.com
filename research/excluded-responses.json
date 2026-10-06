@@ -1,0 +1,36 @@
+{
+  "_comment": "Responses records that are NOT real participation: Graham's own test runs, approved by him for exclusion. The Airtable records are untouched (append-only); this list is how they are left out. lib/research-phase31/participation-count.js (the homepage count) skips every id here, and ANY analysis, benchmark or completion count MUST read this same list and skip the same ids (do not keep a second list). Add an entry only on Graham's say-so, with a decision-log reference. Contains record ids only, no participant data.",
+  "schema_version": 1,
+  "excluded": [
+    {
+      "id": "recJ9ffZOxOK2j3IP",
+      "reason": "Graham's end-to-end test completion, public_self_service route, 2026-10-06 07:59:04 to 08:00:04 UTC",
+      "decision_log": "operations/decision-log.md: 2026-10-06, Graham's end-to-end test completion excluded",
+      "approved_by": "Graham Beale"
+    },
+    {
+      "id": "recSb8eWUrKUCQWdT",
+      "reason": "Graham's test run, 9 Sep 2026: keyboard-mash comment, identity deleted",
+      "decision_log": "operations/decision-log.md: 2026-10-06, excluded test completions (counter exclusion list)",
+      "approved_by": "Graham Beale"
+    },
+    {
+      "id": "recTBBSB5qhlxbB3C",
+      "reason": "Graham's test run, 14 Sep 2026: keyboard-mash comment and context, identity deleted",
+      "decision_log": "operations/decision-log.md: 2026-10-06, excluded test completions (counter exclusion list)",
+      "approved_by": "Graham Beale"
+    },
+    {
+      "id": "recCl7XWscZCUUbMy",
+      "reason": "Graham's test run, 28 Sep 2026: public route, keyboard-mash comment",
+      "decision_log": "operations/decision-log.md: 2026-10-06, excluded test completions (counter exclusion list)",
+      "approved_by": "Graham Beale"
+    },
+    {
+      "id": "rec3L74uHSmNBHjMr",
+      "reason": "Graham's test run, 30 Sep 2026: keyboard-mash comment, all answers 3",
+      "decision_log": "operations/decision-log.md: 2026-10-06, excluded test completions (counter exclusion list)",
+      "approved_by": "Graham Beale"
+    }
+  ]
+}
