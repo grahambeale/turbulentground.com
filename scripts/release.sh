@@ -74,6 +74,26 @@ slug=$(git -C "$main_wt" remote get-url origin | sed -E 's#(git@github.com:|http
 
 tmp=""; lease_held=0; state="not started"; pushed_sha=""
 
+# ---- a stuck .git/index.lock fails loudly; it is never cleared automatically -----------------------------
+# Locks have repeatedly been left in the shared checkout (see operations/decision-log.md). This reports the evidence
+# and stops. Removing one needs Graham's yes after he has seen this output (operations/workflow.md, "Stuck locks").
+index_lock="$main_wt/.git/index.lock"
+lock_report() {
+  local size age procs
+  size=$(stat -f %z "$index_lock" 2>/dev/null || stat -c %s "$index_lock" 2>/dev/null || echo "?")
+  age=$(( $(date +%s) - $(stat -f %m "$index_lock" 2>/dev/null || stat -c %Y "$index_lock" 2>/dev/null || date +%s) ))
+  procs=$(ps -axo pid,etime,command 2>/dev/null | grep -E '(^| |/)git( |$)|Xcode\.app|Visual Studio Code|Code Helper|Cursor\.app|JetBrains|GitHub Desktop|Fork\.app|Tower\.app|Sourcetree|GitKraken|lazygit|gitk|Claude\.app/Contents/MacOS/Claude( |$)' | grep -v -E 'grep -E|release\.sh' | cut -c1-160 || true)
+  {
+    printf '[release] index.lock exists: %s\n' "$index_lock"
+    printf '[release]   size: %s bytes, age: %ss (%s minutes)\n' "$size" "$age" "$((age / 60))"
+    printf '[release]   running git/IDE processes:\n'
+    if [ -n "$procs" ]; then printf '%s\n' "$procs" | sed 's/^/[release]     /'; else printf '[release]     none found\n'; fi
+    printf '[release]   Known cause: a Cowork VM session whose mount can create but not unlink; check ~/Library/Logs/Claude/cowork_vm_node.log for "unable to unlink" at the lock'"'"'s minute.\n'
+    printf '[release]   NOT removed. Show Graham this output and wait for a yes before deleting it.\n'
+  } >&2
+}
+check_index_lock() { [ ! -e "$index_lock" ] || { lock_report; die "$1"; }; }
+
 # ---- lease ------------------------------------------------------------------------------------
 lease_take() {
   git -C "$main_wt" diff --quiet -- "$lease_file" || die "$lease_file has uncommitted edits in $main_wt: a lease is already held. Do not release over another session."
@@ -96,6 +116,11 @@ PY
 
 lease_release() {
   [ "$lease_held" = 1 ] || return 0
+  if [ -e "$index_lock" ]; then
+    lock_report
+    echo "[release] WARNING: the lease is still held in $main_wt/$lease_file because of the index.lock above. Do not delete the lock without Graham's yes." >&2
+    return 0
+  fi
   git -C "$main_wt" restore --source=HEAD -- "$lease_file"
   python3 - "$main_wt/$lease_file" <<'PY' || { echo "[release] WARNING: lease file is not fully cleared; clear it by hand" >&2; return 0; }
 import json, sys
@@ -194,6 +219,7 @@ if [ "$mode" = verify ]; then
   git -C "$main_wt" fetch -q origin
   full=$(git -C "$main_wt" rev-parse --verify "$verify_sha^{commit}") || die "unknown commit $verify_sha"
   git -C "$main_wt" merge-base --is-ancestor "$full" origin/main || die "${full:0:7} is not on origin/main: --verify-only only verifies a released commit"
+  check_index_lock "refusing to start: index.lock exists in the shared checkout"
   lease_take "verify ${full:0:7}" "verification"
   new_worktree "$full"
   files=$(git -C "$tmp/wt" diff --name-only "$full^" "$full" 2>/dev/null || true)
@@ -204,6 +230,8 @@ if [ "$mode" = verify ]; then
 fi
 
 # ---- release ----------------------------------------------------------------------------------
+state="checking for a stuck index.lock"
+check_index_lock "refusing to start: index.lock exists in the shared checkout"
 state="taking the lease"
 lease_take "release $branch ${approved:0:7}" "release"
 

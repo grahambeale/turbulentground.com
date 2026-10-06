@@ -221,6 +221,21 @@ the authenticated browser pane or the Vercel connector rather than recording a f
   recording a resumable checkpoint in Airtable/OpenSpec or a handoff file.
 - Do not store secrets, participant data or access tokens in the lease.
 
+### Stuck locks (`.git/index.lock`)
+
+A lock file left in the shared checkout is evidence to report, not clutter to clear.
+
+- `scripts/release.sh` stops before taking the lease if `.git/index.lock` exists, and prints its path, size,
+  age and any running git or IDE processes. If a lock appears after the lease is taken, it leaves the lease
+  held (it cannot restore the lease file through git) and prints the same report. It never deletes the lock.
+- Any other session that meets a lock does the same: stop, gather the same evidence, show it to Graham.
+- Remove a lock only after Graham has seen that evidence and said yes. Do not clear locks routinely, and do
+  not treat a lock's absence of a git process as proof it is stale: the lock may be from a Cowork VM session.
+- Known cause: a Cowork VM session whose mount can create but not unlink files runs git (status, fetch, log,
+  show) in the main checkout; git creates `index.lock` and cannot remove it. The Cowork log
+  (`~/Library/Logs/Claude/cowork_vm_node.log`) records `unable to unlink ... index.lock: Operation not permitted`
+  at the minute the lock appears. See `operations/decision-log.md`.
+
 ## Handoffs
 
 Follow `operations/handoffs/README.md`. A handoff resumes work; it does not
