@@ -27,7 +27,7 @@ for (const width of [641, 768, 1440]) {
     const line = page.locator('.referral-privacy-line');
     await expect(line).toBeVisible();
     expect((await line.innerText()).replace(/\s+/g, ' ')).toBe(LINE);
-    await expect(page.locator('.referral-privacy')).toBeHidden();
+    await expect(page.locator('.referral-privacy')).toHaveCSS('display', 'none');   // removed from the accessibility tree, not just invisible
     const m = await page.evaluate(() => {
       const l = /** @type {HTMLElement} */ (document.querySelector('.referral-privacy-line'));
       const cs = getComputedStyle(l), sc = getComputedStyle(/** @type {Element} */ (l.querySelector('strong')));
@@ -55,7 +55,7 @@ for (const width of [320, 390, 640]) {
     const { context, page } = await open(browser, width);
     await expect(page.locator('.referral-privacy')).toBeVisible();
     await expect(page.locator('.referral-privacy')).toContainText('The link does not reveal anything about you.');
-    await expect(page.locator('.referral-privacy-line')).toBeHidden();
+    await expect(page.locator('.referral-privacy-line')).toHaveCSS('display', 'none');
     await context.close();
   });
 }
