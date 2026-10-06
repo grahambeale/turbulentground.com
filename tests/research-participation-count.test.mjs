@@ -95,3 +95,19 @@ test('a missing or malformed list fails loudly rather than overcounting', () => 
   assert.throws(() => loadExcludedIds(new URL('./no-such-file.json', import.meta.url)));
   assert.throws(() => loadExcludedIds(new URL('../package.json', import.meta.url)), /no excluded array/);
 });
+
+test('no api or lib module uses import.meta (Vercel loads them as CommonJS, where it is a SyntaxError)', async () => {
+  const { readdirSync, readFileSync: read, statSync } = await import('node:fs');
+  const { join: j } = await import('node:path');
+  const root = new URL('..', import.meta.url).pathname;
+  const files = [];
+  const walk = (d) => { for (const n of readdirSync(d)) { const f = j(d, n); if (statSync(f).isDirectory()) walk(f); else if (/\.(js|mjs|cjs)$/.test(n)) files.push(f); } };
+  walk(j(root, 'api')); walk(j(root, 'lib'));
+  const bad = files.filter((f) => /\bimport\.meta\b/.test(read(f, 'utf8')));
+  assert.deepEqual(bad, []);
+});
+
+test('vercel.json packages the exclusion list with the research-invite function', () => {
+  const cfg = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8'));
+  assert.equal(cfg.functions['api/research-invite.js'].includeFiles, 'research/excluded-responses.json');
+});

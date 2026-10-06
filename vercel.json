@@ -3,6 +3,11 @@
   "trailingSlash": false,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
+  "functions": {
+    "api/research-invite.js": {
+      "includeFiles": "research/excluded-responses.json"
+    }
+  },
   "crons": [
     {
       "path": "/api/research-incomplete-cron",
