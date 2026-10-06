@@ -896,6 +896,10 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     }
     #screen-public-start .btn:not(.secondary), #screen-done .btn:not(.secondary) { font-size: 18px; }
     #screen-done #stay-involved-form h2 .optional-tag { font-size: inherit; line-height: inherit; color: var(--muted); }
+    /* The expanded transcript fills the screen's text column (it was capped at 320px): the start screen's note column,
+       and the thank-you screen's 760px actions column, left-aligned like the text below it. */
+    #screen-public-start .transcript-toggle, #screen-done .transcript-toggle { max-width: none; }
+    #screen-done .transcript-body { text-align: left; }
   }
 </style>
 </head>
