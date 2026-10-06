@@ -869,6 +869,7 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
      Starts at 641px: the phone rules above run up to and including 640px (mobile-nav.spec.js holds 20px body there),
      and the survey's phone presentation is frozen (survey-frozen.spec.js), so nothing below changes. DM Sans 600 is not
      loaded, so "bold" lead-ins and the legend use 500. */
+  .referral-privacy-line { display: none; }   /* phone keeps the .referral-privacy callout (frozen by survey-frozen) */
   @media (min-width: 641px) {
     #screen-public-start h1, #screen-done h1 { font-size: 44px; }
     #screen-done h2 { font-size: 28px; }
@@ -885,6 +886,9 @@ a.nav-logo:hover .nav-wordmark { color:var(--orange-lt); }
     #screen-done .referral-mode-option strong {
       font-size: 18px; line-height: 1.6; font-weight: 400;
     }
+    #screen-done .referral-privacy { display: none; }
+    #screen-done .referral-privacy-line { display: block; margin: 12px 0 0; padding: 0; border: 0; background: none; color: var(--muted); }
+    #screen-done .referral-privacy-line strong { font-weight: 500; color: inherit; }
     #screen-done .referral-recipient-preview { font-size: 18px !important; line-height: 1.6; }
     #screen-done .referral-mode legend, #screen-done .referral-mode-option strong, #screen-done .referral-privacy strong { font-weight: 500; }
     #screen-done .referral-privacy strong { font-size: inherit; }
@@ -1235,6 +1239,7 @@ Thank you for being a part of it.</div>
         <h2 id="referral-sharing-title">Help me hear more perspectives on AI at work</h2>
         <p>Share this link and anyone who opens it can add their own experience to the study. The more perspectives there are, the more useful the findings are for everyone.</p>
         <div class="referral-link-row"><div class="referral-link-value" id="referral-link-value" aria-label="Your personal invitation link"></div><button class="btn" type="button" id="referral-copy-link">Copy link</button></div>
+        <p class="referral-privacy-line"><strong>Privacy:</strong> the link contains a random referral code, not your name, email, answers or results.</p>
         <div class="referral-privacy"><strong>The link does not reveal anything about you.</strong><br>It contains a random referral code, not your name, email, answers or results.</div>
         <button class="referral-more-toggle" type="button" id="referral-more-toggle" aria-expanded="false" aria-controls="referral-more-options">More ways to share</button>
         <div id="referral-more-options" hidden>
