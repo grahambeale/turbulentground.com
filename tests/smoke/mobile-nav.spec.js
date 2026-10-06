@@ -278,6 +278,22 @@ const BATCH2 = [
   ['research-privacy', '/research/privacy', '/research/privacy.html', 'main p', false],
 ];
 
+// /writing is a permanent redirect to LinkedIn on the deployed site, so measuring "/writing" there measures LinkedIn's own
+// page (cookie banner, 12 to 16px nav) and fails whenever LinkedIn changes (6 Oct 2026, mobile-nav on production). The layout
+// tests run against writing.html on the static server (SMOKE_HTML_EXT=1, the pre-push hook); on the deployed site we
+// assert the redirect target instead, below.
+const BATCH2_RUN = html ? BATCH2 : BATCH2.filter(([name]) => name !== 'writing');
+
+test('/writing redirects to LinkedIn (permanent, not followed); /writing.html goes to /writing first', async ({ request }) => {
+  test.skip(html, 'a static server has no vercel.json redirects');
+  const direct = await request.get('/writing', { maxRedirects: 0 });
+  expect(direct.status()).toBe(308);
+  expect(direct.headers().location).toBe('https://www.linkedin.com/in/grahambeale/');
+  const file = await request.get('/writing.html', { maxRedirects: 0 });
+  expect(file.status()).toBe(308);
+  expect(new URL(file.headers().location, 'https://www.turbulentground.com').pathname).toBe('/writing');
+});
+
 /** Walks the page so scroll-driven content (the homepage scenes) is laid out. */
 async function walk(page) {
   await page.evaluate(async () => {
@@ -288,7 +304,7 @@ async function walk(page) {
 }
 
 for (const width of [320, 390, 480, 640]) {
-  for (const [name, clean, file, , js] of BATCH2) {
+  for (const [name, clean, file, , js] of BATCH2_RUN) {
     test(`no visible text under 18px at ${width}px: ${name}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true, javaScriptEnabled: js });
       const page = await context.newPage();
@@ -303,7 +319,7 @@ for (const width of [320, 390, 480, 640]) {
 }
 
 for (const width of [320, 390]) {
-  for (const [name, clean, file, sel, js] of BATCH2) {
+  for (const [name, clean, file, sel, js] of BATCH2_RUN) {
     test(`body text is >=20px with line-height <=1.65 at ${width}px: ${name}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true, javaScriptEnabled: js });
       const page = await context.newPage();
@@ -325,7 +341,7 @@ for (const width of [320, 390]) {
 }
 
 for (const width of [320, 360, 390]) {
-  for (const [name, clean, file, , js] of BATCH2) {
+  for (const [name, clean, file, , js] of BATCH2_RUN) {
     test(`no sideways scroll at ${width}px: ${name}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true, javaScriptEnabled: js });
       const page = await context.newPage();
