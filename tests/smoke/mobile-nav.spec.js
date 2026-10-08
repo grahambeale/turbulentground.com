@@ -266,7 +266,7 @@ for (const width of [320, 360, 390]) {
 }
 
 /**
- * Batch 2 (homepage, /writing, /care-capital, /research/privacy) follows the same
+ * Batch 2 (homepage, /writing, /research/privacy) follows the same
  * rule below 640px: body 20px at <=1.65, nothing visible under 18px, no sideways
  * scroll. /research/privacy redirects to /privacy#participation, so it is checked
  * with scripts off (the no-script fallback is the page a visitor can see).
@@ -275,7 +275,6 @@ const BATCH2 = [
   // name, clean URL, static file, body-text selector, scripts on?
   ['home', '/', '/index.html', '.lede', true],
   ['writing', '/writing', '/writing.html', '.phase-desc', true],
-  ['care-capital', '/care-capital', '/care-capital.html', 'main p:not([class]):not([style*="font-size"])', true],
   ['research-privacy', '/research/privacy', '/research/privacy.html', 'main p', false],
 ];
 
@@ -374,7 +373,7 @@ for (const [width, height] of [[390, 844], [375, 667], [320, 568]]) {
  * the comment at the top of styles/reading.css.
  */
 const COVERED = [
-  'index.html', 'about.html', 'privacy.html', 'writing.html', 'care-capital.html', 'research/privacy.html',
+  'index.html', 'about.html', 'privacy.html', 'writing.html', 'research/privacy.html',
   'learnings/index.html', 'learnings/analytics-data-mean-what-you-think.html', 'learnings/chatgpt-starts-this-week.html',
   'learnings/eleven-sprints-in.html', 'learnings/how-does-an-ai-team-miss-a-failure-this-big.html',
   'learnings/make-my-ai-team-take-risks.html', 'learnings/seven-copies-of-the-rules.html',
@@ -382,7 +381,6 @@ const COVERED = [
   'learnings/what-zero-intervention-actually-means.html', 'learnings/zero-humans-in-the-loop.html',
 ];
 const EXEMPT = [
-  'diagnostic/index.html',                       // the diagnostic
   'admin/index.html',                            // Decap CMS
   'admin/invitations/index.html', 'research/admin-tools.html', 'research/admin.html', // admin pages
   'research/benchmark-preview.html', 'research/benchmark-preview/available.html', 'research/benchmark-preview/building.html',
@@ -412,7 +410,7 @@ test('every HTML page is covered, exempt, deferred or a template (and the exempt
   expect(found.filter((f) => !known.has(f)), 'pages not classified for the phone type scale').toEqual([]);
   expect([...known].filter((f) => !found.includes(f)), 'listed pages that no longer exist').toEqual([]);
   const readingCss = fs.readFileSync(path.join(root, 'styles', 'reading.css'), 'utf8');
-  for (const needle of ['/diagnostic', '/admin/invitations', '/research/admin-tools', '/research/admin', 'Decap CMS', 'preview and email pages', 'DEFERRED']) {
+  for (const needle of ['/admin/invitations', '/research/admin-tools', '/research/admin', 'Decap CMS', 'preview and email pages', 'DEFERRED']) {
     expect(readingCss, `reading.css comment mentions "${needle}"`).toContain(needle);
   }
 });

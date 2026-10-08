@@ -6,7 +6,7 @@ const { test, expect } = require('@playwright/test');
  * line, About / Privacy / Graham's LinkedIn and one final line, with no mention of the
  * AI experiment and no YouTube link; each row is a single line at 320/375/390px.
  * The AI-experiment disclosure must stay on the pages the AI team built: the footer
- * note on /about, /writing, /care-capital, /learnings and every article, and the
+ * note on /about, /writing, /learnings and every article, and the
  * "not by the AI team" note on articles. Runs against SMOKE_TEST_BASE_URL;
  * SMOKE_HTML_EXT=1 requests the .html files for a static server.
  */
@@ -64,7 +64,6 @@ for (const width of [320, 375, 390]) {
 
 const DISCLOSURE_PAGES = [
   ['/about', '/about.html'],
-  ['/care-capital', '/care-capital.html'],
   ['/learnings', '/learnings/index.html'],
   ['/learnings/zero-humans-in-the-loop', '/learnings/zero-humans-in-the-loop.html'],
 ];

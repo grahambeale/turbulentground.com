@@ -39,7 +39,7 @@ Research work includes:
 General website feedback is out of scope. Flag it for manual rerouting. Do not
 silently turn it into research work.
 
-The research workflow is independent of `_experiment/sprint-state.json`. Do
+The research workflow is independent of `archive/phase2/sprint-state.json`. Do
 not claim a sprint, wait for a sprint day, add research work to sprint logs, or
 allow an open but idle main-site sprint to block an approved research item.
 

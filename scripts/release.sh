@@ -192,7 +192,6 @@ choose_specs() {          # $1 = changed files, one per line; prints spec names 
   fi
   local s out=""
   for s in $want; do
-    [ "$s" = diagnostic ] && continue
     if [ -f "$tmp/wt/tests/smoke/$s.spec.js" ]; then out="$out $s"; else say "spec '$s' does not exist at this commit: skipped" >&2; fi
   done
   echo "$out"

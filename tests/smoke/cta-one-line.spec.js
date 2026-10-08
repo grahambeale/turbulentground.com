@@ -29,7 +29,6 @@ async function gotoStyled(page, target) {
 }
 const PAGES = [
   ['/', '/index.html'],
-  ['/care-capital', '/care-capital.html'],
   ['/about', '/about.html'],
   ['/privacy', '/privacy.html'],
   ['/learnings', '/learnings/index.html'],

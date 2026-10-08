@@ -10,7 +10,7 @@ research/openspec/
 # every page. The target is option (b), a public/ allowlist output directory.
 /tests/
 /operations/
-/_experiment/
+/archive/
 /.claude/
 /.github/
 /CLAUDE.md

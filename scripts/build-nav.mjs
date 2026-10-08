@@ -106,7 +106,6 @@ const TARGET_FILES = [
   'index.html',
   'writing.html',
   'about.html',
-  'care-capital.html',
   'privacy.html',
   'learnings/index.html',
   'learnings/the-silent-veto.html',

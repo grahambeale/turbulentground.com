@@ -6,8 +6,7 @@
 #   1. npm run build, and fails if it changes any tracked file (generated pages
 #      out of date: run npm run build and commit the result)
 #   2. npm test
-#   3. the Playwright smoke suite (tests/smoke, except diagnostic.spec.js, which
-#      drives the live site) against that commit served locally
+#   3. the Playwright smoke suite (tests/smoke) against that commit served locally
 # Any failure blocks the push. Deleting a remote branch is not tested.
 #
 # Install once per clone:  sh scripts/hooks/install.sh
@@ -70,7 +69,7 @@ for sha in $shas; do
     || { tail -40 "$tmp/public.log" >&2; fail "public/ production variant failed for $short"; }
   printf '[pre-push] public/ allowlist checks passed (production and preview variants)\n'
 
-  specs=$(ls tests/smoke/*.spec.js 2>/dev/null | grep -v 'diagnostic\.spec\.js' || true)
+  specs=$(ls tests/smoke/*.spec.js 2>/dev/null || true)
   if [ -n "$specs" ]; then
     port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
     python3 scripts/hooks/serve.py "$port" public >/dev/null 2>&1 &

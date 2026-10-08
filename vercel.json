@@ -20,10 +20,6 @@
       "destination": "/research"
     },
     {
-      "source": "/diagnostic",
-      "destination": "/diagnostic/index.html"
-    },
-    {
       "source": "/learnings",
       "destination": "/learnings/index.html"
     },
@@ -114,6 +110,31 @@
     {
       "source": "/writing.html",
       "destination": "https://www.linkedin.com/in/grahambeale/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostic",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostic.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostic/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/care-capital",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/care-capital.html",
+      "destination": "/about",
       "permanent": true
     }
   ],

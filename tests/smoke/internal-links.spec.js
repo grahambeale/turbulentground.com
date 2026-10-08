@@ -22,7 +22,6 @@ const redirects = new Map((vercel.redirects || []).map((r) => [r.source, r.desti
 const PAGES = [
   ['/', '/index.html'],
   ['/about', '/about.html'],
-  ['/care-capital', '/care-capital.html'],
   ['/privacy', '/privacy.html'],
   ['/learnings', '/learnings/index.html'],
   ['/take-part', '/research/index.html'],

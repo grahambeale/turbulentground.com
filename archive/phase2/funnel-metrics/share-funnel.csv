@@ -1,0 +1,2 @@
+Record ID,Week Ending,Sprint Number,Step Name,Step Order,Count,Conversion From Previous Step,Low Confidence,Notes
+recTaLjp96CymhOLe,2026-08-11,13,Share Triggered,1,0,,TRUE,"First row in this table since the event shipped Sprint 12 — genuinely zero this trailing 7 days, unverified rather than confirmed per the same instrumentation caveat as the Diagnostic Funnel's CTA-click row this sprint. No diagnostic completions occurred in this window either, so zero shares is also consistent with there being no completed diagnostic to share from."

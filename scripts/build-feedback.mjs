@@ -19,7 +19,6 @@ const TARGET_FILES = [
   'index.html',
   'writing.html',
   'about.html',
-  'care-capital.html',
   'privacy.html',
   'learnings/index.html',
   'learnings/the-silent-veto.html',
@@ -32,7 +31,6 @@ const TARGET_FILES = [
   'learnings/make-my-ai-team-take-risks.html',
   'learnings/seven-copies-of-the-rules.html',
   'learnings/signals-added-to-the-pile.html',
-  'diagnostic/index.html',
 ];
 
 const feedbackHtml = readFileSync(path.join(root, 'partials/feedback.html'), 'utf8').trimEnd();

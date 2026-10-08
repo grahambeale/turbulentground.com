@@ -111,7 +111,7 @@ in Blocker and the required human or technical step in Next action.
   benchmark inclusion rules as a cosmetic change.
 - Maintain WCAG 2.2 AA and verify the complete affected journey for changes to
   submission, email, consent, results, save-and-return or unsubscribe.
-- Do not modify `_experiment/sprint-state.json` or use the main-site sprint.
+- Do not modify `archive/phase2/sprint-state.json` or use the main-site sprint.
 - Clear the research lease as the final state action on every mutating run.
 - Remain quiet when nothing is actionable. Notify Graham when a proposal,
   preview, production release, blocker, failure or decision is ready.

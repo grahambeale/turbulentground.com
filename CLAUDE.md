@@ -9,7 +9,7 @@ Before acting on any product request:
 5. Follow the shared lease, approval, implementation and release gates exactly.
 
 `operations/workflow.md` is the single source of truth for new work. The former
-`_experiment/` and `research/` workflows are compatibility evidence only unless
+`archive/phase2/` and `research/` workflows are compatibility evidence only unless
 the shared workflow explicitly directs a legacy continuation.
 
 Never fabricate unavailable data, expose participant information, infer release

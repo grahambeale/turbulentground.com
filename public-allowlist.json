@@ -7,7 +7,6 @@
       "paths": [
         "index.html",
         "about.html",
-        "care-capital.html",
         "privacy.html",
         "writing.html"
       ]
@@ -31,12 +30,6 @@
       "paths": [
         "styles/tokens.css",
         "styles/reading.css"
-      ]
-    },
-    {
-      "reason": "Diagnostic tool",
-      "paths": [
-        "diagnostic/index.html"
       ]
     },
     {
@@ -147,7 +140,7 @@
       "content/",
       "partials/",
       "operations/",
-      "_experiment/",
+      "archive/",
       ".claude/",
       ".github/",
       "node_modules/",

@@ -99,7 +99,6 @@ const TARGET_FILES = [
   'index.html',
   'writing.html',
   'about.html',
-  'care-capital.html',
   'learnings/index.html',
   'learnings/the-silent-veto.html',
   'learnings/what-zero-intervention-actually-means.html',
@@ -117,7 +116,6 @@ const FOOTER_CONFIG = {
   'index.html': HOME_FOOTER_CONFIG,
   'writing.html': WRITING_FOOTER_CONFIG,
   'about.html': SECONDARY_PAGE_FOOTER_CONFIG,
-  'care-capital.html': SECONDARY_PAGE_FOOTER_CONFIG,
   'learnings/index.html': LEARNINGS_INDEX_FOOTER_CONFIG,
 };
 

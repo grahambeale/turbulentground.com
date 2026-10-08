@@ -244,7 +244,7 @@ rewrites of historical evidence.
 
 ## Compatibility with former workflows
 
-`_experiment/orchestration-prompt.md`, `_experiment/sprint-state.json`,
+`archive/phase2/orchestration-prompt.md`, `archive/phase2/sprint-state.json`,
 `research/agent-workflow.md` and `research/work-state.json` remain historical
 and transitional inputs in Release 1.
 

@@ -1,7 +1,7 @@
 {
   "recordedFrom": "https://www.turbulentground.com",
   "recordedAt": "2026-10-03T02:04:40.466Z",
-  "note": "public = expected bytes; previewOnly = 200 on previews, 404 on production; absent = served on the baseline site but must 404 after the migration (files .vercelignore already hides are not listed).",
+  "note": "public = expected bytes; previewOnly = 200 on previews, 404 on production; absent = served on the baseline site but must 404 after the migration (files .vercelignore already hides are not listed). Updated 8 Oct 2026 for the Phase 2 decommission: /about, /sitemap.xml and /styles/reading.css re-hashed; /diagnostic and /care-capital are now permanent redirects. Other entries (for example /research) are as recorded on 3 Oct and were not re-recorded.",
   "routes": [
     {
       "route": "/",
@@ -21,19 +21,8 @@
       "expect": {
         "status": 200,
         "contentType": "text/html",
-        "length": 39078,
-        "sha256": "207f3aa8b5920cfc68aa37e9b1e48d3b05d8d6770405b6fc6e2124fa5f78392a"
-      }
-    },
-    {
-      "route": "/care-capital",
-      "file": "care-capital.html",
-      "kind": "public",
-      "expect": {
-        "status": 200,
-        "contentType": "text/html",
-        "length": 64392,
-        "sha256": "190c13c64c71c1932655fb55a640fc5189fb399784c7a3c384dd887fc262b5b4"
+        "length": 38675,
+        "sha256": "82342a1fd0b948dfca7d80f8b71ff638f75e1de3b871dd413ccbcd2a11259aa6"
       }
     },
     {
@@ -142,8 +131,8 @@
       "expect": {
         "status": 200,
         "contentType": "application/xml",
-        "length": 1428,
-        "sha256": "c6c6a3243b370bdb07c81fdefd570bf309682f70127252def3a5e4baadc9b4c2"
+        "length": 1363,
+        "sha256": "3de12f3a99fc2d8c730a2d463055172e0a0864d05812943228c70320e15c67fc"
       }
     },
     {
@@ -175,19 +164,8 @@
       "expect": {
         "status": 200,
         "contentType": "text/css",
-        "length": 4936,
-        "sha256": "4aba80d30f8c3b8eb0035e7d968468a59e2323bb506ee0da2ef9218fb28c304b"
-      }
-    },
-    {
-      "route": "/diagnostic",
-      "file": "diagnostic/index.html",
-      "kind": "public",
-      "expect": {
-        "status": 200,
-        "contentType": "text/html",
-        "length": 102813,
-        "sha256": "c229b16dd95fb3407c9a923b6efd15a235c794602292fe19bd0e3326555b3c55"
+        "length": 4908,
+        "sha256": "ba90dd728d7c4c897d67ad54a595cd0a4c98ce46432dd5b76e5f22b320dada5d"
       }
     },
     {
@@ -963,6 +941,28 @@
       "route": "/vercel.json",
       "file": "vercel.json",
       "kind": "absent"
+    },
+    {
+      "route": "/diagnostic",
+      "file": "vercel.json redirect to /",
+      "kind": "public",
+      "expect": {
+        "status": 308,
+        "contentType": "text/plain",
+        "length": 15,
+        "sha256": "7c040f8633b8823d72ed63da9b3b2dfe9846e912c66a64c9433ec9c4815d76c2"
+      }
+    },
+    {
+      "route": "/care-capital",
+      "file": "vercel.json redirect to /about",
+      "kind": "public",
+      "expect": {
+        "status": 308,
+        "contentType": "text/plain",
+        "length": 15,
+        "sha256": "7c040f8633b8823d72ed63da9b3b2dfe9846e912c66a64c9433ec9c4815d76c2"
+      }
     }
   ]
 }

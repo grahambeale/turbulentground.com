@@ -11,12 +11,12 @@
    Sizes are px, not rem, because pages set different root sizes.
 
    COVERED (class="reading-page"): the ten articles, /privacy, /learnings, /about,
-   the /take-part start-screen intro, the homepage, /writing, /care-capital and
+   the /take-part start-screen intro, the homepage, /writing and
    /research/privacy (a redirect whose no-JS fallback shows the text), and the
    shared footer on every page that includes it.
 
    EXEMPT on purpose (small text is expected and allowed; mirrored in the allowlist
-   in tests/smoke/mobile-nav.spec.js): /diagnostic, the admin pages
+   in tests/smoke/mobile-nav.spec.js): the admin pages
    (/admin/invitations, /research/admin-tools, /research/admin), the Decap CMS
    (/admin), and the internal preview and email pages (research/*-preview.html,
    research/ux-review.html, research/legacy-v3.html, research/results-preview-*.html).
