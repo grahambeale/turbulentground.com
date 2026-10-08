@@ -103,6 +103,14 @@ When a preview is authorised, push only the reviewed commit, reconcile the
 commit SHA with the deployment and record the preview URL and evidence in
 Airtable. Set release decision to `Awaiting approval` and stop.
 
+A change under `api/` or `lib/` (or to `vercel.json` `functions`) also needs a **runtime check on
+the preview** before approval is requested: fetch every route it can affect on the preview deployment
+(the Vercel connector's share link, or an authenticated browser) and record the status codes and, for
+a counter or lookup, a sample response. Local Node tests do not reproduce how Vercel loads these
+files: on 6 Oct 2026 a module that used `import.meta` passed every local test and then took down the
+whole `api/research-invite.js` function in production for about 29 minutes. `tests/research-participation-count.test.mjs`
+now fails if any `api/` or `lib/` file uses `import.meta`, but the preview check is the general control.
+
 ### 6. Release
 
 Release only when the exact implementation's Release decision is `Approved` or
