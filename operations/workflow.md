@@ -202,8 +202,7 @@ if `public/` is not exactly the allowlist, a forbidden path is in it, any local 
 or JavaScript (including built paths) does not resolve, a dynamic entry is stale, or `.vercelignore`
 hides an allowlisted file (Vercel removes ignored files before the build, so never list a build input
 or an allowlisted file there). The pre-push hook proves both variants (production and preview) and
-serves `public/` for the smoke suite; `npm run serve` builds and serves `public/` locally. The
-crawl-and-hash parity tool is `scripts/audit/crawl-parity.mjs` (throttled, see Verification crawls).
+serves `public/` for the smoke suite; `npm run serve` builds and serves `public/` locally.
 
 ### Verification crawls
 

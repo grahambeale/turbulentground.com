@@ -15,6 +15,7 @@
 #      (same content, same order; commits already on main are reported, not re-released)
 #   5. push to main through the pre-push hook (never --no-verify)
 #   6. wait for the Vercel production deployment of the pushed commit
+#   6b. call the production API routes (scripts/release-health.sh): any 5xx fails the release and LEAVES THE LEASE HELD
 #   7. run the relevant smoke specs against production, throttled
 #   8. release the lease
 #
@@ -27,6 +28,7 @@
 # Needs: git, gh (authenticated), python3, node_modules in the shared checkout, core.hooksPath=scripts/hooks.
 set -euo pipefail
 
+script_dir=$(cd "$(dirname "$0")" && pwd)
 PROD_URL="${RELEASE_PROD_URL:-https://www.turbulentground.com}"
 DEPLOY_TIMEOUT="${RELEASE_DEPLOY_TIMEOUT:-1200}"   # seconds
 SPEC_GAP="${RELEASE_SPEC_GAP:-20}"                 # seconds between production spec runs (workflow: verification crawls)
@@ -72,7 +74,7 @@ gh auth status >/dev/null 2>&1 || die "gh is not authenticated"
 slug=$(git -C "$main_wt" remote get-url origin | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')
 [ -n "$slug" ] || die "cannot work out the GitHub repository from the origin URL"
 
-tmp=""; lease_held=0; state="not started"; pushed_sha=""
+tmp=""; lease_held=0; lease_keep=0; state="not started"; pushed_sha=""
 
 # ---- a stuck .git/index.lock fails loudly; it is never cleared automatically -----------------------------
 # Locks have repeatedly been left in the shared checkout (see operations/decision-log.md). This reports the evidence
@@ -140,7 +142,11 @@ cleanup() {
     rm -rf "$tmp"
     git -C "$main_wt" worktree prune
   fi
-  lease_release || true
+  if [ "$lease_keep" = 1 ]; then
+    printf '[release] The lease is LEFT HELD (production is unhealthy). Clear it by hand in operations/work-state.json when it is safe, or let it expire.\n' >&2
+  else
+    lease_release || true
+  fi
   if [ $rc -ne 0 ]; then
     printf '\n[release] FAILED (state: %s). Nothing after this point was done.\n' "$state" >&2
     if [ -n "$pushed_sha" ]; then
@@ -183,6 +189,15 @@ wait_for_production() {   # $1 = sha
   die "no successful production deployment of ${1:0:7} after ${DEPLOY_TIMEOUT}s (last status '${st:-none}')"
 }
 
+api_health() {   # $1 = sha. Any 5xx, no response or Security Checkpoint challenge fails the release and keeps the lease.
+  state="checking the production API health"
+  say "calling the production API routes (scripts/release-health.sh)"
+  if ! "$script_dir/release-health.sh" "$PROD_URL"; then
+    lease_keep=1
+    die "production API health check FAILED for ${1:0:7}. The commit is already on main: do not push again. Roll back or fix forward, then check again with: scripts/release.sh --verify-only ${1:0:7} (after clearing the held lease)."
+  fi
+}
+
 choose_specs() {          # $1 = changed files, one per line; prints spec names that exist in the worktree
   local files=$1 want="internal-links"
   if [ -n "$specs_arg" ]; then want=$(echo "$specs_arg" | tr ',' ' ')
@@ -223,6 +238,7 @@ if [ "$mode" = verify ]; then
   new_worktree "$full"
   files=$(git -C "$tmp/wt" diff --name-only "$full^" "$full" 2>/dev/null || true)
   wait_for_production "$full"
+  api_health "$full"
   run_specs "$full" "$files"
   say "VERIFIED: ${full:0:7} is live and the production specs pass"
   exit 0
@@ -294,6 +310,7 @@ state="pushed; waiting for deployment"
 
 changed=$(git diff --name-only "$main_before" "$pushed_sha")
 wait_for_production "$pushed_sha"
+api_health "$pushed_sha"
 run_specs "$pushed_sha" "$changed"
 
 say "RELEASED AND VERIFIED: $branch ${approved_full:0:7} is on main as ${pushed_sha:0:7} (patch-identical), production deployment is live, production specs pass."
