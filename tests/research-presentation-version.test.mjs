@@ -111,7 +111,7 @@ for (const f of ['privacy.html', 'research/privacy.html']) {
   const t = read(f);
   assert.match(t, /kind of screen you used/i, `${f}: privacy notice row for the viewport bucket and layout version`);
   assert.match(t, /layout version/i);
-  assert.match(t, /Last updated:<\/strong> 3 October 2026/, `${f}: last updated date`);
+  assert.match(t, /Last updated:<\/strong> 24 October 2026/, `${f}: last updated date`);
 }
 console.log('research-presentation-version: ok');
 } finally {

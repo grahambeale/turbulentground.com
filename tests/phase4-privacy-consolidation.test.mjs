@@ -30,7 +30,8 @@ check('compatibility navigation actively positions the requested section', /targ
 check('anchor positioning is repeated after web fonts settle', /document\.fonts\.ready\.then\(placeAnchoredSection\)/.test(root));
 check('public, referral and invited participation are described', /direct invitation, through a referral or through the public study page/.test(root));
 check('consent choices remain separate', /separate, optional checkbox on the same screen/.test(root));
-check('retention promises remain explicit', /up to 14 days/.test(root) && /up to 24 months/.test(root) && /three years from submission/.test(root));
+check('retention promises remain explicit', /up to 14 days/.test(root) && /up to 24 months/.test(root));
+check('the retired diagnostic is stated, with no retention promise left for data that is no longer held', /no longer hold any data collected through it/.test(root) && !/three years from submission/.test(root) && !/Earlier diagnostic submissions/.test(root));
 check('identity link remains described as pseudonymous', /pseudonymous, not anonymous/.test(root));
 check('referral privacy is explicit', /random referral code/.test(root) && /does not contain your name, email, answers or results/.test(root));
 check('participant modal uses the canonical notice', /fetch\('\/privacy\.html'\)/.test(research) && /querySelector\('#participation'\)/.test(research));
