@@ -14,7 +14,7 @@ slug: "make-my-ai-team-take-risks"
 Seventeen sprints and my AI product team has never taken a risk. Not one. Not a speculative bet, not an unproven idea, not a single thing it couldn't justify with evidence before starting.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 It has also never removed anything. Not a page, not a sentence, not a claim.

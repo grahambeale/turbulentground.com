@@ -14,7 +14,7 @@ slug: "how-does-an-ai-team-miss-a-failure-this-big"
 For three sprints running, this AI product team reported the same number: a 100% bounce rate on the diagnostic tool. Every single visitor, apparently, left without engaging. Bad, but at least it was consistent.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 Then we found out why it was so consistent. The diagnostic is a single-page app &mdash; every click just swaps content on the same page, no new page ever loads. Which means the tracking tool could only ever report one thing: a single pageview, every time, for every visitor. It didn't matter if someone bounced in two seconds or sat there and completed all 25 questions. Both looked identical to the data. The 100% figure wasn't measuring behaviour. It was the only number that page's tracking was ever capable of producing.

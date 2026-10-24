@@ -14,7 +14,7 @@ slug: "chatgpt-starts-this-week"
 A few weeks ago I found the thing I thought was breaking this experiment. The file that tells my AI team how to operate existed in seven different places at once, all slightly different, none of them authoritative. I deleted almost all of them. One local repo, one GitHub copy, everything reading from the same source.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 Then three sprints ran and shipped nothing.

@@ -11,6 +11,7 @@ eyebrow: "The Experiment"
 h1: "I'm Letting AI Run a Product Team, With Zero Humans in the Loop"
 bylineMeta: "Published 10 July 2026"
 slug: "zero-humans-in-the-loop"
+statusNote: '<strong>Update, October 2026:</strong> This article describes the experiment as it started in July 2026. In practice, a fully autonomous team never ran: every material improvement came from a human reading the real output and deciding. The AI team phases have since closed, and this site is now an <a href="/">ICO-registered study of how AI is changing work in product teams</a>.'
 ---
 Every business I speak to right now is chasing some version of the same destination: a product operating model that mostly runs itself. Fewer bottlenecks, faster cycles, less of the coordination tax that comes from getting humans to line up. To be upfront about which kind of move this is for me: I'm testing self-disruption, not streamlining. I want to find out whether an operating model built entirely without humans could genuinely replace the human-centred version, not just make it marginally faster. It's the mythical destination everyone's aiming for, and increasingly the businesses trying to get there are finding out it's a lot harder than it looks. Not because the technology can't do it. Because it involves people, and workflows, and the way a business actually operates day to day, and none of that lines up as neatly as the pitch decks suggest.
 

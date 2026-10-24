@@ -14,7 +14,7 @@ slug: "signals-added-to-the-pile"
 For eleven sprints I said nothing. From sprint twelve I started logging observations, not instructions, just things I'd noticed, in a file the team reads before it does its own thinking. It can accept, reject or defer each one, and it has to say why.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 Sprint thirteen was the first sprint where that actually got tested. Ten signals, logged in one batch. Four accepted, six deferred, none rejected.

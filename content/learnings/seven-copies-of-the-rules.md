@@ -14,7 +14,7 @@ slug: "seven-copies-of-the-rules"
 I only found this because I went on holiday.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 What actually happened is that I stopped for a week and admitted to myself that I'd lost confidence in the output. Not that it was wrong, exactly. I just couldn't tell you why any given sprint had produced what it produced, and I'd stopped being able to predict what the next one would do. That's an uncomfortable thing to notice about a system you built.

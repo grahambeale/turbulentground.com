@@ -35,8 +35,9 @@ import path from 'node:path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
+// Phases 1 and 2 (the AI product team) are closed; the note says how the site began, not that the experiment runs now.
 const BEALE_NOTE =
-  'Originally built by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. AI product team from Sprint 1 — a live experiment. <a href="/learnings/zero-humans-in-the-loop">Read about it</a>.';
+  'Built and run by <a href="https://beale.co.uk" target="_blank" rel="noopener">Graham Beale</a>. Began as an <a href="/learnings/zero-humans-in-the-loop">AI product team experiment</a>, July 2026.';
 
 // Homepage: trimmed (Graham, 2 Oct 2026, final wording) to a closing line, three
 // links and one final line. It no longer mentions the AI experiment; that
@@ -57,7 +58,7 @@ const WRITING_FOOTER_CONFIG = {
     { href: 'writing.html', label: 'Writing' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'LinkedIn', external: true },
     { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
-    { href: 'privacy.html', label: 'Privacy' },
+    { href: '/privacy', label: 'Privacy' },
   ],
   note: BEALE_NOTE,
 };
@@ -69,7 +70,7 @@ const SECONDARY_PAGE_FOOTER_CONFIG = {
     { href: '/take-part', label: 'The study' },
     { href: 'https://www.linkedin.com/in/grahambeale/', label: 'LinkedIn', external: true },
     { href: 'https://www.youtube.com/@TurbulentGround', label: 'YouTube', external: true },
-    { href: 'privacy.html', label: 'Privacy' },
+    { href: '/privacy', label: 'Privacy' },
   ],
   note: BEALE_NOTE,
 };
