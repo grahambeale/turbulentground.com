@@ -28,6 +28,8 @@
 //   eyebrow          — small label above the headline (e.g. "The Experiment")
 //   h1               — headline as it renders (HTML entities like &rsquo; OK)
 //   bylineMeta       — e.g. "Sprint 11" or "Sprints 2–5"
+//   statusNote       — optional. A dated note shown above the article (in the .cold-open callout style), for
+//                      an article kept as a historical record. Trusted HTML; leave it out for no note.
 // Body (everything after the "---" front-matter block) is Markdown,
 // rendered with marked. Raw HTML blocks (e.g. a .cold-open callout) pass
 // through unchanged, same as any CommonMark renderer.
@@ -104,6 +106,7 @@ function render(fields, bodyHtml) {
     .replaceAll('{{EYEBROW}}', fields.eyebrow)
     .replaceAll('{{H1}}', fields.h1)
     .replaceAll('{{BYLINE_META}}', fields.bylineMeta)
+    .replace('{{STATUS_NOTE}}', fields.statusNote ? `\n  <div class="cold-open status-note" role="note"><p>${fields.statusNote}</p></div>\n` : '')
     .replace('{{BODY_HTML}}', bodyHtml);
 }
 

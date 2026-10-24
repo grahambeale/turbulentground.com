@@ -1,5 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Footer decisions (Graham, 2 Oct 2026). The homepage footer is trimmed to a closing
@@ -70,10 +72,29 @@ const DISCLOSURE_PAGES = [
 if (html) DISCLOSURE_PAGES.push(['/writing', '/writing.html']);   // production redirects /writing to LinkedIn
 
 for (const [clean, file] of DISCLOSURE_PAGES) {
-  test(`AI-experiment disclosure stays in the footer: ${clean}`, async ({ page }) => {
+  test(`footer says who runs the site and how it began: ${clean}`, async ({ page }) => {
     await page.goto(url(clean, file));
-    await expect(page.locator('footer .footer-note')).toContainText('AI product team from Sprint 1');
-    await expect(page.locator('footer .footer-note')).toContainText('live experiment');
+    const note = page.locator('footer .footer-note');
+    await expect(note).toContainText('Built and run by Graham Beale. Began as an AI product team experiment, July 2026.');
+    // The AI product team phases are closed (Oct 2026): nothing may describe the experiment as current.
+    const text = (await note.innerText()).toLowerCase();
+    for (const stale of ['sprint 1', 'live experiment', 'originally built']) expect(text).not.toContain(stale);
+  });
+}
+
+// The AI team phases are closed (Oct 2026). Article chrome and the "New here?" boxes must not describe the experiment as
+// running now. The founding article's own body (its "Start here." box) is kept unchanged as a historical record, under a
+// dated status note, so it is the one place the old wording is allowed.
+const ARTICLE_SLUGS = fs.readdirSync(path.join(__dirname, '..', '..', 'learnings'))
+  .filter((f) => f.endsWith('.html') && f !== 'index.html' && !f.startsWith('_')).map((f) => f.replace(/\.html$/, ''));
+for (const slug of ARTICLE_SLUGS) {
+  test(`no present-tense experiment wording in the article chrome: ${slug}`, async ({ page }) => {
+    await page.goto(url(`/learnings/${slug}`, `/learnings/${slug}.html`));
+    const checked = [await page.locator('.disclosure-note').innerText()];
+    if (slug !== 'zero-humans-in-the-loop') checked.push(...(await page.locator('.cold-open').allInnerTexts()));
+    for (const text of checked) {
+      for (const stale of ['makes autonomously', 'ongoing experiment']) expect(text.toLowerCase(), `${slug}: "${stale}"`).not.toContain(stale);
+    }
   });
 }
 

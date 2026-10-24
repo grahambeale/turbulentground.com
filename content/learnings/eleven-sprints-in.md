@@ -14,7 +14,7 @@ slug: "eleven-sprints-in"
 Eleven sprints into TurbulentGround.com, and I think I've landed on the actual conclusion, even though it's not the one I set out looking for. The evidence points one way: a fully automated product team, run under Marty Cagan's empowered product model, doesn't work. Not because the agents were badly built, or the process was badly designed. Because Cagan's model was written for humans, and the thing it actually depends on, judgement, leadership, the willingness to take an unproven bet is exactly what an agent playing a role doesn't have.
 
 <div class="cold-open">
-<p><strong>New here?</strong> This is one dispatch from an ongoing experiment: an AI product team running a live site with zero human intervention in the product decisions. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
+<p><strong>New here?</strong> This is one dispatch from an experiment that began in July 2026, in which a team of AI agents ran a live product site. A fully autonomous team never ran in practice; what it showed led to <a href="/">the study this site now hosts</a>. <a href="/learnings/zero-humans-in-the-loop">Start with the premise</a> for the full setup before diving into this one.</p>
 </div>
 
 Quick context if you're new here: five AI agents run a product cycle against my live diagnostic site, following Cagan's model, twice a week since sprint 5. I set the objective at the start of the quarter. After that, I don't get a vote.

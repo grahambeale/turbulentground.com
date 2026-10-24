@@ -35,5 +35,6 @@ collections:
       - { label: "Social share image", name: "ogImage", widget: "string", default: "https://www.turbulentground.com/og-image.png", hint: "Full https://www.turbulentground.com/... URL of the image, usually the default. The build checks the file exists and fails if it does not." }
       - { label: "Hero image", name: "heroImage", widget: "string", hint: "Path relative to learnings/, e.g. images/eleven-sprints-in.png." }
       - { label: "Hero image alt text", name: "heroAlt", widget: "text" }
+      - { label: "Status note", name: "statusNote", widget: "text", required: false, hint: "Optional dated note shown above the article, for an article kept as a historical record. HTML allowed (for example a link)." }
       - { label: "Hero image position", name: "heroImagePosition", widget: "select", required: false, options: ["center", "top", "bottom"], default: "center", hint: "Only change this if the hero image looks cropped wrong — e.g. \"top\" if the important part of the image sits near the top." }
       - { label: "Body", name: "body", widget: "markdown", hint: "The article itself. Write normally — paragraphs, **bold**, _italic_, [links](https://example.com). A raw <div class=\"cold-open\">...</div> block is fine if you need one of the callout boxes; everything else just wants plain prose." }
