@@ -1,0 +1,15 @@
+{
+  "revision": 2,
+  "airtable_record_id": null,
+  "decision": "Approved",
+  "decision_quote": "approve specification: benchmark compatibility revision 2, then implement tasks.md",
+  "source": "Direct message from Graham to Claude Code, 2026-10-27, in the session that recorded this file",
+  "recorded_at": "2026-10-27T22:53:22Z",
+  "packet_files_sha256": {
+    "proposal.md": "c01ab40cb4d0b9b0626f6b019ab8f00122536838d82caf23387cc1cba05a4797",
+    "tasks.md": "e326d39134b989dab5e1bca69543bcbd89eac1fe864eb3913178d86838fe859a",
+    "implementation-preview-benchmarks.diff": "713306657bbf1983610b9bd47dc01c1d9fadea5dd027e091dce4359b4cc3cf12"
+  },
+  "packet_provenance": "Received as untracked benchmark-compatibility-revision-2.tgz and an identical untracked 'research 2/' folder in the shared checkout; copied here unchanged (hashes above match both)",
+  "scope": "Specification approved and implementation of tasks.md authorised. Not authorised: pushing, production release, sending any participant email, minting retake tokens (13h). D3 date gate still blank in proposal.md, for Graham to set before the first participant email."
+}

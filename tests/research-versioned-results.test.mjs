@@ -14,7 +14,7 @@ assert.equal(INSTRUMENTS[PAIRED_VERSION].length,12);assert.equal(INSTRUMENTS[PAI
 assert(!buildEmailHtml('',{}, {cohortSize:0,domains:{}},'fictional',PREVIOUS_PAIRED_VERSION).includes(PAIRED_VERSION));
 const pairs=Object.fromEntries(INSTRUMENTS[PAIRED_VERSION].map(d=>[d.key,{contribution:4,conditions:2}]));
 pairs.d1.conditions='not_applicable';pairs.d2.contribution='skip';delete pairs.d12.conditions;
-const bench={cohortSize:15,domains:Object.fromEntries(Object.keys(pairs).map(k=>[k,{contribution:{mean:3.1,n:15},conditions:{mean:2.2,n:14}}]))};
+const bench={cohortSize:30,domains:Object.fromEntries(Object.keys(pairs).map(k=>[k,{contribution:{mean:3.1,n:15},conditions:{mean:2.2,n:14}}]))};
 const html=buildEmailHtml('<Synthetic>',pairs,bench,'fictional',PAIRED_VERSION);
 assert(!html.includes('Questionnaire version:'));assert(!html.includes(PAIRED_VERSION));
 for(const d of INSTRUMENTS[PAIRED_VERSION])for(const s of d.statements)assert(html.includes(s.text));
@@ -26,7 +26,10 @@ assert(!html.includes('n=15'));assert(!html.includes('n=14'));
 assert(html.indexOf('When AI saves me time, I use that time to improve my work.')<html.indexOf('When AI saves me time, I keep some of that time free from work.'));
 assert(html.includes('Your answer: 2 / 5'));assert(html.includes('Your answer: 4 / 5'));
 const own=buildEmailHtml('',pairs,{cohortSize:14,domains:bench.domains},'fictional',PAIRED_VERSION);assert(!own.includes('Benchmark: 3.1'));assert(own.includes('own answers only'));
+// The participant gate (30) holds even when every statement clears the per-statement floor (15).
+const gated=buildEmailHtml('',pairs,{cohortSize:29,domains:bench.domains},'fictional',PAIRED_VERSION);assert(!gated.includes('Benchmark: 3.1'));assert(gated.includes('29 of 30 completions so far; your comparison unlocks at 30.'));
+const open=buildEmailHtml('',pairs,{...bench,versionsPresent:['phase3-v4-2026-09-13-paired',PAIRED_VERSION],retakeCount:0},'fictional',PAIRED_VERSION);assert(open.includes('Benchmark: 3.1 / 5'));assert(open.includes('differ only in optional explanatory examples'));assert(open.includes('It includes 0 responses from people who retook'));
 const old=buildEmailHtml('',pairs,{cohortSize:0,domains:null},'fictional',LEGACY_VERSION);
 assert(old.includes("My organisation trusts me to decide when to rely on AI output."));assert(!old.includes('I can decide when to use AI in my work.'));
 assert.throws(()=>buildEmailHtml('',pairs,bench,'fictional','unknown'));
-console.log('PASS: exact frozen version wording, examples and storage mapping; v4/v5 rendering; per-item benchmark floor; safe own-answer fallback; distinct missingness and escaped names');
+console.log('PASS: exact frozen version wording, examples and storage mapping; v4/v5 rendering; per-item benchmark floor; 30-completion gate with progress note; pooled-version and retake disclosure; safe own-answer fallback; distinct missingness and escaped names');

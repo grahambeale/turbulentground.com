@@ -2,13 +2,18 @@
 // body: { token, email? }
 //
 // Sends a completed participant a factual summary of their own paired
-// responses using their recorded question version. Benchmarks use only that
-// version's eligible completed responses, with at least fifteen numeric answers
-// per displayed statement. The revised instrument is statement-specific;
-// historical summaries retain their original interpretation and exact wording.
+// responses using their recorded question version. Benchmarks use that
+// version's eligible completed responses (V4 and V5 pooled, decision log
+// 2026-10-27), with at least fifteen numeric answers per displayed statement,
+// and show no means at all until the cohort reaches the pre-registered 30.
+// Test records on research/excluded-responses.json and responses whose token
+// has no Identity row are left out. The revised instrument is
+// statement-specific; historical summaries retain their original
+// interpretation and exact wording.
 
 import { INSTRUMENTS, LEGACY_VERSION, PAIRED_VERSION, PREVIOUS_PAIRED_VERSION } from './_research-instruments.js';
-import { BENCHMARK_MIN_COHORT, computeStatementBenchmark, benchmarkProvenance } from './_research-benchmarks.js';
+import { BENCHMARK_MIN_COHORT, BENCHMARK_ANNOUNCE_MIN_PARTICIPANTS, computeStatementBenchmark, benchmarkProvenance } from './_research-benchmarks.js';
+import { loadExcludedIds } from '../lib/research-phase31/participation-count.js';
 import { resolveReferralShareForParticipant } from '../lib/research-phase31/referral-issue.js';
 
 const AIRTABLE_BASE_ID = "app7dKDinTjxczEfD";
@@ -20,6 +25,7 @@ const IDENTITY_FIELD = {
   name: "fldGto31lmx5KwyNr",
   email: "fldePJtCCYwLsmNjp",
   inviteStatus: "fldEhm06lLDvEeF6q",
+  origin: "fldzOXQwAKsJFvjx4",
   consentResults: "fldDQkh2LSSVjacTx",
   resultsSentAt: "fldcGbn19ft4z1OPe",
   benchmarkProvenance: "fldmEbpMqwAWUWv7l",
@@ -154,6 +160,44 @@ async function listResponsePairs(airtableToken, instrumentVersion) {
     offset = data.offset || "";
   } while (offset);
   return allPairs;
+}
+
+// Tokens only (plus origin, to count retakes): the orphan guard needs to know
+// which Responses tokens still have an Identity row, nothing else about them.
+async function listIdentityTokens(airtableToken) {
+  const tokens = new Set(), retakeTokens = new Set();
+  let offset = "";
+  do {
+    const params = new URLSearchParams({ pageSize: "100", returnFieldsByFieldId: "true" });
+    params.append("fields[]", IDENTITY_FIELD.token);
+    params.append("fields[]", IDENTITY_FIELD.origin);
+    if (offset) params.set("offset", offset);
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}?${params}`,
+      { headers: { Authorization: `Bearer ${airtableToken}` } }
+    );
+    if (!response.ok) throw new Error(`Airtable identity token lookup failed: ${response.status}`);
+    const data = await response.json();
+    for (const record of data.records || []) {
+      const value = record.fields?.[IDENTITY_FIELD.token];
+      if (typeof value !== "string" || !value.trim()) continue;
+      tokens.add(value.trim());
+      if (record.fields[IDENTITY_FIELD.origin] === "retake") retakeTokens.add(value.trim());
+    }
+    offset = data.offset || "";
+  } while (offset);
+  return { tokens, retakeTokens };
+}
+
+// Benchmark for one participant's version with both D2 guards applied.
+export function benchmarkForParticipant(allPairs, instrumentVersion, { excludedRecordIds, allowedTokens, retakeTokens }) {
+  const benchmark = computeStatementBenchmark(allPairs, instrumentVersion, { excludedRecordIds, allowedTokens, retakeTokens });
+  if (benchmark.excludedByList || benchmark.excludedOrphans) {
+    console.warn(`Benchmark guards: ${benchmark.excludedByList} response(s) skipped by the exclusion list, ${benchmark.excludedOrphans} with no Identity row`);
+  }
+  // No means are shown before the pre-registered participant gate, whatever the per-statement counts.
+  if (benchmark.cohortSize < BENCHMARK_ANNOUNCE_MIN_PARTICIPANTS) benchmark.domains = null;
+  return benchmark;
 }
 
 function benchmarkValue(entry) {
@@ -450,14 +494,23 @@ function referralShareSection(shareUrl) {
   </section>`;
 }
 
+function benchmarkDisclosure(benchmark) {
+  const notes = [];
+  if ((benchmark.versionsPresent || []).length > 1) notes.push('The benchmark combines two versions of the questionnaire that differ only in optional explanatory examples. It assumes answers to both are comparable.');
+  if (typeof benchmark.retakeCount === 'number') notes.push(`It includes ${benchmark.retakeCount} ${benchmark.retakeCount === 1 ? 'response' : 'responses'} from people who retook the current questionnaire after answering an earlier version.`);
+  return notes.length ? `<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">${notes.join(' ')}</p>` : '';
+}
+
 function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion, shareUrl) {
   const textStyle = 'font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d0bea2;';
+  const cohortSize = Number.isInteger(benchmark.cohortSize) ? benchmark.cohortSize : 0;
+  const announced = cohortSize >= BENCHMARK_ANNOUNCE_MIN_PARTICIPANTS;
   const sections = INSTRUMENTS[instrumentVersion].map(domain => {
     const rows = domain.statements.map(statement => {
       const value = pairs?.[domain.key]?.[statement.field];
-      // The compatible cohort and each displayed statement must meet the floor.
+      // The cohort must reach the participant gate and each displayed statement the observation floor.
       const candidate = benchmark.domains?.[domain.key]?.[statement.field];
-      const entry = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && candidate?.n >= BENCHMARK_MIN_COHORT ? candidate : null;
+      const entry = announced && candidate?.n >= BENCHMARK_MIN_COHORT ? candidate : null;
       return `<div style="padding:16px 0;border-bottom:1px solid #3a332d;">
         <p style="${textStyle}margin:0 0 8px;">${escapeHtml(statement.text)}</p>
         <p style="${textStyle}margin:0;"><strong>Your answer: ${displayValue(value)}</strong></p>
@@ -467,13 +520,15 @@ function buildPairedEmailHtml(name, pairs, benchmark, token, instrumentVersion, 
     }).join('');
     return `<section><h2 style="margin:28px 0 4px;font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8dcc8;">${escapeHtml(domain.name)}</h2>${rows}</section>`;
   }).join('');
-  const hasBenchmark = benchmark.cohortSize >= BENCHMARK_MIN_COHORT && Object.values(benchmark.domains || {}).some(d => Object.values(d).some(e => e?.n >= BENCHMARK_MIN_COHORT));
+  const hasBenchmark = announced && Object.values(benchmark.domains || {}).some(d => Object.values(d).some(e => e?.n >= BENCHMARK_MIN_COHORT));
+  const gateNote = `${cohortSize} of ${BENCHMARK_ANNOUNCE_MIN_PARTICIPANTS} completions so far; your comparison unlocks at ${BENCHMARK_ANNOUNCE_MIN_PARTICIPANTS}.`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your AI shift: a snapshot of your experience</title></head><body style="margin:0;background:#131110;color:#e8dcc8;">
     <main style="max-width:680px;margin:0 auto;padding:32px 20px;">
       <p style="${textStyle}">${name ? 'Hello ' + escapeHtml(name) + ',' : 'Hello,'}</p>
       <h1 style="font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.2;">Your AI shift: a snapshot of your experience</h1>
       <p style="${textStyle}">Here’s a clear view of how AI is affecting your work, based on the answers you shared. Use it to spot where things feel supportive, where there may be friction, and what you might want to explore further.</p>
-      <p style="${textStyle}">${hasBenchmark ? 'Where a comparison is available, the light marker shows the current study benchmark. It is a useful point of reference, not a target or judgement.' : 'For now, this shows your own answers only. Your personal comparison is still building and will appear once enough comparable responses are available.'}</p>
+      <p style="${textStyle}">${hasBenchmark ? 'Where a comparison is available, the light marker shows the current study benchmark. It is a useful point of reference, not a target or judgement.' : `For now, this shows your own answers only. ${announced ? 'Your personal comparison is still building and will appear once enough comparable responses are available.' : gateNote}`}</p>
+      ${hasBenchmark ? benchmarkDisclosure(benchmark) : ''}
       <p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;color:#9e8e7c;">Scores run from 1 (strongly disagree) to 5 (strongly agree). There is no “good” score — this is a snapshot of your experience, not an assessment of your ability or organisation.</p>
       ${sections}
       <p style="${textStyle}">As you read, look for answers that surprise you or feel especially important. Those are often the most useful places to start a conversation or make a change.</p>
@@ -567,7 +622,20 @@ export default async function handler(req, res) {
   if (!INSTRUMENTS[instrumentVersion]) {
     return res.status(409).json({ error: "Results for this questionnaire version are not ready. Your saved answers are preserved." });
   }
-  try { allPairs = await listResponsePairs(airtableToken, instrumentVersion); }
+  // One exclusion list, read the same way as the participation count. If it cannot be read, nothing is sent.
+  let excludedRecordIds;
+  try { excludedRecordIds = loadExcludedIds(); }
+  catch (error) {
+    console.error("Exclusion list unreadable:", error.message);
+    return res.status(502).json({ error: "Could not prepare your results" });
+  }
+  let identityTokens;
+  try {
+    [allPairs, identityTokens] = await Promise.all([
+      listResponsePairs(airtableToken, instrumentVersion),
+      listIdentityTokens(airtableToken),
+    ]);
+  }
   catch { return res.status(502).json({ error: "Could not prepare your results" }); }
 
   const suppliedEmail = typeof data?.email === "string" ? data.email.trim() : "";
@@ -578,8 +646,9 @@ export default async function handler(req, res) {
   let pairs;
   try { pairs = JSON.parse(responseRecord.fields[RESPONSE_FIELD.pairResponsesJson] || "{}"); }
   catch { return res.status(502).json({ error: "Could not read your saved responses" }); }
-  const benchmark = computeStatementBenchmark(allPairs, instrumentVersion);
-  if (instrumentVersion === LEGACY_VERSION && benchmark.cohortSize < BENCHMARK_MIN_COHORT) benchmark.domains = null;
+  const benchmark = benchmarkForParticipant(allPairs, instrumentVersion, {
+    excludedRecordIds, allowedTokens: identityTokens.tokens, retakeTokens: identityTokens.retakeTokens,
+  });
 
   const name = identity.fields[IDENTITY_FIELD.name] || "";
 

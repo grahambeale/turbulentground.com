@@ -1,4 +1,7 @@
 import handler, { buildEmailHtml } from "../api/research-results-email.js";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 function check(label, condition, detail = "") {
   if (!condition) throw new Error(`FAIL  ${label}${detail ? `: ${detail}` : ""}`);
@@ -21,9 +24,16 @@ process.env.RESEND_FROM = "Turbulent Ground <results@example.com>";
 
 try {
   const calls = [];
-  let cohortSize = 15;
+  let cohortSize = 30;
+  const cohortNumbers = () => Array.from({ length: cohortSize }, (_, index) => index + 1);
   global.fetch = async (url, options = {}) => {
     calls.push({ url: String(url), options });
+    // The orphan guard's token listing: every synthetic cohort token has an Identity row except "orphan".
+    if (String(url).includes("tblwpricYYzx4rmiR?") && !String(url).includes("filterByFormula")) {
+      return { ok: true, json: async () => ({ records: cohortNumbers().map((value) => ({ id: `recIdentity${value}`, fields: {
+        fld6danERot7gjOqb: `synthetic-cohort-${value}`,
+      } })) }) };
+    }
     if (String(url).includes("tblwpricYYzx4rmiR?") && (!options.method || options.method === "GET")) {
       return { ok: true, json: async () => ({ records: [{ id: "recIdentity", fields: {
         fldGto31lmx5KwyNr: "Alex Morgan",
@@ -51,15 +61,19 @@ try {
       } }] }) };
     }
     if (String(url).includes("tblL9mf8VfAmbhuG7?")) {
-      return { ok: true, json: async () => ({ records: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].slice(0, cohortSize).map((value) => ({
-        id: `recCohort${value}`,
+      // Two extra low-scoring completions that must never reach the benchmark: one whose record id is on
+      // research/excluded-responses.json, and one whose token has no Identity row.
+      const skipped = [["recJ9ffZOxOK2j3IP", "synthetic-cohort-1-excluded"], ["recOrphan", "orphan"]];
+      return { ok: true, json: async () => ({ records: cohortNumbers().map((value) => [`recCohort${value}`, `synthetic-cohort-${value}`, 3])
+        .concat(skipped.map(([id, token]) => [id, token, 1])).map(([id, token, score]) => ({
+        id,
         fields: {
-          flduL4PmBEfH9rLpz: `synthetic-cohort-${value}`,
+          flduL4PmBEfH9rLpz: token,
           fldvxb2mrIYVKLGVM: JSON.stringify({
-            d1: { contribution: 3, conditions: 3 },
-            d2: { contribution: 3, conditions: 3 },
-            d3: { contribution: 3, conditions: 3 },
-            d4: { contribution: 3, conditions: 3 },
+            d1: { contribution: score, conditions: score },
+            d2: { contribution: score, conditions: score },
+            d3: { contribution: score, conditions: score },
+            d4: { contribution: score, conditions: score },
           }),
           fldc1EMbDAHAO99Av: true,
           fldHJ4KNzMbpzdob6: "phase3-v3-2026-09-08",
@@ -93,7 +107,7 @@ try {
   check("does not present the comparison as a score or judgement", /point of comparison, not a score or judgement/i.test(sendBody.html));
   check("does not claim to explain a difference", /do not explain why the difference exists/i.test(sendBody.html));
   check("includes the saved response", /4 \/ 5/.test(sendBody.html));
-  check("includes the current study benchmark", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
+  check("includes the current study benchmark, unaffected by the excluded and orphan records", /Current study benchmark 3\.0 \/ 5/.test(sendBody.html));
   check("does not reveal the response count", !/eligible completed responses|\(n=\d+\)/i.test(sendBody.html));
   check("includes accessible comparison bars", /aria-label="Your response 4 out of 5; current benchmark 3\.0 out of 5"/.test(sendBody.html));
   check("keeps the requested comparison separate from study emails", /requested comparison is separate from optional study emails/i.test(sendBody.html));
@@ -104,15 +118,28 @@ try {
   check("records results-email consent", auditBody.fields.fldDQkh2LSSVjacTx === true);
   check("records a sent timestamp", typeof auditBody.fields.fldcGbn19ft4z1OPe === "string");
 
-  cohortSize = 14;
+  const provenance = JSON.parse(auditBody.fields.fldmEbpMqwAWUWv7l);
+  check("records the v2 benchmark policy and the cohort size", provenance.policyId === "statement-benchmark-v2-2026-10-27" && provenance.cohortSize === 30 && provenance.announceGate === 30);
+
+  cohortSize = 29;
   const secondRes = mockRes();
   await handler({ method: "POST", body: { token: "second-valid-token" } }, secondRes);
   const sends = calls.filter(call => call.url.includes("api.resend.com/emails"));
   const secondSendBody = JSON.parse(sends.at(-1).options.body);
-  check("withholds the benchmark below fifteen eligible responses", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
-  check("explains that the comparison is still building without revealing the count", /Your comparison is still building/i.test(secondSendBody.html) && !/Only 14|14 eligible/i.test(secondSendBody.html));
+  check("withholds the benchmark below the 30-completion participant gate, although every statement clears 15", !/Current study benchmark 3\.0 \/ 5/.test(secondSendBody.html));
+  check("explains that the comparison is still building without revealing the count", /Your comparison is still building/i.test(secondSendBody.html) && !/Only 29|29 eligible/i.test(secondSendBody.html));
   check("withholds comparisons when the benchmark is unavailable", !/Where you differ most|Where you are broadly similar/.test(secondSendBody.html));
   check("still shows the participant's answers before a benchmark exists", /Your answers, theme by theme/.test(secondSendBody.html));
+
+  // An unreadable exclusion list stops the email rather than risk counting test records.
+  const sendsBefore = calls.filter(call => call.url.includes("api.resend.com/emails")).length;
+  const cwd = process.cwd();
+  const listRes = mockRes();
+  process.chdir(mkdtempSync(join(tmpdir(), "no-exclusion-list-")));
+  try { await handler({ method: "POST", body: { token: "third-valid-token" } }, listRes); }
+  finally { process.chdir(cwd); }
+  check("returns 502 when the exclusion list cannot be read", listRes._status === 502);
+  check("sends nothing when the exclusion list cannot be read", calls.filter(call => call.url.includes("api.resend.com/emails")).length === sendsBefore);
 
   const sparseHtml = buildEmailHtml("", {
     d1: { contribution: 5, conditions: 3 },

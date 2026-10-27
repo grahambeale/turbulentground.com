@@ -29,6 +29,7 @@ let sends=[],auditPatches=[],version=v3,cohortCalls=0,compatibleCount=15;
 global.fetch=async(url,options={})=>{
 const u=String(url);if(u.includes('api.resend.com')){sends.push(JSON.parse(options.body));return {ok:true,json:async()=>({})};}
 if(options.method){auditPatches.push(JSON.parse(options.body));return {ok:true,json:async()=>({})};}
+if(u.includes('tblwpricYYzx4rmiR')&&!u.includes('filterByFormula'))return {ok:true,json:async()=>({records:Array.from({length:200},(_,i)=>({id:`identity${i}`,fields:{fld6danERot7gjOqb:`synthetic-cohort-${i+1}`}}))})};
 if(u.includes('tblwpricYYzx4rmiR'))return {ok:true,json:async()=>({records:[{id:'identity',fields:{fldEhm06lLDvEeF6q:'Completed',fldePJtCCYwLsmNjp:'synthetic@example.com'}}]})};
 if(u.includes('filterByFormula'))return {ok:true,json:async()=>({records:[{id:'response',fields:{fldHJ4KNzMbpzdob6:version,fldvxb2mrIYVKLGVM:JSON.stringify(pairResponses)}}]})};
 cohortCalls++;assert(u.includes('fldHJ4KNzMbpzdob6'));
@@ -37,13 +38,13 @@ const make=(v,n)=>({fields:{flduL4PmBEfH9rLpz:`synthetic-cohort-${++recordSerial
 const incomplete=make(v4,1);delete incomplete.fields.fld8sYjswX21vvVXz;
 const ineligible=make(v4,1);ineligible.fields.fldc1EMbDAHAO99Av=false;
 const corrupt=make(v4,1);corrupt.fields.fldvxb2mrIYVKLGVM='{';
-const compatibleVersion=version===v5?v5:v4;
-return {ok:true,json:async()=>({records:Array.from({length:15},()=>make(v3,2)).concat(Array.from({length:compatibleCount},()=>make(compatibleVersion,5)),Array.from({length:15},()=>incomplete),Array.from({length:15},()=>ineligible),[corrupt,make(null,1)])})};
+// V4 and V5 are pooled (decision log 2026-10-27); V3 never pools with them.
+return {ok:true,json:async()=>({records:Array.from({length:30},()=>make(v3,2)).concat(Array.from({length:compatibleCount},()=>make(v4,5)),Array.from({length:compatibleCount},()=>make(v5,5)),Array.from({length:15},()=>incomplete),Array.from({length:15},()=>ineligible),[corrupt,make(null,1)])})};
 };
 let res=response();await results({method:'POST',body:{token:'synthetic'}},res);assert.equal(res._status,200);assert(sends[0].html.includes('Current study benchmark 2.0 / 5'));assert(!sends[0].html.includes('Current study benchmark 5.0 / 5'));
 version=v5;compatibleCount=15;res=response();await results({method:'POST',body:{token:'synthetic2'}},res);assert.equal(res._status,200);assert.equal(sends.length,2);assert.equal(cohortCalls,2);assert(sends[1].html.includes('Benchmark: 5.0 / 5'));assert(!sends[1].html.includes('Current study benchmark 2.0 / 5'));assert(!sends[1].html.includes(v5));assert(sends[1].html.includes('I can decide when to use AI in my work.'));assert(!sends[1].html.includes("I'm comfortable explaining how I use AI at work."));
 compatibleCount=14;res=response();await results({method:'POST',body:{token:'synthetic-own'}},res);assert.equal(res._status,200);assert.equal(sends.length,3);assert(sends[2].html.includes('own answers only'));assert(!sends[2].html.includes('Benchmark: 5.0'));assert(!sends[2].html.includes('Current study benchmark 2.0'));
-assert.equal(auditPatches.length,3);for(const patch of auditPatches){const provenance=JSON.parse(patch.fields.fldmEbpMqwAWUWv7l);assert.equal(provenance.policyId,'statement-benchmark-v1-2026-09-14');assert.equal(provenance.minimumObservations,15);assert(provenance.computedAt);}
+assert.equal(auditPatches.length,3);for(const patch of auditPatches){const provenance=JSON.parse(patch.fields.fldmEbpMqwAWUWv7l);assert.equal(provenance.policyId,'statement-benchmark-v2-2026-10-27');assert.equal(provenance.minimumObservations,15);assert(provenance.computedAt);}
 version='unknown';res=response();await results({method:'POST',body:{token:'synthetic3'}},res);assert.equal(res._status,409);assert.equal(sends.length,3);assert.equal(cohortCalls,3);
-console.log('PASS: version stamping; mismatch/unknown rejects before writes; legacy clients preserved; both versions render their wording and isolate same-version benchmarks; unknown results withheld');
+console.log('PASS: version stamping; mismatch/unknown rejects before writes; legacy clients preserved; both versions render their wording; V3 stays isolated, V4 and V5 pool and show means only from 30; unknown results withheld');
 }finally{global.fetch=oldFetch;for(const k of Object.keys(process.env))if(!(k in oldEnv))delete process.env[k];Object.assign(process.env,oldEnv);}
