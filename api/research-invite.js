@@ -5,7 +5,17 @@
 // Owner-only invite generation for the Phase 3 research study. This is the
 // browser equivalent of scripts/generate-invite.mjs: it creates an Identity
 // record and returns the unique participant link. It never returns existing
-// Identity data and never reads or writes the Responses table.
+// Identity data.
+//
+// body: { action: "retake-invite", previousToken }
+// Mints a retake invite for someone who completed an earlier instrument
+// version (decision log 2026-10-27, benchmark compatibility revision 2, D4):
+// a new Identity row with a fresh token, origin "retake", Previous Token set,
+// name and email copied, invite status "Not sent". The existing row and its
+// token are never modified, so the earlier Responses row stays reachable. The
+// Responses table is read only to confirm the earlier completion consented to
+// study emails. Minting is not sending: the email goes through Graham's own
+// review sequence.
 
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import saveResearchFeedback from "../lib/research-feedback.js";
@@ -31,7 +41,12 @@ const FIELD = {
   inviteSentDate: "flda1wM53yby5Un6F",
   inviteStatus: "fldEhm06lLDvEeF6q",
   notes: "fldX9muawo9iSMYpT",
+  identityOrigin: "fldzOXQwAKsJFvjx4",
+  previousToken: "fld7KtQmkOlnXUgCJ",
 };
+const RESPONSES_TABLE_ID = "tblL9mf8VfAmbhuG7";
+const RESPONSE_FIELD = { token: "flduL4PmBEfH9rLpz", completedAt: "fld8sYjswX21vvVXz", consentStudyEmails: "flduWhkQo6u5O3nIp" };
+const INVITE_STATUS_NOT_SENT = "Not sent";
 
 function authorised(req, expectedKey) {
   if (!expectedKey) return false;
@@ -42,6 +57,63 @@ function authorised(req, expectedKey) {
   const supplied = Buffer.from(suppliedKey);
   const expected = Buffer.from(expectedKey);
   return supplied.length === expected.length && timingSafeEqual(supplied, expected);
+}
+
+async function findByToken(tableId, tokenFieldId, token, airtableToken) {
+  const formula = `{${tokenFieldId}}="${token.replace(/"/g, '\\"')}"`;
+  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${tableId}` +
+    `?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1&returnFieldsByFieldId=true`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${airtableToken}` } });
+  if (!r.ok) throw new Error(`Airtable lookup failed: ${r.status}`);
+  const data = await r.json();
+  return data.records && data.records[0];
+}
+
+async function retakeInvite(res, data, airtableToken) {
+  const previousToken = typeof data?.previousToken === "string" ? data.previousToken.trim() : "";
+  if (!previousToken || previousToken.length > 200) return res.status(400).json({ error: "Enter the participant's earlier invite token" });
+
+  let identity, response;
+  try {
+    [identity, response] = await Promise.all([
+      findByToken(IDENTITY_TABLE_ID, FIELD.token, previousToken, airtableToken),
+      findByToken(RESPONSES_TABLE_ID, RESPONSE_FIELD.token, previousToken, airtableToken),
+    ]);
+  } catch (err) {
+    console.error("Retake invite lookup failed:", err.message);
+    return res.status(502).json({ error: "Could not check the earlier token. Please try again." });
+  }
+  if (!identity) return res.status(404).json({ error: "No participant has that token" });
+  if (identity.fields[FIELD.identityOrigin] === "retake") return res.status(409).json({ error: "That token is already a retake invite" });
+  if (!response || !response.fields[RESPONSE_FIELD.completedAt]) return res.status(409).json({ error: "That participant has not completed the questionnaire" });
+  if (response.fields[RESPONSE_FIELD.consentStudyEmails] !== true) return res.status(409).json({ error: "That participant did not agree to study emails" });
+  const email = typeof identity.fields[FIELD.email] === "string" ? identity.fields[FIELD.email].trim() : "";
+  if (!email) return res.status(409).json({ error: "That participant has no email on file" });
+
+  const token = randomUUID();
+  const fields = {
+    [FIELD.token]: token,
+    [FIELD.name]: identity.fields[FIELD.name] || "",
+    [FIELD.email]: email,
+    [FIELD.inviteStatus]: INVITE_STATUS_NOT_SENT,
+    [FIELD.identityOrigin]: "retake",
+    [FIELD.previousToken]: previousToken,
+  };
+  try {
+    const airtableRes = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${IDENTITY_TABLE_ID}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${airtableToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ records: [{ fields }], typecast: true }),
+    });
+    if (!airtableRes.ok) {
+      console.error("Airtable retake invite write failed:", await airtableRes.text());
+      return res.status(502).json({ error: "Could not create the retake invite. Please try again." });
+    }
+  } catch (err) {
+    console.error("Airtable retake invite fetch error:", err);
+    return res.status(502).json({ error: "Could not create the retake invite. Please try again." });
+  }
+  return res.status(201).json({ inviteUrl: `${RESEARCH_BASE_URL}/take-part?t=${token}`, hasEmail: true, retake: true });
 }
 
 function looksLikeEmail(value) {
@@ -100,6 +172,15 @@ export default async function handler(req, res) {
   }
   if (!authorised(req, adminKey)) {
     return res.status(401).json({ error: "Incorrect access key" });
+  }
+
+  if (data?.action === "retake-invite") {
+    const retakeAirtableToken = process.env.AIRTABLE_RESEARCH_TOKEN;
+    if (!retakeAirtableToken) {
+      console.error("Missing AIRTABLE_RESEARCH_TOKEN");
+      return res.status(500).json({ error: "Server configuration error" });
+    }
+    return retakeInvite(res, data, retakeAirtableToken);
   }
 
   const name = typeof data?.name === "string" ? data.name.trim() : "";

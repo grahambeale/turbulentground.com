@@ -264,6 +264,8 @@ export default async function handler(req, res) {
     return res.status(409).json({ error: "This invite has already been used." });
   }
   const isPublic = identityRecord.fields[IDENTITY_FIELD.identityOrigin] === "public_self_service";
+  // A retake (decision log 2026-10-27, D4) is an owner invite for every rule here; only the Responses row is stamped.
+  const isRetake = identityRecord.fields[IDENTITY_FIELD.identityOrigin] === "retake";
   const expiry = Date.parse(identityRecord.fields[IDENTITY_FIELD.incompleteExpiresAt] || "");
   if (isPublic && (identityRecord.fields[IDENTITY_FIELD.lifecycleState] === "expired" ||
       (Number.isFinite(expiry) && Date.now() >= expiry))) {
@@ -292,6 +294,7 @@ export default async function handler(req, res) {
     [FIELD.rationaleVersion]: requestedRationale,
   };
   if (isPublic) fields[FIELD.submissionOrigin] = "public_self_service";
+  else if (isRetake) fields[FIELD.submissionOrigin] = "retake";
 
   if (presentation.value) {
     fields[FIELD.presentationVersionSubmit] = presentation.value.version;

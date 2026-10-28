@@ -184,6 +184,8 @@ export default async function handler(req, res) {
     console.error("Responses lookup for resume failed (non-fatal):", err.message);
   }
 
-  // origin lets the page label analytics events by route (invitation vs public self-service); it carries no personal data.
-  return res.status(200).json({ valid: true, name, hasEmail, completed, savedState, origin: isPublic ? "public_self_service" : "owner_invite" });
+  // origin lets the page label analytics events by route (invitation, public self-service or retake); it carries no
+  // personal data. A retake behaves like an owner invite throughout the journey (decision log 2026-10-27, D4).
+  const origin = isPublic ? "public_self_service" : record.fields[IDENTITY_FIELD.identityOrigin] === "retake" ? "retake" : "owner_invite";
+  return res.status(200).json({ valid: true, name, hasEmail, completed, savedState, origin });
 }

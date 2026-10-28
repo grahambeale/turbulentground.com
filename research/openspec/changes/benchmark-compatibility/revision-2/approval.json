@@ -11,5 +11,20 @@
     "implementation-preview-benchmarks.diff": "713306657bbf1983610b9bd47dc01c1d9fadea5dd027e091dce4359b4cc3cf12"
   },
   "packet_provenance": "Received as untracked benchmark-compatibility-revision-2.tgz and an identical untracked 'research 2/' folder in the shared checkout; copied here unchanged (hashes above match both)",
-  "scope": "Specification approved and implementation of tasks.md authorised. Not authorised: pushing, production release, sending any participant email, minting retake tokens (13h). D3 date gate still blank in proposal.md, for Graham to set before the first participant email."
+  "scope": "Specification approved and implementation of tasks.md authorised. Not authorised: pushing, production release, sending any participant email, minting retake tokens (13h). D3 date gate still blank in proposal.md, for Graham to set before the first participant email. Amendment 1 (2026-10-28) extends 13a to the Responses Submission Origin field; retake tokens are still not to be minted until Graham has reviewed the retake email (13h).",
+  "amendments": [
+    {
+      "number": 1,
+      "date": "2026-10-28",
+      "decision_quote": "Approve with changes: make all three schema changes for B3a, including the retake choice on Responses Submission Origin; record the third as an amendment to revision 2 in approval.json. Add the 11 skipped test files to npm test as a separate commit on the same branch. Then send me the head for review. Do not push.",
+      "source": "Direct message from Graham to Claude Code, 2026-10-28",
+      "change": "tasks.md 13a and 13d: the retake origin value is also added as a choice on Responses field Submission Origin (fld7t6e21yjvQmTTh), which 13d writes but the packet did not list. All three schema changes are additive.",
+      "schema_record": {
+        "identity_previous_token_field": "fld7KtQmkOlnXUgCJ (created 2026-10-28, singleLineText)",
+        "identity_origin_retake_choice": "fldzOXQwAKsJFvjx4: not addable through the Airtable API (field update accepts name and description only); created by typecast on the first retake invite write, or by Graham in the Airtable UI",
+        "responses_submission_origin_retake_choice": "fld7t6e21yjvQmTTh: same; created by typecast on the first retake submission, or by Graham in the Airtable UI"
+      },
+      "also": "The 11 test files that package.json test did not run are added to it on the same branch as a separate commit."
+    }
+  ]
 }
