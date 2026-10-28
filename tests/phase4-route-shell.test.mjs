@@ -12,7 +12,8 @@ assert.match(participant, /<title>Take part \| Turbulent Ground<\/title>/);
 assert.match(participant, /<link rel="canonical" href="https:\/\/www\.turbulentground\.com\/take-part">/);
 assert.match(participant, /<meta name="robots" content="noindex, nofollow">/);
 assert.match(participant, /\/research\/media\//);
-assert.match(participant, /\/research\/privacy/);
+// Phase 4 consolidated the notice: the participant page links to /privacy#participation, not a research-only copy.
+assert.match(participant, /\/privacy#participation/);
 assert.match(participant, /\/research\/legacy-v3\.html/);
 
 const emitters = [
